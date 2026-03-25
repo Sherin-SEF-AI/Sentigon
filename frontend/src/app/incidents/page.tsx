@@ -456,7 +456,7 @@ function IncidentDetailPanel({
   useEffect(() => {
     apiFetch<TimelineEntry[]>(`/api/incidents/${incident.id}/timeline`)
       .then(setTimeline)
-      .catch(() => {});
+      .catch((err) => { console.warn("[incidents] API call failed:", err); });
   }, [incident.id]);
 
   const fetchLinkedEvidence = useCallback(() => {
@@ -1044,7 +1044,7 @@ export default function IncidentManagementPage() {
   const fetchStats = useCallback(() => {
     apiFetch<IncidentStats>("/api/incidents/stats")
       .then(setStats)
-      .catch(() => {});
+      .catch((err) => { console.warn("[incidents] API call failed:", err); });
   }, []);
 
   const fetchIncidents = useCallback(async () => {
@@ -1086,7 +1086,7 @@ export default function IncidentManagementPage() {
     if (selectedIncident) {
       apiFetch<Incident>(`/api/incidents/${selectedIncident.id}`)
         .then((updated) => setSelectedIncident(updated))
-        .catch(() => {});
+        .catch((err) => { console.warn("[incidents] API call failed:", err); });
     }
   };
 

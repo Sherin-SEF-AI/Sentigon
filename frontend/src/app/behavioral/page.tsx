@@ -227,7 +227,7 @@ export default function BehavioralAnalyticsPage() {
       if (Array.isArray(occData) && occData.length > 0) {
         apiFetch<OccupancyTimeSeries[]>("/api/behavioral/occupancy?format=timeseries")
           .then(setOccupancyTimeSeries)
-          .catch(() => {});
+          .catch((err) => { console.warn("[behavioral] API call failed:", err); });
       }
     } catch {
     } finally {
@@ -252,7 +252,7 @@ export default function BehavioralAnalyticsPage() {
       );
       apiFetch<BehavioralStats>("/api/behavioral/stats")
         .then(setStats)
-        .catch(() => {});
+        .catch((err) => { console.warn("[behavioral] API call failed:", err); });
     } catch {
     } finally {
       setResolveLoading(null);

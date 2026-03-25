@@ -246,10 +246,10 @@ export default function VideoArchivePage() {
   useEffect(() => { fetchRecordings(); }, [fetchRecordings]);
 
   useEffect(() => {
-    apiFetch<ArchiveStats>("/api/video-archive/stats").then(setStats).catch(() => {});
+    apiFetch<ArchiveStats>("/api/video-archive/stats").then(setStats).catch((err) => { console.warn("[video-archive] API call failed:", err); });
     apiFetch<{ id: string; name: string }[]>("/api/cameras")
       .then((cams) => setCameras(cams.map((c) => ({ id: c.id, name: c.name }))))
-      .catch(() => {});
+      .catch((err) => { console.warn("[video-archive] API call failed:", err); });
   }, []);
 
   const fetchBookmarks = useCallback(async (recId: string) => {

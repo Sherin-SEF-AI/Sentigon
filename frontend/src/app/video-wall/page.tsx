@@ -126,7 +126,7 @@ export default function VideoWallPage() {
 
   // Fetch cameras
   const fetchCameras = useCallback(() => {
-    apiFetch<CameraInfo[]>("/api/cameras").then(setCameras).catch(() => {});
+    apiFetch<CameraInfo[]>("/api/cameras").then(setCameras).catch((err) => { console.warn("[video-wall] API call failed:", err); });
   }, []);
 
   useEffect(() => {

@@ -104,16 +104,16 @@ export default function VisualSearchTab() {
   useEffect(() => {
     apiFetch<CLIPStats>("/api/visual-search/stats")
       .then(setStats)
-      .catch(() => {});
+      .catch((err) => { console.warn("[visual-search] API call failed:", err); });
     apiFetch<CLIPCamera[]>("/api/visual-search/cameras")
       .then((cams) => {
         setCameras(cams);
         if (cams.length > 0) setSelectedCamera(cams[0].camera_id);
       })
-      .catch(() => {});
+      .catch((err) => { console.warn("[visual-search] API call failed:", err); });
     apiFetch<VisualAnomaly[]>("/api/visual-search/anomalies?limit=20")
       .then(setAnomalies)
-      .catch(() => {});
+      .catch((err) => { console.warn("[visual-search] API call failed:", err); });
     // Load search history from localStorage
     setSearchHistory(loadHistory());
   }, []);
@@ -269,10 +269,10 @@ export default function VisualSearchTab() {
   const refreshStats = useCallback(() => {
     apiFetch<CLIPStats>("/api/visual-search/stats")
       .then(setStats)
-      .catch(() => {});
+      .catch((err) => { console.warn("[visual-search] API call failed:", err); });
     apiFetch<VisualAnomaly[]>("/api/visual-search/anomalies?limit=20")
       .then(setAnomalies)
-      .catch(() => {});
+      .catch((err) => { console.warn("[visual-search] API call failed:", err); });
   }, []);
 
   // ── Render ─────────────────────────────────────────────

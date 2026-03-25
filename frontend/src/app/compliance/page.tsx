@@ -371,7 +371,7 @@ export default function PPECompliancePage() {
         .then(() => {
           addToast("success", `Remediation status updated to "${nextStatus}".`);
         })
-        .catch(() => {});
+        .catch((err) => { console.warn("[compliance] API call failed:", err); });
     },
     [addToast]
   );

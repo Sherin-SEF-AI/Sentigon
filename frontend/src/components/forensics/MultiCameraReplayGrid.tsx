@@ -121,7 +121,7 @@ export default function MultiCameraReplayGrid({
 
     apiFetch<AgentAction[]>(`/api/incident-replay/incidents/${incidentId}/agent-actions`)
       .then(setAgentActions)
-      .catch(() => {});
+      .catch((err) => { console.warn("[multi-camera-replay-grid] API call failed:", err); });
   }, [incidentId]);
 
   /* --- Fetch multicam slice --- */

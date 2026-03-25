@@ -334,7 +334,7 @@ export default function LinkAnalysisPage() {
   useEffect(() => {
     apiFetch("/api/intelligence/threat-graph")
       .then((data: any) => setThreatIntel(data))
-      .catch(() => {});
+      .catch((err) => { console.warn("[link-analysis] API call failed:", err); });
   }, []);
 
   /* ---- Derived data ---- */

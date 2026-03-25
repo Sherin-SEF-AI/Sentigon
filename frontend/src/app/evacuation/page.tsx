@@ -361,8 +361,8 @@ export default function EvacuationPage() {
         }
         // If the API returns nothing useful, keep the ASSEMBLY_POINTS defaults already in state
       })
-      .catch(() => {
-        // Network/API failure — silently keep the hardcoded defaults
+      .catch((err) => {
+        console.warn("[evacuation] Failed to fetch assembly points, using defaults:", err);
       });
   }, []);
 
@@ -440,7 +440,7 @@ export default function EvacuationPage() {
 
   /* --- Cancel evacuation --- */
   const handleCancel = useCallback(async () => {
-    await apiFetch("/api/emergency/deactivate", { method: "POST" }).catch(() => {});
+    await apiFetch("/api/emergency/deactivate", { method: "POST" }).catch((err) => { console.warn("[evacuation] API call failed:", err); });
     setEvacuationActive(false);
     setZoneStatuses({});
     stopTimer();

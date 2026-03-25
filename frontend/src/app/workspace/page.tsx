@@ -21,6 +21,8 @@ import {
   RotateCcw,
   X,
   Loader2,
+  Volume2,
+  VolumeX,
   Shield,
   Lock,
   CheckCircle2,
@@ -405,6 +407,10 @@ export default function WorkspacePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [darkMode, setDarkMode] = useState(true);
+  const [audioMuted, setAudioMuted] = useState(() => {
+    if (typeof window !== "undefined") return localStorage.getItem("sentinel_audio_muted") === "true";
+    return false;
+  });
   const [briefing, setBriefing] = useState<ShiftBriefing | null>(null);
   const [showBriefing, setShowBriefing] = useState(false);
   const [briefingLoading, setBriefingLoading] = useState(false);
@@ -673,7 +679,15 @@ export default function WorkspacePage() {
             className="p-2 rounded-lg bg-zinc-800 text-zinc-400 hover:bg-zinc-700 transition">
             {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
-          {/* Sound toggle placeholder — audio API not yet implemented */}
+          <button onClick={() => {
+              const next = !audioMuted;
+              setAudioMuted(next);
+              localStorage.setItem("sentinel_audio_muted", String(next));
+            }}
+            className="p-2 rounded-lg bg-zinc-800 text-zinc-400 hover:bg-zinc-700 transition"
+            title={audioMuted ? "Unmute alerts" : "Mute alerts"}>
+            {audioMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          </button>
         </div>
       </header>
 

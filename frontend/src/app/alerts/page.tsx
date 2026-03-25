@@ -165,7 +165,7 @@ function AlertRow({
       setXaiLoading(true);
       apiFetch(`/api/intelligence/explain/${alert.id}`)
         .then((data: any) => setXaiChain(data))
-        .catch(() => {})
+        .catch((err) => { console.warn("[alerts] API call failed:", err); })
         .finally(() => setXaiLoading(false));
     }
   }, [expanded, alert.id, xaiChain, xaiLoading]);

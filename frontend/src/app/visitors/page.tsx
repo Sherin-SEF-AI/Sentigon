@@ -330,7 +330,7 @@ function VisitorDetailPanel({
     setLogLoading(true);
     apiFetch<{ access_log?: AccessLogEntry[] }>(`/api/visitors/${visitor.id}`)
       .then((data) => setAccessLog(data.access_log || []))
-      .catch(() => {})
+      .catch((err) => { console.warn("[visitors] API call failed:", err); })
       .finally(() => setLogLoading(false));
   }, [visitor.id]);
 
@@ -1153,7 +1153,7 @@ export default function VisitorManagementPage() {
   const fetchStats = useCallback(() => {
     apiFetch<VisitorStats>("/api/visitors/stats")
       .then(setStats)
-      .catch(() => {});
+      .catch((err) => { console.warn("[visitors] API call failed:", err); });
   }, []);
 
   const fetchVisitors = useCallback(async () => {

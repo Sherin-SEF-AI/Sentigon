@@ -358,8 +358,8 @@ export default function SemanticSearchTab() {
 
   /* --- Load filter options & saved searches on mount --- */
   useEffect(() => {
-    apiFetch<Zone[]>("/api/zones").then(setZones).catch(() => {});
-    apiFetch<CameraType[]>("/api/cameras").then(setCameras).catch(() => {});
+    apiFetch<Zone[]>("/api/zones").then(setZones).catch((err) => { console.warn("[semantic-search] API call failed:", err); });
+    apiFetch<CameraType[]>("/api/cameras").then(setCameras).catch((err) => { console.warn("[semantic-search] API call failed:", err); });
     setSavedSearches(loadSavedSearches());
   }, []);
 

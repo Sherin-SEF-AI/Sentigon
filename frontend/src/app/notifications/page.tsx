@@ -558,7 +558,7 @@ function TemplatesTab() {
     setLoading(true);
     apiFetch<NotifTemplate[]>("/api/notifications/mass/templates")
       .then(setTemplates)
-      .catch(() => {})
+      .catch((err) => { console.warn("[notifications] API call failed:", err); })
       .finally(() => setLoading(false));
   }, []);
 
@@ -1040,7 +1040,7 @@ export default function NotificationsPage() {
           setStats(data as unknown as NotifStats);
         }
       })
-      .catch(() => {});
+      .catch((err) => { console.warn("[notifications] API call failed:", err); });
 
     apiFetch<LockdownStatus>("/api/notifications/mass/lockdown/status")
       .then((ld) => {
@@ -1048,7 +1048,7 @@ export default function NotificationsPage() {
           prev ? { ...prev, active_lockdowns: ld.active ? 1 : 0 } : prev
         );
       })
-      .catch(() => {});
+      .catch((err) => { console.warn("[notifications] API call failed:", err); });
   }, []);
 
   useEffect(() => {

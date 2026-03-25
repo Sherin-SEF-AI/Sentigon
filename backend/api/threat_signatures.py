@@ -671,6 +671,139 @@ async def toggle_signature(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+# ── False Positive & Detection Examples ────────────────────
+
+class FalsePositiveRequest(BaseModel):
+    detection_id: str = Field(..., description="ID of the detection to mark as false positive")
+    reason: Optional[str] = None
+
+
+@router.post("/{sig_id}/false-positive")
+async def mark_false_positive(
+    sig_id: str,
+    body: FalsePositiveRequest,
+    _user=Depends(get_current_user),
+):
+    """Mark a detection as a false positive for a given signature.
+
+    This feeds back into the threat engine so that detection thresholds can be
+    adjusted over time.
+    """
+    engine = ThreatEngine()
+
+    # Resolve the signature by name or UUID
+    sig_name: Optional[str] = None
+    if sig_id in engine.signatures:
+        sig_name = sig_id
+    else:
+        try:
+            async with async_session() as session:
+                result = await session.execute(
+                    select(ThreatSignature).where(ThreatSignature.id == uuid.UUID(sig_id))
+                )
+                db_rec = result.scalar_one_or_none()
+                if db_rec:
+                    sig_name = db_rec.name
+        except (ValueError, Exception):
+            pass
+
+    if not sig_name:
+        raise HTTPException(status_code=404, detail="Signature not found")
+
+    # Record the false positive via the feedback tuning service
+    try:
+        from backend.services.feedback_tuning_service import feedback_tuning_service
+        await feedback_tuning_service.record_feedback(
+            signature_name=sig_name,
+            detection_id=body.detection_id,
+            feedback_type="false_positive",
+            user_id=str(_user.id),
+            reason=body.reason,
+        )
+    except Exception as e:
+        logger.debug("Feedback tuning service unavailable, recording locally: %s", e)
+
+    # Also record in the feedback API table if available
+    try:
+        async with async_session() as session:
+            from backend.models.phase3_models import AlertFeedback
+            fb = AlertFeedback(
+                alert_id=uuid.UUID(body.detection_id) if len(body.detection_id) == 36 else None,
+                user_id=_user.id,
+                is_correct=False,
+                label="false_positive",
+                comment=body.reason or f"Marked as false positive for signature: {sig_name}",
+            )
+            session.add(fb)
+            await session.commit()
+    except Exception as e:
+        logger.debug("AlertFeedback record failed (non-critical): %s", e)
+
+    return {
+        "status": "recorded",
+        "signature": sig_name,
+        "detection_id": body.detection_id,
+        "feedback": "false_positive",
+    }
+
+
+@router.get("/{sig_id}/detections")
+async def get_detection_examples(
+    sig_id: str,
+    limit: int = Query(5, ge=1, le=50),
+    _user=Depends(get_current_user),
+):
+    """Get recent detection examples for a given signature."""
+    from backend.models.models import Event
+
+    # Resolve signature name
+    engine = ThreatEngine()
+    sig_name: Optional[str] = None
+    if sig_id in engine.signatures:
+        sig_name = sig_id
+    else:
+        try:
+            async with async_session() as session:
+                result = await session.execute(
+                    select(ThreatSignature).where(ThreatSignature.id == uuid.UUID(sig_id))
+                )
+                db_rec = result.scalar_one_or_none()
+                if db_rec:
+                    sig_name = db_rec.name
+        except (ValueError, Exception):
+            pass
+
+    if not sig_name:
+        raise HTTPException(status_code=404, detail="Signature not found")
+
+    examples: list[dict] = []
+    try:
+        async with async_session() as session:
+            # Query events that match this signature name in their event_type or metadata
+            stmt = (
+                select(Event)
+                .where(Event.event_type == sig_name)
+                .order_by(Event.timestamp.desc())
+                .limit(limit)
+            )
+            result = await session.execute(stmt)
+            for event in result.scalars().all():
+                examples.append({
+                    "id": str(event.id),
+                    "event_type": event.event_type,
+                    "severity": event.severity,
+                    "confidence": event.confidence,
+                    "timestamp": event.timestamp.isoformat() if event.timestamp else None,
+                    "camera_id": str(event.camera_id) if event.camera_id else None,
+                    "description": event.description,
+                    "frame_url": event.frame_url,
+                })
+    except Exception as e:
+        logger.debug("Detection examples query failed: %s", e)
+
+    return examples
+
+
 # ── Natural Language Policy Builder ─────────────────────────
 
 class NLRuleRequest(BaseModel):

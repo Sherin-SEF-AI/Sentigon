@@ -332,19 +332,19 @@ export default function SOCDashboard() {
     if (!analyticsOpen) return;
     apiFetch<{ data: { timestamp: string; count: number }[] }>("/api/analytics/events-over-time?hours=24")
       .then((r) => setEventsOverTime(r.data ?? []))
-      .catch(() => {});
+      .catch((err) => { console.warn("[dashboard] API call failed:", err); });
     apiFetch<{ data: { severity: string; count: number }[] }>("/api/analytics/alerts-by-severity")
       .then((r) => setAlertsBySeverity(r.data ?? []))
-      .catch(() => {});
+      .catch((err) => { console.warn("[dashboard] API call failed:", err); });
     apiFetch<{ data: { zone_name: string; current_occupancy: number; max_occupancy: number | null; occupancy_pct: number | null }[] }>("/api/analytics/zone-occupancy")
       .then((r) => setZoneOccupancy((r.data ?? []).slice(0, 5)))
-      .catch(() => {});
+      .catch((err) => { console.warn("[dashboard] API call failed:", err); });
     apiFetch("/api/intelligence/posture-score")
       .then((r: any) => setPostureScore(r))
-      .catch(() => {});
+      .catch((err) => { console.warn("[dashboard] API call failed:", err); });
     apiFetch("/api/intelligence/predictions")
       .then((r: any) => setPredictions(r))
-      .catch(() => {});
+      .catch((err) => { console.warn("[dashboard] API call failed:", err); });
   }, [analyticsOpen]);
 
   // ── Fetch alerts for grouping + SLA row ────────────────────────────
@@ -352,7 +352,7 @@ export default function SOCDashboard() {
     const fetchAlerts = () => {
       apiFetch<Alert[]>("/api/alerts?limit=100")
         .then(setSidebarAlerts)
-        .catch(() => {});
+        .catch((err) => { console.warn("[dashboard] API call failed:", err); });
     };
     fetchAlerts();
     const iv = setInterval(fetchAlerts, 30000);
