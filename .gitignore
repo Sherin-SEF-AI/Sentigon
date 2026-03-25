@@ -1,0 +1,80 @@
+# Environment
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+.next/
+.turbo/
+out/
+
+# Logs
+*.log
+backend.log
+celerybeat-schedule
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model weights
+*.pt
+*.onnx
+*.pth
+
+# Data and recordings
+recordings/
+exports/
+data/
+streams/
+storage/
+uploads/
+
+# Database
+*.db
+*.sqlite3
+
+# Markdown (except README.md)
+DEPLOYMENT_GUIDE.md
+ENHANCEMENT_SUMMARY.md
+FULL_FUNCTIONALITY_COMPLETE.md
+PLAN.md
+SYSTEM_COMPLETE.md
+FEATURE_SUMMARY.md
+SYSTEM_STATUS.md
+
+# Package lock (root only)
+/package-lock.json
+
+# Generated reports
+backend/reports/*.docx
+backend/reports/*.pdf
+
+# Frontend README (keep only root)
+frontend/README.md
+
+# Backend lock file
+backend/package-lock.json
+
+# Misc
+*.bak
+*.tmp
