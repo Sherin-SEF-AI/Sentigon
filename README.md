@@ -28,6 +28,10 @@ Sentinel AI is a production-grade, full-stack security operations platform that 
 
 ## System Architecture
 
+
+<img width="2816" height="1536" alt="sentigon-architecture" src="https://github.com/user-attachments/assets/aad07232-838b-4b7b-97a5-9f339791772a" />
+
+
 Sentinel AI follows a layered architecture with four principal tiers:
 
 **Data Ingestion Layer**: Camera feeds (RTSP, USB, ONVIF), IoT sensors (MQTT, Modbus), PACS card readers, alarm panels, and environmental monitors continuously stream data into the platform.
