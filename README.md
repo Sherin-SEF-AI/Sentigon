@@ -42,6 +42,20 @@ A central supervisor agent (Sentinel Cortex) orchestrates 16+ specialized agents
 
 ---
 
+<img width="1906" height="919" alt="Screenshot from 2026-03-25 20-42-23" src="https://github.com/user-attachments/assets/ef17c535-c50e-4195-91b9-ecc8f9c94ec9" />
+
+<img width="1906" height="919" alt="Screenshot from 2026-03-25 20-42-34" src="https://github.com/user-attachments/assets/c0b2e2c8-6bc9-44de-b3e4-f87d0a15e342" />
+
+<img width="1906" height="919" alt="Screenshot from 2026-03-25 20-42-40" src="https://github.com/user-attachments/assets/e2caaef5-c74e-4790-a7da-aa43f90aee00" />
+
+<img width="1906" height="919" alt="Screenshot from 2026-03-25 20-42-51" src="https://github.com/user-attachments/assets/1cac2d1c-ada4-4581-ba78-b21e013a00bf" />
+
+<img width="1906" height="919" alt="Screenshot from 2026-03-25 20-42-59" src="https://github.com/user-attachments/assets/96dfde89-fe4f-44ea-b08d-4fc78cbab84c" />
+
+<img width="1906" height="919" alt="Screenshot from 2026-03-25 20-44-39" src="https://github.com/user-attachments/assets/b5bb8b24-33e6-435c-8861-36f60a86f72a" />
+
+<img width="1906" height="919" alt="Screenshot from 2026-03-25 20-44-48" src="https://github.com/user-attachments/assets/1ca78217-d0d9-493a-a787-94601372e4ef" />
+
 ## Architecture Diagram
 
 ```
