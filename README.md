@@ -1,4 +1,4 @@
-# SENTINEL AI
+# SENTIGON
 
 **Agentic Physical Security Intelligence Platform**
 
