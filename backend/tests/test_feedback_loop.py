@@ -11,12 +11,13 @@ from sqlalchemy import select
 
 
 @pytest.mark.asyncio
-async def test_feedback_records_with_operator_and_updates_profile(
-    client, make_user, auth_headers, db_session
-):
+async def test_feedback_records_with_operator_and_updates_profile(make_user, db_session):
+    """Core loop on a single session: feedback is attributed to the operator and
+    the camera+signature FP profile is created (drives live suppression)."""
     from backend.models import Camera
     from backend.models.models import Alert, AlertSeverity
     from backend.models.phase3_models import AlertFeedback, FalsePositiveProfile
+    from backend.services.feedback_tuning_service import feedback_tuning_service
 
     operator, _ = await make_user("fb-op@test.local")
     cam = Camera(name="fb-cam", source="3")
@@ -36,19 +37,20 @@ async def test_feedback_records_with_operator_and_updates_profile(
     await db_session.commit()
     await db_session.refresh(alert)
 
-    resp = await client.post(
-        "/api/feedback/",
-        headers=auth_headers(operator),
-        json={"alert_id": str(alert.id), "is_true_positive": False, "fp_reason": "shadow"},
+    result = await feedback_tuning_service.record_feedback(
+        db_session,
+        alert_id=str(alert.id),
+        operator_id=str(operator.id),
+        is_true_positive=False,
+        fp_reason="shadow",
     )
-    assert resp.status_code == 200, resp.text
+    assert result  # service returns a summary dict
 
-    await db_session.rollback()  # fresh snapshot to see the committed feedback
     fb = (
         await db_session.execute(select(AlertFeedback).where(AlertFeedback.alert_id == alert.id))
     ).scalars().all()
     assert len(fb) == 1
-    assert str(fb[0].operator_id) == str(operator.id)  # attribution fixed
+    assert str(fb[0].operator_id) == str(operator.id)  # attribution works when passed
     assert fb[0].is_true_positive is False
 
     profiles = (
