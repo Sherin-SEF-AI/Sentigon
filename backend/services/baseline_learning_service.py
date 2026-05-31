@@ -414,7 +414,7 @@ class BaselineLearningService:
 
                 # Extract movement intensity: average confidence of
                 # detected objects as a proxy when no explicit field exists.
-                objects = detections.get("objects", [])
+                objects = detections.get("detections", detections.get("objects", []))
                 movement_intensity = 0.0
                 if objects:
                     movement_intensity = sum(

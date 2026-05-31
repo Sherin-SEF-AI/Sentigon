@@ -298,7 +298,7 @@ class PPEComplianceAgent(BaseAgent):
             detections = await TOOL_REGISTRY["get_current_detections"]["fn"](
                 camera_id=camera_id,
             )
-            objects = detections.get("objects", [])
+            objects = detections.get("detections", detections.get("objects", []))
             return any(
                 obj.get("class_name") == "person"
                 for obj in objects

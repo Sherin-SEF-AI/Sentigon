@@ -256,7 +256,7 @@ class ContextFusionEngine:
 
         # Dwell-time escalation: if any matching detected object has been
         # stationary beyond the dwell threshold, bump the score.
-        objects = detections.get("objects", [])
+        objects = detections.get("detections", detections.get("objects", []))
         max_dwell = 0.0
         for obj in objects:
             if (obj.get("class") or "").lower() == object_class:
@@ -405,7 +405,7 @@ class ContextFusionEngine:
         score = 0.0
         evidence: Dict[str, Any] = {"factors": []}
 
-        objects = detections.get("objects", [])
+        objects = detections.get("detections", detections.get("objects", []))
         track_ids = [obj.get("track_id") for obj in objects if obj.get("track_id") is not None]
 
         if not track_ids:
