@@ -1,0 +1,57 @@
+# syntax=docker/dockerfile:1
+#
+# Sentigon backend image.
+#
+# Default build installs CPU-only torch so the image builds and runs anywhere.
+# For a GPU edge node, build from an NVIDIA CUDA base instead and install the
+# matching CUDA torch wheel — e.g.:
+#   FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04
+#   ... install python3.12 ...
+#   pip install torch --index-url https://download.pytorch.org/whl/cu124
+# and run the container with `--gpus all` (compose already reserves the GPU).
+FROM python:3.12-slim AS base
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+WORKDIR /app
+
+# Runtime system libraries:
+#  - ffmpeg: required by the VMS/video services (HLS transcode, recording)
+#  - libGL/libglib: OpenCV runtime deps (even the headless wheel needs these)
+#  - libgomp1: OpenMP runtime for torch/ultralytics
+#  - curl: container HEALTHCHECK
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ffmpeg \
+        libgl1 \
+        libglib2.0-0 \
+        libgomp1 \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python deps first for layer caching. CPU torch by default (see header).
+COPY requirements.txt .
+RUN pip install --upgrade pip \
+    && pip install torch --index-url https://download.pytorch.org/whl/cpu \
+    && pip install -r requirements.txt
+
+# Application code (alembic.ini + backend package). Migrations run at startup.
+COPY alembic.ini ./
+COPY backend ./backend
+
+# Run as a non-root user.
+RUN useradd --create-home --uid 10001 appuser \
+    && mkdir -p /app/recordings /app/logs \
+    && chown -R appuser:appuser /app
+USER appuser
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -fsS http://localhost:8000/api/health/live || exit 1
+
+# Single worker: the app owns in-process camera capture, agents, and background
+# tasks (not shareable across workers). Scale by running more containers/nodes.
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]

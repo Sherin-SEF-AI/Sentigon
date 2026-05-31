@@ -1,0 +1,26 @@
+# Secrets — never copy into an image
+.env
+.env.*
+!.env.example
+
+# VCS / CI
+.git
+.github
+.gitignore
+
+# Frontend (built in its own context/image)
+frontend
+
+# Python caches & local artifacts
+**/__pycache__
+**/*.pyc
+.pytest_cache
+.mypy_cache
+.ruff_cache
+venv
+.venv
+backend.log
+logs
+recordings
+*.md
+!README.md
