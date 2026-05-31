@@ -30,7 +30,7 @@ async def test_feedback_records_with_operator_and_updates_profile(make_user, db_
         description="d",
         severity=AlertSeverity.MEDIUM,
         threat_type="loitering",
-        source_camera=str(cam.id),
+        source_camera=cam.name,  # Alert.source_camera stores the camera NAME
         confidence=0.8,
     )
     db_session.add(alert)
