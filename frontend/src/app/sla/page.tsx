@@ -562,7 +562,7 @@ export default function SLADashboardPage() {
                           fontSize: "11px",
                           color: "#d1d5db",
                         }}
-                        formatter={(value: number) => [`${value}%`, "Compliance"]}
+                        formatter={(value?: number) => [`${value ?? 0}%`, "Compliance"]}
                         labelFormatter={(label) => `Date: ${label}`}
                       />
                       <ReferenceLine y={95} stroke="#10b981" strokeDasharray="4 2" strokeWidth={1} label={{ value: "95%", position: "right", fontSize: 8, fill: "#10b981" }} />

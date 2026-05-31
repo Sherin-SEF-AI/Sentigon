@@ -1,0 +1,133 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: sentinel_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      APP_ENV: test
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/sentinel_test
+      DATABASE_URL_SYNC: postgresql+psycopg2://postgres:postgres@localhost:5432/sentinel_test
+      JWT_SECRET_KEY: test-secret-not-for-production
+      GEMINI_ENABLED: "false"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # CPU-only torch to keep the image smaller/faster than the CUDA wheel.
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements-dev.txt
+      - name: Validate migrations (upgrade/downgrade/upgrade round-trip)
+        env:
+          # Use a dedicated DB so this doesn't collide with the pytest schema.
+          DATABASE_URL_SYNC: postgresql+psycopg2://postgres:postgres@localhost:5432/sentinel_migtest
+        run: |
+          python -c "import psycopg2; c=psycopg2.connect(host='localhost',user='postgres',password='postgres',dbname='postgres'); c.autocommit=True; c.cursor().execute('CREATE DATABASE sentinel_migtest')"
+          alembic upgrade head
+          alembic downgrade base
+          alembic upgrade head
+      - name: Run tests
+        run: pytest -ra
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  supply-chain:
+    # Dependency vulnerability audits. Report-only for now: the ML dependency
+    # tree (torch/opencv/ultralytics) carries transitive advisories that need
+    # triage before this can be a hard gate. FOLLOW-UP: tighten to blocking
+    # (fail on high/critical) once the advisory list is reviewed.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: pip-audit (Python deps)
+        continue-on-error: true
+        run: |
+          python -m pip install --upgrade pip pip-audit
+          pip-audit -r requirements.txt --desc || true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: npm audit (frontend deps)
+        continue-on-error: true
+        working-directory: frontend
+        run: npm audit --audit-level=high || true
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      # Lint is non-blocking until the existing lint debt is cleared (tracked
+      # as a separate cleanup milestone). Surfaces issues without failing CI.
+      - run: npm run lint
+        continue-on-error: true
+      - run: npm run build
+
+  docker-build:
+    # Validates that the production images actually build (no local Docker here).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Free up disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android /usr/local/share/boost || true
+      - uses: docker/setup-buildx-action@v3
+      - name: Build backend image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.backend
+          push: false
+          tags: sentigon-backend:ci
+      - name: Build frontend image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          push: false
+          tags: sentigon-frontend:ci
+          build-args: |
+            NEXT_PUBLIC_API_URL=https://localhost
+            NEXT_PUBLIC_WS_URL=wss://localhost

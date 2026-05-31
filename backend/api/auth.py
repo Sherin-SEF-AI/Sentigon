@@ -61,17 +61,9 @@ async def get_current_user(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
     db: AsyncSession = Depends(get_db),
 ) -> User:
-    # Development mode bypass: auto-login as admin if no auth provided
-    if settings.APP_ENV == "development" and credentials is None:
-        result = await db.execute(
-            select(User).where(User.email == settings.DEFAULT_ADMIN_EMAIL)
-        )
-        user = result.scalar_one_or_none()
-        if user:
-            return user
-        # Fallback: create ephemeral dev user
-        raise HTTPException(status_code=401, detail="Not authenticated")
-
+    # SECURITY: no development bypass. Every request must present a valid token,
+    # in all environments. For local dev, set DEFAULT_ADMIN_PASSWORD to seed an
+    # admin (see lifespan) and log in normally via /api/auth/login.
     if credentials is None:
         raise HTTPException(status_code=401, detail="Not authenticated")
 
@@ -128,11 +120,15 @@ async def register(req: RegisterRequest, db: AsyncSession = Depends(get_db)):
     if existing.scalar_one_or_none():
         raise HTTPException(status_code=409, detail="Email already registered")
 
+    # SECURITY: self-service registration NEVER grants elevated roles. The
+    # client-supplied `role` is intentionally ignored — all public registrations
+    # are VIEWER. Privileged accounts must be created/promoted by an admin via
+    # the user-management endpoints.
     user = User(
         email=req.email,
         hashed_password=hash_password(req.password),
         full_name=req.full_name,
-        role=UserRole(req.role) if req.role in [r.value for r in UserRole] else UserRole.VIEWER,
+        role=UserRole.VIEWER,
     )
     db.add(user)
     await db.flush()

@@ -333,10 +333,10 @@ export default function EntityTrackingPage() {
       setEntities(entData);
       setZones(zonesData);
       setStats({
-        anomalous_entities: statsData.flagged_entities ?? 0,
-        weapon_events_24h: 0,
-        safety_events_24h: 0,
         ...statsData,
+        anomalous_entities: statsData?.anomalous_entities ?? 0,
+        weapon_events_24h: statsData?.weapon_events_24h ?? 0,
+        safety_events_24h: statsData?.safety_events_24h ?? 0,
       });
       setError(null);
     } catch (e: unknown) {
