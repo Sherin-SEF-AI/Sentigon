@@ -307,6 +307,15 @@ class MonitoringAgent:
         self._running = True
         logger.info("Monitoring agent started")
 
+        # Warm cross-camera re-ID cache from recent DB entities so identities
+        # survive process restarts (matching is otherwise in-memory only).
+        try:
+            from backend.services.entity_tracker_service import entity_tracker_service
+            loaded = await entity_tracker_service.warm_cache()
+            logger.info("sentinel.reid_warm", entities=loaded)
+        except Exception as exc:
+            logger.warning("sentinel.reid_warm_failed", error=str(exc))
+
         while self._running:
             try:
                 cameras = await self._get_active_cameras()

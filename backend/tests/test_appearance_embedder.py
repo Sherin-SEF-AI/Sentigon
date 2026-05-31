@@ -73,5 +73,8 @@ def test_embedding_empty_on_bad_input():
     np = pytest.importorskip("numpy")
     pytest.importorskip("cv2")
     frame = np.zeros((10, 10, 3), dtype=np.uint8)
-    assert compute_appearance_embedding(frame, [5, 5, 5, 5]) == []  # zero-area bbox clamps empty
+    # None frame and a too-short bbox yield an empty vector.
     assert compute_appearance_embedding(None, [0, 0, 1, 1]) == []
+    assert compute_appearance_embedding(frame, [0, 1, 2]) == []  # bbox shorter than 4
+    # A zero-area bbox is clamped to a valid 1px crop, so it returns a vector.
+    assert len(compute_appearance_embedding(frame, [5, 5, 5, 5])) == EMBEDDING_DIM

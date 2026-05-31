@@ -77,3 +77,43 @@ async def test_reid_persists_embedding_to_entity_track(db_session):
     rows = (await db_session.execute(select(EntityTrack))).scalars().all()
     assert rows, "an EntityTrack should be persisted"
     assert any(r.appearance_embedding for r in rows), "appearance_embedding should be populated"
+
+
+@pytest.mark.asyncio
+async def test_warm_cache_restores_entities_from_db(db_session):
+    """re-ID must survive a process restart: warm_cache reloads recent entities
+    (with embeddings) into the in-memory matching cache."""
+    import uuid
+    from datetime import datetime, timezone
+
+    from backend.models import Camera
+    from backend.models.phase3_models import EntityTrack
+    from backend.services.entity_tracker_service import entity_tracker_service as svc
+
+    cam = Camera(name="warm-cam", source="2")
+    db_session.add(cam)
+    await db_session.commit()
+    await db_session.refresh(cam)
+
+    tid = uuid.uuid4()
+    now = datetime.now(timezone.utc)
+    track = EntityTrack(
+        id=tid,
+        entity_type="person",
+        appearance_descriptor={"build": "average"},
+        appearance_embedding=[0.1] * 64,
+        first_seen_at=now,
+        last_seen_at=now,
+        first_camera_id=cam.id,
+        last_camera_id=cam.id,
+        cameras_visited=[str(cam.id)],
+        total_appearances=1,
+    )
+    db_session.add(track)
+    await db_session.commit()
+
+    svc._active_entities.clear()
+    loaded = await svc.warm_cache(max_age_hours=24)
+    assert loaded >= 1
+    assert str(tid) in svc._active_entities
+    assert svc._active_entities[str(tid)]["embedding"] == [0.1] * 64

@@ -62,6 +62,41 @@ class EntityTrackerService:
 
     # ── Public API ────────────────────────────────────────────────
 
+    async def warm_cache(self, max_age_hours: int = 6, limit: int = 500) -> int:
+        """Load recent entity tracks into the in-memory matching cache.
+
+        Re-ID matching is otherwise purely in-memory, so a process restart would
+        fragment identities (everyone seen before the restart becomes "new").
+        Warming from the DB on startup makes re-ID survive restarts. Returns the
+        number of entities loaded.
+        """
+        try:
+            cutoff = datetime.now(timezone.utc) - timedelta(hours=max_age_hours)
+            async with async_session() as db:
+                rows = (
+                    await db.execute(
+                        select(EntityTrack)
+                        .where(EntityTrack.last_seen_at >= cutoff)
+                        .order_by(EntityTrack.last_seen_at.desc())
+                        .limit(limit)
+                    )
+                ).scalars().all()
+            loaded = 0
+            for t in rows:
+                self._active_entities[str(t.id)] = {
+                    "appearance": t.appearance_descriptor or {},
+                    "embedding": t.appearance_embedding or [],
+                    "last_seen": t.last_seen_at,
+                    "camera_id": str(t.last_camera_id) if t.last_camera_id else None,
+                    "first_seen": t.first_seen_at,
+                }
+                loaded += 1
+            logger.info("entity_tracker.warm_cache", loaded=loaded)
+            return loaded
+        except Exception as e:  # pragma: no cover - defensive
+            logger.warning("entity_tracker.warm_cache_failed", error=str(e))
+            return 0
+
     async def process_detection(
         self,
         db: AsyncSession,
@@ -184,6 +219,11 @@ class EntityTrackerService:
                 "camera_id": str(camera_id),
                 "first_seen": now,
             }
+
+        # Ensure the parent EntityTrack is persisted before inserting the child
+        # appearance. EntityTrack/EntityAppearance share a FK but have no ORM
+        # relationship(), so a single flush won't reliably order parent→child.
+        await db.flush()
 
         # --- Create appearance record ---
         behavior = self._infer_behavior(detection)
