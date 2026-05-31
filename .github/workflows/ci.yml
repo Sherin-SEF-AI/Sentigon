@@ -40,6 +40,15 @@ jobs:
           # CPU-only torch to keep the image smaller/faster than the CUDA wheel.
           pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install -r requirements-dev.txt
+      - name: Validate migrations (upgrade/downgrade/upgrade round-trip)
+        env:
+          # Use a dedicated DB so this doesn't collide with the pytest schema.
+          DATABASE_URL_SYNC: postgresql+psycopg2://postgres:postgres@localhost:5432/sentinel_migtest
+        run: |
+          python -c "import psycopg2; c=psycopg2.connect(host='localhost',user='postgres',password='postgres',dbname='postgres'); c.autocommit=True; c.cursor().execute('CREATE DATABASE sentinel_migtest')"
+          alembic upgrade head
+          alembic downgrade base
+          alembic upgrade head
       - name: Run tests
         run: pytest -ra
 

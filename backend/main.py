@@ -60,37 +60,27 @@ async def lifespan(app: FastAPI):
 
     logger.info("sentinel.startup", app=settings.APP_NAME, env=settings.APP_ENV)
 
-    # 1. Run DB migrations (via Alembic programmatically)
+    # 1. Run DB migrations — Alembic is the SINGLE source of truth for the
+    #    schema. Failure is fatal: without the schema the app cannot operate
+    #    correctly, and silently falling back to create_all (the old behavior)
+    #    hides drift. Run the blocking, sync Alembic command in a worker thread
+    #    so we don't stall the event loop.
     try:
+        import os as _os
         from alembic.config import Config as AlembicConfig
         from alembic import command as alembic_cmd
-        import os
 
-        alembic_ini = os.path.join(os.path.dirname(__file__), "..", "alembic.ini")
-        if os.path.exists(alembic_ini):
+        alembic_ini = _os.path.join(_os.path.dirname(__file__), "..", "alembic.ini")
+
+        def _run_migrations():
             alembic_cfg = AlembicConfig(alembic_ini)
             alembic_cmd.upgrade(alembic_cfg, "head")
-            logger.info("sentinel.migrations", status="applied")
-    except Exception as e:
-        logger.warning("sentinel.migrations", status="skipped", error=str(e))
 
-    # 2. Create tables directly as fallback
-    try:
-        from backend.database import engine, Base
-        from backend.models import models  # noqa: ensure models imported
-        try:
-            from backend.models import phase2b_models  # noqa: Phase 2B tables
-        except Exception:
-            pass
-        try:
-            from backend.models import phase3_models  # noqa: Phase 3 tables
-        except Exception:
-            pass
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-        logger.info("sentinel.tables", status="ensured")
+        await asyncio.to_thread(_run_migrations)
+        logger.info("sentinel.migrations", status="applied")
     except Exception as e:
-        logger.error("sentinel.tables", status="failed", error=str(e))
+        logger.error("sentinel.migrations", status="failed", error=str(e))
+        raise
 
     # 3-4. Initialize Qdrant, sync threat engine, seed admin (parallel)
     async def _init_qdrant():
