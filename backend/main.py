@@ -16,7 +16,7 @@ _file_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s
 logging.getLogger().addHandler(_file_handler)
 
 import structlog
-from fastapi import FastAPI, Request
+from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -112,6 +112,11 @@ async def lifespan(app: FastAPI):
 
     async def _seed_admin():
         try:
+            # Never seed an admin with an empty/unset password — doing so would
+            # create a privileged account with an unusable or guessable secret.
+            if not settings.DEFAULT_ADMIN_PASSWORD:
+                logger.warning("sentinel.seed", status="skipped", reason="DEFAULT_ADMIN_PASSWORD not set")
+                return
             from backend.database import async_session
             from backend.models import User
             from backend.models.models import UserRole
@@ -409,24 +414,57 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS
+# CORS — explicit methods/headers (no wildcards) since credentials are allowed.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origin_list,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-Requested-With"],
 )
+
+# Security headers (X-Frame-Options, X-Content-Type-Options, CSP, HSTS on HTTPS).
+try:
+    from backend.middleware.security_headers import SecurityHeadersMiddleware
+    app.add_middleware(SecurityHeadersMiddleware)
+except Exception:
+    logger.warning("middleware.security_headers", status="unavailable")
+
+# NOTE: CSRF middleware (backend/middleware/csrf_protection.py) is intentionally
+# NOT registered. Authentication uses a Bearer token in the Authorization header
+# (not an ambient cookie), so cross-site requests cannot forge it and double-submit
+# CSRF is redundant. Revisit only if the token moves to an httpOnly cookie.
 
 # Rate Limiting
 try:
     from backend.middleware.rate_limit import RateLimitMiddleware
     app.add_middleware(RateLimitMiddleware)
 except Exception as _rl_err:
-    pass  # Rate limiting not available
+    logger.warning("middleware.rate_limit", status="unavailable")
 
 
 # ── Audit Logging Middleware ──────────────────────────────────
+
+def _extract_user_id(request: Request) -> "uuid.UUID | None":
+    """Best-effort decode of the bearer token to attribute audit entries.
+
+    Never raises — audit logging must not affect request handling.
+    """
+    import uuid as _uuid
+    auth = request.headers.get("authorization") or ""
+    if not auth.lower().startswith("bearer "):
+        return None
+    token = auth.split(" ", 1)[1].strip()
+    try:
+        from jose import jwt
+        payload = jwt.decode(
+            token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM]
+        )
+        sub = payload.get("sub")
+        return _uuid.UUID(sub) if sub else None
+    except Exception:
+        return None
+
 
 @app.middleware("http")
 async def audit_log_middleware(request: Request, call_next):
@@ -438,8 +476,10 @@ async def audit_log_middleware(request: Request, call_next):
             from backend.database import async_session
             from backend.models import AuditLog
 
+            user_id = _extract_user_id(request)
             async with async_session() as session:
                 log_entry = AuditLog(
+                    user_id=user_id,
                     action=f"{request.method} {request.url.path}",
                     resource_type=request.url.path.split("/")[2] if len(request.url.path.split("/")) > 2 else None,
                     ip_address=request.client.host if request.client else None,
@@ -574,11 +614,34 @@ _optional_routers = [
     ("backend.api.building_systems", "router"),
 ]
 
+# Routers mounted WITHOUT a blanket auth dependency. Either genuinely public,
+# or machine-to-machine endpoints that authenticate by signature/shared-secret
+# rather than a user JWT. Everything else is protected by default at mount time.
+from backend.api.auth import get_current_user
+
+_PUBLIC_ROUTER_MODULES = {
+    "backend.api.health",          # k8s/liveness probes
+    "backend.api.emergency",       # emergency codes — public by design, must always work
+    "backend.api.ws",              # WebSocket upgrades (auth handled in-handler)
+    "backend.api.slack_commands",  # Slack HMAC signature verification
+    # FOLLOW-UP (known remaining hole): sso is mixed (OAuth/LDAP callbacks must be
+    # public, but provider-CRUD / API-keys / MFA must be protected) AND is currently
+    # a simulated stub. Needs per-route auth + a real identity backend before prod.
+    "backend.api.sso",
+}
+
 for module_path, attr in _optional_routers:
     try:
         import importlib
         mod = importlib.import_module(module_path)
-        app.include_router(getattr(mod, attr))
+        router = getattr(mod, attr)
+        if module_path in _PUBLIC_ROUTER_MODULES:
+            app.include_router(router)
+        else:
+            # Default-deny: require a valid token for every route in this router.
+            # Routers that already declare get_current_user per-route still work
+            # (the dependency is idempotent); new routes are protected automatically.
+            app.include_router(router, dependencies=[Depends(get_current_user)])
     except Exception as e:
         import traceback
         print(f"ROUTER SKIP: {module_path} -> {e}")

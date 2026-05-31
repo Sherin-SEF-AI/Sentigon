@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 from typing import List
 
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -24,7 +25,9 @@ class Settings(BaseSettings):
     REDIS_URL: str = "redis://localhost:6379/0"
 
     # ── JWT ───────────────────────────────────────────────────
-    JWT_SECRET_KEY: str = "change-me-in-production"
+    # No insecure default: must be supplied via environment in any non-dev env.
+    # Generate with: python -c "import secrets; print(secrets.token_hex(32))"
+    JWT_SECRET_KEY: str = ""
     JWT_ALGORITHM: str = "HS256"
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 480
 
@@ -48,7 +51,8 @@ class Settings(BaseSettings):
 
     # ── AI Provider ────────────────────────────────────────
     AI_PROVIDER: str = "gemini"  # Primary: Gemini, Fallback: Ollama
-    GEMINI_API_KEY: str = "AIzaSyAK3k9d-VhWDUiVKcuaPoLIWLTKgVNqJ2I"
+    # No hardcoded key: supply via GEMINI_API_KEY env var. Any committed key is compromised.
+    GEMINI_API_KEY: str = ""
     GEMINI_MODEL: str = "gemini-3.1-flash-lite-preview"  # Fast, cheap — agents/perception
     GEMINI_STANDARD_MODEL: str = "gemini-3-flash-preview"  # Standard — analysis/copilot
     GEMINI_PRO_MODEL: str = "gemini-3.1-pro-preview"  # Deep reasoning — investigations
@@ -110,14 +114,48 @@ class Settings(BaseSettings):
     SLACK_SIGNING_SECRET: str = ""
 
     # ── Admin seed ────────────────────────────────────────────
+    # No default password: when empty, admin seeding is skipped (see lifespan).
     DEFAULT_ADMIN_EMAIL: str = "admin@sentinel.local"
-    DEFAULT_ADMIN_PASSWORD: str = "changeme123"
+    DEFAULT_ADMIN_PASSWORD: str = ""
 
     @property
     def cors_origin_list(self) -> List[str]:
         if isinstance(self.CORS_ORIGINS, list):
             return self.CORS_ORIGINS
         return json.loads(self.CORS_ORIGINS)
+
+    @property
+    def is_production(self) -> bool:
+        return self.APP_ENV.lower() not in ("development", "dev", "local", "test")
+
+    @model_validator(mode="after")
+    def _enforce_required_secrets(self) -> "Settings":
+        """Fail fast on insecure configuration outside development.
+
+        In development we fill safe ephemeral defaults so the app still runs;
+        in any other environment, required secrets MUST be supplied explicitly.
+        """
+        insecure_jwt = {"", "change-me-in-production"}
+
+        if self.is_production:
+            missing = []
+            if self.JWT_SECRET_KEY in insecure_jwt:
+                missing.append("JWT_SECRET_KEY")
+            if self.GEMINI_ENABLED and not self.GEMINI_API_KEY:
+                missing.append("GEMINI_API_KEY")
+            if missing:
+                raise ValueError(
+                    "Refusing to start in '%s': missing/insecure required secrets: %s. "
+                    "Set them via environment variables (see .env.example)."
+                    % (self.APP_ENV, ", ".join(missing))
+                )
+        else:
+            # Development convenience: deterministic-but-local placeholder so the
+            # app boots without ceremony. NOT used in production (guarded above).
+            if self.JWT_SECRET_KEY == "":
+                self.JWT_SECRET_KEY = "dev-only-insecure-secret-do-not-use-in-prod"
+
+        return self
 
 
 settings = Settings()
