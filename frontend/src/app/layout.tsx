@@ -133,6 +133,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: "/context-intelligence", label: "Context AI", icon: Brain },
       { href: "/entity-tracking", label: "Entity Tracking", icon: Eye },
       { href: "/reid", label: "Re-Identification", icon: ScanSearch },
+      { href: "/tripwires", label: "Tripwires", icon: Target },
       { href: "/lpr", label: "Plate Reader", icon: Car },
       { href: "/audio", label: "Audio Intel", icon: Volume2 },
     ],
