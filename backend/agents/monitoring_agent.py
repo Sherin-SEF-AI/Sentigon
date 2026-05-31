@@ -150,13 +150,13 @@ class MonitoringAgent:
                         db, cam_uuid, zone_id_uuid,
                         person_count=person_count,
                         vehicle_count=vehicle_count,
-                        movement_intensity=len(detections.get("objects", [])) if isinstance(detections, dict) else 0,
-                        dwell_time=max((o.get("dwell_time", 0) for o in detections.get("objects", [{}])), default=0) if isinstance(detections, dict) else 0,
+                        movement_intensity=len(detections.get("detections", [])) if isinstance(detections, dict) else 0,
+                        dwell_time=max((o.get("dwell_time", 0) for o in detections.get("detections", [{}])), default=0) if isinstance(detections, dict) else 0,
                     )
 
                     # Entity tracking: process each person detection
                     if isinstance(detections, dict):
-                        for obj in detections.get("objects", []):
+                        for obj in detections.get("detections", []):
                             if obj.get("class") == "person" and obj.get("track_id") is not None:
                                 entity_result = await entity_tracker_service.process_detection(
                                     db, camera_id, zone_id_str, obj.get("track_id"), obj,
@@ -173,7 +173,7 @@ class MonitoringAgent:
                     # Weapon detection
                     pose_feats = None
                     if isinstance(detections, dict):
-                        for obj in detections.get("objects", []):
+                        for obj in detections.get("detections", []):
                             if obj.get("pose_features"):
                                 pose_feats = obj["pose_features"]
                                 break

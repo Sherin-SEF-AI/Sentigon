@@ -318,7 +318,7 @@ class IntentClassifier:
             matched.append("pacing")
 
         # 5. Photographing: detect held cell phone or camera in detections
-        objects = detections.get("objects", [])
+        objects = detections.get("detections", detections.get("objects", []))
         device_classes = {"cell phone", "camera", "tablet"}
         for obj in objects:
             obj_class = (obj.get("class") or "").lower()
@@ -508,7 +508,7 @@ class IntentClassifier:
 
         # Delivery: linear approach, moderate speed, short dwell
         if path_linearity > 0.7 and dwell_time < 120 and zone_type in ("entry", "exit", "general"):
-            objects = detections.get("objects", [])
+            objects = detections.get("detections", detections.get("objects", []))
             carrying = any(
                 (o.get("class") or "").lower() in ("backpack", "suitcase", "handbag", "box")
                 for o in objects
