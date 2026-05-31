@@ -212,19 +212,36 @@ class MonitoringAgent:
                             "detection_method": "safety_detection",
                         })
 
-                    # NL Alert Rules evaluation
+                    # NL Alert Rules evaluation — pass the detection LIST (not the
+                    # full detector dict) so rules actually evaluate.
                     zone_type = zone_info.get("zone_type", "general") if zone_info else "general"
+                    det_list = (
+                        detections.get("detections", [])
+                        if isinstance(detections, dict)
+                        else (detections or [])
+                    )
                     triggered_rules = await nl_alert_rules_service.evaluate_rules(
-                        db, camera_id, zone_id_str, zone_type, detections, ts,
+                        db, camera_id, zone_id_str, zone_type, det_list, ts,
                     )
                     for rule in triggered_rules:
                         threats.append({
                             "signature": f"nl_rule_{rule.get('rule_name', 'custom')}",
-                            "description": rule.get("description", "Custom alert rule triggered"),
+                            "description": (
+                                f"Alert rule '{rule.get('rule_name', 'custom')}': "
+                                f"{rule.get('natural_language', '')}".strip()
+                            ),
                             "severity": rule.get("severity", "medium"),
                             "confidence": 0.95,
                             "detection_method": "nl_alert_rule",
                         })
+                        # Record the trigger so cooldown engages (otherwise the
+                        # rule re-fires every frame) and counters/notifications run.
+                        try:
+                            await nl_alert_rules_service.trigger_rule(
+                                db, rule["rule_id"], camera_id, rule,
+                            )
+                        except Exception as exc:
+                            logger.debug("nl_rule trigger failed: %s", exc)
 
             except Exception as exc:
                 logger.debug("Phase 3 context processing error: %s", exc)

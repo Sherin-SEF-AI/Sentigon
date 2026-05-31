@@ -410,6 +410,11 @@ class NLAlertRulesService:
     ) -> list[dict]:
         """Evaluate ALL active NL rules against a detection frame.
         Returns a list of triggered rules with match details."""
+        # Defensive: accept either the detector's list or its full dict. Passing
+        # the dict (a past bug) iterates keys and silently breaks evaluation.
+        if isinstance(detections, dict):
+            detections = detections.get("detections", detections.get("objects", []))
+        detections = detections or []
         q = select(NLAlertRule).where(NLAlertRule.is_active.is_(True))
         result = await db.execute(q)
         rules = result.scalars().all()
@@ -560,8 +565,11 @@ class NLAlertRulesService:
         match_details: dict,
     ) -> dict:
         """Mark a rule as triggered, update counters, and dispatch notification."""
+        import uuid as _uuid
+
+        rid = _uuid.UUID(rule_id) if isinstance(rule_id, str) else rule_id
         result = await db.execute(
-            select(NLAlertRule).where(NLAlertRule.id == rule_id)
+            select(NLAlertRule).where(NLAlertRule.id == rid)
         )
         rule = result.scalar_one_or_none()
         if not rule:
