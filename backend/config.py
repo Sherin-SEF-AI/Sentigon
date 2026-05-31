@@ -113,6 +113,12 @@ class Settings(BaseSettings):
     # ── Slack Integration ────────────────────────────────────
     SLACK_SIGNING_SECRET: str = ""
 
+    # ── SSO / Identity ────────────────────────────────────────
+    # Disabled by default: the current SSO/LDAP implementation is a stub and
+    # has mixed public/protected routes. Do NOT enable in production until it
+    # is backed by a real identity provider and each route is auth-gated.
+    SSO_ENABLED: bool = False
+
     # ── Admin seed ────────────────────────────────────────────
     # No default password: when empty, admin seeding is skipped (see lifespan).
     DEFAULT_ADMIN_EMAIL: str = "admin@sentinel.local"

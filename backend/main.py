@@ -631,6 +631,11 @@ _PUBLIC_ROUTER_MODULES = {
 }
 
 for module_path, attr in _optional_routers:
+    # Feature-gated routers: skip mounting entirely when disabled, so their
+    # routes do not exist (no attack surface) until the feature is production-ready.
+    if module_path == "backend.api.sso" and not settings.SSO_ENABLED:
+        logger.info("router.disabled", module=module_path, reason="SSO_ENABLED=false")
+        continue
     try:
         import importlib
         mod = importlib.import_module(module_path)
