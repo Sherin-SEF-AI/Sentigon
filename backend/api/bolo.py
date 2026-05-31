@@ -220,7 +220,7 @@ async def check_plate_against_bolos(
             # Also try partial matching via bolo_service if available
             try:
                 from backend.services.bolo_service import bolo_service
-                service_matches = await bolo_service.check_plate(plate)
+                service_matches = await bolo_service.check_plate_match(plate)
                 if service_matches:
                     return PlateCheckResponse(
                         plate_text=plate,

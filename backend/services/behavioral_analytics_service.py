@@ -11,6 +11,18 @@ from backend.models.phase2b_models import BehavioralEvent
 logger = logging.getLogger(__name__)
 
 
+def _detection_list(detections) -> list:
+    """Extract the per-object detection list from a stored Event.detections.
+
+    Event.detections holds the full detector output dict
+    ({"detections": [...], "person_count": ...}); older/other shapes may be a
+    bare list. Return the list of detection dicts either way.
+    """
+    if isinstance(detections, dict):
+        return detections.get("detections", detections.get("objects", []))
+    return detections or []
+
+
 class BehavioralAnalyticsService:
 
     async def detect_loitering(self, db: AsyncSession, zone_id: str = None,
@@ -23,8 +35,7 @@ class BehavioralAnalyticsService:
         result = await db.execute(q)
         loitering = []
         for e in result.scalars().all():
-            dets = e.detections or []
-            for det in (dets if isinstance(dets, list) else [dets]):
+            for det in _detection_list(e.detections):
                 dwell = det.get("dwell_time", 0) if isinstance(det, dict) else 0
                 if dwell >= dwell_threshold_seconds:
                     loitering.append({
@@ -57,8 +68,10 @@ class BehavioralAnalyticsService:
                 key = bucket.isoformat()
                 if key not in buckets:
                     buckets[key] = {"time": key, "count": 0, "entries": 0, "exits": 0}
-                dets = e.detections or []
-                person_count = sum(1 for d in (dets if isinstance(dets, list) else []) if isinstance(d, dict) and d.get("class_name") == "person")
+                person_count = sum(
+                    1 for d in _detection_list(e.detections)
+                    if isinstance(d, dict) and d.get("class") == "person"
+                )
                 buckets[key]["count"] = max(buckets[key]["count"], person_count)
                 buckets[key]["entries"] += 1
 
@@ -99,8 +112,10 @@ class BehavioralAnalyticsService:
                     )).limit(5)
                 )
                 for ce in cam_events.scalars().all():
-                    dets = ce.detections or []
-                    person_count = sum(1 for d in (dets if isinstance(dets, list) else []) if isinstance(d, dict) and d.get("class_name") == "person")
+                    person_count = sum(
+                        1 for d in _detection_list(ce.detections)
+                        if isinstance(d, dict) and d.get("class") == "person"
+                    )
                     if person_count >= 2:
                         tailgating.append({
                             "access_event_id": str(ae.id) if hasattr(ae, 'id') else None,

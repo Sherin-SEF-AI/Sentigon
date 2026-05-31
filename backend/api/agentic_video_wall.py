@@ -35,7 +35,9 @@ async def get_auto_focus(db: AsyncSession = Depends(get_db)):
 @router.get("/smart-grid")
 async def get_smart_grid(db: AsyncSession = Depends(get_db)):
     try:
-        return await agentic_video_wall_service.get_smart_grid(db)
+        # Service method is compute_smart_grid(db, active_incidents); no incident
+        # feed is wired here yet, so pass an empty set → baseline grid layout.
+        return await agentic_video_wall_service.compute_smart_grid(db, active_incidents=[])
     except Exception as e:
         raise HTTPException(400, str(e))
 
@@ -43,7 +45,7 @@ async def get_smart_grid(db: AsyncSession = Depends(get_db)):
 @router.post("/attention")
 async def record_attention(data: dict, db: AsyncSession = Depends(get_db)):
     try:
-        result = await agentic_video_wall_service.record_operator_attention(
+        result = await agentic_video_wall_service.record_operator_view(
             db,
             operator_id=data.get("operator_id"),
             camera_id=data.get("camera_id"),
