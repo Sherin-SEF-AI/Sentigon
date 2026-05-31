@@ -37,6 +37,7 @@ try:
     from backend.services.safety_detection_service import safety_detection_service
     from backend.services.nl_alert_rules_service import nl_alert_rules_service
     from backend.services.alarm_correlation_engine import alarm_correlation_engine
+    from backend.services.tripwire_service import tripwire_service
 except ImportError:
     _phase3_available = False
 
@@ -170,6 +171,14 @@ class MonitoringAgent:
                                         "confidence": entity_result.get("risk_score", 0.7),
                                         "detection_method": "entity_tracking",
                                     })
+
+                    # Tripwire (line-crossing) detection on persistent tracks
+                    try:
+                        tracked = yolo_detector.get_tracked_objects(camera_id)
+                        crossings = await tripwire_service.check_camera(db, camera_id, tracked)
+                        threats.extend(crossings)
+                    except Exception as exc:
+                        logger.debug("tripwire.check_failed: %s", exc)
 
                     # Weapon detection
                     pose_feats = None

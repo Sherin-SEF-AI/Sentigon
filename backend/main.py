@@ -599,6 +599,8 @@ _optional_routers = [
     ("backend.api.entity_tracking", "router"),
     ("backend.api.weapon_detection", "router"),
     ("backend.api.safety_detection", "router"),
+    # Line-crossing / tripwires (W2 behavioral signatures)
+    ("backend.api.tripwires", "router"),
     ("backend.api.silhouette", "router"),
     ("backend.api.compliance_dashboard", "router"),
     # ONVIF camera integration

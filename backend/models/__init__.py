@@ -30,6 +30,7 @@ from backend.models.advanced_models import (
     VehicleTrip,
     VehicleWatchlist,
 )
+from backend.models.tripwire_models import Tripwire
 from backend.models.phase2_models import (
     AccessEvent,
     BOLOEntry,
@@ -75,4 +76,5 @@ __all__ = [
     "PendingAction",
     "PendingActionStatus",
     "SystemSetting",
+    "Tripwire",
 ]
