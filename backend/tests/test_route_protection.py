@@ -30,7 +30,8 @@ _PUBLIC_EXACT = {
     "/metrics",
 }
 _PUBLIC_PREFIXES = (
-    "/health",            # liveness/readiness probes
+    "/health",            # top-level liveness probe
+    "/api/health",        # k8s liveness/readiness/deep probes
     "/ws",                # WebSocket upgrades (auth handled in-handler)
     "/api/emergency",     # emergency codes — public by design
     "/api/slack",         # Slack HMAC signature verification
