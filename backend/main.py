@@ -433,6 +433,17 @@ if settings.RATE_LIMIT_ENABLED:
     except Exception as _rl_err:
         logger.warning("middleware.rate_limit", status="unavailable")
 
+# Prometheus metrics middleware + /metrics endpoint (scrape target).
+try:
+    from backend.middleware.prometheus_metrics import PrometheusMiddleware, get_metrics_response
+    app.add_middleware(PrometheusMiddleware)
+
+    @app.get("/metrics")
+    async def metrics():
+        return get_metrics_response()
+except Exception:
+    logger.warning("middleware.prometheus", status="unavailable")
+
 
 # ── Audit Logging Middleware ──────────────────────────────────
 

@@ -63,6 +63,30 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  supply-chain:
+    # Dependency vulnerability audits. Report-only for now: the ML dependency
+    # tree (torch/opencv/ultralytics) carries transitive advisories that need
+    # triage before this can be a hard gate. FOLLOW-UP: tighten to blocking
+    # (fail on high/critical) once the advisory list is reviewed.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: pip-audit (Python deps)
+        continue-on-error: true
+        run: |
+          python -m pip install --upgrade pip pip-audit
+          pip-audit -r requirements.txt --desc || true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: npm audit (frontend deps)
+        continue-on-error: true
+        working-directory: frontend
+        run: npm audit --audit-level=high || true
+
   frontend-build:
     runs-on: ubuntu-latest
     defaults:
