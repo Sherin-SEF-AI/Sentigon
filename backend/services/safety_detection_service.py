@@ -88,6 +88,12 @@ class SafetyDetectionService:
         gemini_analysis: dict | None = None,
     ) -> list[dict]:
         """Analyze a frame for safety events.  Returns list of detected events."""
+        # Defensive: accept the detector's full dict or just its list. Passing
+        # the dict iterates keys (strings) and raises — a silent past failure.
+        if isinstance(detections, dict):
+            detections = detections.get("detections", detections.get("objects", []))
+        detections = detections or []
+
         now = datetime.now(timezone.utc)
         results: list[dict] = []
         cam_key = str(camera_id)

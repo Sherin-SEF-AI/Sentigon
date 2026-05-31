@@ -144,13 +144,16 @@ class ContextFusionEngine:
         results: List[Dict[str, Any]] = []
 
         for threat in raw_threats:
+            # threat_engine threats use the "signature" key; keep a threat_type
+            # alias for the scorers/output without dropping the original fields.
+            threat_type = threat.get("signature", threat.get("threat_type", "unknown"))
             try:
                 spatial = await self._apply_spatial_context(db, zone_id, threat, detections)
                 temporal = await self._apply_temporal_context(db, camera_id, zone_id, threat, ts)
                 behavioral = await self._apply_behavioral_context(db, camera_id, detections, threat)
                 environmental = await self._apply_environmental_context(db, zone_id, threat, ts)
 
-                raw_conf = float(threat.get("raw_confidence", threat.get("confidence", 0.5)))
+                raw_conf = float(threat.get("confidence", threat.get("raw_confidence", 0.5)))
                 final_score = await self._compute_final_score(
                     spatial["score"],
                     temporal["score"],
@@ -159,35 +162,30 @@ class ContextFusionEngine:
                     raw_conf,
                 )
 
+                # Preserve the original threat (signature/severity/description/
+                # detection_method) so downstream suppression + alert creation
+                # keep working; write the re-scored value into "confidence".
                 results.append({
-                    "threat_type": threat.get("threat_type", "unknown"),
-                    "object_class": threat.get("object_class", "unknown"),
+                    **threat,
+                    "threat_type": threat_type,
+                    "confidence": round(final_score, 4),
                     "raw_confidence": raw_conf,
                     "contextual_confidence": final_score,
                     "delta": round(final_score - raw_conf, 4),
-                    "dimensions": {
+                    "context_dimensions": {
                         "spatial": spatial,
                         "temporal": temporal,
                         "behavioral": behavioral,
                         "environmental": environmental,
                     },
-                    "timestamp": ts.isoformat(),
                 })
             except Exception:
                 logger.exception(
-                    "Context evaluation failed for threat %s — passing through raw score",
-                    threat.get("threat_type"),
+                    "Context evaluation failed for threat %s — passing through raw threat",
+                    threat_type,
                 )
-                results.append({
-                    "threat_type": threat.get("threat_type", "unknown"),
-                    "object_class": threat.get("object_class", "unknown"),
-                    "raw_confidence": float(threat.get("raw_confidence", 0.5)),
-                    "contextual_confidence": float(threat.get("raw_confidence", 0.5)),
-                    "delta": 0.0,
-                    "dimensions": {},
-                    "error": "context_evaluation_failed",
-                    "timestamp": ts.isoformat(),
-                })
+                # Pass the original threat through unchanged so nothing is lost.
+                results.append(dict(threat))
 
         return results
 

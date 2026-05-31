@@ -83,6 +83,12 @@ class WeaponDetectionService:
         Returns a weapon event dict when a detection or pre-indicator
         exceeds thresholds, None otherwise.
         """
+        # Defensive: accept the detector's full dict or just its list. Passing
+        # the dict iterates keys (strings) and raises — a silent past failure.
+        if isinstance(detections, dict):
+            detections = detections.get("detections", detections.get("objects", []))
+        detections = detections or []
+
         now = datetime.now(timezone.utc)
 
         person_detections = [d for d in detections if d.get("class") == "person"]
