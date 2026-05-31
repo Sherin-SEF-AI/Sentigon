@@ -435,12 +435,13 @@ except Exception:
 # (not an ambient cookie), so cross-site requests cannot forge it and double-submit
 # CSRF is redundant. Revisit only if the token moves to an httpOnly cookie.
 
-# Rate Limiting
-try:
-    from backend.middleware.rate_limit import RateLimitMiddleware
-    app.add_middleware(RateLimitMiddleware)
-except Exception as _rl_err:
-    logger.warning("middleware.rate_limit", status="unavailable")
+# Rate Limiting (disable-able for tests via RATE_LIMIT_ENABLED=false)
+if settings.RATE_LIMIT_ENABLED:
+    try:
+        from backend.middleware.rate_limit import RateLimitMiddleware
+        app.add_middleware(RateLimitMiddleware)
+    except Exception as _rl_err:
+        logger.warning("middleware.rate_limit", status="unavailable")
 
 
 # ── Audit Logging Middleware ──────────────────────────────────

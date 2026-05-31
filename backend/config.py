@@ -87,6 +87,8 @@ class Settings(BaseSettings):
     # ── App ───────────────────────────────────────────────────
     APP_NAME: str = "SENTINEL AI"
     APP_ENV: str = "development"
+    # Rate limiting can be disabled (e.g. in tests) to avoid 429s under load.
+    RATE_LIMIT_ENABLED: bool = True
     LOG_LEVEL: str = "INFO"
     CORS_ORIGINS: str = '["http://localhost:3000","http://localhost:3737","http://localhost:8000"]'
 
