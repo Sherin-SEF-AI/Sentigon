@@ -337,7 +337,7 @@ export default function AnalyticsPage() {
   const handleExportEvents = useCallback(() => {
     if (!eventsChartData.length) { addToast("info", "No events data to export."); return; }
     try {
-      exportCSV(eventsChartData as Record<string, unknown>[], `events_over_time_${ts()}.csv`);
+      exportCSV(eventsChartData as unknown as Record<string, unknown>[], `events_over_time_${ts()}.csv`);
       addToast("success", "Events Over Time exported.");
     } catch { addToast("error", "Export failed."); }
   }, [eventsChartData, addToast]);
@@ -345,7 +345,7 @@ export default function AnalyticsPage() {
   const handleExportSeverity = useCallback(() => {
     if (!severityChartData.length) { addToast("info", "No severity data to export."); return; }
     try {
-      exportCSV(severityChartData as Record<string, unknown>[], `alerts_by_severity_${ts()}.csv`);
+      exportCSV(severityChartData as unknown as Record<string, unknown>[], `alerts_by_severity_${ts()}.csv`);
       addToast("success", "Alerts by Severity exported.");
     } catch { addToast("error", "Export failed."); }
   }, [severityChartData, addToast]);
@@ -353,7 +353,7 @@ export default function AnalyticsPage() {
   const handleExportOccupancy = useCallback(() => {
     if (!occupancyChartData.length) { addToast("info", "No occupancy data to export."); return; }
     try {
-      exportCSV(occupancyChartData as Record<string, unknown>[], `zone_occupancy_${ts()}.csv`);
+      exportCSV(occupancyChartData as unknown as Record<string, unknown>[], `zone_occupancy_${ts()}.csv`);
       addToast("success", "Zone Occupancy exported.");
     } catch { addToast("error", "Export failed."); }
   }, [occupancyChartData, addToast]);
@@ -361,7 +361,7 @@ export default function AnalyticsPage() {
   const handleExportCamera = useCallback(() => {
     if (!cameraChartData.length) { addToast("info", "No camera data to export."); return; }
     try {
-      exportCSV(cameraChartData as Record<string, unknown>[], `camera_activity_${ts()}.csv`);
+      exportCSV(cameraChartData as unknown as Record<string, unknown>[], `camera_activity_${ts()}.csv`);
       addToast("success", "Camera Activity exported.");
     } catch { addToast("error", "Export failed."); }
   }, [cameraChartData, addToast]);
@@ -369,7 +369,7 @@ export default function AnalyticsPage() {
   const handleExportResponse = useCallback(() => {
     if (!responseChartData.length) { addToast("info", "No response time data to export."); return; }
     try {
-      exportCSV(responseChartData as Record<string, unknown>[], `response_times_${ts()}.csv`);
+      exportCSV(responseChartData as unknown as Record<string, unknown>[], `response_times_${ts()}.csv`);
       addToast("success", "Response Time Trend exported.");
     } catch { addToast("error", "Export failed."); }
   }, [responseChartData, addToast]);
@@ -377,7 +377,7 @@ export default function AnalyticsPage() {
   const handleExportForecast = useCallback(() => {
     if (!forecastChartData.length) { addToast("info", "No forecast data to export."); return; }
     try {
-      exportCSV(forecastChartData as Record<string, unknown>[], `threat_forecast_${ts()}.csv`);
+      exportCSV(forecastChartData as unknown as Record<string, unknown>[], `threat_forecast_${ts()}.csv`);
       addToast("success", "Threat Forecast exported.");
     } catch { addToast("error", "Export failed."); }
   }, [forecastChartData, addToast]);

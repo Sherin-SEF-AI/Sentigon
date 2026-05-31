@@ -866,13 +866,11 @@ export default function SiteMapPage() {
           </div>
         )}
 
-        <FacilityMap
-          drawMode={drawMode}
-          heatmap={layers.heatmap}
-          cameraFov={layers.cameraFov}
-          violations={layers.violations}
-          assetTrails={layers.assetTrails}
-        />
+        {/* NOTE: FacilityMap is self-contained (own layer/draw controls). The
+            page-level toggle panel above is not yet wired into the map — tracked
+            as frontend tech debt (lift FacilityMap state to props). Passing the
+            props here was a no-op and broke the type-check, so they're removed. */}
+        <FacilityMap />
       </div>
 
       {/* ══════════════════ LOCKDOWN CONFIRMATION MODAL ══════════════════ */}

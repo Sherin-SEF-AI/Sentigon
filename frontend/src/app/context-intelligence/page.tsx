@@ -218,10 +218,10 @@ export default function ContextIntelligencePage() {
       ]);
       setRules(rulesData);
       setStats({
-        anomalies_today: 0,
-        baseline_coverage: 0,
-        avg_anomaly_score: 0,
         ...statsData,
+        anomalies_today: statsData?.anomalies_today ?? 0,
+        baseline_coverage: statsData?.baseline_coverage ?? 0,
+        avg_anomaly_score: statsData?.avg_anomaly_score ?? 0,
       });
       setCameras(Array.isArray(camerasData) ? camerasData : []);
       setError(null);
@@ -245,7 +245,12 @@ export default function ContextIntelligencePage() {
         apiFetch<ContextStats>("/api/context/stats"),
       ]);
       setRules(data);
-      setStats((prev) => prev ? { ...prev, ...statsData } : { anomalies_today: 0, baseline_coverage: 0, avg_anomaly_score: 0, ...statsData });
+      setStats((prev) => prev ? { ...prev, ...statsData } : {
+        ...statsData,
+        anomalies_today: statsData?.anomalies_today ?? 0,
+        baseline_coverage: statsData?.baseline_coverage ?? 0,
+        avg_anomaly_score: statsData?.avg_anomaly_score ?? 0,
+      });
     } catch {
     } finally {
       setRulesLoading(false);
