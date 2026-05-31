@@ -160,6 +160,7 @@ class MonitoringAgent:
                             if obj.get("class") == "person" and obj.get("track_id") is not None:
                                 entity_result = await entity_tracker_service.process_detection(
                                     db, camera_id, zone_id_str, obj.get("track_id"), obj,
+                                    frame=frame,
                                 )
                                 if entity_result and entity_result.get("alert_needed"):
                                     threats.append({

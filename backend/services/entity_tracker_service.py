@@ -21,6 +21,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from backend.database import async_session
 from backend.models.models import Camera, Zone
 from backend.models.phase3_models import EntityTrack, EntityAppearance
+from backend.services.appearance_embedder import (
+    blend_embeddings,
+    compute_appearance_embedding,
+    cosine_similarity,
+)
 
 logger = structlog.get_logger()
 
@@ -48,7 +53,8 @@ class EntityTrackerService:
     def __init__(self) -> None:
         # In-memory cache for fast entity matching
         self._active_entities: Dict[str, Dict[str, Any]] = {}  # entity_id -> descriptor/state
-        self._MATCH_THRESHOLD = 0.70  # Minimum appearance similarity to match
+        self._MATCH_THRESHOLD = 0.70  # Minimum descriptor similarity to match (fallback)
+        self._EMBED_MATCH_THRESHOLD = 0.65  # Min cosine similarity on appearance embeddings
         self._RECON_VISIT_THRESHOLD = 3  # Visits to restricted area before alert
         self._RECON_WINDOW_HOURS = 24
         self._TAILGATE_WINDOW_SECONDS = 8  # Seconds after access event to look for follower
@@ -63,29 +69,49 @@ class EntityTrackerService:
         zone_id: str | None,
         track_id: int,
         detection: dict,
+        frame=None,
         frame_path: str | None = None,
     ) -> Dict[str, Any] | None:
         """Process a single YOLO detection for entity tracking.
+
+        If ``frame`` (the BGR frame the detection came from) is provided, a
+        privacy-preserving appearance embedding is computed from the crop and
+        used as the primary cross-camera matching signal; otherwise matching
+        falls back to the coarse bbox-derived descriptor.
 
         Returns entity info dict when a behavioral flag fires, None otherwise.
         """
         now = datetime.now(timezone.utc)
         appearance = self._extract_appearance(detection)
 
-        # --- Match against active entities ---
+        embedding: list = []
+        if frame is not None:
+            try:
+                embedding = compute_appearance_embedding(frame, detection.get("bbox", []))
+            except Exception:
+                embedding = []
+
+        # --- Match against active entities (embedding cosine preferred) ---
         best_match_id: str | None = None
         best_score: float = 0.0
+        best_via_embedding: bool = False
 
         for eid, state in self._active_entities.items():
-            score = self._compute_similarity(appearance, state.get("appearance", {}))
+            cand_emb = state.get("embedding") or []
+            if embedding and cand_emb:
+                score = cosine_similarity(embedding, cand_emb)
+                via_emb = True
+            else:
+                score = self._compute_similarity(appearance, state.get("appearance", {}))
+                via_emb = False
             if score > best_score:
-                best_score = score
-                best_match_id = eid
+                best_score, best_match_id, best_via_embedding = score, eid, via_emb
 
+        threshold = self._EMBED_MATCH_THRESHOLD if best_via_embedding else self._MATCH_THRESHOLD
         entity_id: str
         is_new = False
 
-        if best_match_id and best_score >= self._MATCH_THRESHOLD:
+        if best_match_id and best_score >= threshold:
             entity_id = best_match_id
             # Update in-memory cache
             self._active_entities[entity_id]["last_seen"] = now
@@ -93,6 +119,10 @@ class EntityTrackerService:
             self._active_entities[entity_id]["appearance"] = self._merge_appearance(
                 self._active_entities[entity_id].get("appearance", {}), appearance
             )
+            if embedding:
+                self._active_entities[entity_id]["embedding"] = blend_embeddings(
+                    self._active_entities[entity_id].get("embedding") or [], embedding
+                )
 
             # Update DB entity track
             result = await db.execute(
@@ -105,6 +135,9 @@ class EntityTrackerService:
                 entity_track.total_appearances = (entity_track.total_appearances or 0) + 1
                 entity_track.total_dwell_seconds = (entity_track.total_dwell_seconds or 0.0) + detection.get("dwell_time", 0.0)
                 entity_track.appearance_descriptor = self._active_entities[entity_id]["appearance"]
+                blended_emb = self._active_entities[entity_id].get("embedding")
+                if blended_emb:
+                    entity_track.appearance_embedding = blended_emb
 
                 # Track cameras visited
                 cameras = entity_track.cameras_visited or []
@@ -131,6 +164,7 @@ class EntityTrackerService:
                 id=entity_uid,
                 entity_type=detection.get("class", "person"),
                 appearance_descriptor=appearance,
+                appearance_embedding=embedding or None,
                 first_seen_at=now,
                 last_seen_at=now,
                 first_camera_id=uuid.UUID(str(camera_id)),
@@ -145,6 +179,7 @@ class EntityTrackerService:
 
             self._active_entities[entity_id] = {
                 "appearance": appearance,
+                "embedding": embedding,
                 "last_seen": now,
                 "camera_id": str(camera_id),
                 "first_seen": now,
