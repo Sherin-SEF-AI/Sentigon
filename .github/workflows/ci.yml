@@ -116,7 +116,12 @@ jobs:
             sleep 2
           done
           if [ "$up" != "1" ]; then echo "::error::app did not become healthy in time"; cat /tmp/app.log; kill $APP_PID 2>/dev/null || true; exit 1; fi
-          echo "── /health ──"; curl -fsS http://127.0.0.1:8000/health; echo
+          HEALTH=$(curl -fsS http://127.0.0.1:8000/health)
+          echo "── /health ── $HEALTH"
+          # The agents introspection must not throw (it did before is_running existed).
+          if echo "$HEALTH" | grep -q '"agents":"unavailable"'; then
+            echo "::error::/health reports agents unavailable — health check threw"; cat /tmp/app.log; kill $APP_PID 2>/dev/null || true; exit 1
+          fi
           code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000/api/cameras)
           echo "GET /api/cameras (no token) -> $code"
           kill $APP_PID 2>/dev/null || true
