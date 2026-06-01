@@ -1,4 +1,4 @@
-.PHONY: help install install-dev test eval lint migrate up down
+.PHONY: help install install-dev test eval benchmark lint migrate up down
 
 help:
 	@echo "Targets:"
@@ -6,6 +6,7 @@ help:
 	@echo "  install-dev  Install backend + test dependencies"
 	@echo "  test         Run the backend test suite (needs a test Postgres)"
 	@echo "  eval         Run the perception accuracy benchmark over fixtures"
+	@echo "  benchmark    Run the real YOLO detector benchmark (recall + FP rate)"
 	@echo "  migrate      Apply database migrations (alembic upgrade head)"
 	@echo "  up / down    Start / stop the production docker-compose stack"
 
@@ -20,6 +21,9 @@ test:
 
 eval:
 	python -m backend.eval.perception_eval
+
+benchmark:
+	python -m backend.eval.detector_benchmark
 
 migrate:
 	alembic upgrade head

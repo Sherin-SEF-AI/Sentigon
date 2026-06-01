@@ -37,8 +37,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # CPU-only torch to keep the image smaller/faster than the CUDA wheel.
-          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          # CPU-only torch AND torchvision from the SAME index so their ABIs
+          # match — otherwise ultralytics fails with "torchvision::nms does not
+          # exist" and the detector can't run.
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
           pip install -r requirements-dev.txt
       - name: Validate migrations (upgrade/downgrade/upgrade round-trip)
         env:
