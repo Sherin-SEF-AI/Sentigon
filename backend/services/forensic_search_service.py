@@ -12,6 +12,20 @@ from backend.models.phase2b_models import ForensicSearchResult
 logger = logging.getLogger(__name__)
 
 
+def _to_epoch(value):
+    """Coerce an ISO timestamp string or epoch number to epoch seconds, else None."""
+    if value is None:
+        return None
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, str):
+        try:
+            return datetime.fromisoformat(value.replace("Z", "+00:00")).timestamp()
+        except ValueError:
+            return None
+    return None
+
+
 class ForensicSearchService:
 
     async def search_by_attributes(self, db: AsyncSession, query: dict) -> dict:
@@ -105,6 +119,55 @@ class ForensicSearchService:
         except Exception as e:
             logger.error("Similarity search failed: %s", e)
             return {"query": query_text, "result_count": 0, "results": [], "error": str(e)}
+
+    async def search_objects_by_text(
+        self, query_text: str, camera_id: str = None,
+        time_from=None, time_to=None, top_k: int = 20,
+    ) -> dict:
+        """Object-level natural-language search: e.g. "person in a red jacket".
+
+        Embeds the query with CLIP and searches the per-object crop embeddings
+        (object_crops collection) — i.e. individual people/objects, not whole
+        frames. Optionally filtered by camera and time window. Requires
+        REID_USE_CLIP (to populate crop embeddings) + Qdrant; returns an empty
+        result set gracefully when either is unavailable.
+        """
+        try:
+            from backend.services.clip_embedder import clip_embedder
+            from backend.services.vector_store import vector_store
+        except Exception:
+            return {"query": query_text, "result_count": 0, "results": []}
+
+        try:
+            vec = clip_embedder.embed_text_sync(query_text) if query_text else []
+        except Exception:
+            vec = []  # CLIP model unavailable/failed to load — degrade gracefully
+        if not vec:
+            return {"query": query_text, "result_count": 0, "results": []}
+
+        filters = {"camera_id": str(camera_id)} if camera_id else None
+        hits = await vector_store.search_by_vector(
+            vector=vec, top_k=max(int(top_k), 1), filters=filters,
+            collection="object_crops",
+        )
+
+        tf, tt = _to_epoch(time_from), _to_epoch(time_to)
+        results = []
+        for h in hits or []:
+            ts = h.get("timestamp")
+            if tf is not None and ts is not None and ts < tf:
+                continue
+            if tt is not None and ts is not None and ts > tt:
+                continue
+            results.append({
+                "entity_id": h.get("entity_id"),
+                "camera_id": h.get("camera_id"),
+                "zone_id": h.get("zone_id"),
+                "timestamp": ts,
+                "behavior": h.get("behavior"),
+                "score": h.get("score"),
+            })
+        return {"query": query_text, "result_count": len(results), "results": results}
 
     async def cross_camera_journey(self, db: AsyncSession, track_id: str = None,
                                     appearance_desc: dict = None, time_from=None, time_to=None) -> dict:

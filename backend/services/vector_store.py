@@ -40,6 +40,7 @@ COLLECTIONS = {
     "entity_appearances": {"dim": settings.EMBEDDING_DIM, "description": "Person re-identification descriptors"},
     "audio_events": {"dim": settings.EMBEDDING_DIM, "description": "Audio event descriptions"},
     "frame_embeddings": {"dim": settings.CLIP_EMBEDDING_DIM, "description": "CLIP visual frame embeddings"},
+    "object_crops": {"dim": settings.CLIP_EMBEDDING_DIM, "description": "CLIP per-object crop embeddings for object-level forensic search"},
 }
 
 
