@@ -23,6 +23,7 @@ from backend.services.gemini_analyzer import gemini_analyzer
 from backend.services.threat_engine import threat_engine
 from backend.services.alert_manager import alert_manager
 from backend.services.vector_store import vector_store
+from backend.services.persistence_gate import persistence_gate
 from backend.services.notification_service import notification_service
 
 # Phase 3 — Context-Aware Intelligence imports (all optional)
@@ -260,6 +261,12 @@ class MonitoringAgent:
                 severity = thr.get("severity", "medium")
                 # Only create alerts for medium and above
                 if severity in ("critical", "high", "medium"):
+                    # Persistence gate: suppress single-frame (flicker) false
+                    # positives for non-critical threats. critical/high bypass.
+                    if settings.PERSISTENCE_GATE_ENABLED and not persistence_gate.should_emit(
+                        camera_id, thr.get("signature", ""), severity, ts.timestamp()
+                    ):
+                        continue
                     alert_data = await alert_manager.create_alert(
                         title=thr.get("signature", "Threat Detected"),
                         description=thr.get("description", ""),
