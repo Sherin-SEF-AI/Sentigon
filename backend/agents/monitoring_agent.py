@@ -167,7 +167,7 @@ class MonitoringAgent:
                                     threats.append({
                                         "signature": entity_result.get("alert_type", "reconnaissance"),
                                         "description": entity_result.get("description", "Suspicious entity behavior detected"),
-                                        "severity": "high",
+                                        "severity": entity_result.get("severity", "high"),
                                         "confidence": entity_result.get("risk_score", 0.7),
                                         "detection_method": "entity_tracking",
                                     })

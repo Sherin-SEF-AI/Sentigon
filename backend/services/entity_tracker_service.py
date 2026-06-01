@@ -282,6 +282,13 @@ class EntityTrackerService:
                     **se,
                 }
 
+        # Composite temporal signatures (multi-step patterns over the entity's
+        # appearance history). Checked after the single-pattern detectors.
+        if not flag_result:
+            comp = await self.evaluate_composite_signatures(db, entity_id)
+            if comp and comp.get("alert_needed"):
+                flag_result = comp
+
         await db.flush()
 
         logger.debug(
@@ -432,6 +439,88 @@ class EntityTrackerService:
         if stationary and dwell > 10:
             return "looking"
         return "walking_past"
+
+    # ── Composite temporal signatures ────────────────────────────
+
+    _SEV_ORDER = {"critical": 4, "high": 3, "medium": 2, "low": 1, "info": 0}
+
+    async def evaluate_composite_signatures(
+        self, db: AsyncSession, entity_id: str, window_seconds: int = 900,
+    ) -> Dict[str, Any] | None:
+        """Detect multi-step behavioral patterns over the entity's recent
+        appearance history. Returns the highest-severity NEW signature (one not
+        already flagged on the entity), escalating the track, or None.
+        """
+        from backend.services.composite_signatures import BehaviorEvent, evaluate
+
+        cutoff = datetime.now(timezone.utc) - timedelta(seconds=window_seconds)
+        rows = (
+            await db.execute(
+                select(EntityAppearance)
+                .where(
+                    and_(
+                        EntityAppearance.entity_track_id == uuid.UUID(entity_id),
+                        EntityAppearance.timestamp >= cutoff,
+                    )
+                )
+                .order_by(EntityAppearance.timestamp.asc())
+            )
+        ).scalars().all()
+        if len(rows) < 2:
+            return None
+
+        # Resolve zone types for the zones touched (one batched query).
+        zone_ids = {r.zone_id for r in rows if r.zone_id}
+        zone_types: Dict[str, str] = {}
+        if zone_ids:
+            zres = await db.execute(select(Zone.id, Zone.zone_type).where(Zone.id.in_(zone_ids)))
+            zone_types = {str(zid): ztype for zid, ztype in zres.all()}
+
+        events = [
+            BehaviorEvent(
+                timestamp=r.timestamp.timestamp(),
+                behavior=r.behavior,
+                zone_type=zone_types.get(str(r.zone_id)) if r.zone_id else None,
+                zone_id=str(r.zone_id) if r.zone_id else None,
+                camera_id=str(r.camera_id),
+            )
+            for r in rows
+        ]
+
+        matches = evaluate(events)
+        if not matches:
+            return None
+
+        entity_track = (
+            await db.execute(select(EntityTrack).where(EntityTrack.id == uuid.UUID(entity_id)))
+        ).scalar_one_or_none()
+        existing = list(entity_track.behavioral_flags or []) if entity_track else []
+        new_matches = [m for m in matches if m["signature"] not in existing]
+        if not new_matches:
+            return None
+
+        new_matches.sort(key=lambda m: self._SEV_ORDER.get(m["severity"], 0), reverse=True)
+        top = new_matches[0]
+
+        if entity_track:
+            for m in new_matches:
+                existing.append(m["signature"])
+            entity_track.behavioral_flags = existing
+            entity_track.escalation_level = max(entity_track.escalation_level or 0, 2)
+            bump = 0.7 if top["severity"] in ("high", "critical") else 0.5
+            entity_track.risk_score = max(entity_track.risk_score or 0.0, bump)
+
+        return {
+            "entity_id": entity_id,
+            "flag": "composite_signature",
+            "alert_needed": True,
+            "alert_type": top["signature"],
+            "signature": top["signature"],
+            "description": top["description"],
+            "severity": top["severity"],
+            "risk_score": entity_track.risk_score if entity_track else 0.7,
+            "matched_signatures": [m["signature"] for m in new_matches],
+        }
 
     # ── Reconnaissance detection ─────────────────────────────────
 
