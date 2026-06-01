@@ -210,6 +210,13 @@ class BaseAgent(ABC):
         logger.info("Agent %s errors reset", self.name)
 
     @property
+    def is_running(self) -> bool:
+        """Whether the agent's run loop is active. Public accessor for _running
+        (used by /health; its absence made the health check report agents as
+        'unavailable')."""
+        return self._running
+
+    @property
     def status_text(self) -> str:
         if not self._running:
             return "stopped"
