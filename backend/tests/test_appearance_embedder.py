@@ -3,10 +3,13 @@ from __future__ import annotations
 
 import pytest
 
+import backend.services.appearance_embedder as ae
 from backend.services.appearance_embedder import (
     EMBEDDING_DIM,
+    appearance_embedding,
     blend_embeddings,
     compute_appearance_embedding,
+    compute_clip_crop_embedding,
     cosine_similarity,
 )
 
@@ -78,3 +81,41 @@ def test_embedding_empty_on_bad_input():
     assert compute_appearance_embedding(frame, [0, 1, 2]) == []  # bbox shorter than 4
     # A zero-area bbox is clamped to a valid 1px crop, so it returns a vector.
     assert len(compute_appearance_embedding(frame, [5, 5, 5, 5])) == EMBEDDING_DIM
+
+
+# ── re-ID embedding dispatcher (CLIP crop vs HSV histogram) ───────────────────
+
+def test_clip_crop_embedding_empty_on_bad_input():
+    # Short-circuits before any CLIP import — no model needed.
+    assert compute_clip_crop_embedding(None, [0, 0, 1, 1]) == []
+    assert compute_clip_crop_embedding(object(), [0, 1, 2]) == []  # bbox too short
+
+
+def test_dispatcher_uses_histogram_when_clip_disabled(monkeypatch):
+    from backend.config import settings
+    monkeypatch.setattr(settings, "REID_USE_CLIP", False, raising=False)
+    monkeypatch.setattr(ae, "compute_clip_crop_embedding", lambda f, b: ["CLIP"])
+    monkeypatch.setattr(ae, "compute_appearance_embedding", lambda f, b: ["HSV"])
+    assert appearance_embedding(None, [0, 0, 1, 1]) == ["HSV"]
+
+
+def test_dispatcher_prefers_clip_when_enabled(monkeypatch):
+    from backend.config import settings
+    monkeypatch.setattr(settings, "REID_USE_CLIP", True, raising=False)
+    monkeypatch.setattr(ae, "compute_clip_crop_embedding", lambda f, b: [0.1] * 512)
+    monkeypatch.setattr(ae, "compute_appearance_embedding", lambda f, b: ["HSV"])
+    assert appearance_embedding(None, [0, 0, 1, 1]) == [0.1] * 512
+
+
+def test_dispatcher_falls_back_when_clip_unavailable(monkeypatch):
+    from backend.config import settings
+    monkeypatch.setattr(settings, "REID_USE_CLIP", True, raising=False)
+    monkeypatch.setattr(ae, "compute_clip_crop_embedding", lambda f, b: [])  # CLIP failed
+    monkeypatch.setattr(ae, "compute_appearance_embedding", lambda f, b: ["HSV"])
+    assert appearance_embedding(None, [0, 0, 1, 1]) == ["HSV"]
+
+
+def test_cross_kind_embeddings_never_falsely_match():
+    # A CLIP-dim (512) and an HSV-dim (64) vector must not match (cosine 0),
+    # so switching embedders can't produce false re-IDs — it just ages out old.
+    assert cosine_similarity([0.1] * 512, [0.1] * 64) == 0.0

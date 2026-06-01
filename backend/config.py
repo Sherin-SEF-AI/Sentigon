@@ -70,6 +70,10 @@ class Settings(BaseSettings):
     CLIP_ANOMALY_THRESHOLD: float = 0.35  # cosine distance for scene change
     CLIP_ENABLED: bool = True
     CLIP_RETENTION_HOURS: int = 48  # auto-delete embeddings older than this
+    # Cross-camera re-ID appearance embedding: when True, use a CLIP crop
+    # embedding (richer/more robust) instead of the fast HSV colour histogram.
+    # Off by default (CLIP is heavyweight); enable on GPU-backed deployments.
+    REID_USE_CLIP: bool = False
 
     # ── GPU / CUDA ─────────────────────────────────────────
     YOLO_DEVICE: str = "auto"  # "auto" | "cpu" | "cuda" | "cuda:0"

@@ -22,8 +22,8 @@ from backend.database import async_session
 from backend.models.models import Camera, Zone
 from backend.models.phase3_models import EntityTrack, EntityAppearance
 from backend.services.appearance_embedder import (
+    appearance_embedding,
     blend_embeddings,
-    compute_appearance_embedding,
     cosine_similarity,
 )
 
@@ -122,7 +122,7 @@ class EntityTrackerService:
         embedding: list = []
         if frame is not None:
             try:
-                embedding = compute_appearance_embedding(frame, detection.get("bbox", []))
+                embedding = appearance_embedding(frame, detection.get("bbox", []))
             except Exception:
                 embedding = []
 
