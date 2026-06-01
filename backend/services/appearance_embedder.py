@@ -22,6 +22,58 @@ S_BINS = 4
 EMBEDDING_DIM = H_BINS * S_BINS * 2  # upper + lower body = 64
 
 
+def _crop_bbox(frame_bgr, bbox: Sequence[float]):
+    """Return the clamped bbox crop of a BGR frame, or None if invalid/empty."""
+    if frame_bgr is None or bbox is None or len(bbox) < 4:
+        return None
+    h, w = frame_bgr.shape[:2]
+    x1, y1, x2, y2 = (int(bbox[0]), int(bbox[1]), int(bbox[2]), int(bbox[3]))
+    x1 = max(0, min(x1, w - 1))
+    y1 = max(0, min(y1, h - 1))
+    x2 = max(x1 + 1, min(x2, w))
+    y2 = max(y1 + 1, min(y2, h))
+    crop = frame_bgr[y1:y2, x1:x2]
+    if crop.size == 0:
+        return None
+    return crop
+
+
+def compute_clip_crop_embedding(frame_bgr, bbox: Sequence[float]) -> List[float]:
+    """CLIP embedding of the person/object crop — a richer, semantic appearance
+    descriptor than the HSV histogram (more robust to lighting/pose), reusing the
+    existing clip_embedder. Returns [] if the crop is invalid or CLIP is
+    unavailable (caller falls back to the histogram)."""
+    crop = _crop_bbox(frame_bgr, bbox)
+    if crop is None:
+        return []
+    try:
+        from backend.services.clip_embedder import clip_embedder
+        vec = clip_embedder.embed_frame_sync(crop)
+        return list(vec) if vec else []
+    except Exception:
+        return []
+
+
+def appearance_embedding(frame_bgr, bbox: Sequence[float]) -> List[float]:
+    """Produce an appearance embedding for re-ID.
+
+    Uses a CLIP crop embedding when REID_USE_CLIP is enabled and available
+    (richer/more robust), otherwise the fast HSV colour histogram. Vectors of
+    different kinds never falsely match: cosine_similarity returns 0 on a
+    dimension mismatch, so switching embedders simply ages out old entities.
+    """
+    try:
+        from backend.config import settings
+        use_clip = bool(getattr(settings, "REID_USE_CLIP", False))
+    except Exception:
+        use_clip = False
+    if use_clip:
+        emb = compute_clip_crop_embedding(frame_bgr, bbox)
+        if emb:
+            return emb
+    return compute_appearance_embedding(frame_bgr, bbox)
+
+
 def compute_appearance_embedding(
     frame_bgr, bbox: Sequence[float], h_bins: int = H_BINS, s_bins: int = S_BINS
 ) -> List[float]:
@@ -38,19 +90,8 @@ def compute_appearance_embedding(
     """
     import cv2  # lazy: only needed when actually embedding a frame
 
-    if frame_bgr is None or len(bbox) < 4:
-        return []
-
-    h, w = frame_bgr.shape[:2]
-    x1, y1, x2, y2 = (int(bbox[0]), int(bbox[1]), int(bbox[2]), int(bbox[3]))
-    # Clamp to frame bounds and ensure a non-empty region.
-    x1 = max(0, min(x1, w - 1))
-    y1 = max(0, min(y1, h - 1))
-    x2 = max(x1 + 1, min(x2, w))
-    y2 = max(y1 + 1, min(y2, h))
-
-    crop = frame_bgr[y1:y2, x1:x2]
-    if crop.size == 0:
+    crop = _crop_bbox(frame_bgr, bbox)
+    if crop is None:
         return []
 
     hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV)
