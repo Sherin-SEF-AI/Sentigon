@@ -31,10 +31,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python deps first for layer caching. CPU torch by default (see header).
+# Install Python deps first for layer caching. CPU torch + torchvision from the
+# SAME index so their ABIs match (otherwise ultralytics fails at runtime with
+# "torchvision::nms does not exist" and object detection silently won't run).
 COPY requirements.txt .
 RUN pip install --upgrade pip \
-    && pip install torch --index-url https://download.pytorch.org/whl/cpu \
+    && pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu \
     && pip install -r requirements.txt
 
 # Application code (alembic.ini + backend package). Migrations run at startup.
