@@ -54,6 +54,77 @@ jobs:
       - name: Run tests
         run: pytest -ra
 
+  boot-smoke:
+    # Actually boot the app (full lifespan: migrations, agent registry, background
+    # tasks, YOLO preload) and confirm it serves /health and enforces auth. The
+    # unit tests use a TestClient WITHOUT lifespan, so real startup is otherwise
+    # unvalidated. This is the in-CI proxy for `docker compose up`.
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: sentinel_boot
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      APP_ENV: test
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/sentinel_boot
+      DATABASE_URL_SYNC: postgresql+psycopg2://postgres:postgres@localhost:5432/sentinel_boot
+      REDIS_URL: redis://localhost:6379/0
+      CELERY_BROKER_URL: redis://localhost:6379/1
+      JWT_SECRET_KEY: test-secret-not-for-production
+      GEMINI_ENABLED: "false"
+      CLIP_ENABLED: "false"
+      AUTO_RECORD_ENABLED: "false"
+      AUTONOMOUS_RESPONSE_ENABLED: "false"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
+      - name: Boot app and smoke-test startup
+        run: |
+          uvicorn backend.main:app --host 127.0.0.1 --port 8000 --log-level warning > /tmp/app.log 2>&1 &
+          APP_PID=$!
+          up=0
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:8000/health >/dev/null 2>&1; then up=1; break; fi
+            if ! kill -0 $APP_PID 2>/dev/null; then echo "::error::uvicorn exited during startup"; cat /tmp/app.log; exit 1; fi
+            sleep 2
+          done
+          if [ "$up" != "1" ]; then echo "::error::app did not become healthy in time"; cat /tmp/app.log; kill $APP_PID 2>/dev/null || true; exit 1; fi
+          echo "── /health ──"; curl -fsS http://127.0.0.1:8000/health; echo
+          code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000/api/cameras)
+          echo "GET /api/cameras (no token) -> $code"
+          kill $APP_PID 2>/dev/null || true
+          if [ "$code" != "401" ] && [ "$code" != "403" ]; then
+            echo "::error::protected route not enforced through the live app"; cat /tmp/app.log; exit 1
+          fi
+          echo "✅ boot smoke test passed"
+
   secret-scan:
     runs-on: ubuntu-latest
     steps:
