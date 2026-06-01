@@ -242,6 +242,10 @@ class EntityTrackerService:
         )
         db.add(entity_appearance)
 
+        # Index the crop embedding for object-level forensic search (best-effort;
+        # only CLIP-dim embeddings go to the CLIP object_crops collection).
+        await self._index_object_crop(embedding, entity_id, camera_id, zone_id, behavior, now)
+
         # Buffer behavior for escalation analysis
         self._entity_behavior_buffer[entity_id].append(behavior)
         if len(self._entity_behavior_buffer[entity_id]) > 50:
@@ -300,6 +304,32 @@ class EntityTrackerService:
             flag=flag_result.get("flag") if flag_result else None,
         )
         return flag_result
+
+    async def _index_object_crop(self, embedding, entity_id, camera_id, zone_id, behavior, now) -> None:
+        """Upsert a CLIP crop embedding into the object_crops vector collection
+        for object-level forensic search. No-op unless the embedding is CLIP-dim
+        (so it matches the collection's space) and Qdrant is available."""
+        if not embedding:
+            return
+        try:
+            from backend.config import settings
+            if len(embedding) != settings.CLIP_EMBEDDING_DIM:
+                return  # HSV histogram, not a CLIP crop — wrong vector space
+            from backend.services.vector_store import vector_store
+            await vector_store.upsert_with_vector(
+                point_id=str(uuid.uuid4()),
+                vector=list(embedding),
+                payload={
+                    "entity_id": entity_id,
+                    "camera_id": str(camera_id),
+                    "zone_id": str(zone_id) if zone_id else None,
+                    "timestamp": now.timestamp(),
+                    "behavior": behavior,
+                },
+                collection="object_crops",
+            )
+        except Exception as e:  # pragma: no cover - best-effort; Qdrant optional
+            logger.debug("object_crop.index_failed", error=str(e))
 
     # ── Appearance extraction and matching ────────────────────────
 

@@ -17,6 +17,19 @@ async def search_vehicles(data: dict, db: AsyncSession = Depends(get_db)):
 async def search_similarity(data: dict):
     return await forensic_search_service.search_by_similarity(data["query"], data.get("top_k", 20))
 
+@router.post("/objects")
+async def search_objects(data: dict):
+    """Object-level NL search: 'person in a red jacket near the dock 2-4pm'."""
+    if not data.get("query"):
+        raise HTTPException(400, "query is required")
+    return await forensic_search_service.search_objects_by_text(
+        data["query"],
+        camera_id=data.get("camera_id"),
+        time_from=data.get("time_from"),
+        time_to=data.get("time_to"),
+        top_k=data.get("top_k", 20),
+    )
+
 @router.post("/cross-camera")
 async def cross_camera(data: dict, db: AsyncSession = Depends(get_db)):
     return await forensic_search_service.cross_camera_journey(db, data.get("track_id"), data.get("appearance_desc"), data.get("time_from"), data.get("time_to"))
