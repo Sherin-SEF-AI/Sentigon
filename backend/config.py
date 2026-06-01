@@ -93,6 +93,13 @@ class Settings(BaseSettings):
     APP_ENV: str = "development"
     # Rate limiting can be disabled (e.g. in tests) to avoid 429s under load.
     RATE_LIMIT_ENABLED: bool = True
+
+    # Persistence (corroboration) gate: a non-critical threat must recur for the
+    # same camera+signature before it raises an alert — kills single-frame
+    # false positives. critical/high bypass. Disable to alert on first sighting.
+    PERSISTENCE_GATE_ENABLED: bool = True
+    PERSISTENCE_MIN_OCCURRENCES: int = 2
+    PERSISTENCE_WINDOW_SECONDS: float = 10.0
     LOG_LEVEL: str = "INFO"
     CORS_ORIGINS: str = '["http://localhost:3000","http://localhost:3737","http://localhost:8000"]'
 
