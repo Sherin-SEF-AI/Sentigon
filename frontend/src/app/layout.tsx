@@ -66,6 +66,8 @@ import { ToastProvider } from "@/components/common/Toaster";
 import { ConfirmProvider } from "@/components/common/useConfirm";
 import ErrorBoundary from "@/components/common/ErrorBoundary";
 import CopilotWidget from "@/components/copilot/CopilotWidget";
+import { NAV_GROUPS } from "@/lib/nav";
+import { CommandPalette } from "@/components/common/CommandPalette";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -74,126 +76,6 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 /*  Navigation structure — grouped with collapsible sections           */
 /* ------------------------------------------------------------------ */
 
-interface NavItem {
-  href: string;
-  label: string;
-  icon: typeof LayoutDashboard;
-}
-
-interface NavGroup {
-  label: string;
-  items: NavItem[];
-  defaultOpen?: boolean;
-}
-
-const NAV_GROUPS: NavGroup[] = [
-  {
-    label: "Operations",
-    defaultOpen: true,
-    items: [
-      { href: "/", label: "Dashboard", icon: LayoutDashboard },
-      { href: "/command-center", label: "Command Center", icon: Building },
-      { href: "/video-wall", label: "Video Wall", icon: Monitor },
-      { href: "/cameras", label: "Cameras & ONVIF", icon: Camera },
-      { href: "/status", label: "System Status", icon: Activity },
-      { href: "/workspace", label: "SOC Workspace", icon: Columns },
-      { href: "/copilot", label: "SOC Copilot", icon: MessageSquare },
-    ],
-  },
-  {
-    label: "Alerts & Response",
-    defaultOpen: true,
-    items: [
-      { href: "/emergency", label: "Emergency", icon: Siren },
-      { href: "/alerts", label: "Alerts", icon: AlertTriangle },
-      { href: "/incidents", label: "Incidents", icon: AlertTriangle },
-      { href: "/threat-response", label: "Threat Response", icon: Siren },
-      { href: "/alarm-management", label: "Alarm Analysis", icon: BellRing },
-      { href: "/pending-actions", label: "Pending Actions", icon: ClipboardCheck },
-      { href: "/notifications", label: "Mass Notify", icon: Bell },
-      { href: "/evacuation", label: "Evacuation", icon: Route },
-    ],
-  },
-  {
-    label: "Investigation",
-    items: [
-      { href: "/search", label: "Search", icon: Search },
-      { href: "/forensics", label: "Forensics", icon: Microscope },
-      { href: "/cases", label: "Cases", icon: FolderOpen },
-      { href: "/evidence", label: "Evidence", icon: FileCheck },
-      { href: "/link-analysis", label: "Link Analysis", icon: Network },
-      { href: "/video-summary", label: "Video Summary", icon: Film },
-      { href: "/video-archive", label: "Video Archive", icon: Clapperboard },
-    ],
-  },
-  {
-    label: "Detection & AI",
-    items: [
-      { href: "/agents", label: "AI Agents", icon: Brain },
-      { href: "/agentic-ops", label: "Auto Investigations", icon: Sparkles },
-      { href: "/behavioral", label: "Behavioral AI", icon: BarChart },
-      { href: "/context-intelligence", label: "Context AI", icon: Brain },
-      { href: "/entity-tracking", label: "Entity Tracking", icon: Eye },
-      { href: "/entity-journey", label: "Entity Journey", icon: Route },
-      { href: "/reid", label: "Re-Identification", icon: ScanSearch },
-      { href: "/tripwires", label: "Tripwires", icon: Target },
-      { href: "/lpr", label: "Plate Reader", icon: Car },
-      { href: "/audio", label: "Audio Intel", icon: Volume2 },
-    ],
-  },
-  {
-    label: "Threat Management",
-    items: [
-      { href: "/threat-config", label: "Threat Config", icon: Zap },
-      { href: "/threat-signatures", label: "Signatures", icon: Fingerprint },
-      { href: "/threat-intel", label: "Threat Intel", icon: Globe },
-      { href: "/insider-threat", label: "Insider Threat", icon: UserX },
-      { href: "/tamper-detection", label: "Tamper Detect", icon: ScanEye },
-      { href: "/bolo", label: "BOLO & Logbook", icon: Target },
-    ],
-  },
-  {
-    label: "Access & Patrol",
-    items: [
-      { href: "/pacs", label: "Access Control", icon: DoorOpen },
-      { href: "/visitors", label: "Visitors", icon: UserCheck },
-      { href: "/vip", label: "VIP Protection", icon: Crown },
-      { href: "/patrol", label: "Patrol Command", icon: Route },
-      { href: "/dispatch", label: "Dispatch", icon: Truck },
-      { href: "/crowd-protocols", label: "Crowd Protocols", icon: Users },
-      { href: "/sop", label: "SOP Manager", icon: BookOpen },
-    ],
-  },
-  {
-    label: "Analytics & Maps",
-    items: [
-      { href: "/analytics", label: "Analytics", icon: BarChart3 },
-      { href: "/zones", label: "Zones", icon: MapPin },
-      { href: "/site-map", label: "Site Map", icon: Map },
-      { href: "/floor-plans", label: "Floor Plans", icon: Map },
-      { href: "/overwatch", label: "Global Overwatch", icon: Radar },
-      { href: "/environmental", label: "Env Safety", icon: Flame },
-      { href: "/sla", label: "SLA Dashboard", icon: BarChart3 },
-    ],
-  },
-  {
-    label: "Compliance & Privacy",
-    items: [
-      { href: "/compliance", label: "Compliance", icon: HardHat },
-      { href: "/privacy", label: "Privacy & GDPR", icon: Lock },
-    ],
-  },
-  {
-    label: "System",
-    items: [
-      { href: "/integrations", label: "Integrations", icon: Layers },
-      { href: "/webhooks", label: "Webhooks", icon: Webhook },
-      { href: "/settings", label: "Settings", icon: Settings },
-      { href: "/customer-portal", label: "Customer Portal", icon: Building },
-      { href: "/admin", label: "Administration", icon: Settings },
-    ],
-  },
-];
 
 /* ------------------------------------------------------------------ */
 /*  Sidebar component                                                  */
@@ -411,6 +293,19 @@ export default function RootLayout({
     }
   }, [isFullPage, pathname]);
 
+  // Cmd/Ctrl+K opens the command palette.
+  const [cmdOpen, setCmdOpen] = useState(false);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setCmdOpen((o) => !o);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   return (
     <html lang="en" className="dark">
       <body className={`${inter.variable} font-sans antialiased bg-[#030712] text-gray-100`}>
@@ -423,19 +318,22 @@ export default function RootLayout({
             ) : isFullPage ? (
               children
             ) : (
-              <div className="flex h-screen overflow-hidden">
-                <Sidebar />
-                <main className="flex-1 overflow-auto">
-                  {/* Keyed by route so a crashed page recovers on navigation,
-                      and a thrown page can't white-screen the whole shell. */}
-                  <ErrorBoundary name="page" key={pathname}>
-                    {children}
+              <>
+                <div className="flex h-screen overflow-hidden">
+                  <Sidebar />
+                  <main className="flex-1 overflow-auto">
+                    {/* Keyed by route so a crashed page recovers on navigation,
+                        and a thrown page can't white-screen the whole shell. */}
+                    <ErrorBoundary name="page" key={pathname}>
+                      {children}
+                    </ErrorBoundary>
+                  </main>
+                  <ErrorBoundary name="copilot">
+                    <CopilotWidget />
                   </ErrorBoundary>
-                </main>
-                <ErrorBoundary name="copilot">
-                  <CopilotWidget />
-                </ErrorBoundary>
-              </div>
+                </div>
+                <CommandPalette open={cmdOpen} onOpenChange={setCmdOpen} />
+              </>
             )}
           </ConfirmProvider>
         </ToastProvider>
