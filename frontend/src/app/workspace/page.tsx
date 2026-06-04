@@ -34,6 +34,7 @@ import {
 } from "lucide-react";
 import { cn, apiFetch } from "@/lib/utils";
 import { useToast } from "@/components/common/Toaster";
+import { OperatorMetricsWidget } from "@/components/soc/OperatorMetricsWidget";
 import { useRouter } from "next/navigation";
 import {
   LineChart,
@@ -690,6 +691,10 @@ export default function WorkspacePage() {
           </button>
         </div>
       </header>
+
+      <div className="px-6 pt-4">
+        <OperatorMetricsWidget userId={userId} />
+      </div>
 
       <div className="flex">
         {/* ===== Edit Mode Palette ===== */}
