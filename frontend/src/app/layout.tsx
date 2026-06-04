@@ -68,6 +68,7 @@ import ErrorBoundary from "@/components/common/ErrorBoundary";
 import CopilotWidget from "@/components/copilot/CopilotWidget";
 import { NAV_GROUPS } from "@/lib/nav";
 import { CommandPalette } from "@/components/common/CommandPalette";
+import { NotificationCenter } from "@/components/common/NotificationCenter";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -330,6 +331,9 @@ export default function RootLayout({
                   </main>
                   <ErrorBoundary name="copilot">
                     <CopilotWidget />
+                  </ErrorBoundary>
+                  <ErrorBoundary name="notifications">
+                    <NotificationCenter />
                   </ErrorBoundary>
                 </div>
                 <CommandPalette open={cmdOpen} onOpenChange={setCmdOpen} />
