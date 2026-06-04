@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import { cn, apiFetch, API_BASE } from "@/lib/utils";
 import { useToast } from "@/components/common/Toaster";
+import { useConfirm } from "@/components/common/useConfirm";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -191,6 +192,7 @@ function heatColor(score: number): string {
 
 export default function AgenticOpsPage() {
   const { addToast } = useToast();
+  const confirm = useConfirm();
   const [activeTab, setActiveTab] = useState<Tab>("Investigations");
   const [error, setError] = useState<string | null>(null);
 
@@ -380,7 +382,7 @@ export default function AgenticOpsPage() {
   };
 
   const handleDeleteRule = async (ruleId: string) => {
-    if (!confirm("Delete this alert rule?")) return;
+    if (!(await confirm({ title: "Delete this alert rule?", variant: "destructive", confirmLabel: "Delete" }))) return;
     try {
       await apiFetch(`/api/nl-alerts/rules/${ruleId}`, { method: "DELETE" });
       fetchRules();

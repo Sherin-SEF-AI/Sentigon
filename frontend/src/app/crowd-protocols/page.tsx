@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { cn, apiFetch } from "@/lib/utils";
 import { useToast } from "@/components/common/Toaster";
+import { useConfirm } from "@/components/common/useConfirm";
 import MetricSparkline from "@/components/common/MetricSparkline";
 
 /* ------------------------------------------------------------------ */
@@ -87,6 +88,7 @@ function loadEscalationRule(): EscalationRule {
 
 export default function CrowdProtocolsPage() {
   const { addToast } = useToast();
+  const confirm = useConfirm();
   const [protocols, setProtocols] = useState<CrowdProtocol[]>([]);
   const [tension, setTension] = useState<number>(0);
   const [loading, setLoading] = useState(true);
@@ -163,9 +165,7 @@ export default function CrowdProtocolsPage() {
   /* --- Activate a protocol --- */
   const handleActivate = useCallback(
     async (protocol: CrowdProtocol) => {
-      const confirmed = window.confirm(
-        `Activate "${protocol.name}"?\n\nThis will mark the protocol as active and initiate the recommended actions.`
-      );
+      const confirmed = await confirm({ title: `Activate "${protocol.name}"?`, description: "This will mark the protocol as active and initiate the recommended actions." });
       if (!confirmed) return;
 
       setActionLoading(protocol.id);
@@ -185,15 +185,13 @@ export default function CrowdProtocolsPage() {
         setActionLoading(null);
       }
     },
-    [addToast]
+    [addToast, confirm]
   );
 
   /* --- Deactivate a protocol --- */
   const handleDeactivate = useCallback(
     async (protocol: CrowdProtocol) => {
-      const confirmed = window.confirm(
-        `Deactivate "${protocol.name}"?\n\nThe protocol will be returned to standby.`
-      );
+      const confirmed = await confirm({ title: `Deactivate "${protocol.name}"?`, description: "The protocol will be returned to standby." });
       if (!confirmed) return;
 
       setActionLoading(protocol.id);
@@ -213,7 +211,7 @@ export default function CrowdProtocolsPage() {
         setActionLoading(null);
       }
     },
-    [addToast]
+    [addToast, confirm]
   );
 
   const handleSaveEscalationRule = useCallback(() => {

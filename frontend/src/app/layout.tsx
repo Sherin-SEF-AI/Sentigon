@@ -63,6 +63,7 @@ import {
 import { cn, apiFetch } from "@/lib/utils";
 import type { OperationModeStatus } from "@/lib/types";
 import { ToastProvider } from "@/components/common/Toaster";
+import { ConfirmProvider } from "@/components/common/useConfirm";
 import CopilotWidget from "@/components/copilot/CopilotWidget";
 import "./globals.css";
 
@@ -413,19 +414,21 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={`${inter.variable} font-sans antialiased bg-[#030712] text-gray-100`}>
         <ToastProvider>
-          {authed === null ? (
-            <div className="flex h-screen items-center justify-center">
-              <div className="h-6 w-6 animate-spin rounded-full border-2 border-cyan-400 border-t-transparent" />
-            </div>
-          ) : isFullPage ? (
-            children
-          ) : (
-            <div className="flex h-screen overflow-hidden">
-              <Sidebar />
-              <main className="flex-1 overflow-auto">{children}</main>
-              <CopilotWidget />
-            </div>
-          )}
+          <ConfirmProvider>
+            {authed === null ? (
+              <div className="flex h-screen items-center justify-center">
+                <div className="h-6 w-6 animate-spin rounded-full border-2 border-cyan-400 border-t-transparent" />
+              </div>
+            ) : isFullPage ? (
+              children
+            ) : (
+              <div className="flex h-screen overflow-hidden">
+                <Sidebar />
+                <main className="flex-1 overflow-auto">{children}</main>
+                <CopilotWidget />
+              </div>
+            )}
+          </ConfirmProvider>
         </ToastProvider>
       </body>
     </html>

@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { cn, apiFetch, severityColor } from "@/lib/utils";
 import { useToast } from "@/components/common/Toaster";
+import { useConfirm } from "@/components/common/useConfirm";
 import TimelineView, { TimelineEvent } from "@/components/common/TimelineView";
 import ViolationTable from "@/components/lpr/ViolationTable";
 import LoadingDockDashboard from "@/components/lpr/LoadingDockDashboard";
@@ -178,6 +179,7 @@ function StatCard({
 
 export default function LprPage() {
   const { addToast } = useToast();
+  const confirm = useConfirm();
 
   /* --- State --- */
   const [activeTab, setActiveTab] = useState<TabKey>("log");
@@ -403,7 +405,7 @@ export default function LprPage() {
   }, [form, fetchWatchlist, fetchStats]);
 
   const handleDeleteWatchlist = useCallback(async (id: string) => {
-    if (!window.confirm("Remove this plate from the watchlist?")) return;
+    if (!(await confirm({ title: "Remove this plate from the watchlist?", variant: "destructive", confirmLabel: "Remove" }))) return;
     setDeletingId(id);
     try {
       await apiFetch(`/api/lpr/watchlist/${id}`, { method: "DELETE" });
