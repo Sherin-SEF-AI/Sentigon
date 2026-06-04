@@ -146,9 +146,9 @@ export default function SiteMapPage() {
   // ── Map layer toggles ────────────────────────────────────────────
   const [layers, setLayers] = useState<MapLayers>({
     heatmap: false,
-    cameraFov: false,
+    cameraFov: true,
     violations: true,
-    assetTrails: false,
+    assetTrails: true,
   });
 
   // ── Draw / Quick-action modals ────────────────────────────────────
@@ -866,11 +866,10 @@ export default function SiteMapPage() {
           </div>
         )}
 
-        {/* NOTE: FacilityMap is self-contained (own layer/draw controls). The
-            page-level toggle panel above is not yet wired into the map — tracked
-            as frontend tech debt (lift FacilityMap state to props). Passing the
-            props here was a no-op and broke the type-check, so they're removed. */}
-        <FacilityMap />
+        {/* The sidebar layer toggles are lifted into FacilityMap: heatmap /
+            camera FOV / violations / asset trails are driven from `layers`
+            here; FacilityMap keeps its own geofence + draw/measure tools. */}
+        <FacilityMap layers={layers} />
       </div>
 
       {/* ══════════════════ LOCKDOWN CONFIRMATION MODAL ══════════════════ */}
