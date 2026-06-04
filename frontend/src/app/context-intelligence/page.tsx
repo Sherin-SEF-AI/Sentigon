@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { cn, apiFetch } from "@/lib/utils";
 import { useToast } from "@/components/common/Toaster";
+import { useConfirm } from "@/components/common/useConfirm";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -146,6 +147,7 @@ function anomalyBg(score: number): string {
 
 export default function ContextIntelligencePage() {
   const { addToast } = useToast();
+  const confirm = useConfirm();
 
   const [activeTab, setActiveTab] = useState<Tab>("Rules");
   const [stats, setStats] = useState<ContextStats | null>(null);
@@ -301,7 +303,7 @@ export default function ContextIntelligencePage() {
   };
 
   const handleDeleteRule = async (ruleId: string) => {
-    if (!confirm("Delete this context rule?")) return;
+    if (!(await confirm({ title: "Delete this context rule?", variant: "destructive", confirmLabel: "Delete" }))) return;
     setDeletingRuleId(ruleId);
     try {
       await apiFetch(`/api/context/rules/${ruleId}`, { method: "DELETE" });

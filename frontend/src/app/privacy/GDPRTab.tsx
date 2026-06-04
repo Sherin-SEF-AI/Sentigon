@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useConfirm } from "@/components/common/useConfirm";
 import {
   ShieldCheck,
   Loader2,
@@ -151,6 +152,7 @@ const TABS: { id: TabId; label: string; icon: typeof ShieldCheck }[] = [
 
 export default function GDPRTab() {
   const { toasts, show: toast, dismiss: dismissToast } = useToast();
+  const confirm = useConfirm();
 
   const [tab, setTab] = useState<TabId>("retention");
   const [loading, setLoading] = useState(true);
@@ -247,7 +249,7 @@ export default function GDPRTab() {
   };
 
   const deletePolicy = async (id: string) => {
-    if (!confirm("Delete this retention policy?")) return;
+    if (!(await confirm({ title: "Delete this retention policy?", variant: "destructive", confirmLabel: "Delete" }))) return;
     try {
       await apiFetch(`/api/privacy/retention-policies/${id}`, { method: "DELETE" });
       toast("Retention policy deleted", "success");

@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { cn, apiFetch } from "@/lib/utils";
 import { useToast } from "@/components/common/Toaster";
+import { useConfirm } from "@/components/common/useConfirm";
 
 /* ---------- Types ---------- */
 interface IntegrationStats {
@@ -99,6 +100,7 @@ function syncHealthDot(lastSync: string | null, status: string): { cls: string; 
 
 export default function IntegrationsPage() {
   const { addToast } = useToast();
+  const confirm = useConfirm();
   const [tab, setTab] = useState<TabId>("connectors");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -202,7 +204,7 @@ export default function IntegrationsPage() {
   };
 
   const deleteConnector = async (id: string) => {
-    if (!window.confirm("Delete this connector?")) return;
+    if (!(await confirm({ title: "Delete this connector?", variant: "destructive", confirmLabel: "Delete" }))) return;
     try {
       await apiFetch(`/api/integrations/connectors/${id}`, { method: "DELETE" });
       await fetchConnectors();

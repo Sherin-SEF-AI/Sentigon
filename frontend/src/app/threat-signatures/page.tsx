@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { apiFetch, cn, severityColor } from "@/lib/utils";
 import { useToast } from "@/components/common/Toaster";
+import { useConfirm } from "@/components/common/useConfirm";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -130,6 +131,7 @@ const METHOD_LABELS: Record<string, string> = {
 
 export default function ThreatSignaturesPage() {
   const { addToast } = useToast();
+  const confirm = useConfirm();
 
   const [signatures, setSignatures] = useState<Signature[]>([]);
   const [categories, setCategories] = useState<CategoryInfo[]>([]);
@@ -248,7 +250,7 @@ export default function ThreatSignaturesPage() {
 
   const handleDelete = async (sig: Signature) => {
     if (sig.source === "built_in") return;
-    if (!confirm(`Delete signature "${sig.name}"?`)) return;
+    if (!(await confirm({ title: `Delete signature "${sig.name}"?`, variant: "destructive", confirmLabel: "Delete" }))) return;
     const key = sig.id || sig.name;
     try {
       await apiFetch(`/api/threat-signatures/${encodeURIComponent(key)}`, { method: "DELETE" });

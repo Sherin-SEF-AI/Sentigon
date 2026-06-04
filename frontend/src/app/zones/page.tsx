@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { cn, apiFetch, formatTimestamp } from "@/lib/utils";
 import { useToast } from "@/components/common/Toaster";
+import { useConfirm } from "@/components/common/useConfirm";
 import TimelineView, { type TimelineEvent } from "@/components/common/TimelineView";
 import type { Zone } from "@/lib/types";
 
@@ -169,6 +170,7 @@ function Spinner() {
 
 export default function ZonesPage() {
   const { addToast } = useToast();
+  const confirm = useConfirm();
   const [zones, setZones] = useState<Zone[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -339,7 +341,7 @@ export default function ZonesPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!window.confirm("Delete this zone? This action cannot be undone.")) return;
+    if (!(await confirm({ title: "Delete this zone?", description: "This action cannot be undone.", variant: "destructive", confirmLabel: "Delete" }))) return;
     try {
       await apiFetch(`/api/zones/${id}`, { method: "DELETE" });
       if (selectedZone?.id === id) setSelectedZone(null);

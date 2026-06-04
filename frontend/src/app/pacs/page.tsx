@@ -30,6 +30,7 @@ import {
   Moon,
 } from "lucide-react";
 import { cn, apiFetch, formatTimestamp } from "@/lib/utils";
+import { useConfirm } from "@/components/common/useConfirm";
 import type { PACSEvent } from "@/lib/types";
 
 /* ------------------------------------------------------------------ */
@@ -472,6 +473,7 @@ function AnalyticsTab({ events }: { events: PACSEvent[] }) {
 /* ------------------------------------------------------------------ */
 
 export default function PACSPage() {
+  const confirm = useConfirm();
   const [events, setEvents] = useState<PACSEvent[]>([]);
   const [doors, setDoors] = useState<DoorSummary[]>([]);
   const [doorDetails, setDoorDetails] = useState<DoorDetail[]>([]);
@@ -549,9 +551,7 @@ export default function PACSPage() {
   };
 
   const handleEmergencyLockdown = async () => {
-    const confirmed = window.confirm(
-      "WARNING: This will lock ALL doors facility-wide immediately.\n\nProceed with Emergency Lockdown?"
-    );
+    const confirmed = await confirm({ title: "Emergency Lockdown", description: "This will lock ALL doors facility-wide immediately. Proceed?", variant: "destructive", confirmLabel: "Lock down" });
     if (!confirmed) return;
 
     setLockdownLoading(true);

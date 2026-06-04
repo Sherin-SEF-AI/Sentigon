@@ -34,6 +34,7 @@ import {
 import { cn, apiFetch, API_BASE, WS_BASE, formatTimestamp } from "@/lib/utils";
 import type { User, OperationModeStatus } from "@/lib/types";
 import { useToast } from "@/components/common/Toaster";
+import { useConfirm } from "@/components/common/useConfirm";
 import SystemHealthGauge from "@/components/common/SystemHealthGauge";
 
 /* ------------------------------------------------------------------ */
@@ -456,6 +457,7 @@ const PERF_MODE_COLORS: Record<string, { border: string; bg: string; text: strin
 
 function SystemTab() {
   const { addToast } = useToast();
+  const confirm = useConfirm();
 
   const [modeStatus, setModeStatus] = useState<OperationModeStatus | null>(null);
   const [switching, setSwitching] = useState(false);
@@ -598,7 +600,7 @@ function SystemTab() {
   };
 
   const handleClearCache = async () => {
-    if (!window.confirm("Clear all system caches? This will flush Redis and in-memory LRU caches.")) return;
+    if (!(await confirm({ title: "Clear all system caches?", description: "This will flush Redis and in-memory LRU caches.", confirmLabel: "Clear" }))) return;
     setClearingCache(true);
     try {
       await apiFetch("/api/settings/clear-cache", { method: "POST" });
@@ -611,7 +613,7 @@ function SystemTab() {
   };
 
   const handleResetAnalytics = async () => {
-    if (!window.confirm("Reset analytics? This will permanently delete all event records. Alerts, cameras, and users are preserved.")) return;
+    if (!(await confirm({ title: "Reset analytics?", description: "This will permanently delete all event records. Alerts, cameras, and users are preserved.", variant: "destructive", confirmLabel: "Reset" }))) return;
     setResettingAnalytics(true);
     try {
       const result = await apiFetch<{ message: string }>("/api/settings/reset-analytics", { method: "POST" });
