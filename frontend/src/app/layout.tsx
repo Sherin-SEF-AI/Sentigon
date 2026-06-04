@@ -64,6 +64,7 @@ import { cn, apiFetch } from "@/lib/utils";
 import type { OperationModeStatus } from "@/lib/types";
 import { ToastProvider } from "@/components/common/Toaster";
 import { ConfirmProvider } from "@/components/common/useConfirm";
+import ErrorBoundary from "@/components/common/ErrorBoundary";
 import CopilotWidget from "@/components/copilot/CopilotWidget";
 import "./globals.css";
 
@@ -424,8 +425,16 @@ export default function RootLayout({
             ) : (
               <div className="flex h-screen overflow-hidden">
                 <Sidebar />
-                <main className="flex-1 overflow-auto">{children}</main>
-                <CopilotWidget />
+                <main className="flex-1 overflow-auto">
+                  {/* Keyed by route so a crashed page recovers on navigation,
+                      and a thrown page can't white-screen the whole shell. */}
+                  <ErrorBoundary name="page" key={pathname}>
+                    {children}
+                  </ErrorBoundary>
+                </main>
+                <ErrorBoundary name="copilot">
+                  <CopilotWidget />
+                </ErrorBoundary>
               </div>
             )}
           </ConfirmProvider>
