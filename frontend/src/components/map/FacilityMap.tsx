@@ -162,7 +162,21 @@ function trailColor(t: number): string {
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
-export default function FacilityMap() {
+/** Optional external layer controls (lifted to the site-map page sidebar).
+ *  When supplied, these gate the corresponding internal layers and the
+ *  component's own duplicate toggles for them are hidden. */
+export interface ExternalMapLayers {
+  heatmap: boolean;
+  cameraFov: boolean;
+  violations: boolean;
+  assetTrails: boolean;
+}
+
+interface FacilityMapProps {
+  layers?: ExternalMapLayers;
+}
+
+export default function FacilityMap({ layers }: FacilityMapProps = {}) {
   // ── Map refs ──────────────────────────────────────────────────
   const mapRef = useRef<any>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -186,6 +200,17 @@ export default function FacilityMap() {
   const [showCameras, setShowCameras] = useState(true);
   const [showHeatmap, setShowHeatmap] = useState(false);
   const [showViolations, setShowViolations] = useState(true);
+
+  // When the parent supplies layer controls, mirror them into the internal
+  // toggles that gate rendering (cameraFov→cameras, assetTrails→assets).
+  const controlled = layers != null;
+  useEffect(() => {
+    if (!layers) return;
+    setShowHeatmap(layers.heatmap);
+    setShowCameras(layers.cameraFov);
+    setShowViolations(layers.violations);
+    setShowAssets(layers.assetTrails);
+  }, [layers]);
 
   // ── Feature state ─────────────────────────────────────────────
   const [heatmapPoints, setHeatmapPoints] = useState<HeatmapPoint[]>([]);
@@ -1215,32 +1240,39 @@ export default function FacilityMap() {
               value: showGeofences,
               setter: setShowGeofences,
               color: "bg-red-500",
+              external: false,
             },
             {
               label: "Cameras & Sensors",
               value: showCameras,
               setter: setShowCameras,
               color: "bg-green-500",
+              external: true,
             },
             {
               label: "Tracked Assets",
               value: showAssets,
               setter: setShowAssets,
               color: "bg-blue-500",
+              external: true,
             },
             {
               label: heatmapLoading ? "Heatmap (loading…)" : "Heatmap",
               value: showHeatmap,
               setter: setShowHeatmap,
               color: "bg-orange-500",
+              external: true,
             },
             {
               label: "Violations",
               value: showViolations,
               setter: setShowViolations,
               color: "bg-pink-500",
+              external: true,
             },
-          ].map(({ label, value, setter, color }) => (
+          ]
+            .filter((row) => !controlled || !row.external)
+            .map(({ label, value, setter, color }) => (
             <label
               key={label}
               className="flex items-center gap-2 cursor-pointer text-slate-300 hover:text-white"
