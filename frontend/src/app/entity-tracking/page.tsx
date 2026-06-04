@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { cn, apiFetch } from "@/lib/utils";
 import { useToast } from "@/components/common/Toaster";
+import { BehavioralFlagBadges } from "@/components/entity/BehavioralFlagBadges";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -52,6 +53,7 @@ interface TrackedEntity {
   zones_entered: string[];
   risk_score: number;
   escalation_level: "none" | "watch" | "alert" | "critical";
+  behavioral_flags?: string[];
   first_seen: string;
   last_seen: string;
   track_ids: string[];
@@ -589,6 +591,11 @@ export default function EntityTrackingPage() {
                                   <Users className="h-2.5 w-2.5" />
                                   Group: {groupSize}
                                 </span>
+                              )}
+
+                              {/* Composite behavioral signature flags */}
+                              {entity.behavioral_flags && entity.behavioral_flags.length > 0 && (
+                                <BehavioralFlagBadges flags={entity.behavioral_flags} max={3} />
                               )}
                             </div>
                             <div className="flex items-center gap-3 mt-0.5">

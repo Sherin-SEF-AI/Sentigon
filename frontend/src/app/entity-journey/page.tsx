@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useToast } from "@/components/common/Toaster";
+import { BehavioralFlagBadges } from "@/components/entity/BehavioralFlagBadges";
 import type { Camera } from "@/lib/types";
 import { apiFetch, formatTimestamp } from "@/lib/utils";
 
@@ -10,8 +11,10 @@ interface JourneyEntity {
   entity_id: string;
   entity_type?: string;
   risk_score?: number;
+  escalation_level?: string;
   cameras_visited?: number;
   zones_entered?: string[];
+  behavioral_flags?: string[];
   last_seen_at?: string;
 }
 
@@ -76,6 +79,11 @@ export default function EntityJourneyPage() {
     [appearances]
   );
 
+  const selectedEntity = useMemo(
+    () => entities.find((e) => e.entity_id === selected) ?? null,
+    [entities, selected]
+  );
+
   return (
     <div className="p-6 grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
       {/* Entity list */}
@@ -112,6 +120,9 @@ export default function EntityJourneyPage() {
                   <div className="text-xs text-gray-500">
                     {e.cameras_visited ?? 0} cameras · {e.zones_entered?.length ?? 0} zones
                   </div>
+                  {e.behavioral_flags && e.behavioral_flags.length > 0 && (
+                    <BehavioralFlagBadges flags={e.behavioral_flags} max={3} className="mt-1.5" />
+                  )}
                 </button>
               </li>
             ))}
@@ -134,6 +145,36 @@ export default function EntityJourneyPage() {
           <div className="text-sm text-gray-500 py-12 text-center">No appearances recorded.</div>
         ) : (
           <>
+            {selectedEntity && (
+              <div className="mb-4 rounded-lg border border-gray-800 bg-zinc-900/40 p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-sm font-medium text-gray-100">
+                    {(selectedEntity.entity_type ?? "entity")} · {selectedEntity.entity_id.slice(0, 8)}
+                  </span>
+                  <div className="flex items-center gap-2 text-[11px]">
+                    {selectedEntity.escalation_level &&
+                      selectedEntity.escalation_level !== "none" && (
+                        <span className="rounded border border-orange-500/40 px-1.5 py-0.5 uppercase text-orange-400">
+                          {selectedEntity.escalation_level}
+                        </span>
+                      )}
+                    {typeof selectedEntity.risk_score === "number" && (
+                      <span className="text-gray-400">
+                        risk {selectedEntity.risk_score.toFixed(2)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                {selectedEntity.behavioral_flags &&
+                  selectedEntity.behavioral_flags.length > 0 && (
+                    <BehavioralFlagBadges
+                      flags={selectedEntity.behavioral_flags}
+                      max={8}
+                      className="mt-2"
+                    />
+                  )}
+              </div>
+            )}
             <div className="text-sm text-gray-400 mb-4">
               {appearances.length} appearances across {camerasInJourney} camera(s)
             </div>
