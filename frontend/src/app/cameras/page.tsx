@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { cn, apiFetch } from "@/lib/utils";
 import { useToast } from "@/components/common/Toaster";
+import { DataState } from "@/components/common/DataState";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -605,8 +606,8 @@ function CamerasTab() {
     setLoading(true);
     setError("");
     try {
-      const data = await apiFetch<CameraItem[]>("/api/cameras");
-      setCameras(data);
+      const data = await apiFetch<CameraItem[]>("/api/cameras", { throwOnError: true });
+      setCameras(Array.isArray(data) ? data : []);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load cameras");
     } finally {
@@ -618,25 +619,15 @@ function CamerasTab() {
     fetchCameras();
   }, [fetchCameras]);
 
-  if (loading) {
+  if (loading || error) {
     return (
-      <div className="flex items-center justify-center py-16">
-        <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20">
-        <AlertTriangle className="mb-2 h-8 w-8 text-red-500" />
-        <p className="text-sm text-red-400">{error}</p>
-        <button
-          onClick={fetchCameras}
-          className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
-        >
-          Retry
-        </button>
+      <div className="py-12">
+        <DataState
+          loading={loading}
+          error={error || null}
+          onRetry={fetchCameras}
+          message="Failed to load cameras"
+        />
       </div>
     );
   }
