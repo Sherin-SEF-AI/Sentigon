@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/common/Toaster";
 import type { Camera } from "@/lib/types";
 import { apiFetch } from "@/lib/utils";
@@ -178,12 +179,7 @@ export default function TripwiresPage() {
             <input className={inputCls} value={classes} onChange={(e) => setClasses(e.target.value)} />
           </Field>
         </div>
-        <button
-          onClick={createTripwire}
-          className="rounded-md bg-cyan-600 hover:bg-cyan-500 px-4 py-1.5 text-sm font-medium text-white"
-        >
-          Create tripwire
-        </button>
+        <Button onClick={createTripwire}>Create tripwire</Button>
       </div>
 
       {/* List */}
@@ -205,12 +201,9 @@ export default function TripwiresPage() {
                   ({w.point_a.join(", ")}) → ({w.point_b.join(", ")}) · {w.direction} · {w.classes.join(", ")}
                 </div>
               </div>
-              <button
-                onClick={() => removeTripwire(w.id)}
-                className="text-xs text-red-400 hover:text-red-300 border border-red-500/30 rounded px-2 py-1"
-              >
+              <Button variant="outline" size="sm" onClick={() => removeTripwire(w.id)}>
                 Delete
-              </button>
+              </Button>
             </li>
           ))}
           {!loading && tripwires.length === 0 && (
