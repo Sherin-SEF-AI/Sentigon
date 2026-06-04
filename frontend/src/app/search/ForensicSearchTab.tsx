@@ -34,7 +34,22 @@ import { useToast } from "@/components/common/Toaster";
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
-type SearchTab = "attributes" | "vehicle" | "similarity" | "cross-camera";
+type SearchTab = "attributes" | "vehicle" | "similarity" | "cross-camera" | "objects";
+
+interface ObjectHit {
+  entity_id?: string;
+  camera_id?: string;
+  zone_id?: string | null;
+  timestamp?: number;
+  behavior?: string | null;
+  score?: number;
+}
+
+interface ObjectSearchResponse {
+  query: string;
+  result_count: number;
+  results: ObjectHit[];
+}
 
 interface AttributeSearchParams {
   clothing_color: string;
@@ -123,6 +138,7 @@ const TABS: { key: SearchTab; label: string; icon: React.ReactNode }[] = [
   { key: "vehicle", label: "Vehicle Search", icon: <Car className="h-4 w-4" /> },
   { key: "similarity", label: "Similarity Search", icon: <ScanSearch className="h-4 w-4" /> },
   { key: "cross-camera", label: "Cross-Camera Tracking", icon: <Route className="h-4 w-4" /> },
+  { key: "objects", label: "Object NL Search", icon: <Search className="h-4 w-4" /> },
 ];
 
 const GENDER_OPTIONS = ["", "male", "female", "unknown"] as const;
@@ -532,6 +548,12 @@ export default function ForensicSearchTab() {
     null
   );
 
+  /* --- Object NL search state --- */
+  const [objectQuery, setObjectQuery] = useState("");
+  const [objectResult, setObjectResult] = useState<ObjectSearchResponse | null>(
+    null
+  );
+
   /* --- Shared results state --- */
   const [results, setResults] = useState<ForensicResult[]>([]);
   const [totalResults, setTotalResults] = useState(0);
@@ -733,6 +755,37 @@ export default function ForensicSearchTab() {
     }
   }, [crossParams]);
 
+  const searchObjects = useCallback(async () => {
+    const q = objectQuery.trim();
+    if (!q) {
+      setError("Please describe the person or object to search for");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    setResults([]);
+    setTotalResults(0);
+    try {
+      const data = await apiFetch<ObjectSearchResponse>(
+        "/api/forensic-search/objects",
+        {
+          method: "POST",
+          body: JSON.stringify({ query: q, top_k: 30 }),
+          throwOnError: true,
+        }
+      );
+      setObjectResult(
+        data ?? { query: q, result_count: 0, results: [] }
+      );
+      setQueryTimeMs(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Object search failed");
+      setObjectResult(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [objectQuery]);
+
   /* ── Unified search dispatcher ─────────────────────────────── */
 
   const handleSearch = useCallback(
@@ -746,9 +799,11 @@ export default function ForensicSearchTab() {
           return searchSimilarity(page);
         case "cross-camera":
           return searchCrossCamera();
+        case "objects":
+          return searchObjects();
       }
     },
-    [activeTab, searchAttributes, searchVehicle, searchSimilarity, searchCrossCamera]
+    [activeTab, searchAttributes, searchVehicle, searchSimilarity, searchCrossCamera, searchObjects]
   );
 
   /* ── File upload handler ───────────────────────────────────── */
@@ -791,6 +846,7 @@ export default function ForensicSearchTab() {
     setCurrentPage(1);
     setQueryTimeMs(null);
     setCrossResult(null);
+    setObjectResult(null);
   }, []);
 
   /* ── Pagination ────────────────────────────────────────────── */
@@ -1525,6 +1581,53 @@ export default function ForensicSearchTab() {
               </div>
             </div>
           )}
+
+          {activeTab === "objects" && (
+            <div className="space-y-5">
+              <div className="flex items-center gap-2 mb-1">
+                <Search className="h-4 w-4 text-cyan-400" />
+                <h2 className="text-sm font-semibold text-gray-200">
+                  Natural-Language Object Search
+                </h2>
+              </div>
+
+              <div>
+                <FieldLabel>Describe the person or object</FieldLabel>
+                <div className="flex gap-2">
+                  <input
+                    value={objectQuery}
+                    onChange={(e) => setObjectQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleSearch();
+                    }}
+                    placeholder="e.g. person in a red jacket carrying a backpack"
+                    className="flex-1 rounded-lg border border-gray-700 bg-gray-800/60 px-3 py-2.5 text-sm text-gray-200 placeholder:text-gray-500 focus:border-cyan-500 focus:outline-none"
+                  />
+                  <button
+                    onClick={() => handleSearch()}
+                    disabled={loading || !objectQuery.trim()}
+                    className={cn(
+                      "flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition-all",
+                      "bg-cyan-600 text-white hover:bg-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed",
+                      "shadow-lg shadow-cyan-600/20"
+                    )}
+                  >
+                    {loading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Search className="h-4 w-4" />
+                    )}
+                    Search
+                  </button>
+                </div>
+                <p className="mt-2 text-[11px] text-gray-500">
+                  Semantic CLIP search over indexed object crops. Requires
+                  re-identification embeddings (REID_USE_CLIP) and the vector
+                  store to be enabled.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* ── Error Banner ────────────────────────────────────── */}
@@ -1610,6 +1713,71 @@ export default function ForensicSearchTab() {
               </h3>
               <JourneyTimeline journey={crossResult.journey} />
             </div>
+          </div>
+        )}
+
+        {/* ── Object NL Search Results ────────────────────────── */}
+        {!loading && activeTab === "objects" && objectResult && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-xs text-gray-500">
+              <Search className="h-3.5 w-3.5" />
+              <span>
+                {objectResult.result_count} match
+                {objectResult.result_count === 1 ? "" : "es"} for
+                <span className="text-gray-300"> “{objectResult.query}”</span>
+              </span>
+            </div>
+
+            {objectResult.results.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-gray-500">
+                <Search className="h-8 w-8 mb-3 opacity-40" />
+                <p className="text-sm">No matching objects found</p>
+                <p className="text-[11px] mt-1">
+                  Try a broader description, or confirm object embeddings are
+                  being indexed.
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-2">
+                {objectResult.results.map((hit, i) => (
+                  <div
+                    key={`${hit.entity_id ?? "obj"}-${i}`}
+                    className="flex items-center justify-between gap-4 rounded-xl border border-gray-800 bg-zinc-900/50 px-4 py-3"
+                  >
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 text-sm text-gray-200">
+                        <Camera className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
+                        <span className="truncate">
+                          Camera {String(hit.camera_id ?? "—").slice(0, 12)}
+                        </span>
+                        {hit.behavior && (
+                          <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[10px] font-medium text-amber-300">
+                            {hit.behavior}
+                          </span>
+                        )}
+                      </div>
+                      <div className="mt-1 flex items-center gap-3 text-[11px] text-gray-500">
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {hit.timestamp
+                            ? fmtTimestamp(
+                                new Date(hit.timestamp * 1000).toISOString()
+                              )
+                            : "—"}
+                        </span>
+                        {hit.zone_id && <span>Zone {String(hit.zone_id).slice(0, 8)}</span>}
+                        <span>Entity {String(hit.entity_id ?? "—").slice(0, 8)}</span>
+                      </div>
+                    </div>
+                    {typeof hit.score === "number" && (
+                      <span className="shrink-0 text-sm font-bold text-cyan-400 tabular-nums">
+                        {(hit.score * 100).toFixed(0)}%
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -1723,7 +1891,7 @@ export default function ForensicSearchTab() {
         )}
 
         {/* ── Empty State ─────────────────────────────────────── */}
-        {!loading && !error && results.length === 0 && !crossResult && (
+        {!loading && !error && results.length === 0 && !crossResult && !objectResult && (
           <div className="flex flex-col items-center justify-center py-20 text-gray-600">
             <Search className="h-12 w-12 mb-4 opacity-30" />
             <p className="text-sm">
