@@ -14,7 +14,7 @@ const _inflight = new Map<string, Promise<unknown>>();
 
 export async function apiFetch<T = unknown>(
   path: string,
-  options: RequestInit & { timeoutMs?: number; silent404?: boolean } = {}
+  options: RequestInit & { timeoutMs?: number; silent404?: boolean; throwOnError?: boolean } = {}
 ): Promise<T> {
   const token =
     typeof window !== "undefined" ? localStorage.getItem("sentinel_token") : null;
@@ -53,8 +53,9 @@ export async function apiFetch<T = unknown>(
             throw new Error("Session expired");
           }
         }
-        // For GET requests, silently return undefined on non-ok responses (optional endpoints)
-        if (method === "GET" && !res.ok) {
+        // For GET requests, silently return undefined on non-ok responses
+        // (optional endpoints) — UNLESS the caller opts into real error states.
+        if (method === "GET" && !res.ok && !options.throwOnError) {
           return undefined as T;
         }
         isHttpError = true;
@@ -69,7 +70,8 @@ export async function apiFetch<T = unknown>(
         throw new Error("Request timeout");
       }
       // For GET network errors, return undefined instead of retrying/throwing
-      if (!isHttpError && method === "GET") {
+      // (unless the caller opted into real error states via throwOnError).
+      if (!isHttpError && method === "GET" && !options.throwOnError) {
         return undefined as T;
       }
       throw e;
