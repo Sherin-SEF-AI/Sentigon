@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/common/Toaster";
+import TripwireCanvas, { type Point } from "@/components/tripwires/TripwireCanvas";
 import type { Camera } from "@/lib/types";
 import { apiFetch } from "@/lib/utils";
 
@@ -38,10 +39,8 @@ export default function TripwiresPage() {
 
   // create form
   const [name, setName] = useState("New tripwire");
-  const [ax, setAx] = useState(0);
-  const [ay, setAy] = useState(240);
-  const [bx, setBx] = useState(640);
-  const [by, setBy] = useState(240);
+  const [pointA, setPointA] = useState<Point>([0, 240]);
+  const [pointB, setPointB] = useState<Point>([640, 240]);
   const [direction, setDirection] = useState<string>("both");
   const [severity, setSeverity] = useState<string>("medium");
   const [classes, setClasses] = useState("person");
@@ -82,14 +81,18 @@ export default function TripwiresPage() {
       addToast("info", "Select a camera first.");
       return;
     }
+    if (pointA.length !== 2 || pointB.length !== 2) {
+      addToast("info", "Draw the tripwire line (place points A and B).");
+      return;
+    }
     try {
       await apiFetch("/api/tripwires", {
         method: "POST",
         body: JSON.stringify({
           camera_id: cameraId,
           name,
-          point_a: [ax, ay],
-          point_b: [bx, by],
+          point_a: pointA,
+          point_b: pointB,
           direction,
           severity,
           classes: classes.split(",").map((s) => s.trim()).filter(Boolean),
@@ -139,47 +142,57 @@ export default function TripwiresPage() {
       </div>
 
       {/* Create form */}
-      <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-4 space-y-3">
+      <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-4 space-y-4">
         <div className="text-sm font-medium text-gray-200">New tripwire</div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <Field label="Name">
-            <input className={inputCls} value={name} onChange={(e) => setName(e.target.value)} />
-          </Field>
-          <Field label="A (x, y)">
-            <div className="flex gap-2">
-              <input type="number" className={inputCls} value={ax} onChange={(e) => setAx(Number(e.target.value))} />
-              <input type="number" className={inputCls} value={ay} onChange={(e) => setAy(Number(e.target.value))} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          {/* Canvas line editor */}
+          <div>
+            <span className="mb-1 block text-xs text-gray-500">
+              Draw line on camera view
+            </span>
+            <TripwireCanvas
+              cameraId={cameraId || undefined}
+              pointA={pointA}
+              pointB={pointB}
+              direction={direction}
+              onChange={(a, b) => {
+                setPointA(a);
+                setPointB(b);
+              }}
+            />
+          </div>
+
+          {/* Metadata fields */}
+          <div className="grid grid-cols-2 gap-3 content-start">
+            <Field label="Name">
+              <input className={inputCls} value={name} onChange={(e) => setName(e.target.value)} />
+            </Field>
+            <Field label="Direction">
+              <select className={inputCls} value={direction} onChange={(e) => setDirection(e.target.value)}>
+                {DIRECTIONS.map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Severity">
+              <select className={inputCls} value={severity} onChange={(e) => setSeverity(e.target.value)}>
+                {Object.keys(SEVERITY_STYLES).map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Classes (comma-separated)">
+              <input className={inputCls} value={classes} onChange={(e) => setClasses(e.target.value)} />
+            </Field>
+            <div className="col-span-2 pt-1">
+              <Button onClick={createTripwire}>Create tripwire</Button>
             </div>
-          </Field>
-          <Field label="B (x, y)">
-            <div className="flex gap-2">
-              <input type="number" className={inputCls} value={bx} onChange={(e) => setBx(Number(e.target.value))} />
-              <input type="number" className={inputCls} value={by} onChange={(e) => setBy(Number(e.target.value))} />
-            </div>
-          </Field>
-          <Field label="Direction">
-            <select className={inputCls} value={direction} onChange={(e) => setDirection(e.target.value)}>
-              {DIRECTIONS.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Severity">
-            <select className={inputCls} value={severity} onChange={(e) => setSeverity(e.target.value)}>
-              {Object.keys(SEVERITY_STYLES).map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Classes (comma-separated)">
-            <input className={inputCls} value={classes} onChange={(e) => setClasses(e.target.value)} />
-          </Field>
+          </div>
         </div>
-        <Button onClick={createTripwire}>Create tripwire</Button>
       </div>
 
       {/* List */}
