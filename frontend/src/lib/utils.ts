@@ -1,6 +1,8 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+import { SEVERITY_CLASSES, STATUS_CLASSES, THREAT_LEVEL_HEX } from "@/lib/tokens";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -94,34 +96,13 @@ export function formatTimestamp(iso: string): string {
 }
 
 export function severityColor(severity: string): string {
-  const map: Record<string, string> = {
-    critical: "text-red-500 bg-red-500/10 border-red-500",
-    high: "text-orange-500 bg-orange-500/10 border-orange-500",
-    medium: "text-yellow-500 bg-yellow-500/10 border-yellow-500",
-    low: "text-blue-400 bg-blue-400/10 border-blue-400",
-    info: "text-gray-400 bg-gray-400/10 border-gray-400",
-  };
-  return map[severity] || map.info;
+  return SEVERITY_CLASSES[severity] || SEVERITY_CLASSES.info;
 }
 
 export function statusColor(status: string): string {
-  const map: Record<string, string> = {
-    new: "text-red-400",
-    acknowledged: "text-yellow-400",
-    investigating: "text-blue-400",
-    resolved: "text-green-400",
-    dismissed: "text-gray-500",
-    escalated: "text-red-600",
-  };
-  return map[status] || "text-gray-400";
+  return STATUS_CLASSES[status] || "text-gray-400";
 }
 
 export function threatLevelColor(level: string): string {
-  const map: Record<string, string> = {
-    critical: "#ef4444",
-    high: "#f97316",
-    elevated: "#eab308",
-    normal: "#22c55e",
-  };
-  return map[level] || "#22c55e";
+  return THREAT_LEVEL_HEX[level] || THREAT_LEVEL_HEX.normal;
 }
