@@ -98,9 +98,15 @@ async def get_all_cameras_status() -> dict:
     cached = _cache_get("get_all_cameras_status")
     if cached is not None:
         return cached
+    from backend.config import settings
     async with async_session() as db:
         result = await db.execute(select(Camera).where(Camera.is_active.is_(True)))
         cameras = result.scalars().all()
+        # Exclude local USB/laptop webcams (digit-only source) from the agents'
+        # analysis view unless explicitly enabled — they only yield hallucinated
+        # detections. They still stream to the video wall via the camera API.
+        if not settings.WEBCAM_MONITORING_ENABLED:
+            cameras = [c for c in cameras if not (c.source or "").isdigit()]
         result_data = {
             "success": True,
             "total": len(cameras),

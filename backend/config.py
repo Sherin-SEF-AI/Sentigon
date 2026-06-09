@@ -121,6 +121,12 @@ class Settings(BaseSettings):
     MAX_CAMERAS: int = 16
     FRAME_BUFFER_SIZE: int = 30
     DEFAULT_FPS: int = 15
+    # Run AI threat analysis on local USB/laptop webcams (digit-only sources).
+    # Off by default: a laptop webcam pointed at a desk is not a security feed,
+    # and analysing it only produces hallucinated detections. Webcams still
+    # stream to the video wall; real network cameras (RTSP/ONVIF URLs) are
+    # always analysed regardless of this flag.
+    WEBCAM_MONITORING_ENABLED: bool = False
 
     # ── Auto Recording ──────────────────────────────────────
     AUTO_RECORD_ENABLED: bool = True

@@ -416,7 +416,14 @@ class MonitoringAgent:
     # ------------------------------------------------------------------ #
 
     async def _get_active_cameras(self) -> List[Camera]:
-        """Return cameras that are both active and online."""
+        """Return cameras that are both active and online.
+
+        Local USB/laptop webcams (digit-only source) are excluded from AI threat
+        analysis unless ``WEBCAM_MONITORING_ENABLED`` is set — they still stream
+        to the video wall, but analysing a webcam pointed at a desk only yields
+        hallucinated detections. Real network cameras (RTSP/ONVIF URLs) are
+        always analysed.
+        """
         try:
             async with async_session() as session:
                 result = await session.execute(
@@ -425,7 +432,10 @@ class MonitoringAgent:
                         Camera.status == CameraStatus.ONLINE,
                     )
                 )
-                return list(result.scalars().all())
+                cameras = list(result.scalars().all())
+            if not settings.WEBCAM_MONITORING_ENABLED:
+                cameras = [c for c in cameras if not (c.source or "").isdigit()]
+            return cameras
         except Exception as exc:
             logger.error("Failed to fetch active cameras: %s", exc)
             return []
