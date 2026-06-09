@@ -47,6 +47,7 @@ from backend.models.phase2_models import (
     VIPProximityEvent,
 )
 from backend.models.pacs_models import PacsDoor, PacsBadgeHolder
+from backend.models.alarm_models import AlarmPanelRow, AlarmZoneRow
 
 __all__ = [
     "User",
@@ -80,4 +81,6 @@ __all__ = [
     "Tripwire",
     "PacsDoor",
     "PacsBadgeHolder",
+    "AlarmPanelRow",
+    "AlarmZoneRow",
 ]

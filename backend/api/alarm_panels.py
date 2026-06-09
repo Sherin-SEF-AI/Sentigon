@@ -60,6 +60,7 @@ class AcknowledgeEventRequest(BaseModel):
 async def get_alarm_status():
     """Return overall alarm system status including all panels, zones, and stats."""
     try:
+        await alarm_service.ensure_hydrated()
         return alarm_service.get_status()
     except Exception as exc:
         logger.exception("Failed to get alarm status")
@@ -68,18 +69,18 @@ async def get_alarm_status():
 
 @router.post("/panels", status_code=201)
 async def register_panel(body: RegisterPanelRequest):
-    """Register a new alarm panel with the system."""
+    """Register a new alarm panel with the system (persisted)."""
     try:
+        await alarm_service.ensure_hydrated()
         if body.id in alarm_service.panels:
             raise HTTPException(status_code=409, detail=f"Panel '{body.id}' already registered")
-        panel = AlarmPanel(
-            panel_id=body.id,
-            name=body.name,
-            model=body.model,
-            ip_address=body.ip_address,
-            port=body.port,
-        )
-        alarm_service.register_panel(panel)
+        await alarm_service.save_panel({
+            "panel_id": body.id,
+            "name": body.name,
+            "model": body.model,
+            "ip_address": body.ip_address,
+            "port": body.port,
+        })
         return {"panel_id": body.id, "name": body.name, "status": "registered"}
     except HTTPException:
         raise
@@ -88,10 +89,25 @@ async def register_panel(body: RegisterPanelRequest):
         raise HTTPException(status_code=500, detail=str(exc))
 
 
+@router.delete("/panels/{panel_id}")
+async def delete_panel(panel_id: str):
+    """Remove an alarm panel (persisted)."""
+    try:
+        if not await alarm_service.remove_panel(panel_id):
+            raise HTTPException(status_code=404, detail=f"Panel '{panel_id}' not found")
+        return {"deleted": True, "panel_id": panel_id}
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.exception("Failed to delete alarm panel")
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
 @router.get("/panels/{panel_id}")
 async def get_panel(panel_id: str):
     """Get details for a specific alarm panel."""
     try:
+        await alarm_service.ensure_hydrated()
         status = alarm_service.get_status()
         panel_data = status["panels"].get(panel_id)
         if not panel_data:
@@ -162,6 +178,7 @@ async def bypass_zone(panel_id: str, zone_number: int):
 async def add_zone(panel_id: str, body: AddZoneRequest):
     """Add a zone to an existing alarm panel."""
     try:
+        await alarm_service.ensure_hydrated()
         panel = alarm_service.panels.get(panel_id)
         if not panel:
             raise HTTPException(status_code=404, detail=f"Panel '{panel_id}' not found")
@@ -171,21 +188,20 @@ async def add_zone(panel_id: str, body: AddZoneRequest):
                 detail=f"Zone {body.zone_number} already exists on panel '{panel_id}'",
             )
         try:
-            zone_type = AlarmZoneType(body.zone_type)
+            AlarmZoneType(body.zone_type)
         except ValueError:
             valid = [t.value for t in AlarmZoneType]
             raise HTTPException(
                 status_code=422,
                 detail=f"Invalid zone_type '{body.zone_type}'. Must be one of: {', '.join(valid)}",
             )
-        zone = AlarmZone(
-            zone_number=body.zone_number,
-            name=body.name,
-            zone_type=zone_type,
-            camera_id=body.camera_id,
-            partition=body.partition,
-        )
-        panel.zones[body.zone_number] = zone
+        await alarm_service.save_zone(panel_id, {
+            "zone_number": body.zone_number,
+            "name": body.name,
+            "zone_type": body.zone_type,
+            "camera_id": body.camera_id,
+            "partition": body.partition,
+        })
         return {
             "panel_id": panel_id,
             "zone_number": body.zone_number,
@@ -289,6 +305,7 @@ async def get_sia_status():
 async def get_all_zones():
     """Return all alarm zones aggregated across every registered panel."""
     try:
+        await alarm_service.ensure_hydrated()
         zones = []
         for panel_id, panel in alarm_service.panels.items():
             for zone in panel.zones.values():
