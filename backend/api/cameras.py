@@ -5,7 +5,7 @@ from __future__ import annotations
 import uuid
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -89,6 +89,34 @@ async def get_camera(
     if camera is None:
         raise HTTPException(status_code=404, detail="Camera not found")
     return CameraResponse.model_validate(camera)
+
+
+# ── Camera snapshot (latest frame as JPEG) ───────────────────
+
+@router.get("/{camera_id}/snapshot")
+async def camera_snapshot(
+    camera_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    _user: User = Depends(get_current_user),
+):
+    """Return the latest captured frame of a camera as a JPEG image."""
+    # Verify camera exists
+    result = await db.execute(select(Camera).where(Camera.id == camera_id))
+    camera = result.scalar_one_or_none()
+    if camera is None:
+        raise HTTPException(status_code=404, detail="Camera not found")
+
+    from backend.services.video_capture import capture_manager
+
+    stream = capture_manager.get_stream(str(camera_id))
+    if stream is None:
+        raise HTTPException(status_code=404, detail="No active stream for this camera")
+
+    jpeg = stream.encode_jpeg()
+    if jpeg is None:
+        raise HTTPException(status_code=404, detail="No frame available for this camera")
+
+    return Response(content=jpeg, media_type="image/jpeg")
 
 
 # ── Update camera ────────────────────────────────────────────

@@ -45,7 +45,7 @@ class CompanionDiscoveryAgent(BaseAgent):
                 "coordinated movement."
             ),
             tier="reasoning",
-            model_name="deepseek-v3.1:671b-cloud",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "get_current_detections",
                 "get_tracking_trajectory",

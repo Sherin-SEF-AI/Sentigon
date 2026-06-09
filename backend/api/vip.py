@@ -55,6 +55,13 @@ class VIPProfileResponse(BaseModel):
     updated_at: Optional[str]
 
 
+class EscortAssignRequest(BaseModel):
+    escort_name: Optional[str] = None
+    officer: Optional[str] = None
+    agent: Optional[str] = None
+    route: Optional[str] = None
+
+
 class ProximityEventResponse(BaseModel):
     id: str
     vip_id: str
@@ -174,6 +181,58 @@ async def update_vip_profile(
     except Exception as e:
         logger.error(f"Error updating VIP profile {vip_id}: {e}")
         raise HTTPException(status_code=500, detail="Failed to update VIP profile")
+
+
+@router.post("/{vip_id}/escort", response_model=dict)
+async def assign_vip_escort(
+    vip_id: uuid.UUID,
+    body: EscortAssignRequest,
+    _user=Depends(get_current_user),
+):
+    """Start/assign a protective escort for a VIP.
+
+    The VIP model has no dedicated escort column, so escort state is persisted on
+    the VIP's `appearance` JSONB under an `escort` key. Returns the escort
+    assignment. 404 if the VIP is unknown.
+    """
+    try:
+        async with async_session() as session:
+            result = await session.execute(
+                select(VIPProfile).where(VIPProfile.id == vip_id)
+            )
+            profile = result.scalar_one_or_none()
+            if not profile:
+                raise HTTPException(status_code=404, detail="VIP profile not found")
+
+            escort_name = body.escort_name or body.officer or body.agent
+            assigned_at = datetime.now(timezone.utc).isoformat()
+            escort = {
+                "escort_name": escort_name,
+                "route": body.route,
+                "assigned_at": assigned_at if escort_name else None,
+                "assigned_by": str(getattr(_user, "id", "")) or None,
+            }
+
+            # Persist onto the appearance JSONB (only writable structured field).
+            appearance = dict(profile.appearance or {})
+            appearance["escort"] = escort
+            profile.appearance = appearance
+            profile.updated_at = datetime.now(timezone.utc)
+            from sqlalchemy.orm.attributes import flag_modified
+            flag_modified(profile, "appearance")
+            await session.commit()
+
+            return {
+                "vip_id": str(vip_id),
+                "escort_name": escort_name,
+                "route": body.route,
+                "assigned_at": escort["assigned_at"],
+            }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error assigning VIP escort for {vip_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to assign VIP escort")
 
 
 @router.get("/proximity-events", response_model=List[dict])

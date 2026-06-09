@@ -6,7 +6,7 @@ import uuid
 from typing import Any, Dict, List
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.config import settings
@@ -160,3 +160,89 @@ async def get_zone_occupancy(
             else None
         ),
     }
+
+
+# ── Get zone analytics ───────────────────────────────────────
+
+@router.get("/{zone_id}/analytics", response_model=Dict[str, Any])
+async def get_zone_analytics(
+    zone_id: uuid.UUID,
+    hours: int = 24,
+    db: AsyncSession = Depends(get_db),
+    _user: User = Depends(get_current_user),
+):
+    """Return occupancy/dwell analytics for a zone (counts over time + current occupancy)."""
+    result = await db.execute(select(Zone).where(Zone.id == zone_id))
+    zone = result.scalar_one_or_none()
+    if zone is None:
+        raise HTTPException(status_code=404, detail="Zone not found")
+
+    avg_dwell_seconds: float | None = None
+    recent_events = 0
+    try:
+        from backend.services.analytics_engine import analytics_engine
+        history = await analytics_engine.zone_occupancy_history(
+            zone_id=str(zone_id), hours=hours,
+        )
+        rows = history.get("data", [])
+        if rows:
+            recent_events = rows[0].get("recent_events", 0) or 0
+    except Exception:
+        # Analytics engine unavailable — fall back to a direct event count.
+        from backend.models import Event
+        from datetime import datetime, timezone, timedelta
+        cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
+        count = await db.execute(
+            select(func.count(Event.id)).where(
+                Event.zone_id == zone_id, Event.timestamp >= cutoff,
+            )
+        )
+        recent_events = count.scalar() or 0
+
+    return {
+        "zone_id": str(zone.id),
+        "zone_name": zone.name,
+        "current_occupancy": zone.current_occupancy,
+        "max_occupancy": zone.max_occupancy,
+        "recent_events": recent_events,
+        "period_hours": hours,
+        "avg_dwell_seconds": avg_dwell_seconds,
+        "avg_dwell_minutes": round(avg_dwell_seconds / 60, 1) if avg_dwell_seconds else None,
+    }
+
+
+# ── Get recent zone events ───────────────────────────────────
+
+@router.get("/{zone_id}/events", response_model=List[Dict[str, Any]])
+async def get_zone_events(
+    zone_id: uuid.UUID,
+    limit: int = 50,
+    db: AsyncSession = Depends(get_db),
+    _user: User = Depends(get_current_user),
+):
+    """Return recent events in a zone, newest first. Empty list if none."""
+    result = await db.execute(select(Zone).where(Zone.id == zone_id))
+    zone = result.scalar_one_or_none()
+    if zone is None:
+        raise HTTPException(status_code=404, detail="Zone not found")
+
+    from backend.models import Event
+    events_result = await db.execute(
+        select(Event)
+        .where(Event.zone_id == zone_id)
+        .order_by(Event.timestamp.desc())
+        .limit(max(1, min(limit, 200)))
+    )
+    return [
+        {
+            "id": str(e.id),
+            "event_type": e.event_type,
+            "description": e.description,
+            "severity": e.severity.value if hasattr(e.severity, "value") else str(e.severity),
+            "confidence": e.confidence,
+            "camera_id": str(e.camera_id) if e.camera_id else None,
+            "frame_url": e.frame_url,
+            "timestamp": e.timestamp.isoformat() if e.timestamp else None,
+        }
+        for e in events_result.scalars().all()
+    ]

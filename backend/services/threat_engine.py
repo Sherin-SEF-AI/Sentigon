@@ -859,26 +859,13 @@ class ThreatEngine:
                 "detection_method": "gemini",
             })
 
-        anomalies_text = " ".join(analysis.get("anomalies", [])).lower()
-        scene_text = analysis.get("scene_description", "").lower()
-        combined_text = f"{anomalies_text} {scene_text}"
-
-        for sig in self.signatures.values():
-            if sig.detection_method == "yolo":
-                continue
-            if sig.gemini_keywords:
-                matches = sum(1 for kw in sig.gemini_keywords if kw.lower() in combined_text)
-                if matches > 0:
-                    confidence = min(0.4 + (matches * 0.15), 0.95)
-                    if not any(t["signature"] == sig.name for t in threats):
-                        threats.append({
-                            "signature": sig.name,
-                            "category": sig.category,
-                            "severity": sig.severity,
-                            "confidence": round(confidence, 3),
-                            "description": sig.description,
-                            "detection_method": "gemini_keyword",
-                        })
+        # NOTE: A loose substring keyword-matcher over the model's free-text
+        # scene description used to live here. It fabricated CRITICAL threats
+        # (e.g. "Active Shooter Indicators") whenever a single keyword like
+        # "shooting" appeared in a benign description, producing a flood of
+        # false positives. It has been removed: we now trust only the
+        # structured `threat_indicators` the vision model explicitly reports
+        # (handled above), which carry their own confidence.
 
         return threats
 

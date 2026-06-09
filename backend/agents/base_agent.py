@@ -94,7 +94,7 @@ class BaseAgent(ABC):
         role: str,
         description: str,
         tier: str,
-        model_name: str = "gemma3:27b-cloud",
+        model_name: str = "qwen2.5:7b",
         tool_names: list[str] | None = None,
         subscriptions: list[str] | None = None,
         cycle_interval: float = 15.0,

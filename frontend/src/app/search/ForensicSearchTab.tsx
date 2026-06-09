@@ -650,7 +650,7 @@ export default function ForensicSearchTab() {
         });
 
         const data = await apiFetch<ForensicSearchResponse>(
-          "/api/forensic-search/vehicle",
+          "/api/forensic-search/vehicles",
           { method: "POST", body: JSON.stringify(body) }
         );
 

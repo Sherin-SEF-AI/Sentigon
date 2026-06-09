@@ -75,7 +75,7 @@ class WatcherAgent(BaseAgent):
                 "Reduces AI calls by 80% while maintaining full awareness."
             ),
             tier="perception",
-            model_name="gemma3:4b",
+            model_name="qwen2.5:7b",
             tool_names=["capture_frame", "get_current_detections", "analyze_frame_with_gemini",
                         "get_zone_occupancy", "get_site_context", "store_observation",
                         "get_all_cameras_status", "get_all_zones_status"],

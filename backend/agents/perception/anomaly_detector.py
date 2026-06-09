@@ -103,7 +103,7 @@ class AnomalyDetectorAgent(BaseAgent):
                 "and continuously learns new baselines from normal activity."
             ),
             tier="perception",
-            model_name="gemma3:27b-cloud",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "get_current_detections",
                 "get_event_history",

@@ -17,10 +17,13 @@ logger = logging.getLogger(__name__)
 _DEFAULT_MODE = "autonomous"
 _DEFAULT_AUTO_APPROVE_TIMEOUT = 600  # 10 minutes
 _DEFAULT_PERFORMANCE_MODE = "standard"
-_DEFAULT_AI_PROVIDER = "gemini"  # Primary: Gemini, Fallback: Ollama
+_DEFAULT_AI_PROVIDER = "ollama"  # Local-first; Gemini is opt-in
 _VALID_AI_PROVIDERS = {"gemini", "ollama"}
 
-# Performance mode definitions
+# Performance mode definitions.
+# NOTE: the "gemini_enabled" key is a legacy name that simply toggles whether AI
+# scene analysis runs at all (it runs the local vision model, not Gemini).
+# "model" is the local Ollama model surfaced to the UI for the current depth.
 PERFORMANCE_MODES = {
     "ultra_fast": {
         "label": "Ultra Fast",
@@ -40,9 +43,9 @@ PERFORMANCE_MODES = {
         "cycle_multiplier": 0.5,
         "analysis_interval": 10,
         "max_output_tokens": 1024,
-        "ai_provider": "gemini",
-        "model": "gemini-3.1-flash-lite-preview",
-        "description": "Gemini 3.1 Flash Lite for fast AI analysis with minimal delay",
+        "ai_provider": "ollama",
+        "model": "qwen2.5:7b",
+        "description": "Local Qwen2.5 for fast AI analysis with minimal delay",
         "use_case": "Real-time monitoring with quick threat classification",
     },
     "standard": {
@@ -52,9 +55,9 @@ PERFORMANCE_MODES = {
         "cycle_multiplier": 1.0,
         "analysis_interval": 15,
         "max_output_tokens": 2048,
-        "ai_provider": "gemini",
-        "model": "gemini-3-flash-preview",
-        "description": "Gemini 3 Flash with thinking, balanced speed and depth",
+        "ai_provider": "ollama",
+        "model": "qwen2.5:7b",
+        "description": "Local Qwen2.5 with light reasoning, balanced speed and depth",
         "use_case": "Default operational mode for SOC operations",
     },
     "advanced": {
@@ -64,9 +67,9 @@ PERFORMANCE_MODES = {
         "cycle_multiplier": 2.0,
         "analysis_interval": 5,
         "max_output_tokens": 4096,
-        "ai_provider": "gemini",
-        "model": "gemini-3.1-pro-preview",
-        "description": "Gemini Pro with deep reasoning for complex threat analysis",
+        "ai_provider": "ollama",
+        "model": "qwen2.5:7b",
+        "description": "Local Qwen2.5 with deeper reasoning for complex threat analysis",
         "use_case": "Active incidents requiring thorough investigation",
     },
     "max_accuracy": {
@@ -76,8 +79,8 @@ PERFORMANCE_MODES = {
         "cycle_multiplier": 3.0,
         "analysis_interval": 3,
         "max_output_tokens": 8192,
-        "ai_provider": "gemini",
-        "model": "gemini-3.1-pro-preview",
+        "ai_provider": "ollama",
+        "model": "qwen2.5:7b",
         "description": "Maximum AI depth with extended reasoning and multi-pass analysis",
         "use_case": "Critical incidents, forensic investigation, threat hunting",
     },

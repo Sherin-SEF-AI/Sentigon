@@ -49,7 +49,7 @@ class ReporterAgent(BaseAgent):
                 "compliance monitoring into a single agent."
             ),
             tier="action",
-            model_name="gemma3:4b",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "get_threat_statistics",
                 "get_event_history",

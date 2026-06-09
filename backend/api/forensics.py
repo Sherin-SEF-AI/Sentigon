@@ -14,7 +14,7 @@ from sqlalchemy import select, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.database import get_db
-from backend.models import Event, Alert, Camera
+from backend.models import Event, Alert, Camera, Recording
 from backend.api.auth import get_current_user, require_role
 from backend.models.models import UserRole
 
@@ -105,6 +105,22 @@ class CorrelationResult(BaseModel):
 # ── Helpers ────────────────────────────────────────────────────
 
 SEVERITY_ORDER = {"info": 0, "low": 1, "medium": 2, "high": 3, "critical": 4}
+
+
+def _parse_dt(value: Any) -> Optional[datetime]:
+    """Best-effort parse of an ISO datetime string; None for non-datetimes.
+
+    Numeric offsets (e.g. replay seconds) are intentionally ignored so they
+    don't constrain recording lookups.
+    """
+    if isinstance(value, datetime):
+        return value
+    if isinstance(value, str):
+        try:
+            return datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except ValueError:
+            return None
+    return None
 
 
 def _event_to_dict(ev: Event) -> Dict[str, Any]:
@@ -691,4 +707,140 @@ async def export_pdf_report(
         raise HTTPException(status_code=501, detail="PDF generator not available")
     except Exception as e:
         logger.error("PDF generation failed: %s", e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ── Chain of Custody ───────────────────────────────────────────
+
+
+@router.get("/chain-of-custody/{evidence_id}")
+async def chain_of_custody(
+    evidence_id: str,
+    _user=Depends(require_role(UserRole.ANALYST)),
+):
+    """Return the chain-of-custody timeline for an evidence item.
+
+    Reuses the same evidence-chain service that backs
+    /api/evidence-chain/{id}/chain. Returns the ordered custody entries,
+    or 404 if the evidence item does not exist.
+    """
+    from enum import Enum
+
+    from backend.services.evidence_service import evidence_service
+
+    try:
+        chain = evidence_service.get_chain(evidence_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Evidence item not found")
+
+    entries = [
+        {
+            "entry_id": e.entry_id,
+            "timestamp": e.timestamp,
+            "action": e.action.value if isinstance(e.action, Enum) else e.action,
+            "actor": e.actor,
+            "from_location": e.from_location,
+            "to_location": e.to_location,
+            "notes": e.notes,
+            "signature": e.signature,
+        }
+        for e in chain
+    ]
+
+    return {
+        "evidence_id": evidence_id,
+        "entries": entries,
+        "total_entries": len(entries),
+    }
+
+
+# ── Export Video Clip ──────────────────────────────────────────
+
+
+@router.post("/export-clip")
+async def export_clip(
+    body: Dict[str, Any],
+    db: AsyncSession = Depends(get_db),
+    _user=Depends(require_role(UserRole.ANALYST)),
+):
+    """Export a video clip for a camera/time range.
+
+    Locates the existing continuous recording (produced by the auto-recorder)
+    that covers the requested window and returns a playable stream reference.
+    If no recording covers the window, returns an honest status object rather
+    than fabricated clip data.
+
+    Body: {camera_id, start_time, end_time}. A camera may also be resolved
+    from an event/incident id when camera_id is omitted.
+    """
+    try:
+        camera_id = body.get("camera_id")
+        start_time = body.get("start_time")
+        end_time = body.get("end_time")
+
+        # Resolve camera from an event/incident reference if not given directly
+        ref_id = body.get("event_id") or body.get("incident_id")
+        if not camera_id and ref_id:
+            try:
+                ev_res = await db.execute(select(Event).where(Event.id == uuid.UUID(str(ref_id))))
+                ev = ev_res.scalar_one_or_none()
+                if ev is not None:
+                    camera_id = str(ev.camera_id)
+            except (ValueError, TypeError):
+                pass
+
+        if not camera_id:
+            return {
+                "status": "unavailable",
+                "clip_url": None,
+                "detail": "No camera_id provided and none could be resolved from the request.",
+            }
+
+        try:
+            cam_uuid = uuid.UUID(str(camera_id))
+        except (ValueError, TypeError):
+            raise HTTPException(status_code=400, detail="Invalid camera_id")
+
+        # Find a continuous recording that overlaps the requested window.
+        # start_time/end_time may be ISO strings or numeric offsets; only
+        # use them for filtering when they parse as datetimes.
+        filters = [Recording.camera_id == cam_uuid]
+        win_start = _parse_dt(start_time)
+        win_end = _parse_dt(end_time)
+        if win_end is not None:
+            filters.append(Recording.start_time <= win_end)
+        if win_start is not None:
+            filters.append(
+                (Recording.end_time >= win_start) | (Recording.end_time.is_(None))
+            )
+
+        rec_stmt = (
+            select(Recording)
+            .where(and_(*filters))
+            .order_by(Recording.start_time.desc())
+            .limit(1)
+        )
+        rec = (await db.execute(rec_stmt)).scalar_one_or_none()
+
+        if rec is None:
+            return {
+                "status": "no_recording",
+                "clip_url": None,
+                "camera_id": str(cam_uuid),
+                "detail": "No recording is available for the requested camera/time range.",
+            }
+
+        return {
+            "status": "ready",
+            "recording_id": str(rec.id),
+            "clip_url": f"/api/video-archive/stream/{rec.id}",
+            "camera_id": str(cam_uuid),
+            "start_time": rec.start_time.isoformat() if rec.start_time else None,
+            "end_time": rec.end_time.isoformat() if rec.end_time else None,
+            "duration_seconds": rec.duration_seconds,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("Clip export failed: %s", e)
         raise HTTPException(status_code=500, detail=str(e))

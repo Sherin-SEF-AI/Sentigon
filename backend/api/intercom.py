@@ -240,6 +240,52 @@ async def broadcast(body: BroadcastRequest):
         raise HTTPException(status_code=500, detail=str(exc))
 
 
+@router.get("/broadcast/zones")
+async def list_broadcast_zones():
+    """List zones available for intercom broadcast.
+
+    Zones are derived from the registered intercom devices (grouped by their
+    ``zone``, the identifier the broadcast endpoint targets) and enriched with
+    Zone records from the database where the names match. Returns a list of
+    {zone_id, name, device_count}; empty if there are no devices/zones.
+    """
+    try:
+        # Count registered intercom devices per zone string
+        device_counts: dict = {}
+        for device in intercom_service.devices.values():
+            if device.zone:
+                device_counts[device.zone] = device_counts.get(device.zone, 0) + 1
+
+        # Enrich with Zone records from the DB (match on name)
+        zone_names: dict = {}
+        try:
+            from backend.database import async_session
+            from backend.models.models import Zone
+            from sqlalchemy import select
+
+            async with async_session() as session:
+                result = await session.execute(select(Zone).where(Zone.is_active.is_(True)))
+                for z in result.scalars().all():
+                    zone_names[z.name] = str(z.id)
+                    # Surface configured zones even if they have no devices yet
+                    device_counts.setdefault(z.name, 0)
+        except Exception:
+            logger.exception("Failed to load Zone records for broadcast zones")
+
+        zones = [
+            {
+                "zone_id": zone_names.get(zone, zone),
+                "name": zone,
+                "device_count": count,
+            }
+            for zone, count in sorted(device_counts.items())
+        ]
+        return zones
+    except Exception as exc:
+        logger.exception("Failed to list broadcast zones")
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
 @router.get("/calls")
 async def get_call_history(
     device_id: Optional[str] = Query(None, description="Filter by device ID"),

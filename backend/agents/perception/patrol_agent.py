@@ -101,7 +101,7 @@ class PatrolAgent(BaseAgent):
                 "findings to the perceptions channel."
             ),
             tier="perception",
-            model_name="gemma3:27b-cloud",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "capture_frame",
                 "analyze_frame_with_gemini",

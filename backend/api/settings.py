@@ -4,15 +4,45 @@ from __future__ import annotations
 import logging
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
+from sqlalchemy import select, func, desc
 
 from backend.api.auth import get_current_user, require_role
-from backend.models.models import UserRole
+from backend.database import async_session
+from backend.models.models import UserRole, AuditLog
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/settings", tags=["settings"])
+
+
+@router.get("/audit-log")
+async def get_audit_log(
+    limit: int = Query(100, ge=1, le=1000),
+    offset: int = Query(0, ge=0),
+    _user=Depends(require_role(UserRole.ADMIN)),
+):
+    """Paginated audit-trail entries (newest first)."""
+    async with async_session() as session:
+        total = await session.scalar(select(func.count(AuditLog.id)))
+        rows = (await session.execute(
+            select(AuditLog).order_by(desc(AuditLog.timestamp)).limit(limit).offset(offset)
+        )).scalars().all()
+        items = [
+            {
+                "id": str(r.id),
+                "user_id": str(r.user_id) if r.user_id else None,
+                "action": r.action,
+                "resource_type": r.resource_type,
+                "resource_id": r.resource_id,
+                "details": r.details,
+                "ip_address": r.ip_address,
+                "timestamp": r.timestamp.isoformat() if r.timestamp else None,
+            }
+            for r in rows
+        ]
+    return {"items": items, "total": total or 0, "limit": limit, "offset": offset}
 
 
 # ── GET /api/settings ─────────────────────────────────────────

@@ -46,6 +46,7 @@ from backend.models.phase2_models import (
     VIPProfile,
     VIPProximityEvent,
 )
+from backend.models.pacs_models import PacsDoor, PacsBadgeHolder
 
 __all__ = [
     "User",
@@ -77,4 +78,6 @@ __all__ = [
     "PendingActionStatus",
     "SystemSetting",
     "Tripwire",
+    "PacsDoor",
+    "PacsBadgeHolder",
 ]

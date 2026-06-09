@@ -34,30 +34,36 @@ class Settings(BaseSettings):
     # ── Ollama AI (all models) ─────────────────────────────────
     OLLAMA_HOST: str = "http://localhost:11434"
 
-    # Model tiers — intelligent routing
+    # Model tiers — intelligent routing.
+    # Defaults are LOCAL Ollama models so the system is fully functional out of
+    # the box without a .env. Override per-deployment as needed.
     # Tier 1: Heavy reasoning (investigations, forensics, copilot)
-    OLLAMA_REASONING_MODEL: str = "gemma3:4b"
+    OLLAMA_REASONING_MODEL: str = "qwen2.5:7b"
     # Tier 2: Standard tasks (perception agents, text analysis)
-    OLLAMA_STANDARD_MODEL: str = "gemma3:4b"
+    OLLAMA_STANDARD_MODEL: str = "qwen2.5:7b"
     # Tier 3: Vision analysis (frame analysis, image understanding)
-    OLLAMA_VISION_MODEL: str = "gemma3:4b"
+    OLLAMA_VISION_MODEL: str = "qwen2.5vl:7b"
     # Tier 4: Fast/lightweight (quick classifications, simple responses)
-    OLLAMA_FAST_MODEL: str = "gemma3:4b"
-    # Fallback models (tried in order if primary fails)
-    OLLAMA_FALLBACK_MODELS: str = "qwen3.5:0.8b"
+    OLLAMA_FAST_MODEL: str = "qwen2.5:7b"
+    # Fallback models (tried in order if primary fails) — stays local.
+    OLLAMA_FALLBACK_MODELS: str = "qwen2.5:7b"
 
     # Legacy alias
-    OLLAMA_TEXT_MODEL: str = "gemma3:4b"
+    OLLAMA_TEXT_MODEL: str = "qwen2.5:7b"
 
     # ── AI Provider ────────────────────────────────────────
-    AI_PROVIDER: str = "gemini"  # Primary: Gemini, Fallback: Ollama
+    # LOCAL-FIRST by default: all AI runs through Ollama. Cloud (Gemini) is an
+    # optional opt-in — set AI_PROVIDER=gemini, GEMINI_ENABLED=true and supply
+    # GEMINI_API_KEY to enable the cloud path (with automatic Ollama fallback).
+    AI_PROVIDER: str = "ollama"
     # No hardcoded key: supply via GEMINI_API_KEY env var. Any committed key is compromised.
     GEMINI_API_KEY: str = ""
     GEMINI_MODEL: str = "gemini-3.1-flash-lite-preview"  # Fast, cheap — agents/perception
     GEMINI_STANDARD_MODEL: str = "gemini-3-flash-preview"  # Standard — analysis/copilot
     GEMINI_PRO_MODEL: str = "gemini-3.1-pro-preview"  # Deep reasoning — investigations
     GEMINI_RATE_LIMIT: int = 10  # Max requests per minute (safe limit to prevent suspension)
-    GEMINI_ENABLED: bool = True
+    # Cloud disabled by default — flip to true (with a key) to use Gemini as primary.
+    GEMINI_ENABLED: bool = False
 
     # ── CLIP Video Embedding ──────────────────────────────
     HF_TOKEN: str = ""
@@ -100,6 +106,11 @@ class Settings(BaseSettings):
     PERSISTENCE_GATE_ENABLED: bool = True
     PERSISTENCE_MIN_OCCURRENCES: int = 2
     PERSISTENCE_WINDOW_SECONDS: float = 10.0
+
+    # Minimum confidence a threat must reach before it is persisted as an
+    # event/alert. Filters low-confidence hallucinations (e.g. a vision model
+    # loosely mentioning a threat word) so only genuine detections surface.
+    MIN_THREAT_CONFIDENCE: float = 0.6
     LOG_LEVEL: str = "INFO"
     CORS_ORIGINS: str = '["http://localhost:3000","http://localhost:3737","http://localhost:8000"]'
 

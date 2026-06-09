@@ -140,7 +140,7 @@ class RedTeamAgent(BaseAgent):
                 "spots, and generates adversarial vulnerability reports."
             ),
             tier="action",
-            model_name="gemma3:4b",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "get_all_cameras_status",
                 "get_all_zones_status",

@@ -113,7 +113,7 @@ class InvestigatorAgent(BaseAgent):
                 "with evidence chains and timeline narratives."
             ),
             tier="reasoning",
-            model_name="deepseek-v3.1:671b-cloud",
+            model_name="qwen2.5:7b",
             tool_names=[
                 # Search & retrieval
                 "semantic_search_video",

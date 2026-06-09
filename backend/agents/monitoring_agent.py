@@ -247,6 +247,14 @@ class MonitoringAgent:
             except Exception as exc:
                 logger.debug("Phase 3 context processing error: %s", exc)
 
+        # ── 3c. Confidence floor ──────────────────────────────────
+        # Drop low-confidence threats before anything is persisted. This kills
+        # hallucinated detections (e.g. a vision model loosely mentioning a
+        # threat keyword) so only genuine, confident detections become events.
+        if threats:
+            min_conf = settings.MIN_THREAT_CONFIDENCE
+            threats = [t for t in threats if t.get("confidence", 0.0) >= min_conf]
+
         # ── 4. Create alerts for significant threats ──────────────
         created_alerts: List[Dict[str, Any]] = []
         event_id: Optional[str] = None

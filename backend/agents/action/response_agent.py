@@ -36,7 +36,7 @@ class ResponseActionAgent(BaseAgent):
                 "auto-escalates unacknowledged critical alerts."
             ),
             tier="action",
-            model_name="gemma3:27b-cloud",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "create_alert",
                 "escalate_alert",

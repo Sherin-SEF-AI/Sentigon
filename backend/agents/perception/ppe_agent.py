@@ -49,7 +49,7 @@ class PPEComplianceAgent(BaseAgent):
                 "for non-compliant personnel."
             ),
             tier="perception",
-            model_name="gemma3:27b-cloud",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "capture_frame",
                 "get_current_detections",

@@ -268,6 +268,48 @@ async def acknowledge_event(event_id: str, body: AcknowledgeEventRequest):
         raise HTTPException(status_code=500, detail=str(exc))
 
 
+@router.get("/sia/status")
+async def get_sia_status():
+    """Return the status of the SIA DC-07 / Contact ID listener."""
+    try:
+        receiver = alarm_service._sia_receiver
+        running = receiver is not None
+        return {
+            "running": running,
+            "last_message_at": None,
+            "host": receiver.host if receiver else None,
+            "port": receiver.port if receiver else None,
+        }
+    except Exception as exc:
+        logger.exception("Failed to get SIA receiver status")
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@router.get("/zones")
+async def get_all_zones():
+    """Return all alarm zones aggregated across every registered panel."""
+    try:
+        zones = []
+        for panel_id, panel in alarm_service.panels.items():
+            for zone in panel.zones.values():
+                zones.append({
+                    "panel_id": panel_id,
+                    "zone_number": zone.zone_number,
+                    "name": zone.name,
+                    "zone_type": zone.zone_type.value,
+                    "state": zone.state.value,
+                    "bypassed": zone.bypassed,
+                    "camera_id": zone.camera_id,
+                    "partition": zone.partition,
+                    "alarm_count": zone.alarm_count,
+                    "last_event_time": zone.last_event_time,
+                })
+        return zones
+    except Exception as exc:
+        logger.exception("Failed to get alarm zones")
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
 @router.post("/sia/start")
 async def start_sia_receiver(body: SIAReceiverRequest):
     """Start the SIA DC-07 protocol receiver."""

@@ -94,6 +94,27 @@ class WiegandParser:
         return {"facility": facility, "card": card, "format": "W34"}
 
 
+class PacsAdapter:
+    """Hardware abstraction for door actuation.
+
+    The service owns access decisions and state tracking; the adapter is the
+    seam where the *physical* lock is driven. Swap ``SimulatedPacsAdapter`` for
+    a real driver (HID, Genetec, Lenel, …) by implementing ``actuate``.
+    """
+
+    async def actuate(self, door: "DoorController", lock: bool) -> bool:
+        raise NotImplementedError
+
+
+class SimulatedPacsAdapter(PacsAdapter):
+    """Software adapter — updates in-memory door state (no physical hardware)."""
+
+    async def actuate(self, door: "DoorController", lock: bool) -> bool:
+        door.locked = lock
+        door.state = DoorState.LOCKED if lock else DoorState.UNLOCKED
+        return True
+
+
 class PACSService:
     def __init__(self):
         self.doors: Dict[str, DoorController] = {}
@@ -103,6 +124,9 @@ class PACSService:
         self._callbacks: List[Callable] = []
         self._alert_callback: Optional[Callable] = None
         self._door_monitor_task: Optional[asyncio.Task] = None
+        # Pluggable hardware seam — simulated by default (no real PACS hardware).
+        self.adapter: PacsAdapter = SimulatedPacsAdapter()
+        self._hydrated = False
         self._stats = {
             "total_events": 0, "granted": 0, "denied": 0,
             "forced_doors": 0, "held_doors": 0,
@@ -232,13 +256,12 @@ class PACSService:
         door = self.doors.get(door_id)
         if not door:
             return False
-        door.locked = False
-        door.state = DoorState.UNLOCKED
+        await self.adapter.actuate(door, lock=False)
 
         async def _relock():
             await asyncio.sleep(duration)
-            door.locked = True
-            if door.state == DoorState.UNLOCKED:
+            await self.adapter.actuate(door, lock=True)
+            if door.state == DoorState.LOCKED:
                 door.state = DoorState.CLOSED
         asyncio.create_task(_relock())
         return True
@@ -247,8 +270,7 @@ class PACSService:
         door = self.doors.get(door_id)
         if not door:
             return False
-        door.locked = True
-        door.state = DoorState.LOCKED
+        await self.adapter.actuate(door, lock=True)
         return True
 
     async def lockdown(self, zone: str = None) -> int:
@@ -302,6 +324,127 @@ class PACSService:
             "badge_holders_count": len(self.badge_holders),
             "stats": self._stats,
         }
+
+    # ── Persistence (write-through cache over the DB) ─────────────
+
+    async def ensure_hydrated(self) -> None:
+        """Load doors + badge holders from the DB into memory once."""
+        if self._hydrated:
+            return
+        try:
+            from sqlalchemy import select
+            from backend.database import async_session
+            from backend.models.pacs_models import PacsDoor, PacsBadgeHolder
+            async with async_session() as s:
+                for r in (await s.execute(select(PacsDoor))).scalars().all():
+                    self.doors[r.door_id] = DoorController(
+                        door_id=r.door_id, name=r.name, location=r.location or "",
+                        zone=r.zone or "", locked=r.locked,
+                        reader_in=r.reader_in, reader_out=r.reader_out,
+                        held_open_timeout=r.held_open_timeout or 30,
+                        requires_access_level=r.requires_access_level or 1,
+                        anti_passback_enabled=r.anti_passback_enabled,
+                        camera_id=r.camera_id,
+                        state=DoorState.LOCKED if r.locked else DoorState.CLOSED,
+                    )
+                for r in (await s.execute(select(PacsBadgeHolder))).scalars().all():
+                    self.badge_holders[r.card_number] = BadgeHolder(
+                        card_number=r.card_number, name=r.name,
+                        department=r.department or "", access_level=r.access_level or 0,
+                        zones_allowed=r.zones_allowed or [],
+                        valid_from=r.valid_from, valid_until=r.valid_until,
+                        is_active=r.is_active, photo_url=r.photo_url,
+                        anti_passback_zone=r.anti_passback_zone,
+                    )
+            self._hydrated = True
+        except Exception as e:  # noqa: BLE001
+            logger.warning("PACS hydrate failed: %s", e)
+
+    async def save_door(self, data: Dict[str, Any]) -> DoorController:
+        """Create or update a door (DB + in-memory)."""
+        await self.ensure_hydrated()
+        from sqlalchemy import select
+        from backend.database import async_session
+        from backend.models.pacs_models import PacsDoor
+        door_id = str(data.get("door_id") or f"door_{int(time.time()*1000)}")
+        async with async_session() as s:
+            row = (await s.execute(select(PacsDoor).where(PacsDoor.door_id == door_id))).scalar_one_or_none()
+            if row is None:
+                row = PacsDoor(door_id=door_id)
+                s.add(row)
+            for f in ("name", "location", "zone", "reader_in", "reader_out",
+                      "held_open_timeout", "requires_access_level",
+                      "anti_passback_enabled", "camera_id", "locked"):
+                if f in data and data[f] is not None:
+                    setattr(row, f, data[f])
+            if row.name is None:
+                row.name = f"Door {door_id}"
+            await s.commit()
+            await s.refresh(row)
+        door = DoorController(
+            door_id=row.door_id, name=row.name, location=row.location or "",
+            zone=row.zone or "", locked=row.locked,
+            reader_in=row.reader_in, reader_out=row.reader_out,
+            held_open_timeout=row.held_open_timeout or 30,
+            requires_access_level=row.requires_access_level or 1,
+            anti_passback_enabled=row.anti_passback_enabled, camera_id=row.camera_id,
+            state=DoorState.LOCKED if row.locked else DoorState.CLOSED,
+        )
+        self.doors[door_id] = door
+        return door
+
+    async def remove_door(self, door_id: str) -> bool:
+        await self.ensure_hydrated()
+        from sqlalchemy import delete
+        from backend.database import async_session
+        from backend.models.pacs_models import PacsDoor
+        async with async_session() as s:
+            await s.execute(delete(PacsDoor).where(PacsDoor.door_id == door_id))
+            await s.commit()
+        return self.doors.pop(door_id, None) is not None
+
+    async def save_badge_holder(self, data: Dict[str, Any]) -> BadgeHolder:
+        """Create or update a badge holder (DB + in-memory)."""
+        await self.ensure_hydrated()
+        from sqlalchemy import select
+        from backend.database import async_session
+        from backend.models.pacs_models import PacsBadgeHolder
+        card = str(data.get("card_number") or "").strip()
+        if not card:
+            raise ValueError("card_number is required")
+        async with async_session() as s:
+            row = (await s.execute(select(PacsBadgeHolder).where(PacsBadgeHolder.card_number == card))).scalar_one_or_none()
+            if row is None:
+                row = PacsBadgeHolder(card_number=card)
+                s.add(row)
+            for f in ("name", "department", "access_level", "zones_allowed",
+                      "valid_from", "valid_until", "is_active", "photo_url",
+                      "anti_passback_zone"):
+                if f in data and data[f] is not None:
+                    setattr(row, f, data[f])
+            if row.name is None:
+                row.name = card
+            await s.commit()
+            await s.refresh(row)
+        holder = BadgeHolder(
+            card_number=row.card_number, name=row.name,
+            department=row.department or "", access_level=row.access_level or 0,
+            zones_allowed=row.zones_allowed or [], valid_from=row.valid_from,
+            valid_until=row.valid_until, is_active=row.is_active,
+            photo_url=row.photo_url, anti_passback_zone=row.anti_passback_zone,
+        )
+        self.badge_holders[card] = holder
+        return holder
+
+    async def remove_badge_holder(self, card_number: str) -> bool:
+        await self.ensure_hydrated()
+        from sqlalchemy import delete
+        from backend.database import async_session
+        from backend.models.pacs_models import PacsBadgeHolder
+        async with async_session() as s:
+            await s.execute(delete(PacsBadgeHolder).where(PacsBadgeHolder.card_number == card_number))
+            await s.commit()
+        return self.badge_holders.pop(card_number, None) is not None
 
     async def shutdown(self):
         if self._door_monitor_task:

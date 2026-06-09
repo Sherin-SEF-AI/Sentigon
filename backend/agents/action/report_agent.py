@@ -36,7 +36,7 @@ class ReportAgent(BaseAgent):
                 "narrative intelligence products."
             ),
             tier="action",
-            model_name="gemma3:27b-cloud",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "get_threat_statistics",
                 "get_event_history",

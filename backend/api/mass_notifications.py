@@ -53,6 +53,18 @@ async def deactivate_lockdown(data: dict, db: AsyncSession = Depends(get_db)):
 async def active_lockdowns():
     return await mass_notification_service.get_active_lockdowns()
 
+
+@router.get("/lockdown/status")
+async def lockdown_status():
+    """Whether a lockdown is currently active, plus the active lockdown list."""
+    active = await mass_notification_service.get_active_lockdowns()
+    active_list = active if isinstance(active, list) else (active or [])
+    return {
+        "active": len(active_list) > 0,
+        "count": len(active_list),
+        "lockdowns": active_list,
+    }
+
 # Must be LAST — catches /{notification_id} which would shadow /templates, /lockdown, /stats etc.
 @router.get("/{notification_id}")
 async def get_notification(notification_id: str, db: AsyncSession = Depends(get_db)):

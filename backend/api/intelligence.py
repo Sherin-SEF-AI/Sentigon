@@ -435,6 +435,129 @@ async def get_predictions():
         return {"predictions": [], "generated_at": datetime.now(timezone.utc).isoformat()}
 
 
+@router.get("/threat-graph")
+async def get_threat_graph(
+    hours: int = Query(24, ge=1, le=720),
+    limit: int = Query(100, ge=1, le=500),
+):
+    """Node/edge threat graph linking entities, alerts, cameras, events, and zones.
+
+    Built entirely from real DB rows from the last ``hours`` window. Returns
+    {"nodes": [...], "edges": [...]} with empty arrays when there is no data.
+    """
+    try:
+        from backend.database import async_session
+        from backend.models.models import Alert, Event, Camera, Zone
+        from backend.models.phase3_models import EntityTrack
+        from sqlalchemy import select, desc
+
+        cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
+        nodes: List[Dict[str, Any]] = []
+        edges: List[Dict[str, Any]] = []
+        seen: set = set()
+
+        def add_node(node_id: str, node_type: str, label: str, **extra):
+            if node_id in seen:
+                return
+            seen.add(node_id)
+            nodes.append({"id": node_id, "type": node_type, "label": label, **extra})
+
+        async with async_session() as session:
+            # Cameras (referenced by alerts/events) keyed by id and by name
+            cam_result = await session.execute(select(Camera))
+            cameras = cam_result.scalars().all()
+            cam_by_name: Dict[str, Camera] = {}
+            for c in cameras:
+                cam_by_name[c.name] = c
+            # Zones keyed by name for alert.zone_name linkage
+            zone_result = await session.execute(select(Zone))
+            zones = zone_result.scalars().all()
+            zone_by_name: Dict[str, Zone] = {z.name: z for z in zones}
+
+            # Recent events
+            ev_result = await session.execute(
+                select(Event)
+                .where(Event.timestamp >= cutoff)
+                .order_by(desc(Event.timestamp))
+                .limit(limit)
+            )
+            events = ev_result.scalars().all()
+            for e in events:
+                ev_id = f"event:{e.id}"
+                add_node(
+                    ev_id, "event", e.event_type or "event",
+                    severity=e.severity.value if hasattr(e.severity, "value") else str(e.severity),
+                    timestamp=e.timestamp.isoformat() if e.timestamp else None,
+                )
+                if e.camera_id:
+                    cam_id = f"camera:{e.camera_id}"
+                    add_node(cam_id, "camera", "camera")
+                    edges.append({"source": cam_id, "target": ev_id, "type": "captured", "weight": 1})
+                if e.zone_id:
+                    zn_id = f"zone:{e.zone_id}"
+                    add_node(zn_id, "zone", "zone")
+                    edges.append({"source": ev_id, "target": zn_id, "type": "in_zone", "weight": 1})
+
+            # Recent alerts
+            al_result = await session.execute(
+                select(Alert)
+                .where(Alert.created_at >= cutoff)
+                .order_by(desc(Alert.created_at))
+                .limit(limit)
+            )
+            alerts = al_result.scalars().all()
+            for a in alerts:
+                al_id = f"alert:{a.id}"
+                add_node(
+                    al_id, "alert", a.threat_type or a.title or "alert",
+                    severity=a.severity.value if hasattr(a.severity, "value") else str(a.severity),
+                    status=a.status.value if hasattr(a.status, "value") else str(a.status),
+                    timestamp=a.created_at.isoformat() if a.created_at else None,
+                )
+                if a.event_id:
+                    edges.append({"source": f"event:{a.event_id}", "target": al_id, "type": "triggered", "weight": 2})
+                # Link alert to its source camera (alert stores camera name)
+                if a.source_camera:
+                    cam = cam_by_name.get(a.source_camera)
+                    cam_id = f"camera:{cam.id}" if cam else f"camera:{a.source_camera}"
+                    add_node(cam_id, "camera", a.source_camera)
+                    edges.append({"source": cam_id, "target": al_id, "type": "source", "weight": 1})
+                # Link alert to its zone (alert stores zone name)
+                if a.zone_name:
+                    zone = zone_by_name.get(a.zone_name)
+                    zn_id = f"zone:{zone.id}" if zone else f"zone:{a.zone_name}"
+                    add_node(zn_id, "zone", a.zone_name)
+                    edges.append({"source": al_id, "target": zn_id, "type": "in_zone", "weight": 1})
+
+            # Recent tracked entities and their camera/alert relationships
+            ent_result = await session.execute(
+                select(EntityTrack)
+                .where(EntityTrack.last_seen_at >= cutoff)
+                .order_by(desc(EntityTrack.last_seen_at))
+                .limit(limit)
+            )
+            entities = ent_result.scalars().all()
+            for ent in entities:
+                ent_id = f"entity:{ent.id}"
+                add_node(
+                    ent_id, "entity", ent.entity_type or "entity",
+                    risk_score=ent.risk_score or 0.0,
+                    escalation_level=ent.escalation_level or 0,
+                    behavioral_flags=ent.behavioral_flags or [],
+                )
+                if ent.last_camera_id:
+                    cam_id = f"camera:{ent.last_camera_id}"
+                    add_node(cam_id, "camera", "camera")
+                    edges.append({"source": ent_id, "target": cam_id, "type": "seen_at", "weight": ent.total_appearances or 1})
+                if ent.linked_alert_id:
+                    edges.append({"source": ent_id, "target": f"alert:{ent.linked_alert_id}", "type": "linked_to", "weight": 2})
+
+        return {"nodes": nodes, "edges": edges}
+    except Exception as e:
+        logger.error("api.threat_graph_failed: %s", e)
+        return {"nodes": [], "edges": []}
+
+
 @router.get("/narratives")
 async def get_narratives():
     """Scene narratives from AI analysis of camera feeds."""

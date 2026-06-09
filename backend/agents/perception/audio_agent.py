@@ -49,7 +49,7 @@ class AudioIntelligenceAgent(BaseAgent):
                 "audio events with visual detections for multi-modal analysis."
             ),
             tier="perception",
-            model_name="gemma3:27b-cloud",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "get_all_cameras_status",
                 "get_current_detections",

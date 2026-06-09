@@ -525,6 +525,7 @@ _optional_routers = [
     ("backend.api.analytics", "router"),
     ("backend.api.agents", "router"),
     ("backend.api.threat_config", "router"),
+    ("backend.api.threat_engine", "router"),
     ("backend.api.lpr", "router"),
     ("backend.api.audio", "router"),
     ("backend.api.copilot", "router"),

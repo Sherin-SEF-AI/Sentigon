@@ -143,6 +143,40 @@ async def audio_timeline(
         }
 
 
+# ── 5. Audio activity heatmap ───────────────────────────────
+
+@router.get("/heatmap")
+async def audio_heatmap(
+    hours: int = Query(24, ge=1, le=168),
+    _user=Depends(get_current_user),
+):
+    """Audio-activity heatmap: event counts bucketed by camera (zone) and hour of day."""
+    async with async_session() as session:
+        cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
+        result = await session.execute(
+            select(AudioEvent).where(AudioEvent.timestamp >= cutoff)
+        )
+        events = result.scalars().all()
+
+        buckets: Dict[tuple, Dict[str, Any]] = {}
+        for ev in events:
+            if not ev.timestamp:
+                continue
+            cam = str(ev.camera_id)
+            hour = ev.timestamp.hour
+            key = (cam, hour)
+            if key not in buckets:
+                buckets[key] = {"camera_id": cam, "hour": hour, "count": 0, "threats": 0}
+            buckets[key]["count"] += 1
+            if ev.severity in ("critical", "high"):
+                buckets[key]["threats"] += 1
+
+        return [
+            {**v, "intensity": v["count"]}
+            for v in sorted(buckets.values(), key=lambda b: (b["camera_id"], b["hour"]))
+        ]
+
+
 # ── 4. Audio categories ─────────────────────────────────────
 
 @router.get("/categories")

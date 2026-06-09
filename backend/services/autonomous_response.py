@@ -324,8 +324,100 @@ class AutonomousResponseOrchestrator:
         await self._broadcast_step(response, 3, "alert_created", "completed", details)
 
     async def _step_predictive_assessment(self, response: Dict[str, Any]):
-        """Step 4 — Predictive assessment (placeholder — predictive engine removed)."""
-        prediction_info = {"message": "Predictive assessment skipped — engine not available"}
+        """Step 4 — Predict likely escalation from REAL recent activity.
+
+        Combines the threat's severity/confidence with the recent event trend on
+        the source camera (last 15 min vs the prior 15 min) to estimate an
+        escalation probability, an ETA, and a likely progression. All inputs are
+        real — when there is no history the trend is simply "steady".
+        """
+        await self._broadcast_step(response, 4, "predictive_assessment", "executing", {
+            "message": "Assessing likely escalation from recent activity…",
+        })
+
+        prediction_info: Dict[str, Any] = {}
+        try:
+            from datetime import timedelta
+            from sqlalchemy import select, func
+            from backend.database import async_session
+            from backend.models.models import Event
+
+            severity = response.get("severity", "medium")
+            threat_type = response.get("threat_type", "")
+            confidence = float(response.get("confidence", 0.0) or 0.0)
+            cam = response.get("source_camera")
+
+            now = datetime.now(timezone.utc)
+            recent_count = prior_count = 0
+            try:
+                cam_uuid = uuid.UUID(cam) if cam else None
+            except (ValueError, TypeError):
+                cam_uuid = None
+            if cam_uuid is not None:
+                try:
+                    async with async_session() as session:
+                        recent_count = await session.scalar(
+                            select(func.count(Event.id)).where(
+                                Event.camera_id == cam_uuid,
+                                Event.timestamp >= now - timedelta(minutes=15),
+                            )
+                        ) or 0
+                        prior_count = await session.scalar(
+                            select(func.count(Event.id)).where(
+                                Event.camera_id == cam_uuid,
+                                Event.timestamp >= now - timedelta(minutes=30),
+                                Event.timestamp < now - timedelta(minutes=15),
+                            )
+                        ) or 0
+                except Exception as db_exc:  # noqa: BLE001
+                    logger.debug("predictive assessment query failed: %s", db_exc)
+
+            if recent_count > prior_count and recent_count >= 2:
+                trend = "rising"
+            elif recent_count < prior_count:
+                trend = "subsiding"
+            else:
+                trend = "steady"
+
+            sev_weight = {"critical": 0.9, "high": 0.7, "medium": 0.45, "low": 0.25}.get(severity, 0.4)
+            trend_adj = {"rising": 0.25, "steady": 0.0, "subsiding": -0.15}[trend]
+            escalation_probability = max(0.0, min(0.99, 0.5 * sev_weight + 0.5 * confidence + trend_adj))
+            eta_minutes = int(round(max(1, 15 * (1.0 - escalation_probability))))
+
+            t = threat_type.lower()
+            if any(k in t for k in ("weapon", "shoot", "gun", "active_shooter")):
+                progression = ["Subject may brandish or use weapon", "Persons in zone at risk", "Possible active-threat lockdown"]
+            elif any(k in t for k in ("fire", "smoke", "explos")):
+                progression = ["Smoke/fire may spread", "Evacuation likely required", "Alarm/sprinkler activation"]
+            elif any(k in t for k in ("intru", "breach", "perimeter", "trespass")):
+                progression = ["Movement deeper into the facility", "Attempt to reach restricted zones", "Possible additional entry points"]
+            elif any(k in t for k in ("tailgat", "unauthor", "access")):
+                progression = ["Unauthorized access to a secure area", "Potential asset or data exposure"]
+            elif any(k in t for k in ("crowd", "loiter", "gather", "riot")):
+                progression = ["Crowd density increase", "Potential disturbance", "Egress obstruction"]
+            else:
+                progression = ["Situation may persist or escalate", "Continued monitoring advised"]
+
+            prediction_info = {
+                "escalation_probability": round(escalation_probability, 2),
+                "trend": trend,
+                "recent_events_15m": int(recent_count),
+                "prior_events_15m": int(prior_count),
+                "estimated_time_to_escalation_min": eta_minutes,
+                "predicted_progression": progression,
+                "message": (
+                    f"Escalation likelihood {escalation_probability:.0%} ({trend}); "
+                    f"est. {eta_minutes} min to escalation"
+                ),
+            }
+            response["prediction"] = prediction_info
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("Predictive assessment failed: %s", exc)
+            prediction_info = {
+                "escalation_probability": 0.0,
+                "message": "Predictive assessment unavailable",
+            }
+
         await self._broadcast_step(response, 4, "predictive_assessment", "completed", prediction_info)
 
     async def _step_incident_recording(self, response: Dict[str, Any]):

@@ -99,7 +99,7 @@ class CrowdMonitorAgent(BaseAgent):
                 "crowd-safety assessment."
             ),
             tier="perception",
-            model_name="gemma3:27b-cloud",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "get_current_detections",
                 "get_zone_occupancy",

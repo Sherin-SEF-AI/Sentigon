@@ -852,15 +852,13 @@ function StepCameras({
         addToast("success", `Found ${devices.length} ONVIF camera${devices.length > 1 ? "s" : ""}`);
       }
     } catch (err) {
-      // Show mocked discovered cameras in demo mode
-      const mockDevices: DiscoveredCamera[] = [
-        { ip: "192.168.1.101", port: 80, name: "Entry Camera 1", manufacturer: "Axis", model: "P3245" },
-        { ip: "192.168.1.102", port: 80, name: "Parking Cam A", manufacturer: "Hikvision", model: "DS-2CD2143G2" },
-        { ip: "192.168.1.103", port: 80, name: "Lobby PTZ", manufacturer: "Dahua", model: "SD49425XB-HNR" },
-      ];
-      setDiscovered(mockDevices);
+      // No fabricated fallback — report the failure honestly.
+      setDiscovered([]);
       setScanDone(true);
-      addToast("info", "Demo mode: showing sample discovered cameras.");
+      addToast(
+        "error",
+        "ONVIF discovery failed. Ensure the backend ONVIF service is running and cameras are reachable on the network.",
+      );
     } finally {
       setDiscovering(false);
     }

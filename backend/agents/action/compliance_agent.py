@@ -33,7 +33,7 @@ class ComplianceAgent(BaseAgent):
                 "health observations for long-term trend analysis."
             ),
             tier="action",
-            model_name="gemma3:27b-cloud",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "get_all_cameras_status",
                 "get_all_zones_status",

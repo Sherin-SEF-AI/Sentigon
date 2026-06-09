@@ -363,7 +363,7 @@ function VisitorDetailPanel({
     }
     setNotifyLoading(true);
     try {
-      await apiFetch("/api/notifications/send", {
+      await apiFetch("/api/notifications/mass/send", {
         method: "POST",
         body: JSON.stringify({
           recipients: visitor.host,
@@ -1205,7 +1205,7 @@ export default function VisitorManagementPage() {
     if (!v.host) return;
     setNotifyLoadingId(v.id);
     try {
-      await apiFetch("/api/notifications/send", {
+      await apiFetch("/api/notifications/mass/send", {
         method: "POST",
         body: JSON.stringify({
           recipients: v.host,

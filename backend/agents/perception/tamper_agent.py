@@ -43,7 +43,7 @@ class TamperDetectionAgent(BaseAgent):
                 "confirmed tamper events to the anomalies channel."
             ),
             tier="perception",
-            model_name="gemma3:27b-cloud",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "capture_frame",
                 "store_observation",

@@ -40,7 +40,7 @@ class GhostTracerAgent(BaseAgent):
                 "repeated visits, surveillance routes, and facility probing."
             ),
             tier="reasoning",
-            model_name="deepseek-v3.1:671b-cloud",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "search_entity_appearances",
                 "get_tracking_trajectory",

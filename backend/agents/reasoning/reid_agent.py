@@ -35,7 +35,7 @@ class ReIDAgent(BaseAgent):
                 "GDPR/privacy compliance."
             ),
             tier="reasoning",
-            model_name="deepseek-v3.1:671b-cloud",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "capture_frame",
                 "get_all_cameras_status",

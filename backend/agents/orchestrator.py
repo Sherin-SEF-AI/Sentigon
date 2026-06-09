@@ -51,7 +51,7 @@ class SentinelCortex(BaseAgent):
                 "and serves as the primary interface for operator queries."
             ),
             tier="supervisor",
-            model_name="deepseek-v3.1:671b-cloud",
+            model_name="qwen2.5:7b",
             tool_names=SUPERVISOR_TOOLS,
             subscriptions=[
                 CH_PERCEPTIONS,
