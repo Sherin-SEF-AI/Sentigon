@@ -48,6 +48,7 @@ from backend.models.phase2_models import (
 )
 from backend.models.pacs_models import PacsDoor, PacsBadgeHolder
 from backend.models.alarm_models import AlarmPanelRow, AlarmZoneRow
+from backend.models.intercom_models import IntercomDeviceRow
 
 __all__ = [
     "User",
@@ -83,4 +84,5 @@ __all__ = [
     "PacsBadgeHolder",
     "AlarmPanelRow",
     "AlarmZoneRow",
+    "IntercomDeviceRow",
 ]

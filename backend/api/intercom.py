@@ -62,6 +62,7 @@ async def get_intercom_status():
 async def list_devices():
     """List all registered intercom devices."""
     try:
+        await intercom_service.ensure_hydrated()
         return intercom_service.list_devices()
     except Exception as exc:
         logger.exception("Failed to list intercom devices")
@@ -70,22 +71,22 @@ async def list_devices():
 
 @router.post("/devices", status_code=201)
 async def register_device(body: RegisterDeviceRequest):
-    """Register a new intercom device with the system."""
+    """Register a new intercom device with the system (persisted)."""
     try:
+        await intercom_service.ensure_hydrated()
         if body.id in intercom_service.devices:
             raise HTTPException(status_code=409, detail=f"Device '{body.id}' already registered")
-        device = IntercomDevice(
-            id=body.id,
-            name=body.name,
-            zone=body.zone,
-            ip_address=body.ip_address,
-            sip_uri=body.sip_uri,
-            has_door_release=body.has_door_release,
-            has_camera=body.has_camera,
-            camera_id=body.camera_id,
-            volume=body.volume,
-        )
-        intercom_service.register_device(device)
+        await intercom_service.save_device({
+            "id": body.id,
+            "name": body.name,
+            "zone": body.zone,
+            "ip_address": body.ip_address,
+            "sip_uri": body.sip_uri,
+            "has_door_release": body.has_door_release,
+            "has_camera": body.has_camera,
+            "camera_id": body.camera_id,
+            "volume": body.volume,
+        })
         return {"device_id": body.id, "name": body.name, "status": "registered"}
     except HTTPException:
         raise
@@ -94,10 +95,25 @@ async def register_device(body: RegisterDeviceRequest):
         raise HTTPException(status_code=500, detail=str(exc))
 
 
+@router.delete("/devices/{device_id}")
+async def delete_device(device_id: str):
+    """Remove an intercom device (persisted)."""
+    try:
+        if not await intercom_service.remove_device(device_id):
+            raise HTTPException(status_code=404, detail=f"Device '{device_id}' not found")
+        return {"deleted": True, "device_id": device_id}
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.exception("Failed to delete intercom device")
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
 @router.get("/devices/{device_id}")
 async def get_device(device_id: str):
     """Get details for a specific intercom device."""
     try:
+        await intercom_service.ensure_hydrated()
         device = intercom_service.get_device(device_id)
         if not device:
             raise HTTPException(status_code=404, detail=f"Device '{device_id}' not found")
