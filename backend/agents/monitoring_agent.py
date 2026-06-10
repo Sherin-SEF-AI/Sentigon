@@ -135,6 +135,16 @@ class MonitoringAgent:
         except Exception as exc:  # noqa: BLE001
             logger.debug("temporal behaviour failed for %s: %s", camera_id, exc)
 
+        # ── 3a-bis. Pose-based behaviours (fall, pre-assault, concealed-carry) ──
+        # Separate pose model with its own tracking + COCO-17 keypoint analysis.
+        # Throttled — pose is a second model inference per frame.
+        if getattr(settings, "POSE_BEHAVIOR_ENABLED", True) and \
+                counter % max(1, getattr(settings, "POSE_BEHAVIOR_EVERY_N", 5)) == 0:
+            try:
+                threats.extend(yolo_detector.pose_behaviors(frame, camera_id))
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("pose behaviours failed for %s: %s", camera_id, exc)
+
         # ── 3b. Phase 3: Context-Aware Re-scoring ──────────────────
         if _phase3_available:
             try:

@@ -43,7 +43,7 @@ _OWNABLE_OBJECTS = {"backpack", "handbag", "suitcase", "bag", "box", "package", 
 
 
 class _TrackState:
-    __slots__ = ("history", "first_seen", "last_seen", "label", "cooldowns")
+    __slots__ = ("history", "first_seen", "last_seen", "label", "cooldowns", "last_pose")
 
     def __init__(self, label: str, t: float):
         self.history: Deque[Tuple[float, float, float, float, float]] = deque()  # (t, cx, cy, w, h)
@@ -51,6 +51,7 @@ class _TrackState:
         self.last_seen = t
         self.label = label
         self.cooldowns: Dict[str, float] = {}  # behaviour -> last fired time
+        self.last_pose: Dict[str, Any] = {}    # latest pose_features for this track
 
 
 class TemporalBehaviorAnalyzer:
@@ -103,6 +104,7 @@ class TemporalBehaviorAnalyzer:
                 cam[tid] = st
             st.last_seen = t
             st.label = label
+            st.last_pose = obj.get("pose_features") or {}
             st.history.append((t, cx, cy, bw, bh))
             # trim history by time window
             while st.history and t - st.history[0][0] > _HISTORY_S:
@@ -142,17 +144,33 @@ class TemporalBehaviorAnalyzer:
         if len(hist) < 2:
             return out
 
-        # --- Fall: aspect ratio flips tall->wide + centroid drops, fast ---
-        recent = [h for h in hist if t - h[0] <= _FALL_WINDOW_S]
-        if len(recent) >= 2:
-            (t0, cx0, cy0, w0, h0) = recent[0]
-            (t1, cx1, cy1, w1, h1) = recent[-1]
-            ar0 = (h0 / w0) if w0 else 0      # standing ~ >1.2
-            ar1 = (h1 / w1) if w1 else 0      # lying ~ <0.85
-            dropped = (cy1 - cy0) >= _FALL_DROP_FRAC * h_frame
-            if ar0 >= 1.2 and ar1 <= 0.85 and dropped and self._fire(st, "fall", t):
-                out.append(self._mk("fall", "critical", 0.85,
-                    f"person track {tid}: posture flipped standing→prone (aspect {ar0:.1f}→{ar1:.1f}) with a downward drop", tid))
+        # --- Fall ---
+        # Prefer pose evidence when available (robust, keypoint-based). If the
+        # track HAS pose data but no fall, trust it and suppress the crude
+        # bbox-aspect heuristic (kills crouch/sit false positives). Only when
+        # there is no pose at all do we fall back to bbox aspect-ratio.
+        try:
+            from backend.config import settings as _cfg
+            pose_owns_falls = getattr(_cfg, "POSE_BEHAVIOR_ENABLED", True)
+        except Exception:
+            pose_owns_falls = True
+        pose = st.last_pose or {}
+        if pose.get("fall", {}).get("detected"):
+            if self._fire(st, "fall", t):
+                conf = float(pose["fall"].get("confidence", 0.9))
+                out.append(self._mk("fall", "critical", conf,
+                    f"person track {tid}: pose-confirmed fall (torso went prone with a downward drop)", tid))
+        elif not pose_owns_falls and not pose:
+            recent = [h for h in hist if t - h[0] <= _FALL_WINDOW_S]
+            if len(recent) >= 2:
+                (t0, cx0, cy0, w0, h0) = recent[0]
+                (t1, cx1, cy1, w1, h1) = recent[-1]
+                ar0 = (h0 / w0) if w0 else 0      # standing ~ >1.2
+                ar1 = (h1 / w1) if w1 else 0      # lying ~ <0.85
+                dropped = (cy1 - cy0) >= _FALL_DROP_FRAC * h_frame
+                if ar0 >= 1.2 and ar1 <= 0.85 and dropped and self._fire(st, "fall", t):
+                    out.append(self._mk("fall", "critical", 0.8,
+                        f"person track {tid}: posture flipped standing→prone (aspect {ar0:.1f}→{ar1:.1f}) with a downward drop [bbox heuristic]", tid))
 
         # --- Running: sustained high speed ---
         speed_frac = self._recent_speed_frac(hist, t, w_frame, window_s=1.2)

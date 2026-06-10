@@ -103,7 +103,17 @@ class Settings(BaseSettings):
         "backpack", "handbag", "suitcase",
         "person lying on the ground", "person climbing a fence",
     ]
-    POSE_MODEL: str = "yolov8n-pose.pt"   # bumped in increment 2
+    # Stronger pose backbone — keypoints drive pose-based fall/behaviour detection.
+    POSE_MODEL: str = "yolo11m-pose.pt"
+    # Run the pose pipeline in the live loop (fall, pre-assault, concealed-carry,
+    # …). It is the authoritative fall source; the temporal bbox-aspect fall is
+    # used only when this is off. Throttled to every Nth analysed frame.
+    POSE_BEHAVIOR_ENABLED: bool = True
+    POSE_BEHAVIOR_EVERY_N: int = 5
+    # The other pose micro-behaviours (pre_assault, blading, target_fixation,
+    # concealed_carry, evasive, staking) are aggressively tuned and false-positive
+    # prone — off by default. Only the calibrated "fall" is emitted otherwise.
+    POSE_MICROBEHAVIORS_ENABLED: bool = False
 
     # ── Qdrant ────────────────────────────────────────────────
     QDRANT_HOST: str = "localhost"
