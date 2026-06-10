@@ -18,6 +18,47 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/intelligence", tags=["intelligence"])
 
 
+# ── Scene Intelligence (structured vision understanding) ─────────
+
+class SceneAnalyzeRequest(BaseModel):
+    camera_id: Optional[str] = Field(None, description="Analyse this camera's latest frame")
+    image_base64: Optional[str] = Field(None, description="Or a base64-encoded JPEG/PNG to analyse")
+
+
+@router.post("/analyze-scene")
+async def analyze_scene(body: SceneAnalyzeRequest):
+    """Structured scene intelligence for a frame — scene graph, caption,
+    activities, anomalies, and an evidence-calibrated threat assessment.
+
+    Provide either a camera_id (uses its latest captured frame) or a base64 image.
+    """
+    import base64
+    from backend.services.scene_intelligence import scene_intelligence
+
+    image_bytes: Optional[bytes] = None
+    cam_label = body.camera_id or "uploaded"
+
+    if body.image_base64:
+        try:
+            raw = body.image_base64.split(",", 1)[-1]  # tolerate data: URLs
+            image_bytes = base64.b64decode(raw)
+        except Exception:
+            raise HTTPException(status_code=400, detail="Invalid image_base64")
+    elif body.camera_id:
+        from backend.services.video_capture import capture_manager
+        stream = capture_manager.get_stream(body.camera_id)
+        if stream is None or not stream.is_running:
+            raise HTTPException(status_code=404, detail=f"Camera '{body.camera_id}' has no active stream")
+        image_bytes = stream.encode_jpeg(quality=80)
+        if not image_bytes:
+            raise HTTPException(status_code=409, detail="No frame available from camera yet")
+    else:
+        raise HTTPException(status_code=400, detail="Provide camera_id or image_base64")
+
+    result = await scene_intelligence.analyze(image_bytes, camera_id=cam_label)
+    return result
+
+
 # ── Request/Response Models ──────────────────────────────────────
 
 class InvestigateRequest(BaseModel):
