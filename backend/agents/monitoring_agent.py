@@ -122,6 +122,19 @@ class MonitoringAgent:
                 detections, gemini_result, zone_info,
             )
 
+        # ── 3a. Temporal / multi-frame behavioural detection ──────
+        # Geometric trajectory analysis over tracked objects (loitering,
+        # running, fall, abandoned object). Deterministic — not LLM — so it adds
+        # high-quality, hallucination-free behavioural threats on every frame.
+        try:
+            from backend.services.temporal_behavior import temporal_behavior
+            h_f, w_f = frame.shape[0], frame.shape[1]
+            threats.extend(
+                temporal_behavior.observe(camera_id, detections, (w_f, h_f), timestamp_epoch)
+            )
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("temporal behaviour failed for %s: %s", camera_id, exc)
+
         # ── 3b. Phase 3: Context-Aware Re-scoring ──────────────────
         if _phase3_available:
             try:
