@@ -170,6 +170,15 @@ class MonitoringAgent:
             except Exception as exc:  # noqa: BLE001
                 logger.debug("BOLO scan failed for %s: %s", camera_id, exc)
 
+        # ── 3a-quinquies. Threat-escalation chains ───────────────
+        # Detect escalating behaviour SEQUENCES on a single entity (e.g.
+        # loitering → running → fall) across the track-bearing threats above.
+        try:
+            from backend.services.escalation_tracker import escalation_tracker
+            threats.extend(escalation_tracker.observe(camera_id, threats, timestamp_epoch))
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("escalation tracking failed for %s: %s", camera_id, exc)
+
         # ── 3a-ter. SAM2 mask enrichment for FLAGGED objects ──────
         # Only objects referenced by a threat get a pixel-precise SAM2 mask
         # (occlusion-robust extent), attached to the threat + its detection so it
