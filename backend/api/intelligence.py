@@ -23,6 +23,32 @@ router = APIRouter(prefix="/api/intelligence", tags=["intelligence"])
 class SceneAnalyzeRequest(BaseModel):
     camera_id: Optional[str] = Field(None, description="Analyse this camera's latest frame")
     image_base64: Optional[str] = Field(None, description="Or a base64-encoded JPEG/PNG to analyse")
+    verify: bool = Field(True, description="Run the adversarial verifier on medium+ threats")
+
+
+_VERIFY_LEVELS = {"medium", "high", "critical"}
+_LEVEL_RANK = {"none": 0, "low": 1, "medium": 2, "high": 3, "critical": 4}
+
+
+def _decode_scene_image(body: "SceneAnalyzeRequest") -> tuple[bytes, str]:
+    import base64
+    from fastapi import HTTPException as _HE
+    if body.image_base64:
+        try:
+            raw = body.image_base64.split(",", 1)[-1]
+            return base64.b64decode(raw), (body.camera_id or "uploaded")
+        except Exception:
+            raise _HE(status_code=400, detail="Invalid image_base64")
+    if body.camera_id:
+        from backend.services.video_capture import capture_manager
+        stream = capture_manager.get_stream(body.camera_id)
+        if stream is None or not stream.is_running:
+            raise _HE(status_code=404, detail=f"Camera '{body.camera_id}' has no active stream")
+        img = stream.encode_jpeg(quality=80)
+        if not img:
+            raise _HE(status_code=409, detail="No frame available from camera yet")
+        return img, body.camera_id
+    raise _HE(status_code=400, detail="Provide camera_id or image_base64")
 
 
 @router.post("/analyze-scene")
@@ -31,32 +57,47 @@ async def analyze_scene(body: SceneAnalyzeRequest):
     activities, anomalies, and an evidence-calibrated threat assessment.
 
     Provide either a camera_id (uses its latest captured frame) or a base64 image.
+    When ``verify`` is set, medium+ threats are re-checked by the adversarial
+    verifier and only confirmed ones are kept (the threat level is recomputed).
     """
-    import base64
     from backend.services.scene_intelligence import scene_intelligence
 
-    image_bytes: Optional[bytes] = None
-    cam_label = body.camera_id or "uploaded"
-
-    if body.image_base64:
-        try:
-            raw = body.image_base64.split(",", 1)[-1]  # tolerate data: URLs
-            image_bytes = base64.b64decode(raw)
-        except Exception:
-            raise HTTPException(status_code=400, detail="Invalid image_base64")
-    elif body.camera_id:
-        from backend.services.video_capture import capture_manager
-        stream = capture_manager.get_stream(body.camera_id)
-        if stream is None or not stream.is_running:
-            raise HTTPException(status_code=404, detail=f"Camera '{body.camera_id}' has no active stream")
-        image_bytes = stream.encode_jpeg(quality=80)
-        if not image_bytes:
-            raise HTTPException(status_code=409, detail="No frame available from camera yet")
-    else:
-        raise HTTPException(status_code=400, detail="Provide camera_id or image_base64")
-
+    image_bytes, cam_label = _decode_scene_image(body)
     result = await scene_intelligence.analyze(image_bytes, camera_id=cam_label)
+
+    ta = result.get("threat_assessment", {})
+    if body.verify and ta.get("level") in _VERIFY_LEVELS and ta.get("threats"):
+        from backend.services.threat_verifier import threat_verifier
+        kept = []
+        for thr in ta["threats"]:
+            v = await threat_verifier.verify(thr, image_bytes, {"camera": cam_label})
+            thr["verification"] = v
+            if v["verdict"] == "confirmed":
+                kept.append(thr)
+        # Recompute the level from confirmed threats only.
+        if not kept:
+            ta["level"] = "low" if ta.get("anomalies") else "none"
+            ta["reasoning"] = (ta.get("reasoning", "") + " [All flagged threats were rejected by the verifier.]").strip()
+        ta["threats"] = ta["threats"]  # keep all, annotated
+        ta["confirmed_threats"] = kept
+        ta["verified"] = True
+    result["threat_assessment"] = ta
     return result
+
+
+class VerifyThreatRequest(BaseModel):
+    threat: Dict[str, Any] = Field(..., description="{type, evidence, confidence}")
+    camera_id: Optional[str] = None
+    image_base64: Optional[str] = None
+
+
+@router.post("/verify-threat")
+async def verify_threat(body: VerifyThreatRequest):
+    """Adversarially verify a single candidate threat against a frame."""
+    from backend.services.threat_verifier import threat_verifier
+    proxy = SceneAnalyzeRequest(camera_id=body.camera_id, image_base64=body.image_base64)
+    image_bytes, cam_label = _decode_scene_image(proxy)
+    return await threat_verifier.verify(body.threat, image_bytes, {"camera": cam_label})
 
 
 # ── Request/Response Models ──────────────────────────────────────
