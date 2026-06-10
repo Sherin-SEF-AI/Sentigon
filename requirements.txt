@@ -30,7 +30,9 @@ open-clip-torch>=2.24.0
 
 # Computer Vision
 opencv-python-headless>=4.9.0
-ultralytics>=8.1.0
+# >=8.3 guarantees native RT-DETR, YOLO-World (open-vocab) and SAM2.
+# YOLO-World additionally pulls `clip` on first use (ultralytics auto-installs it).
+ultralytics>=8.3.0
 numpy>=1.26.0
 
 # Config / Logging

@@ -85,6 +85,26 @@ class Settings(BaseSettings):
     YOLO_DEVICE: str = "auto"  # "auto" | "cpu" | "cuda" | "cuda:0"
     GPU_HALF_PRECISION: bool = True  # FP16 for faster inference on RTX cards
 
+    # ── Object detector (pluggable) ────────────────────────
+    # DETECTOR_TYPE selects the backbone; all are ultralytics-native:
+    #   "rtdetr"     — RT-DETR transformer, NMS-free, strong on small/occluded
+    #                  objects (default). DETECTOR_MODEL e.g. rtdetr-l.pt
+    #   "yolo-world" — open-vocabulary: detects OPEN_VOCAB_CLASSES by text prompt
+    #   "yolo11" / "yolov8" — classic YOLO (yolo11m.pt / yolov8n.pt)
+    DETECTOR_TYPE: str = "rtdetr"
+    DETECTOR_MODEL: str = "rtdetr-l.pt"   # empty → derived from DETECTOR_TYPE
+    YOLO_CONFIDENCE: float = 0.35
+    TRACKER_CONFIG: str = "botsort.yaml"  # BoT-SORT re-ID (vs "bytetrack.yaml")
+    # Open-vocabulary threat prompts (used only when DETECTOR_TYPE="yolo-world").
+    OPEN_VOCAB_CLASSES: list = [
+        "person", "car", "truck", "bus", "motorcycle", "bicycle",
+        "knife", "gun", "rifle", "pistol", "weapon",
+        "fire", "smoke",
+        "backpack", "handbag", "suitcase",
+        "person lying on the ground", "person climbing a fence",
+    ]
+    POSE_MODEL: str = "yolov8n-pose.pt"   # bumped in increment 2
+
     # ── Qdrant ────────────────────────────────────────────────
     QDRANT_HOST: str = "localhost"
     QDRANT_PORT: int = 6333

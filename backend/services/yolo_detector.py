@@ -51,8 +51,24 @@ def _resolve_device() -> str:
     return _device
 
 
+def _default_weights(dtype: str) -> str:
+    return {
+        "rtdetr": "rtdetr-l.pt",
+        "yolo-world": "yolov8s-worldv2.pt",
+        "yoloworld": "yolov8s-worldv2.pt",
+        "world": "yolov8s-worldv2.pt",
+        "yolo11": "yolo11m.pt",
+        "yolov8": "yolov8n.pt",
+    }.get(dtype, "yolov8n.pt")
+
+
 def _get_model():
-    """Lazy-load YOLOv8 model on first use, placed on GPU if available."""
+    """Lazy-load the configured detector (YOLO | RT-DETR | YOLO-World) on GPU/CPU.
+
+    DETECTOR_TYPE selects the backbone; the per-detection extraction in detect()
+    is identical across all three (boxes.id/xyxy/cls/conf), so the output
+    contract is unchanged regardless of the model.
+    """
     global _model, _model_lock
     import threading
     if _model_lock is None:
@@ -61,18 +77,31 @@ def _get_model():
         if _model is None:
             try:
                 t0 = time.time()
-                from ultralytics import YOLO
+                from backend.config import settings
+                dtype = (getattr(settings, "DETECTOR_TYPE", "yolov8") or "yolov8").lower()
+                model_path = getattr(settings, "DETECTOR_MODEL", "") or _default_weights(dtype)
                 device = _resolve_device()
-                _model = YOLO("yolov8n.pt")
+
+                if dtype == "rtdetr":
+                    from ultralytics import RTDETR
+                    _model = RTDETR(model_path)
+                elif dtype in ("yolo-world", "yoloworld", "world"):
+                    from ultralytics import YOLOWorld
+                    _model = YOLOWorld(model_path)
+                    classes = list(getattr(settings, "OPEN_VOCAB_CLASSES", []) or [])
+                    if classes:
+                        _model.set_classes(classes)
+                else:  # yolov8 / yolo11 → YOLO
+                    from ultralytics import YOLO
+                    _model = YOLO(model_path)
+
                 _model.to(device)
-                use_half = device.startswith("cuda")
-                if use_half:
-                    from backend.config import settings
-                    use_half = getattr(settings, "GPU_HALF_PRECISION", True)
+                use_half = device.startswith("cuda") and getattr(settings, "GPU_HALF_PRECISION", True)
                 elapsed_ms = (time.time() - t0) * 1000
-                logger.info("YOLOv8n loaded on %s (FP16=%s) in %.0fms", device, use_half, elapsed_ms)
+                logger.info("Detector '%s' (%s) loaded on %s (FP16=%s) in %.0fms",
+                            dtype, model_path, device, use_half, elapsed_ms)
             except Exception as e:
-                logger.error("Failed to load YOLO model: %s", e)
+                logger.error("Failed to load detector model: %s", e)
                 raise
     return _model
 
@@ -518,7 +547,13 @@ class YOLODetector:
         "laptop", "umbrella", "dog", "cat", "skateboard",
     }
 
-    def __init__(self, confidence_threshold: float = 0.35, track: bool = True):
+    def __init__(self, confidence_threshold: Optional[float] = None, track: bool = True):
+        if confidence_threshold is None:
+            try:
+                from backend.config import settings
+                confidence_threshold = float(getattr(settings, "YOLO_CONFIDENCE", 0.35))
+            except Exception:
+                confidence_threshold = 0.35
         self.confidence_threshold = confidence_threshold
         self.track = track
         self._tracked_objects: Dict[int, TrackedObject] = {}
@@ -535,14 +570,16 @@ class YOLODetector:
         now = time.time()
 
         try:
+            from backend.config import settings as _cfg
             device = _resolve_device()
-            use_half = device.startswith("cuda")
+            use_half = device.startswith("cuda") and getattr(_cfg, "GPU_HALF_PRECISION", True)
+            tracker_cfg = getattr(_cfg, "TRACKER_CONFIG", "botsort.yaml")
             if self.track:
                 results = model.track(
                     frame,
                     persist=True,
                     conf=self.confidence_threshold,
-                    tracker="bytetrack.yaml",
+                    tracker=tracker_cfg,
                     verbose=False,
                     device=device,
                     half=use_half,
