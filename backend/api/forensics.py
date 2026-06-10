@@ -485,6 +485,40 @@ async def subject_search(
     }
 
 
+class ImageSearchRequest(BaseModel):
+    image_base64: str = Field(..., description="Query image (base64 JPEG/PNG)")
+    bbox: Optional[List[float]] = Field(None, description="[x1,y1,x2,y2] crop; whole image if omitted")
+    camera_id: Optional[str] = None
+    max_results: int = Field(20, ge=1, le=100)
+
+
+@router.post("/search-by-image")
+async def search_by_image(
+    body: ImageSearchRequest,
+    _user=Depends(require_role(UserRole.ANALYST)),
+):
+    """Image-based "looks-like" forensic search: upload an image (or a crop) and
+    find the most visually similar people/objects seen across all cameras, using
+    CLIP embeddings against the object-crop vector store.
+    """
+    import base64
+    import cv2
+    import numpy as np
+    from backend.services.forensic_search_service import forensic_search_service
+
+    try:
+        raw = base64.b64decode(body.image_base64.split(",", 1)[-1])
+        frame = cv2.imdecode(np.frombuffer(raw, np.uint8), cv2.IMREAD_COLOR)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid image_base64")
+    if frame is None:
+        raise HTTPException(status_code=400, detail="Could not decode image")
+
+    return await forensic_search_service.search_objects_by_image(
+        frame, bbox=body.bbox, camera_id=body.camera_id, top_k=body.max_results,
+    )
+
+
 @router.post("/movement-trail")
 async def movement_trail(
     body: MovementTrailRequest,

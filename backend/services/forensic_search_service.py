@@ -120,6 +120,55 @@ class ForensicSearchService:
             logger.error("Similarity search failed: %s", e)
             return {"query": query_text, "result_count": 0, "results": [], "error": str(e)}
 
+    async def search_objects_by_image(
+        self, frame_bgr, bbox=None, camera_id: str = None,
+        time_from=None, time_to=None, top_k: int = 20,
+    ) -> dict:
+        """Image-based "looks-like" search: given a query image (optionally a
+        bbox crop), find the most visually similar people/objects across cameras.
+
+        CLIP image and text embeddings share a space, so this reuses the same
+        ``object_crops`` collection that `search_objects_by_text` queries — just
+        embedding the pixels instead of a phrase. Degrades to an empty result set
+        when CLIP/Qdrant is unavailable.
+        """
+        try:
+            from backend.services.clip_embedder import clip_embedder
+            from backend.services.vector_store import vector_store
+        except Exception:
+            return {"query": "image", "result_count": 0, "results": []}
+
+        crop = frame_bgr
+        try:
+            if bbox is not None:
+                x1, y1, x2, y2 = [int(v) for v in bbox]
+                crop = frame_bgr[max(0, y1):max(0, y2), max(0, x1):max(0, x2)]
+            vec = clip_embedder.embed_frame_sync(crop) if crop is not None and crop.size else []
+            vec = list(vec) if vec else []
+        except Exception:
+            vec = []
+        if not vec:
+            return {"query": "image", "result_count": 0, "results": []}
+
+        filters = {"camera_id": str(camera_id)} if camera_id else None
+        hits = await vector_store.search_by_vector(
+            vector=vec, top_k=max(int(top_k), 1), filters=filters, collection="object_crops",
+        )
+        tf, tt = _to_epoch(time_from), _to_epoch(time_to)
+        results = []
+        for h in hits or []:
+            ts = h.get("timestamp")
+            if tf is not None and ts is not None and ts < tf:
+                continue
+            if tt is not None and ts is not None and ts > tt:
+                continue
+            results.append({
+                "entity_id": h.get("entity_id"), "camera_id": h.get("camera_id"),
+                "zone_id": h.get("zone_id"), "timestamp": ts,
+                "behavior": h.get("behavior"), "score": h.get("score"),
+            })
+        return {"query": "image", "result_count": len(results), "results": results}
+
     async def search_objects_by_text(
         self, query_text: str, camera_id: str = None,
         time_from=None, time_to=None, top_k: int = 20,
