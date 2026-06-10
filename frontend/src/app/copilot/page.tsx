@@ -23,7 +23,7 @@ import {
   History,
   X,
 } from "lucide-react";
-import { apiFetch } from "@/lib/utils";
+import { apiFetch, API_BASE } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -556,7 +556,7 @@ export default function SOCCopilotPage() {
   useEffect(() => {
     async function checkHealth() {
       try {
-        const res = await fetch("/api/health/live");
+        const res = await fetch(`${API_BASE}/api/health/live`);
         setIsBackendOnline(res.ok);
       } catch {
         setIsBackendOnline(false);

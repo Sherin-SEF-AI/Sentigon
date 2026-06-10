@@ -18,6 +18,182 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/intelligence", tags=["intelligence"])
 
 
+# ── Scene Intelligence (structured vision understanding) ─────────
+
+class SceneAnalyzeRequest(BaseModel):
+    camera_id: Optional[str] = Field(None, description="Analyse this camera's latest frame")
+    image_base64: Optional[str] = Field(None, description="Or a base64-encoded JPEG/PNG to analyse")
+    verify: bool = Field(True, description="Run the adversarial verifier on medium+ threats")
+
+
+_VERIFY_LEVELS = {"medium", "high", "critical"}
+_LEVEL_RANK = {"none": 0, "low": 1, "medium": 2, "high": 3, "critical": 4}
+
+
+def _decode_scene_image(body: "SceneAnalyzeRequest") -> tuple[bytes, str]:
+    import base64
+    from fastapi import HTTPException as _HE
+    if body.image_base64:
+        try:
+            raw = body.image_base64.split(",", 1)[-1]
+            return base64.b64decode(raw), (body.camera_id or "uploaded")
+        except Exception:
+            raise _HE(status_code=400, detail="Invalid image_base64")
+    if body.camera_id:
+        from backend.services.video_capture import capture_manager
+        stream = capture_manager.get_stream(body.camera_id)
+        if stream is None or not stream.is_running:
+            raise _HE(status_code=404, detail=f"Camera '{body.camera_id}' has no active stream")
+        img = stream.encode_jpeg(quality=80)
+        if not img:
+            raise _HE(status_code=409, detail="No frame available from camera yet")
+        return img, body.camera_id
+    raise _HE(status_code=400, detail="Provide camera_id or image_base64")
+
+
+@router.post("/analyze-scene")
+async def analyze_scene(body: SceneAnalyzeRequest):
+    """Structured scene intelligence for a frame — scene graph, caption,
+    activities, anomalies, and an evidence-calibrated threat assessment.
+
+    Provide either a camera_id (uses its latest captured frame) or a base64 image.
+    When ``verify`` is set, medium+ threats are re-checked by the adversarial
+    verifier and only confirmed ones are kept (the threat level is recomputed).
+    """
+    from backend.services.scene_intelligence import scene_intelligence
+
+    image_bytes, cam_label = _decode_scene_image(body)
+    result = await scene_intelligence.analyze(image_bytes, camera_id=cam_label)
+
+    ta = result.get("threat_assessment", {})
+    if body.verify and ta.get("level") in _VERIFY_LEVELS and ta.get("threats"):
+        from backend.services.threat_verifier import threat_verifier
+        kept = []
+        for thr in ta["threats"]:
+            v = await threat_verifier.verify(thr, image_bytes, {"camera": cam_label})
+            thr["verification"] = v
+            if v["verdict"] == "confirmed":
+                kept.append(thr)
+        # Recompute the level from confirmed threats only.
+        if not kept:
+            ta["level"] = "low" if ta.get("anomalies") else "none"
+            ta["reasoning"] = (ta.get("reasoning", "") + " [All flagged threats were rejected by the verifier.]").strip()
+        ta["threats"] = ta["threats"]  # keep all, annotated
+        ta["confirmed_threats"] = kept
+        ta["verified"] = True
+    result["threat_assessment"] = ta
+    return result
+
+
+class VerifyThreatRequest(BaseModel):
+    threat: Dict[str, Any] = Field(..., description="{type, evidence, confidence}")
+    camera_id: Optional[str] = None
+    image_base64: Optional[str] = None
+
+
+@router.post("/verify-threat")
+async def verify_threat(body: VerifyThreatRequest):
+    """Adversarially verify a single candidate threat against a frame."""
+    from backend.services.threat_verifier import threat_verifier
+    proxy = SceneAnalyzeRequest(camera_id=body.camera_id, image_base64=body.image_base64)
+    image_bytes, cam_label = _decode_scene_image(proxy)
+    return await threat_verifier.verify(body.threat, image_bytes, {"camera": cam_label})
+
+
+@router.post("/deep-analyze")
+async def deep_analyze(body: SceneAnalyzeRequest):
+    """Agentic deep analysis of a frame — the full AI-analyst chain.
+
+    Stage 1: structured scene intelligence (scene graph, activities, anomalies).
+    Stage 2: adversarial verification of medium+ threats (skeptic).
+    Stage 3: a senior-analyst reasoning synthesis over the verified findings that
+             produces a situation summary, a priority, an alert decision, and
+             prioritised operator actions.
+    """
+    import json as _json
+    from backend.services.scene_intelligence import scene_intelligence
+    from backend.services.threat_verifier import threat_verifier
+    from backend.services.ai_text_service import ai_generate_text
+
+    image_bytes, cam_label = _decode_scene_image(body)
+    scene = await scene_intelligence.analyze(image_bytes, camera_id=cam_label)
+
+    ta = scene.get("threat_assessment", {})
+    confirmed = []
+    for thr in ta.get("threats", []) if ta.get("level") in _VERIFY_LEVELS else []:
+        v = await threat_verifier.verify(thr, image_bytes, {"camera": cam_label})
+        thr["verification"] = v
+        if v["verdict"] == "confirmed":
+            confirmed.append(thr)
+
+    # Stage 3 — senior-analyst reasoning synthesis (text, no vision needed).
+    synth_prompt = (
+        "You are a senior SOC analyst. Given the structured machine analysis of a "
+        "surveillance frame below, reason briefly then return ONLY this JSON:\n"
+        '{"situation": "1-2 sentence assessment", "priority": "routine|attention|urgent|emergency", '
+        '"should_alert": true|false, "recommended_actions": ["..."], "rationale": "why"}\n\n'
+        "Be calibrated: a quiet/benign scene is 'routine', should_alert=false, actions []. "
+        "Only escalate on VERIFIED threats.\n\n"
+        f"SCENE CAPTION: {scene.get('caption','')}\n"
+        f"ACTIVITIES: {scene.get('activities', [])}\n"
+        f"ANOMALIES: {scene.get('anomalies', [])}\n"
+        f"VERIFIED THREATS: {_json.dumps(confirmed)[:1500]}\n"
+        f"SCENE THREAT LEVEL (pre-verification): {ta.get('level','none')}\n"
+    )
+    try:
+        synth_text = await ai_generate_text(synth_prompt, max_tokens=600, temperature=0.2, tier="reasoning")
+        from backend.services.ollama_provider import _parse_json_response
+        assessment = _parse_json_response(synth_text)
+        if "raw_response" in assessment and len(assessment) == 1:
+            assessment = {"situation": synth_text[:400], "priority": "routine",
+                          "should_alert": False, "recommended_actions": [], "rationale": ""}
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("deep_analyze synthesis failed: %s", exc)
+        assessment = {"situation": scene.get("caption", ""), "priority": "routine",
+                      "should_alert": False, "recommended_actions": [], "rationale": "synthesis_unavailable"}
+
+    return {
+        "camera": cam_label,
+        "scene": scene,
+        "verified_threats": confirmed,
+        "assessment": assessment,
+    }
+
+
+class SegmentRequest(BaseModel):
+    camera_id: Optional[str] = None
+    image_base64: Optional[str] = None
+    bboxes: Optional[List[List[float]]] = Field(None, description="Optional explicit box prompts")
+
+
+@router.post("/segment")
+async def segment_scene(body: SegmentRequest):
+    """SAM2 mask segmentation of a frame (occlusion-robust object extent).
+
+    If no bboxes are supplied, the detector's boxes are used as prompts so SAM2
+    segments the currently-detected objects.
+    """
+    import cv2
+    import numpy as np
+    from backend.services.sam_segmenter import sam_segmenter
+
+    proxy = SceneAnalyzeRequest(camera_id=body.camera_id, image_base64=body.image_base64)
+    image_bytes, cam_label = _decode_scene_image(proxy)
+    frame = cv2.imdecode(np.frombuffer(image_bytes, np.uint8), cv2.IMREAD_COLOR)
+    if frame is None:
+        raise HTTPException(status_code=400, detail="Could not decode image")
+
+    bboxes = body.bboxes
+    if not bboxes:
+        from backend.services.yolo_detector import yolo_detector
+        det = yolo_detector.detect(frame, camera_id=cam_label or "segment")
+        bboxes = [d["bbox"] for d in det.get("detections", []) if d.get("bbox")]
+
+    result = sam_segmenter.segment(frame, bboxes=bboxes or None)
+    result["prompted_boxes"] = len(bboxes or [])
+    return result
+
+
 # ── Request/Response Models ──────────────────────────────────────
 
 class InvestigateRequest(BaseModel):
@@ -433,6 +609,129 @@ async def get_predictions():
             return {"predictions": predictions, "generated_at": datetime.now(timezone.utc).isoformat()}
     except Exception:
         return {"predictions": [], "generated_at": datetime.now(timezone.utc).isoformat()}
+
+
+@router.get("/threat-graph")
+async def get_threat_graph(
+    hours: int = Query(24, ge=1, le=720),
+    limit: int = Query(100, ge=1, le=500),
+):
+    """Node/edge threat graph linking entities, alerts, cameras, events, and zones.
+
+    Built entirely from real DB rows from the last ``hours`` window. Returns
+    {"nodes": [...], "edges": [...]} with empty arrays when there is no data.
+    """
+    try:
+        from backend.database import async_session
+        from backend.models.models import Alert, Event, Camera, Zone
+        from backend.models.phase3_models import EntityTrack
+        from sqlalchemy import select, desc
+
+        cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
+        nodes: List[Dict[str, Any]] = []
+        edges: List[Dict[str, Any]] = []
+        seen: set = set()
+
+        def add_node(node_id: str, node_type: str, label: str, **extra):
+            if node_id in seen:
+                return
+            seen.add(node_id)
+            nodes.append({"id": node_id, "type": node_type, "label": label, **extra})
+
+        async with async_session() as session:
+            # Cameras (referenced by alerts/events) keyed by id and by name
+            cam_result = await session.execute(select(Camera))
+            cameras = cam_result.scalars().all()
+            cam_by_name: Dict[str, Camera] = {}
+            for c in cameras:
+                cam_by_name[c.name] = c
+            # Zones keyed by name for alert.zone_name linkage
+            zone_result = await session.execute(select(Zone))
+            zones = zone_result.scalars().all()
+            zone_by_name: Dict[str, Zone] = {z.name: z for z in zones}
+
+            # Recent events
+            ev_result = await session.execute(
+                select(Event)
+                .where(Event.timestamp >= cutoff)
+                .order_by(desc(Event.timestamp))
+                .limit(limit)
+            )
+            events = ev_result.scalars().all()
+            for e in events:
+                ev_id = f"event:{e.id}"
+                add_node(
+                    ev_id, "event", e.event_type or "event",
+                    severity=e.severity.value if hasattr(e.severity, "value") else str(e.severity),
+                    timestamp=e.timestamp.isoformat() if e.timestamp else None,
+                )
+                if e.camera_id:
+                    cam_id = f"camera:{e.camera_id}"
+                    add_node(cam_id, "camera", "camera")
+                    edges.append({"source": cam_id, "target": ev_id, "type": "captured", "weight": 1})
+                if e.zone_id:
+                    zn_id = f"zone:{e.zone_id}"
+                    add_node(zn_id, "zone", "zone")
+                    edges.append({"source": ev_id, "target": zn_id, "type": "in_zone", "weight": 1})
+
+            # Recent alerts
+            al_result = await session.execute(
+                select(Alert)
+                .where(Alert.created_at >= cutoff)
+                .order_by(desc(Alert.created_at))
+                .limit(limit)
+            )
+            alerts = al_result.scalars().all()
+            for a in alerts:
+                al_id = f"alert:{a.id}"
+                add_node(
+                    al_id, "alert", a.threat_type or a.title or "alert",
+                    severity=a.severity.value if hasattr(a.severity, "value") else str(a.severity),
+                    status=a.status.value if hasattr(a.status, "value") else str(a.status),
+                    timestamp=a.created_at.isoformat() if a.created_at else None,
+                )
+                if a.event_id:
+                    edges.append({"source": f"event:{a.event_id}", "target": al_id, "type": "triggered", "weight": 2})
+                # Link alert to its source camera (alert stores camera name)
+                if a.source_camera:
+                    cam = cam_by_name.get(a.source_camera)
+                    cam_id = f"camera:{cam.id}" if cam else f"camera:{a.source_camera}"
+                    add_node(cam_id, "camera", a.source_camera)
+                    edges.append({"source": cam_id, "target": al_id, "type": "source", "weight": 1})
+                # Link alert to its zone (alert stores zone name)
+                if a.zone_name:
+                    zone = zone_by_name.get(a.zone_name)
+                    zn_id = f"zone:{zone.id}" if zone else f"zone:{a.zone_name}"
+                    add_node(zn_id, "zone", a.zone_name)
+                    edges.append({"source": al_id, "target": zn_id, "type": "in_zone", "weight": 1})
+
+            # Recent tracked entities and their camera/alert relationships
+            ent_result = await session.execute(
+                select(EntityTrack)
+                .where(EntityTrack.last_seen_at >= cutoff)
+                .order_by(desc(EntityTrack.last_seen_at))
+                .limit(limit)
+            )
+            entities = ent_result.scalars().all()
+            for ent in entities:
+                ent_id = f"entity:{ent.id}"
+                add_node(
+                    ent_id, "entity", ent.entity_type or "entity",
+                    risk_score=ent.risk_score or 0.0,
+                    escalation_level=ent.escalation_level or 0,
+                    behavioral_flags=ent.behavioral_flags or [],
+                )
+                if ent.last_camera_id:
+                    cam_id = f"camera:{ent.last_camera_id}"
+                    add_node(cam_id, "camera", "camera")
+                    edges.append({"source": ent_id, "target": cam_id, "type": "seen_at", "weight": ent.total_appearances or 1})
+                if ent.linked_alert_id:
+                    edges.append({"source": ent_id, "target": f"alert:{ent.linked_alert_id}", "type": "linked_to", "weight": 2})
+
+        return {"nodes": nodes, "edges": edges}
+    except Exception as e:
+        logger.error("api.threat_graph_failed: %s", e)
+        return {"nodes": [], "edges": []}
 
 
 @router.get("/narratives")

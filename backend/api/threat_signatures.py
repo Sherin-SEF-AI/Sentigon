@@ -747,6 +747,106 @@ async def mark_false_positive(
     }
 
 
+class SignatureTestRequest(BaseModel):
+    hours: int = Field(24, ge=1, le=720)
+    sample: Optional[Dict[str, Any]] = None  # optional detections/gemini payload to evaluate live
+
+    class Config:
+        extra = "allow"
+
+
+@router.post("/{sig_id}/test")
+async def test_signature(
+    sig_id: str,
+    body: Optional[SignatureTestRequest] = None,
+    _user=Depends(get_current_user),
+):
+    """Test a signature: count how many recent events it would have matched, and
+    (optionally) evaluate it live against a provided sample via the threat engine.
+
+    Real data only: matched_events comes from the Event table (event_type ==
+    signature name), and live evaluation uses the actual ThreatEngine.
+    """
+    from datetime import datetime, timedelta, timezone
+    from backend.models.models import Event
+
+    body = body or SignatureTestRequest()
+
+    # Resolve the signature by name (in-memory) or UUID (DB) — 404 if unknown.
+    engine = ThreatEngine()
+    sig_name: Optional[str] = None
+    sig_def = None
+    if sig_id in engine.signatures:
+        sig_name = sig_id
+        sig_def = engine.signatures[sig_id]
+    else:
+        try:
+            async with async_session() as session:
+                result = await session.execute(
+                    select(ThreatSignature).where(ThreatSignature.id == uuid.UUID(sig_id))
+                )
+                db_rec = result.scalar_one_or_none()
+                if db_rec:
+                    sig_name = db_rec.name
+                    sig_def = engine.signatures.get(db_rec.name)
+        except (ValueError, Exception):
+            pass
+
+    if not sig_name:
+        raise HTTPException(status_code=404, detail="Signature not found")
+
+    # Count historical events that match this signature over the window.
+    matched_events = 0
+    try:
+        async with async_session() as session:
+            cutoff = datetime.now(timezone.utc) - timedelta(hours=body.hours)
+            count = (await session.execute(
+                select(func.count(Event.id)).where(
+                    Event.event_type == sig_name,
+                    Event.timestamp >= cutoff,
+                )
+            )).scalar() or 0
+            matched_events = int(count)
+    except Exception as e:
+        logger.debug("Signature test event count failed: %s", e)
+
+    # Optional live evaluation against a provided sample using the real engine.
+    matched = matched_events > 0
+    confidence = 0.0
+    details: Dict[str, Any] = {
+        "signature": sig_name,
+        "window_hours": body.hours,
+        "matched_events": matched_events,
+    }
+    if body.sample:
+        try:
+            sample = body.sample
+            evaluated = engine.evaluate_hybrid(
+                detections=sample.get("detections", sample),
+                gemini_analysis=sample.get("gemini_analysis"),
+                zone_info=sample.get("zone_info"),
+            )
+            hit = next((t for t in evaluated if t.get("signature") == sig_name), None)
+            if hit:
+                matched = True
+                confidence = float(hit.get("confidence", 0.0))
+                details["live_match"] = hit
+            else:
+                details["live_match"] = None
+        except Exception as e:
+            logger.debug("Signature live evaluation failed: %s", e)
+            details["live_match_error"] = str(e)
+
+    return {
+        "matched": matched,
+        "matched_events": matched_events,
+        "hours": body.hours,
+        "confidence": confidence,
+        "score": confidence,
+        "details": details,
+    }
+
+
 @router.get("/{sig_id}/detections")
 async def get_detection_examples(
     sig_id: str,

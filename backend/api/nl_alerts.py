@@ -65,6 +65,18 @@ async def update_rule(rule_id: str, data: dict, db: AsyncSession = Depends(get_d
         raise HTTPException(400, str(e))
 
 
+@router.put("/rules/{rule_id}/toggle")
+async def toggle_rule(rule_id: str, db: AsyncSession = Depends(get_db)):
+    """Flip a rule's active state (enable/disable)."""
+    rule = await db.get(NLAlertRule, rule_id)
+    if not rule:
+        raise HTTPException(404, "NL alert rule not found")
+    rule.is_active = not bool(rule.is_active)
+    await db.commit()
+    await db.refresh(rule)
+    return rule
+
+
 @router.delete("/rules/{rule_id}")
 async def delete_rule(rule_id: str, db: AsyncSession = Depends(get_db)):
     rule = await db.get(NLAlertRule, rule_id)

@@ -83,7 +83,7 @@ class SentinelCortexAgent(BaseAgent):
                 "interface."
             ),
             tier="supervisor",
-            model_name="gemma3:4b",
+            model_name="qwen2.5:7b",
             tool_names=SUPERVISOR_TOOLS,
             subscriptions=[
                 CH_PERCEPTIONS,

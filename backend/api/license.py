@@ -39,74 +39,54 @@ class TenantBranding(BaseModel):
     footer_text: Optional[str] = None
 
 
-# ── In-memory demo store (replaces DB in dev) ─────────────────────────────────
+# ── Tenant store ──────────────────────────────────────────────────────────────
+# Seeded with the single primary tenant for THIS deployment. Its user/camera
+# counts are filled from the real database at read time (see list_tenants).
+# Admins can create/manage additional tenants via the CRUD endpoints below.
 
-_demo_tenants: list[dict] = [
+_tenants: list[dict] = [
     {
-        "id": "tenant-demo-1",
-        "name": "Acme Security Corp",
-        "slug": "acme-security",
+        "id": "tenant-primary",
+        "name": "Primary Organization",
+        "slug": "primary",
         "plan": "enterprise",
         "max_sites": -1,
         "max_users": -1,
-        "user_count": 18,
-        "site_count": 4,
-        "camera_count": 127,
-        "created_at": "2025-01-10T08:00:00Z",
+        "user_count": 0,
+        "site_count": 1,
+        "camera_count": 0,
+        "created_at": datetime.now(timezone.utc).isoformat(),
         "disabled": False,
         "branding": {
             "primary_color": "#06b6d4",
             "accent_color": "#8b5cf6",
             "logo_url": None,
             "login_background_url": None,
-            "footer_text": "Acme Security Corp © 2026",
-        },
-    },
-    {
-        "id": "tenant-demo-2",
-        "name": "Metro Transit Authority",
-        "slug": "metro-transit",
-        "plan": "professional",
-        "max_sites": 5,
-        "max_users": 20,
-        "user_count": 11,
-        "site_count": 3,
-        "camera_count": 58,
-        "created_at": "2025-03-22T14:30:00Z",
-        "disabled": False,
-        "branding": {
-            "primary_color": "#f59e0b",
-            "accent_color": "#10b981",
-            "logo_url": None,
-            "login_background_url": None,
-            "footer_text": "Metro Transit Authority — Safety Division",
-        },
-    },
-    {
-        "id": "tenant-demo-3",
-        "name": "Riverside Mall",
-        "slug": "riverside-mall",
-        "plan": "basic",
-        "max_sites": 1,
-        "max_users": 3,
-        "user_count": 2,
-        "site_count": 1,
-        "camera_count": 12,
-        "created_at": "2025-06-05T09:15:00Z",
-        "disabled": False,
-        "branding": {
-            "primary_color": "#ec4899",
-            "accent_color": "#f97316",
-            "logo_url": None,
-            "login_background_url": None,
-            "footer_text": "Riverside Mall Security",
+            "footer_text": "SENTINEL AI",
         },
     },
 ]
 
 
+async def _hydrate_primary_counts() -> None:
+    """Fill the primary tenant's user/camera counts from the live DB."""
+    try:
+        from sqlalchemy import select, func
+        from backend.database import async_session
+        from backend.models.models import User, Camera
+        async with async_session() as session:
+            users = await session.scalar(select(func.count(User.id)))
+            cams = await session.scalar(select(func.count(Camera.id)))
+        for t in _tenants:
+            if t["id"] == "tenant-primary":
+                t["user_count"] = int(users or 0)
+                t["camera_count"] = int(cams or 0)
+    except Exception as e:  # noqa: BLE001
+        logger.warning("admin.tenants.count_failed", error=str(e))
+
+
 def _find_tenant(tenant_id: str) -> Optional[dict]:
-    return next((t for t in _demo_tenants if t["id"] == tenant_id), None)
+    return next((t for t in _tenants if t["id"] == tenant_id), None)
 
 
 # ── License Routes ────────────────────────────────────────────────────────────
@@ -153,20 +133,29 @@ async def activate_license(req: ActivateRequest):
 
 @admin_router.get("/tenants")
 async def list_tenants():
-    """Return all tenants (demo store)."""
+    """Return all tenants. The primary tenant's counts reflect the live DB."""
+    from backend.config import settings
+    await _hydrate_primary_counts()
     return {
-        "tenants": _demo_tenants,
-        "total": len(_demo_tenants),
-        "total_users": sum(t["user_count"] for t in _demo_tenants),
-        "total_cameras": sum(t["camera_count"] for t in _demo_tenants),
-        "total_sites": sum(t["site_count"] for t in _demo_tenants),
+        "tenants": _tenants,
+        "total": len(_tenants),
+        "total_users": sum(t["user_count"] for t in _tenants),
+        "total_cameras": sum(t["camera_count"] for t in _tenants),
+        "total_sites": sum(t["site_count"] for t in _tenants),
+        "multi_tenant_enabled": settings.MULTI_TENANT_ENABLED,
     }
 
 
 @admin_router.post("/tenants")
 async def create_tenant(body: TenantCreate):
     """Create a new tenant organisation."""
-    if any(t["slug"] == body.slug for t in _demo_tenants):
+    from backend.config import settings
+    if not settings.MULTI_TENANT_ENABLED:
+        raise HTTPException(
+            status_code=403,
+            detail="Multi-tenancy is disabled (single-deployment product). Set MULTI_TENANT_ENABLED to enable.",
+        )
+    if any(t["slug"] == body.slug for t in _tenants):
         raise HTTPException(status_code=409, detail="Slug already exists.")
 
     new_tenant = {
@@ -189,7 +178,7 @@ async def create_tenant(body: TenantCreate):
             "footer_text": f"{body.name} © 2026",
         },
     }
-    _demo_tenants.append(new_tenant)
+    _tenants.append(new_tenant)
     logger.info("admin.tenant.created", tenant_id=new_tenant["id"], name=body.name)
     return new_tenant
 
@@ -197,6 +186,9 @@ async def create_tenant(body: TenantCreate):
 @admin_router.patch("/tenants/{tenant_id}/disable")
 async def toggle_tenant(tenant_id: str):
     """Toggle a tenant's disabled state."""
+    from backend.config import settings
+    if not settings.MULTI_TENANT_ENABLED:
+        raise HTTPException(status_code=403, detail="Multi-tenancy is disabled.")
     tenant = _find_tenant(tenant_id)
     if not tenant:
         raise HTTPException(status_code=404, detail="Tenant not found.")

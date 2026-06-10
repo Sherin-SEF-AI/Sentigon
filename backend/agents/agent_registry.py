@@ -172,59 +172,7 @@ class AgentRegistry:
 # Singleton
 agent_registry = AgentRegistry()
 
-
-def setup_all_agents():
-    """Create and register all SENTINEL AI agents. Call once at startup."""
-    # Lazy imports to avoid circular deps
-    from backend.agents.perception.sentinel_eye import SentinelEyeAgent
-    from backend.agents.perception.patrol_agent import PatrolAgent
-    from backend.agents.perception.anomaly_detector import AnomalyDetectorAgent
-    from backend.agents.perception.crowd_monitor import CrowdMonitorAgent
-    from backend.agents.perception.lpr_agent import LPRAgent
-    from backend.agents.perception.audio_agent import AudioIntelligenceAgent
-    from backend.agents.perception.environmental_agent import EnvironmentalSafetyAgent
-    from backend.agents.perception.tamper_agent import TamperDetectionAgent
-    from backend.agents.perception.ppe_agent import PPEComplianceAgent
-    from backend.agents.reasoning.threat_analyst import ThreatAnalystAgent
-    from backend.agents.reasoning.investigator import InvestigatorAgent
-    from backend.agents.reasoning.correlator import CorrelatorAgent
-    from backend.agents.reasoning.reid_agent import ReIDAgent
-    from backend.agents.action.response_agent import ResponseActionAgent
-    from backend.agents.action.report_agent import ReportAgent
-    from backend.agents.action.dispatch_agent import DispatchAgent
-    from backend.agents.action.compliance_agent import ComplianceAgent
-    from backend.agents.perception.micro_behavior_agent import MicroBehaviorAgent
-    from backend.agents.reasoning.ghost_tracer_agent import GhostTracerAgent
-    from backend.agents.reasoning.companion_agent import CompanionDiscoveryAgent
-    from backend.agents.orchestrator import SentinelCortex
-
-    # Perception tier
-    agent_registry.register(SentinelEyeAgent())
-    agent_registry.register(PatrolAgent())
-    agent_registry.register(AnomalyDetectorAgent())
-    agent_registry.register(CrowdMonitorAgent())
-    agent_registry.register(LPRAgent())
-    agent_registry.register(AudioIntelligenceAgent())
-    agent_registry.register(EnvironmentalSafetyAgent())
-    agent_registry.register(TamperDetectionAgent())
-    agent_registry.register(PPEComplianceAgent())
-    agent_registry.register(MicroBehaviorAgent())
-
-    # Reasoning tier
-    agent_registry.register(ThreatAnalystAgent())
-    agent_registry.register(InvestigatorAgent())
-    agent_registry.register(CorrelatorAgent())
-    agent_registry.register(ReIDAgent())
-    agent_registry.register(GhostTracerAgent())
-    agent_registry.register(CompanionDiscoveryAgent())
-
-    # Action tier
-    agent_registry.register(ResponseActionAgent())
-    agent_registry.register(ReportAgent())
-    agent_registry.register(DispatchAgent())
-    agent_registry.register(ComplianceAgent())
-
-    # Supervisor
-    agent_registry.register(SentinelCortex())
-
-    logger.info("Registered %d agents", len(agent_registry.all_agents))
+# NOTE: the legacy `setup_all_agents()` (perception/reasoning/action tier) was
+# removed — the live system registers agents via
+# `backend.agents.consolidated_registry.setup_consolidated_agents()` (called in
+# main.py). See that module for the active agent set.

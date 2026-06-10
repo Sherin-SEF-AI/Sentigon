@@ -56,6 +56,22 @@ ANOMALY_SEVERITY_MAP = {
 }
 
 
+def _fmt_badge_holder(h) -> dict:
+    """Serialise a pacs_service BadgeHolder dataclass to a dict."""
+    return {
+        "id": h.card_number,
+        "card_number": h.card_number,
+        "name": h.name,
+        "department": h.department or None,
+        "access_level": h.access_level,
+        "zones_allowed": h.zones_allowed or [],
+        "valid_from": h.valid_from.isoformat() if h.valid_from else None,
+        "valid_until": h.valid_until.isoformat() if h.valid_until else None,
+        "is_active": h.is_active,
+        "photo_url": h.photo_url,
+    }
+
+
 def _fmt_event(e: AccessEvent) -> dict:
     return {
         "id": str(e.id),
@@ -198,6 +214,122 @@ async def list_anomalies(_user=Depends(get_current_user)):
         raise HTTPException(status_code=500, detail=str(exc))
 
 
+@router.get("/badge-holders", response_model=List[dict])
+async def list_badge_holders(_user=Depends(get_current_user)):
+    """List badge holders registered with the PACS service."""
+    try:
+        from backend.services.pacs_service import pacs_service
+        await pacs_service.ensure_hydrated()
+        return [_fmt_badge_holder(h) for h in pacs_service.badge_holders.values()]
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.exception("Failed to list badge holders")
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@router.get("/badge-holders/{holder_id}", response_model=dict)
+async def get_badge_holder(holder_id: str, _user=Depends(get_current_user)):
+    """Get a single badge holder by card number; 404 if not found."""
+    try:
+        from backend.services.pacs_service import pacs_service
+        await pacs_service.ensure_hydrated()
+        holder = pacs_service.badge_holders.get(holder_id)
+        if not holder:
+            raise HTTPException(status_code=404, detail=f"Badge holder '{holder_id}' not found")
+        return _fmt_badge_holder(holder)
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.exception("Failed to get badge holder %s", holder_id)
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+# ── Badge-holder + door CRUD (persisted via pacs_service write-through) ─────────
+
+def _fmt_door(d) -> dict:
+    """Serialise a pacs_service DoorController to a dict."""
+    return {
+        "id": d.door_id,
+        "door_id": d.door_id,
+        "name": d.name,
+        "location": d.location or None,
+        "zone": d.zone or None,
+        "locked": d.locked,
+        "state": d.state.value if hasattr(d.state, "value") else str(d.state),
+        "requires_access_level": d.requires_access_level,
+        "anti_passback_enabled": d.anti_passback_enabled,
+        "camera_id": d.camera_id,
+    }
+
+
+@router.post("/badge-holders", response_model=dict, status_code=201)
+async def create_badge_holder(body: dict, _user=Depends(require_role(UserRole.ANALYST))):
+    """Register a badge holder (persisted)."""
+    from backend.services.pacs_service import pacs_service
+    try:
+        holder = await pacs_service.save_badge_holder(body)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return _fmt_badge_holder(holder)
+
+
+@router.put("/badge-holders/{holder_id}", response_model=dict)
+async def update_badge_holder(holder_id: str, body: dict, _user=Depends(require_role(UserRole.ANALYST))):
+    """Update an existing badge holder (persisted)."""
+    from backend.services.pacs_service import pacs_service
+    await pacs_service.ensure_hydrated()
+    if holder_id not in pacs_service.badge_holders:
+        raise HTTPException(status_code=404, detail="Badge holder not found")
+    holder = await pacs_service.save_badge_holder({**body, "card_number": holder_id})
+    return _fmt_badge_holder(holder)
+
+
+@router.delete("/badge-holders/{holder_id}", response_model=dict)
+async def delete_badge_holder(holder_id: str, _user=Depends(require_role(UserRole.ANALYST))):
+    """Remove a badge holder (persisted)."""
+    from backend.services.pacs_service import pacs_service
+    if not await pacs_service.remove_badge_holder(holder_id):
+        raise HTTPException(status_code=404, detail="Badge holder not found")
+    return {"deleted": True, "card_number": holder_id}
+
+
+@router.get("/doors-config", response_model=List[dict])
+async def list_door_config(_user=Depends(get_current_user)):
+    """List configured/persisted doors (distinct from event-derived /doors)."""
+    from backend.services.pacs_service import pacs_service
+    await pacs_service.ensure_hydrated()
+    return [_fmt_door(d) for d in pacs_service.doors.values()]
+
+
+@router.post("/doors-config", response_model=dict, status_code=201)
+async def create_door(body: dict, _user=Depends(require_role(UserRole.ANALYST))):
+    """Create a door (persisted)."""
+    from backend.services.pacs_service import pacs_service
+    door = await pacs_service.save_door(body)
+    return _fmt_door(door)
+
+
+@router.put("/doors-config/{door_id}", response_model=dict)
+async def update_door(door_id: str, body: dict, _user=Depends(require_role(UserRole.ANALYST))):
+    """Update a door (persisted)."""
+    from backend.services.pacs_service import pacs_service
+    await pacs_service.ensure_hydrated()
+    if door_id not in pacs_service.doors:
+        raise HTTPException(status_code=404, detail="Door not found")
+    door = await pacs_service.save_door({**body, "door_id": door_id})
+    return _fmt_door(door)
+
+
+@router.delete("/doors-config/{door_id}", response_model=dict)
+async def delete_door(door_id: str, _user=Depends(require_role(UserRole.ANALYST))):
+    """Remove a door (persisted)."""
+    from backend.services.pacs_service import pacs_service
+    if not await pacs_service.remove_door(door_id):
+        raise HTTPException(status_code=404, detail="Door not found")
+    return {"deleted": True, "door_id": door_id}
+
+
 # ── /api/access-control endpoints ─────────────────────────────────────────────
 #
 # Door state is derived from the most recent AccessEvent for each door_id.
@@ -268,6 +400,24 @@ async def ac_list_doors(_user=Depends(get_current_user)):
                     "state": state,
                     "last_event_time": row.last_event_time.isoformat() if row.last_event_time else None,
                     "zone": None,
+                })
+
+            # Merge in persisted (configured) doors so a door created via
+            # /api/pacs/doors-config appears and is lock/unlock-operable here,
+            # even before it has any access events.
+            from backend.services.pacs_service import pacs_service
+            await pacs_service.ensure_hydrated()
+            seen = {d["door_id"] for d in doors}
+            for cfg in pacs_service.doors.values():
+                if cfg.door_id in seen:
+                    continue
+                doors.append({
+                    "id": cfg.door_id,
+                    "name": cfg.name,
+                    "door_id": cfg.door_id,
+                    "state": _DERIVED_STATE.get(cfg.door_id, "locked" if cfg.locked else "unlocked"),
+                    "last_event_time": None,
+                    "zone": cfg.zone or None,
                 })
 
             return doors

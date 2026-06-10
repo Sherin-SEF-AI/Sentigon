@@ -45,6 +45,14 @@ class OverrideRequest(BaseModel):
     reason: str = Field("manual_override", min_length=1, max_length=500)
 
 
+class ReviewRequest(BaseModel):
+    notes: Optional[str] = None
+    outcome: Optional[str] = None
+
+    class Config:
+        extra = "allow"  # accept after-action fields (what_worked, lessons_learned, …)
+
+
 # ── Endpoints ─────────────────────────────────────────────────────────
 
 @router.get("/active", response_model=List[ThreatResponseItem])
@@ -140,6 +148,35 @@ async def override_response(
     if not success:
         raise HTTPException(status_code=404, detail="Active response not found or already completed")
     return {"status": "aborted", "response_id": response_id, "reason": body.reason}
+
+
+@router.post("/{response_id}/review", response_model=ThreatResponseItem)
+async def review_response(
+    response_id: str,
+    body: ReviewRequest,
+    _user=Depends(require_role(UserRole.ANALYST)),
+):
+    """Mark an autonomous threat response as reviewed (analyst+ only).
+
+    Mirrors the override handler's lookup pattern: resolves the response via the
+    autonomous_response service, records the after-action review (notes/outcome/
+    reviewed_at) onto the real response object, and returns the updated response.
+    """
+    from datetime import datetime, timezone
+    from backend.services.autonomous_response import autonomous_response
+
+    resp = autonomous_response.get_response(response_id)
+    if resp is None:
+        raise HTTPException(status_code=404, detail="Threat response not found")
+
+    review = body.model_dump(exclude_none=True)
+    review["reviewed_at"] = datetime.now(timezone.utc).isoformat()
+    review["reviewed_by"] = str(getattr(_user, "id", "")) or None
+    resp["review"] = review
+    resp["reviewed"] = True
+    resp["reviewed_at"] = review["reviewed_at"]
+
+    return ThreatResponseItem(**_sanitise(resp))
 
 
 @router.post("/test", status_code=201)

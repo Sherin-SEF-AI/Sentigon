@@ -67,12 +67,77 @@ class IntercomService:
         self.call_history: List[IntercomCall] = []
         self.max_history = 10000
         self._callbacks: List[Callable] = []
+        self._hydrated = False
         self._stats = {
             "total_calls": 0,
             "active_calls": 0,
             "door_releases": 0,
             "broadcasts": 0,
         }
+
+    # ── Persistence (write-through cache over the DB) ─────────────
+
+    async def ensure_hydrated(self) -> None:
+        if self._hydrated:
+            return
+        try:
+            from sqlalchemy import select
+            from backend.database import async_session
+            from backend.models.intercom_models import IntercomDeviceRow
+            async with async_session() as s:
+                for r in (await s.execute(select(IntercomDeviceRow))).scalars().all():
+                    self.devices[r.id] = IntercomDevice(
+                        id=r.id, name=r.name, zone=r.zone or "",
+                        ip_address=r.ip_address or "", sip_uri=r.sip_uri or "",
+                        state=IntercomState.IDLE,
+                        has_door_release=r.has_door_release, has_camera=r.has_camera,
+                        camera_id=r.camera_id, volume=r.volume or 75,
+                    )
+            self._hydrated = True
+        except Exception as e:  # noqa: BLE001
+            logger.warning("Intercom hydrate failed: %s", e)
+
+    async def save_device(self, data: Dict[str, Any]) -> IntercomDevice:
+        """Create or update an intercom device (DB + in-memory)."""
+        await self.ensure_hydrated()
+        import time as _time
+        from sqlalchemy import select
+        from backend.database import async_session
+        from backend.models.intercom_models import IntercomDeviceRow
+        device_id = str(data.get("id") or f"intercom_{int(_time.time()*1000)}")
+        async with async_session() as s:
+            row = (await s.execute(select(IntercomDeviceRow).where(IntercomDeviceRow.id == device_id))).scalar_one_or_none()
+            if row is None:
+                row = IntercomDeviceRow(id=device_id)
+                s.add(row)
+            for f in ("name", "zone", "ip_address", "sip_uri", "has_door_release",
+                      "has_camera", "camera_id", "volume"):
+                if f in data and data[f] is not None:
+                    setattr(row, f, data[f])
+            if row.name is None:
+                row.name = f"Intercom {device_id}"
+            await s.commit()
+            await s.refresh(row)
+        existing = self.devices.get(device_id)
+        device = IntercomDevice(
+            id=row.id, name=row.name, zone=row.zone or "",
+            ip_address=row.ip_address or "", sip_uri=row.sip_uri or "",
+            state=existing.state if existing else IntercomState.IDLE,
+            has_door_release=row.has_door_release, has_camera=row.has_camera,
+            camera_id=row.camera_id, volume=row.volume or 75,
+        )
+        self.devices[device_id] = device
+        return device
+
+    async def remove_device(self, device_id: str) -> bool:
+        await self.ensure_hydrated()
+        from sqlalchemy import delete
+        from backend.database import async_session
+        from backend.models.intercom_models import IntercomDeviceRow
+        async with async_session() as s:
+            await s.execute(delete(IntercomDeviceRow).where(IntercomDeviceRow.id == device_id))
+            await s.commit()
+        return self.devices.pop(device_id, None) is not None
 
     # ── Device management ─────────────────────────────────────────
 

@@ -57,7 +57,7 @@ class TrackerAgent(BaseAgent):
                 "patterns using appearance descriptors and temporal analysis."
             ),
             tier="reasoning",
-            model_name="gemma3:4b",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "get_current_detections", "get_all_cameras_status", "get_site_context",
                 "get_alert_history", "get_event_history", "semantic_search",

@@ -13,6 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.auth import get_current_user, require_role
 from backend.database import get_db, async_session
+from backend.models.advanced_models import VehicleSighting
 from backend.models.models import UserRole
 from backend.models.phase2_models import BOLOEntry
 
@@ -197,6 +198,57 @@ async def deactivate_bolo(
     except Exception as e:
         logger.error(f"Error deactivating BOLO {bolo_id}: {e}")
         raise HTTPException(status_code=500, detail="Failed to deactivate BOLO entry")
+
+
+@router.get("/{bolo_id}/sightings", response_model=List[dict])
+async def get_bolo_sightings(
+    bolo_id: uuid.UUID,
+    limit: int = Query(100, ge=1, le=500),
+    _user=Depends(get_current_user),
+):
+    """List sightings logged for a BOLO entry.
+
+    Vehicle BOLOs with a plate are matched against recorded vehicle sightings;
+    other BOLO types have no sighting source and return an empty list.
+    """
+    try:
+        async with async_session() as session:
+            bolo = (await session.execute(
+                select(BOLOEntry).where(BOLOEntry.id == bolo_id)
+            )).scalar_one_or_none()
+            if not bolo:
+                raise HTTPException(status_code=404, detail="BOLO entry not found")
+
+            if bolo.bolo_type == "vehicle" and bolo.plate_text:
+                result = await session.execute(
+                    select(VehicleSighting)
+                    .where(VehicleSighting.plate_text == bolo.plate_text.upper().strip())
+                    .order_by(desc(VehicleSighting.timestamp))
+                    .limit(limit)
+                )
+                sightings = result.scalars().all()
+                return [
+                    {
+                        "id": str(s.id),
+                        "bolo_id": str(bolo_id),
+                        "plate_text": s.plate_text or "",
+                        "camera_id": str(s.camera_id),
+                        "vehicle_type": s.vehicle_type,
+                        "vehicle_color": s.vehicle_color,
+                        "confidence": s.plate_confidence,
+                        "direction": s.vehicle_direction,
+                        "frame_path": s.frame_path,
+                        "timestamp": s.timestamp.isoformat() if s.timestamp else None,
+                    }
+                    for s in sightings
+                ]
+
+            return []
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching sightings for BOLO {bolo_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch BOLO sightings")
 
 
 @router.post("/check-plate", response_model=PlateCheckResponse)

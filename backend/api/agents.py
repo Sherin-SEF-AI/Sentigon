@@ -42,6 +42,14 @@ def _agent_or_404(agent_name: str):
 
 # ── 1. Fleet-wide agent status ────────────────────────────────
 
+@router.get("")
+async def list_agents(
+    _user=Depends(get_current_user),
+):
+    """Flat list of all registered agents (for management UIs)."""
+    return agent_registry.get_all_status()
+
+
 @router.get("/status")
 async def get_all_agents_status(
     _user=Depends(get_current_user),
@@ -133,6 +141,32 @@ async def restart_agent(
     if not success:
         raise HTTPException(status_code=500, detail=f"Failed to restart agent '{agent_name}'")
     return {"status": "restarted", "agent": agent_name}
+
+
+@router.post("/{agent_name}/pause")
+async def pause_agent(
+    agent_name: str,
+    _user=Depends(require_role(UserRole.ADMIN)),
+):
+    """Pause (stop) a single agent. Requires ADMIN role."""
+    _agent_or_404(agent_name)
+    success = await agent_registry.stop_agent(agent_name)
+    if not success:
+        raise HTTPException(status_code=500, detail=f"Failed to pause agent '{agent_name}'")
+    return {"status": "paused", "agent": agent_name}
+
+
+@router.post("/{agent_name}/resume")
+async def resume_agent(
+    agent_name: str,
+    _user=Depends(require_role(UserRole.ADMIN)),
+):
+    """Resume (start) a single agent. Requires ADMIN role."""
+    _agent_or_404(agent_name)
+    success = await agent_registry.start_agent(agent_name)
+    if not success:
+        raise HTTPException(status_code=500, detail=f"Failed to resume agent '{agent_name}'")
+    return {"status": "resumed", "agent": agent_name}
 
 
 # ── 5b. Reset agent errors ─────────────────────────────────

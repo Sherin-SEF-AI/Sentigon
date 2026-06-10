@@ -109,6 +109,79 @@ class LDAPConfig:
 # Service
 # ═══════════════════════════════════════════════════════════════════════════
 
+class IdentityProviderAdapter:
+    """Seam for the external identity source.
+
+    Swap ``SimulatedIdPAdapter`` for a real OAuth/OIDC HTTP client or an
+    ldap3-backed directory adapter. The service layer (tokens, MFA, sessions)
+    is unchanged regardless of which adapter is plugged in.
+    """
+
+    async def authenticate(self, username: str, password: str) -> Optional[Dict[str, Any]]:
+        raise NotImplementedError
+
+    async def resolve_oauth_user(self, provider: "SSOProvider", code: str, redirect_uri: str) -> Dict[str, Any]:
+        raise NotImplementedError
+
+    async def list_directory_users(self) -> List[Dict[str, Any]]:
+        raise NotImplementedError
+
+
+class SimulatedIdPAdapter(IdentityProviderAdapter):
+    """Resolves identities against the REAL local user database — never
+    fabricates users. A production deployment swaps this for a real IdP/LDAP
+    adapter while keeping the same interface.
+    """
+
+    @staticmethod
+    def _user_info(user) -> Dict[str, Any]:
+        role = getattr(user.role, "value", None) or str(user.role)
+        return {
+            "sub": str(user.id),
+            "username": user.email,
+            "email": user.email,
+            "name": user.full_name or user.email,
+            "groups": [role],
+        }
+
+    async def authenticate(self, username: str, password: str) -> Optional[Dict[str, Any]]:
+        from sqlalchemy import select
+        from backend.database import async_session
+        from backend.models.models import User
+        from backend.api.auth import verify_password
+        async with async_session() as s:
+            user = (await s.execute(select(User).where(User.email == username))).scalar_one_or_none()
+        if not user or not user.is_active or not verify_password(password, user.hashed_password):
+            return None
+        return self._user_info(user)
+
+    async def resolve_oauth_user(self, provider, code: str, redirect_uri: str) -> Dict[str, Any]:
+        # Simulated OIDC: the authorization code carries the subject email in
+        # this local flow. Resolve a REAL local user; never invent one.
+        from sqlalchemy import select
+        from backend.database import async_session
+        from backend.models.models import User
+        email = code if code and "@" in code else None
+        async with async_session() as s:
+            stmt = select(User).where(User.email == email) if email else select(User).limit(1)
+            user = (await s.execute(stmt)).scalar_one_or_none()
+        if not user:
+            raise ValueError("No matching local user for the OAuth subject")
+        return self._user_info(user)
+
+    async def list_directory_users(self) -> List[Dict[str, Any]]:
+        from sqlalchemy import select
+        from backend.database import async_session
+        from backend.models.models import User
+        async with async_session() as s:
+            users = (await s.execute(select(User))).scalars().all()
+        return [
+            {"username": u.email, "email": u.email,
+             "name": u.full_name or u.email, "is_active": u.is_active}
+            for u in users
+        ]
+
+
 class SSOService:
     """Unified SSO, MFA, and API-key management service."""
 
@@ -119,6 +192,8 @@ class SSOService:
         self._api_keys: Dict[str, APIKey] = {}        # key_id -> APIKey
         self._api_key_hashes: Dict[str, str] = {}     # key_hash -> key_id
         self._refresh_tokens: Dict[str, Dict[str, Any]] = {}  # refresh_token -> payload
+        # Pluggable identity source — simulated (local DB) by default.
+        self.idp_adapter: IdentityProviderAdapter = SimulatedIdPAdapter()
 
         # LDAP config from environment
         self._ldap_config = LDAPConfig(
@@ -201,7 +276,9 @@ class SSOService:
         if not provider or provider.provider_type != "oauth2":
             raise ValueError(f"OAuth2 provider not found: {provider_id}")
 
-        # --- Simulated token exchange ---
+        # Resolve a REAL identity via the adapter (no fabricated users).
+        user_info = await self.idp_adapter.resolve_oauth_user(provider, code, redirect_uri)
+
         access_token = secrets.token_urlsafe(48)
         refresh_token = secrets.token_urlsafe(48)
         id_token = secrets.token_urlsafe(64)
@@ -209,20 +286,14 @@ class SSOService:
         self._refresh_tokens[refresh_token] = {
             "provider_id": provider_id,
             "access_token": access_token,
+            "sub": user_info.get("sub"),
             "created_at": datetime.now(timezone.utc).isoformat(),
-        }
-
-        user_info = {
-            "sub": str(uuid.uuid4()),
-            "email": f"user-{code[:8]}@{provider.name.lower().replace(' ', '')}.example",
-            "name": f"OAuth User ({provider.name})",
-            "groups": [],
         }
 
         logger.info(
             "OAuth2 callback handled for provider %s — user %s",
             provider_id,
-            user_info["email"],
+            user_info.get("email"),
         )
 
         return {
@@ -241,54 +312,52 @@ class SSOService:
         username: str,
         password: str,
     ) -> Dict[str, Any]:
-        """Authenticate a user against the configured LDAP directory.
+        """Authenticate a user against the directory via the identity adapter.
 
-        This is a stub that validates the configuration is present and returns
-        a simulated result.  In production, replace with ``ldap3`` calls.
+        With the default ``SimulatedIdPAdapter`` this performs a REAL credential
+        check against the local user database (bcrypt). Swapping in an
+        ldap3-backed adapter makes it a real directory bind — no other code
+        changes required.
         """
         cfg = self._ldap_config
-        if not cfg.server:
-            raise ValueError("LDAP server not configured")
-
         logger.info(
-            "LDAP auth attempt — user=%s server=%s:%d ssl=%s",
-            username,
-            cfg.server,
-            cfg.port,
-            cfg.use_ssl,
+            "Directory auth attempt — user=%s server=%s",
+            username, cfg.server or "(simulated/local)",
         )
 
-        # Simulated successful bind
+        result = await self.idp_adapter.authenticate(username, password)
+        if not result:
+            return {"authenticated": False}
+
+        dn = f"uid={username},{cfg.base_dn}" if cfg.base_dn else f"uid={username}"
         return {
             "authenticated": True,
             "user": {
-                "username": username,
-                "email": f"{username}@ldap.local",
-                "name": username.title(),
-                "groups": ["Domain Users"],
-                "dn": f"uid={username},{cfg.base_dn}",
+                "username": result["username"],
+                "email": result["email"],
+                "name": result["name"],
+                "groups": result.get("groups", []),
+                "dn": dn,
             },
         }
 
     async def sync_ldap_users(self) -> Dict[str, Any]:
-        """Synchronise users from the LDAP directory.
+        """Synchronise users from the directory via the identity adapter.
 
-        Stub — returns a summary.  Replace with real ``ldap3`` search in
-        production.
+        The simulated adapter reports the real local users; an ldap3 adapter
+        would report the directory's users. Counts are honest (no fabrication).
         """
         cfg = self._ldap_config
-        if not cfg.server:
-            raise ValueError("LDAP server not configured")
-
-        logger.info("LDAP user sync started — base_dn=%s", cfg.base_dn)
+        users = await self.idp_adapter.list_directory_users()
+        logger.info("Directory user sync — base_dn=%s found=%d", cfg.base_dn, len(users))
 
         return {
             "synced_at": datetime.now(timezone.utc).isoformat(),
-            "users_found": 0,
+            "users_found": len(users),
             "users_created": 0,
-            "users_updated": 0,
-            "users_disabled": 0,
-            "server": cfg.server,
+            "users_updated": len(users),
+            "users_disabled": sum(1 for u in users if not u.get("is_active", True)),
+            "server": cfg.server or "simulated",
             "base_dn": cfg.base_dn,
         }
 

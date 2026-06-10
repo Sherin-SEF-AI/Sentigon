@@ -200,10 +200,55 @@ async def _chat_with_fallback(
 
 
 def _extract_content(response: Dict[str, Any]) -> str:
-    """Extract text content from native Ollama response, stripping <think> tags."""
-    text = response.get("message", {}).get("content", "") or ""
-    text = re.sub(r"<think>[\s\S]*?</think>\s*", "", text).strip()
+    """Extract text content, stripping <think> reasoning blocks.
+
+    Handles the truncation case too: if generation was cut off inside a <think>
+    block (no closing tag), everything from <think> on is dropped rather than
+    dumping raw chain-of-thought to the user. If stripping would leave nothing,
+    the raw text is returned so the caller can detect the empty-answer case.
+    """
+    raw = response.get("message", {}).get("content", "") or ""
+    text = re.sub(r"<think>[\s\S]*?</think>\s*", "", raw)
+    # Unclosed/truncated <think> — drop from the tag to the end.
+    text = re.sub(r"<think>[\s\S]*$", "", text).strip()
     return text
+
+
+async def _synthesize_final_answer(
+    messages: List[Dict[str, Any]],
+    model: str,
+    temperature: float,
+) -> str:
+    """Reasoning layer: force a complete, reasoned answer with no further tools.
+
+    Invoked when a tool loop ends without a usable answer (empty content or the
+    iteration cap). All gathered tool results are already in ``messages``; the
+    model now reasons over them and writes the operator-facing answer. Running
+    without tools guarantees the turn produces prose, not another tool call.
+    """
+    convo = list(messages) + [{
+        "role": "user",
+        "content": (
+            "You now have all the information you need. Do NOT call any tools. "
+            "First reason through the gathered data step by step, then write a "
+            "clear, complete, self-contained answer to the original question. "
+            "Include the specific figures from the tool results (counts, camera "
+            "names, IDs, timestamps). If the data is insufficient to answer, say "
+            "exactly what is missing."
+        ),
+    }]
+    try:
+        result = await _chat_with_fallback(
+            messages=convo,
+            primary_model=model,
+            num_predict=2048,
+            temperature=temperature,
+            tools=None,
+        )
+        return _extract_content(result)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Final-answer synthesis failed: %s", exc)
+        return ""
 
 
 # ── Public API ────────────────────────────────────────────
@@ -342,8 +387,17 @@ async def ollama_generate_with_tools(
         # If no tool calls, this is the final response
         tool_calls = msg.get("tool_calls")
         if not tool_calls:
+            answer = _extract_content(result)
+            if not answer:
+                # The model ended its turn with no usable text (empty, or all of
+                # it was reasoning that got stripped/truncated). Run the
+                # reasoning layer to produce a real answer instead of a blank.
+                answer = await _synthesize_final_answer(messages, resolved_model, temperature)
             return {
-                "response": _extract_content(result),
+                "response": answer or (
+                    "I couldn't find enough information to answer that. "
+                    "Please rephrase or narrow the question."
+                ),
                 "tool_calls": tool_calls_made,
             }
 
@@ -377,8 +431,14 @@ async def ollama_generate_with_tools(
                 "content": json.dumps(call_result, default=str)[:4000],
             })
 
+    # Hit the iteration cap — synthesise a final answer from everything gathered
+    # rather than returning a useless "max iterations" stub to the operator.
+    answer = await _synthesize_final_answer(messages, resolved_model, temperature)
     return {
-        "response": "Max tool call iterations reached",
+        "response": answer or (
+            "I gathered a lot of data but couldn't converge on an answer. "
+            "Please ask a more specific question."
+        ),
         "tool_calls": tool_calls_made,
         "truncated": True,
     }

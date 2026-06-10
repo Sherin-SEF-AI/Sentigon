@@ -127,7 +127,14 @@ async def analyze_audio_flash(
     mime_type: str = "audio/wav",
     json_schema: Optional[Dict] = None,
 ) -> Dict[str, Any]:
-    """Run AI analysis on audio data."""
+    """Reason over audio *metadata/transcript* via the local text model.
+
+    NOTE: the local Ollama stack (qwen2.5) is not an audio-native model, so raw
+    audio bytes are NOT decoded here. Callers must embed the relevant audio
+    context (transcript, acoustic-event tags, dB level, classifier output) into
+    `prompt`. To analyze raw waveforms, plug in an audio-capable model and route
+    the bytes through it.
+    """
     try:
         text = await _gemini_or_ollama_text(
             prompt,
@@ -155,13 +162,19 @@ async def compare_frames_flash(
     prompt: str,
     json_schema: Optional[Dict] = None,
 ) -> Dict[str, Any]:
-    """Compare two frames."""
+    """Compare two frames — sends BOTH images to the vision model.
+
+    Used by tamper detection (before/after comparison). The local Ollama
+    vision model accepts multiple images natively, so both frames are passed
+    together rather than analyzing only the first.
+    """
     try:
-        # Gemini can handle multi-image, but send as text description for now
-        return await _gemini_or_ollama_vision(
-            frame_a_bytes, prompt,
-            model=settings.GEMINI_MODEL,
+        from backend.services.ollama_provider import ollama_analyze_multiple_images
+        result = await ollama_analyze_multiple_images(
+            [frame_a_bytes, frame_b_bytes], prompt,
         )
+        result["ai_provider"] = "ollama"
+        return result
     except Exception as e:
         logger.error("Frame comparison failed: %s", e)
         return {}

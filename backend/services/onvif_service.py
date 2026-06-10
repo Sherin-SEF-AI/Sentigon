@@ -19,8 +19,10 @@ class ONVIFDevice:
     """Represents a discovered or configured ONVIF device."""
     ip: str
     port: int = 80
-    username: str = "admin"
-    password: str = "admin"
+    # No factory-default credentials — they must be supplied explicitly per
+    # device. Trying "admin"/"admin" silently is a security foot-gun.
+    username: str = ""
+    password: str = ""
     name: str = ""
     manufacturer: str = ""
     model: str = ""
@@ -92,8 +94,13 @@ class ONVIFService:
         return discovered
 
     async def connect_device(self, ip: str, port: int = 80,
-                              username: str = "admin", password: str = "admin") -> ONVIFDevice:
-        """Connect to a specific ONVIF device and retrieve its capabilities."""
+                              username: str = "", password: str = "") -> ONVIFDevice:
+        """Connect to a specific ONVIF device and retrieve its capabilities.
+
+        Credentials are required — there are no factory defaults.
+        """
+        if not username or not password:
+            raise ValueError("ONVIF credentials (username and password) are required")
         key = f"{ip}:{port}"
         try:
             from onvif import ONVIFCamera

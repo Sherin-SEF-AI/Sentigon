@@ -96,7 +96,7 @@ class AccessGuardianAgent(BaseAgent):
                 "detections for multi-modal verification."
             ),
             tier="perception",
-            model_name="gemma3:4b",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "get_all_cameras_status",
                 "get_current_detections",

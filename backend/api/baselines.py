@@ -5,6 +5,7 @@ from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.database import get_db
+from backend.models.models import Camera
 from backend.models.phase3_models import ActivityBaseline
 from backend.services.baseline_learning_service import baseline_learning_service
 
@@ -49,6 +50,37 @@ async def get_camera_baseline(camera_id: str, db: AsyncSession = Depends(get_db)
         return baseline
     except HTTPException:
         raise
+    except Exception as e:
+        raise HTTPException(400, str(e))
+
+
+@router.get("/anomaly-scores")
+async def get_anomaly_scores(db: AsyncSession = Depends(get_db)):
+    """Recent anomaly scores across all cameras, computed against learned baselines."""
+    try:
+        cameras = (await db.execute(select(Camera))).scalars().all()
+        scores = []
+        for cam in cameras:
+            try:
+                result = await baseline_learning_service.compute_anomaly_score(
+                    db,
+                    camera_id=cam.id,
+                    zone_id=cam.zone_id,
+                    current_values={},
+                )
+            except Exception:
+                continue
+            scores.append({
+                "camera_id": str(cam.id),
+                "camera_name": cam.name,
+                "score": result.get("overall_anomaly", 0.0),
+                "is_anomalous": result.get("is_anomalous", False),
+                "sample_count": result.get("sample_count", 0),
+                "person_anomaly": result.get("person_anomaly", 0.0),
+                "vehicle_anomaly": result.get("vehicle_anomaly", 0.0),
+                "movement_anomaly": result.get("movement_anomaly", 0.0),
+            })
+        return scores
     except Exception as e:
         raise HTTPException(400, str(e))
 

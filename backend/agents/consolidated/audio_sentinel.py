@@ -79,7 +79,7 @@ class AudioSentinel(BaseAgent):
                 "events for multi-modal threat confirmation."
             ),
             tier="perception",
-            model_name="gemma3:4b",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "get_all_cameras_status",
                 "get_current_detections",

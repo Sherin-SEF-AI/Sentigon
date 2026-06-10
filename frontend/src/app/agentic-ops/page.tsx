@@ -282,7 +282,7 @@ export default function AgenticOpsPage() {
 
   const handleDownloadEvidence = async (investigationId: string) => {
     try {
-      const res = await fetch(`${API_BASE}/api/investigations/${investigationId}/evidence`, {
+      const res = await fetch(`${API_BASE}/api/investigations/${investigationId}/evidence-package`, {
         headers: {
           Accept: "application/zip",
           Authorization: `Bearer ${localStorage.getItem("sentinel_token")}`,

@@ -122,7 +122,7 @@ class InvestigatorAgent(BaseAgent):
                 "timelines, and produces narrative investigation reports."
             ),
             tier="reasoning",
-            model_name="gemma3:4b",
+            model_name="qwen2.5:7b",
             tool_names=[
                 # Search & retrieval
                 "semantic_search_video",

@@ -203,6 +203,61 @@ async def list_recent_anomalies(
         raise HTTPException(status_code=500, detail="Failed to list anomalies")
 
 
+@router.get("/access-patterns", response_model=dict)
+async def get_access_patterns(
+    profile_id: Optional[uuid.UUID] = Query(None, description="Scope to a single profile's user"),
+    days: int = Query(30, ge=1, le=180),
+    _user=Depends(get_current_user),
+):
+    """Access-pattern analysis built from real AccessEvent history.
+
+    Returns an hour(0-23) x day(0=Mon..6=Sun) grid of access counts. If a
+    ``profile_id`` is supplied the grid is scoped to that profile's user; otherwise
+    it aggregates across all monitored users. Returns a zero grid if there is no data.
+    """
+    try:
+        async with async_session() as session:
+            cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+
+            stmt = (
+                select(AccessEvent)
+                .where(AccessEvent.timestamp >= cutoff)
+                .order_by(desc(AccessEvent.timestamp))
+            )
+
+            # Scope to a profile's user if requested
+            if profile_id is not None:
+                profile_result = await session.execute(
+                    select(InsiderThreatProfile).where(InsiderThreatProfile.id == profile_id)
+                )
+                profile = profile_result.scalar_one_or_none()
+                if not profile:
+                    raise HTTPException(status_code=404, detail="Insider threat profile not found")
+                if profile.user_id:
+                    stmt = stmt.where(AccessEvent.user_identifier == str(profile.user_id))
+                else:
+                    # No associated user — no events to attribute
+                    return {"grid": [[0] * 7 for _ in range(24)], "total_events": 0}
+
+            result = await session.execute(stmt)
+            events = result.scalars().all()
+
+            # grid[hour][weekday] counts (weekday: Mon=0 .. Sun=6)
+            grid = [[0] * 7 for _ in range(24)]
+            total = 0
+            for e in events:
+                if e.timestamp:
+                    grid[e.timestamp.hour][e.timestamp.weekday()] += 1
+                    total += 1
+
+            return {"grid": grid, "total_events": total}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error building access patterns: {e}")
+        raise HTTPException(status_code=500, detail="Failed to build access patterns")
+
+
 @router.post("/baseline/{user_id}", response_model=dict)
 async def build_user_baseline(
     user_id: uuid.UUID,

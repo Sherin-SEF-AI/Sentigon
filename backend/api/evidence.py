@@ -114,6 +114,115 @@ async def upload_evidence_file(
     }
 
 
+@upload_router.post("/{evidence_id}/verify")
+async def verify_evidence(evidence_id: str, _user=Depends(get_current_user)):
+    """Re-hash the stored file and compare against the recorded SHA-256."""
+    try:
+        eid = uuid.UUID(evidence_id)
+    except ValueError:
+        raise HTTPException(400, "Invalid evidence id")
+    async with async_session() as session:
+        rec = (await session.execute(
+            select(EvidenceHash).where(EvidenceHash.evidence_id == eid)
+        )).scalar_one_or_none()
+        if not rec:
+            raise HTTPException(404, "Evidence hash record not found")
+        expected = rec.sha256_hash
+        actual = None
+        try:
+            if rec.file_path and os.path.exists(rec.file_path):
+                with open(rec.file_path, "rb") as fp:
+                    actual = hashlib.sha256(fp.read()).hexdigest()
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("evidence.verify.read_failed", error=str(exc))
+        ok = bool(actual) and actual == expected
+        rec.verification_status = "verified" if ok else ("tampered" if actual else "missing")
+        rec.verified_at = datetime.now(timezone.utc)
+        await session.commit()
+        return {
+            "evidence_id": evidence_id,
+            "verified": ok,
+            "expected_hash": expected,
+            "actual_hash": actual,
+            "status": rec.verification_status,
+            "verified_at": rec.verified_at.isoformat(),
+        }
+
+
+@upload_router.get("/{evidence_id}/chain-of-custody")
+async def evidence_chain_of_custody(evidence_id: str, _user=Depends(get_current_user)):
+    """Custody timeline derived from the real evidence + hash records."""
+    try:
+        eid = uuid.UUID(evidence_id)
+    except ValueError:
+        raise HTTPException(400, "Invalid evidence id")
+    async with async_session() as session:
+        ev = (await session.execute(
+            select(CaseEvidence).where(CaseEvidence.id == eid)
+        )).scalar_one_or_none()
+        h = (await session.execute(
+            select(EvidenceHash).where(EvidenceHash.evidence_id == eid)
+        )).scalar_one_or_none()
+        if ev is None and h is None:
+            raise HTTPException(404, "Evidence not found")
+
+        raw = []
+        if ev is not None:
+            raw.append(("collected", getattr(ev, "added_at", None),
+                        f"Evidence '{getattr(ev, 'title', '')}' registered"))
+        if h is not None:
+            raw.append(("hashed", getattr(h, "created_at", None),
+                        f"SHA-256 {(h.sha256_hash or '')[:16]}…"))
+            if h.verified_at:
+                raw.append(("verified", h.verified_at,
+                            f"Integrity check: {h.verification_status}"))
+
+        entries = []
+        for action, at, detail in raw:
+            if at is None:
+                continue
+            entries.append({
+                "action": action,
+                "actor": "system",
+                "detail": detail,
+                "at": at.isoformat() if hasattr(at, "isoformat") else str(at),
+            })
+        entries.sort(key=lambda e: e["at"])
+        return {"evidence_id": evidence_id, "entries": entries, "total_entries": len(entries)}
+
+
+@upload_router.get("")
+async def list_evidence(
+    case_id: Optional[str] = None,
+    limit: int = 200,
+    _user=Depends(get_current_user),
+):
+    """List evidence items (newest first), optionally scoped to a case."""
+    async with async_session() as session:
+        stmt = select(CaseEvidence).order_by(desc(CaseEvidence.added_at)).limit(min(limit, 500))
+        if case_id:
+            try:
+                stmt = select(CaseEvidence).where(
+                    CaseEvidence.case_id == uuid.UUID(case_id)
+                ).order_by(desc(CaseEvidence.added_at)).limit(min(limit, 500))
+            except ValueError:
+                raise HTTPException(400, "Invalid case_id")
+        rows = (await session.execute(stmt)).scalars().all()
+        return [
+            {
+                "id": str(r.id),
+                "case_id": str(r.case_id) if r.case_id else None,
+                "type": getattr(r, "evidence_type", None),
+                "name": getattr(r, "title", None),
+                "title": getattr(r, "title", None),
+                "url": getattr(r, "file_url", None),
+                "file_url": getattr(r, "file_url", None),
+                "created_at": r.added_at.isoformat() if getattr(r, "added_at", None) else None,
+            }
+            for r in rows
+        ]
+
+
 # Keep the original case-scoped router as well
 router_cases = APIRouter(prefix="/api/cases", tags=["evidence"])
 

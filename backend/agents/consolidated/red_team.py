@@ -8,13 +8,13 @@ from __future__ import annotations
 
 import json
 import logging
-import random
 import time
 from datetime import datetime, timezone
 from typing import Any
 
 from backend.agents.base_agent import BaseAgent
 from backend.agents.agent_comms import CH_CORTEX, CH_ACTIONS
+from backend.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -140,7 +140,7 @@ class RedTeamAgent(BaseAgent):
                 "spots, and generates adversarial vulnerability reports."
             ),
             tier="action",
-            model_name="gemma3:4b",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "get_all_cameras_status",
                 "get_all_zones_status",
@@ -152,9 +152,13 @@ class RedTeamAgent(BaseAgent):
                 "create_event",
             ],
             subscriptions=[CH_CORTEX],
-            cycle_interval=300.0,  # every 5 minutes
+            # Hourly by default (configurable) — a red-team probe every 5 min was
+            # pure noise. Scenarios are run deterministically (round-robin), not
+            # at random, so reports carry a stable trend signal.
+            cycle_interval=float(getattr(settings, "RED_TEAM_INTERVAL_SECONDS", 3600)),
             token_budget_per_cycle=30000,
         )
+        self._scenario_index = 0
 
     # ================================================================
     # Core reasoning loop
@@ -185,8 +189,10 @@ class RedTeamAgent(BaseAgent):
                     msg.get("directive", "")[:120],
                 )
 
-        # 1. Select a random attack scenario
-        scenario = random.choice(_ATTACK_SCENARIOS)
+        # 1. Select the next attack scenario deterministically (round-robin), so
+        #    successive reports cover the full suite in order and are comparable.
+        scenario = _ATTACK_SCENARIOS[self._scenario_index % len(_ATTACK_SCENARIOS)]
+        self._scenario_index += 1
         logger.info(
             "RedTeamAgent: running scenario '%s'", scenario["name"],
         )
@@ -309,10 +315,18 @@ class RedTeamAgent(BaseAgent):
         """Persist findings in short-term memory for improvement tracking."""
         history: dict[str, Any] = await self.recall("red_team_history") or {}
 
+        prev = history.get(scenario["id"], {})
+        prev_vulns = prev.get("vulnerabilities_found", 0)
+        curr_vulns = report.get("vulnerabilities_found", 0)
+
         history[scenario["id"]] = {
             "scenario_name": scenario["name"],
             "risk_rating": report.get("risk_rating", "unknown"),
-            "vulnerabilities_found": report.get("vulnerabilities_found", 0),
+            "vulnerabilities_found": curr_vulns,
+            # Trend vs the previous run of this scenario, so a report signals
+            # change rather than just re-stating the same posture as noise.
+            "delta_vulnerabilities": curr_vulns - prev_vulns,
+            "improved": curr_vulns < prev_vulns,
             "summary": report.get("summary", "")[:500],
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }

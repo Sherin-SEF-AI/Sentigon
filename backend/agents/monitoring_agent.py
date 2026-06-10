@@ -97,20 +97,63 @@ class MonitoringAgent:
         # ── 1. YOLO detection ─────────────────────────────────────
         detections = yolo_detector.detect(frame, camera_id=camera_id)
 
-        # ── 2. Optional Gemini Flash analysis ─────────────────────
+        # ── 2-3. Threat evaluation ────────────────────────────────
         counter = self._frame_counters.get(camera_id, 0) + 1
         self._frame_counters[camera_id] = counter
 
-        gemini_result: Optional[Dict[str, Any]] = None
-        if counter % _AI_EVERY_N_FRAMES == 0:
-            gemini_result = await gemini_analyzer.analyze_frame(
-                frame, detections=detections, camera_id=camera_id,
+        if settings.VISION_VERIFIED_DETECTION:
+            # Verified-vision path: structured scene intelligence + an adversarial
+            # verifier. Hallucination-resistant — only threats a skeptic confirms
+            # against the frame become alerts. The legacy keyword analyzer is
+            # bypassed (gemini_result=None) so threat_engine only does concrete
+            # YOLO-class matching, avoiding the false-positive flood.
+            threats = threat_engine.evaluate_hybrid(detections, None, zone_info)
+            if counter % _AI_EVERY_N_FRAMES == 0:
+                threats.extend(
+                    await self._verified_vision_threats(frame, detections, camera_id)
+                )
+        else:
+            gemini_result: Optional[Dict[str, Any]] = None
+            if counter % _AI_EVERY_N_FRAMES == 0:
+                gemini_result = await gemini_analyzer.analyze_frame(
+                    frame, detections=detections, camera_id=camera_id,
+                )
+            threats = threat_engine.evaluate_hybrid(
+                detections, gemini_result, zone_info,
             )
 
-        # ── 3. Threat evaluation ──────────────────────────────────
-        threats = threat_engine.evaluate_hybrid(
-            detections, gemini_result, zone_info,
-        )
+        # ── 3a. Temporal / multi-frame behavioural detection ──────
+        # Geometric trajectory analysis over tracked objects (loitering,
+        # running, fall, abandoned object). Deterministic — not LLM — so it adds
+        # high-quality, hallucination-free behavioural threats on every frame.
+        try:
+            from backend.services.temporal_behavior import temporal_behavior
+            h_f, w_f = frame.shape[0], frame.shape[1]
+            threats.extend(
+                temporal_behavior.observe(camera_id, detections, (w_f, h_f), timestamp_epoch)
+            )
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("temporal behaviour failed for %s: %s", camera_id, exc)
+
+        # ── 3a-bis. Pose-based behaviours (fall, pre-assault, concealed-carry) ──
+        # Separate pose model with its own tracking + COCO-17 keypoint analysis.
+        # Throttled — pose is a second model inference per frame.
+        if getattr(settings, "POSE_BEHAVIOR_ENABLED", True) and \
+                counter % max(1, getattr(settings, "POSE_BEHAVIOR_EVERY_N", 5)) == 0:
+            try:
+                threats.extend(yolo_detector.pose_behaviors(frame, camera_id))
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("pose behaviours failed for %s: %s", camera_id, exc)
+
+        # ── 3a-ter. SAM2 mask enrichment for FLAGGED objects ──────
+        # Only objects referenced by a threat get a pixel-precise SAM2 mask
+        # (occlusion-robust extent), attached to the threat + its detection so it
+        # carries through to the alert. Runs only when there are threats, capped.
+        if getattr(settings, "SAM2_ENABLED", False) and threats:
+            try:
+                self._enrich_flagged_with_masks(frame, detections, threats)
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("SAM2 enrichment failed for %s: %s", camera_id, exc)
 
         # ── 3b. Phase 3: Context-Aware Re-scoring ──────────────────
         if _phase3_available:
@@ -246,6 +289,14 @@ class MonitoringAgent:
 
             except Exception as exc:
                 logger.debug("Phase 3 context processing error: %s", exc)
+
+        # ── 3c. Confidence floor ──────────────────────────────────
+        # Drop low-confidence threats before anything is persisted. This kills
+        # hallucinated detections (e.g. a vision model loosely mentioning a
+        # threat keyword) so only genuine, confident detections become events.
+        if threats:
+            min_conf = settings.MIN_THREAT_CONFIDENCE
+            threats = [t for t in threats if t.get("confidence", 0.0) >= min_conf]
 
         # ── 4. Create alerts for significant threats ──────────────
         created_alerts: List[Dict[str, Any]] = []
@@ -407,8 +458,115 @@ class MonitoringAgent:
     #  Database helpers                                                   #
     # ------------------------------------------------------------------ #
 
+    async def _verified_vision_threats(
+        self,
+        frame,
+        detections: Optional[Dict[str, Any]],
+        camera_id: str,
+    ) -> List[Dict[str, Any]]:
+        """Verified-vision threat source for the live pipeline.
+
+        Runs structured scene intelligence over the frame, then has the
+        adversarial verifier re-examine each medium+ threat. Returns
+        threat_engine-format dicts for ONLY the threats the skeptic confirms —
+        the core anti-false-positive path now wired into real-time monitoring.
+        """
+        try:
+            import cv2 as _cv2
+            ok, buf = _cv2.imencode(".jpg", frame, [int(_cv2.IMWRITE_JPEG_QUALITY), 80])
+            if not ok:
+                return []
+            img = buf.tobytes()
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("verified_vision encode failed: %s", exc)
+            return []
+
+        try:
+            from backend.services.scene_intelligence import scene_intelligence
+            from backend.services.threat_verifier import threat_verifier
+            scene = await scene_intelligence.analyze(img, detections=detections, camera_id=camera_id)
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("verified_vision analyze failed: %s", exc)
+            return []
+
+        ta = scene.get("threat_assessment", {}) if isinstance(scene, dict) else {}
+        if ta.get("level") not in ("medium", "high", "critical"):
+            return []
+
+        out: List[Dict[str, Any]] = []
+        for thr in ta.get("threats", []):
+            try:
+                v = await threat_verifier.verify(thr, img, {"camera": camera_id})
+            except Exception:  # noqa: BLE001
+                continue
+            if v.get("verdict") == "confirmed":
+                out.append({
+                    "signature": thr.get("type", "threat"),
+                    "description": thr.get("evidence") or thr.get("type", "verified threat"),
+                    "severity": ta.get("level", "medium"),
+                    "confidence": float(v.get("confidence") or thr.get("confidence") or 0.6),
+                    "detection_method": "verified_vision",
+                })
+        if out:
+            logger.info("verified_vision: %d confirmed threat(s) on camera %s", len(out), camera_id)
+        return out
+
+    def _enrich_flagged_with_masks(self, frame, detections: Dict[str, Any], threats: List[Dict[str, Any]]) -> None:
+        """Attach SAM2 pixel-precise masks to objects flagged by a threat.
+
+        For each threat that references a track_id, SAM2 segments that object's
+        box (occlusion-robust extent). The mask metadata (area, polygon,
+        mask-bbox) is attached to the threat and its detection so it flows into
+        the alert. Capped at SAM2_MAX_OBJECTS prompts per frame.
+        """
+        flagged = {t.get("track_id") for t in threats if t.get("track_id") is not None}
+        if not flagged:
+            return
+        box_by_tid: Dict[Any, list] = {}
+        for d in detections.get("detections", []) if isinstance(detections, dict) else []:
+            tid = d.get("track_id")
+            if tid in flagged and d.get("bbox") and tid not in box_by_tid:
+                box_by_tid[tid] = d["bbox"]
+        if not box_by_tid:
+            return
+
+        cap = max(1, int(getattr(settings, "SAM2_MAX_OBJECTS", 5)))
+        items = list(box_by_tid.items())[:cap]
+        tids = [t for t, _ in items]
+        boxes = [b for _, b in items]
+
+        from backend.services.sam_segmenter import sam_segmenter
+        res = sam_segmenter.segment(frame, bboxes=boxes)
+        objs = res.get("objects", []) if isinstance(res, dict) else []
+
+        masks_by_tid: Dict[Any, Dict[str, Any]] = {}
+        for i, tid in enumerate(tids):
+            if i < len(objs):
+                o = objs[i]
+                masks_by_tid[tid] = {
+                    "area_px": o.get("area_px"),
+                    "polygon": o.get("polygon"),
+                    "mask_bbox": o.get("bbox"),
+                    "source": "sam2",
+                }
+        if not masks_by_tid:
+            return
+        for t in threats:
+            if t.get("track_id") in masks_by_tid:
+                t["mask"] = masks_by_tid[t["track_id"]]
+        for d in detections.get("detections", []):
+            if d.get("track_id") in masks_by_tid:
+                d["mask"] = masks_by_tid[d["track_id"]]
+
     async def _get_active_cameras(self) -> List[Camera]:
-        """Return cameras that are both active and online."""
+        """Return cameras that are both active and online.
+
+        Local USB/laptop webcams (digit-only source) are excluded from AI threat
+        analysis unless ``WEBCAM_MONITORING_ENABLED`` is set — they still stream
+        to the video wall, but analysing a webcam pointed at a desk only yields
+        hallucinated detections. Real network cameras (RTSP/ONVIF URLs) are
+        always analysed.
+        """
         try:
             async with async_session() as session:
                 result = await session.execute(
@@ -417,7 +575,10 @@ class MonitoringAgent:
                         Camera.status == CameraStatus.ONLINE,
                     )
                 )
-                return list(result.scalars().all())
+                cameras = list(result.scalars().all())
+            if not settings.WEBCAM_MONITORING_ENABLED:
+                cameras = [c for c in cameras if not (c.source or "").isdigit()]
+            return cameras
         except Exception as exc:
             logger.error("Failed to fetch active cameras: %s", exc)
             return []

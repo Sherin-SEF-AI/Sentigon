@@ -347,6 +347,53 @@ async def get_tracking_map(_user=Depends(get_current_user)):
         return tracking_entries
 
 
+# ── 8. Gait-based re-identification ─────────────────────────
+
+@router.get("/gait-matches")
+async def get_gait_matches(
+    limit: int = Query(50, ge=1, le=200),
+    _user=Depends(get_current_user),
+):
+    """Get gait-based cross-camera re-identification matches.
+
+    Gait re-identification (silhouette/keypoint pose-sequence matching) is not
+    yet implemented as a feature in this codebase — there is no gait buffer or
+    gait-match producer. We honestly return an empty match list so the page
+    renders "no matches yet" instead of fabricating rows.
+    """
+    try:
+        matches: List[Dict[str, Any]] = []
+        return {"matches": matches}
+    except Exception as e:
+        logger.warning("Gait matches fallback: %s", e)
+        return {"matches": []}
+
+
+@router.get("/gait-stats")
+async def get_gait_stats(_user=Depends(get_current_user)):
+    """Get gait re-identification buffer statistics.
+
+    No gait keypoint buffer exists yet, so all counters are honestly zero.
+    """
+    try:
+        return {
+            "cameras": 0,
+            "tracked_persons": 0,
+            "buffered_frames": 0,
+            "total_gait_profiles": 0,
+            "matches": 0,
+        }
+    except Exception as e:
+        logger.warning("Gait stats fallback: %s", e)
+        return {
+            "cameras": 0,
+            "tracked_persons": 0,
+            "buffered_frames": 0,
+            "total_gait_profiles": 0,
+            "matches": 0,
+        }
+
+
 # ── 7. Entity path ──────────────────────────────────────────
 
 @router.get("/track/{entity_id}/path")

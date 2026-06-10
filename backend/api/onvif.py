@@ -28,8 +28,9 @@ router = APIRouter(prefix="/api/onvif", tags=["ONVIF"])
 class ConnectRequest(BaseModel):
     ip: str
     port: int = 80
-    username: str = "admin"
-    password: str = "admin"
+    # Required — no factory-default credentials.
+    username: str = Field(..., min_length=1)
+    password: str = Field(..., min_length=1)
 
 
 class PTZRequest(BaseModel):

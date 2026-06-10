@@ -51,8 +51,24 @@ def _resolve_device() -> str:
     return _device
 
 
+def _default_weights(dtype: str) -> str:
+    return {
+        "rtdetr": "rtdetr-l.pt",
+        "yolo-world": "yolov8s-worldv2.pt",
+        "yoloworld": "yolov8s-worldv2.pt",
+        "world": "yolov8s-worldv2.pt",
+        "yolo11": "yolo11m.pt",
+        "yolov8": "yolov8n.pt",
+    }.get(dtype, "yolov8n.pt")
+
+
 def _get_model():
-    """Lazy-load YOLOv8 model on first use, placed on GPU if available."""
+    """Lazy-load the configured detector (YOLO | RT-DETR | YOLO-World) on GPU/CPU.
+
+    DETECTOR_TYPE selects the backbone; the per-detection extraction in detect()
+    is identical across all three (boxes.id/xyxy/cls/conf), so the output
+    contract is unchanged regardless of the model.
+    """
     global _model, _model_lock
     import threading
     if _model_lock is None:
@@ -61,18 +77,31 @@ def _get_model():
         if _model is None:
             try:
                 t0 = time.time()
-                from ultralytics import YOLO
+                from backend.config import settings
+                dtype = (getattr(settings, "DETECTOR_TYPE", "yolov8") or "yolov8").lower()
+                model_path = getattr(settings, "DETECTOR_MODEL", "") or _default_weights(dtype)
                 device = _resolve_device()
-                _model = YOLO("yolov8n.pt")
+
+                if dtype == "rtdetr":
+                    from ultralytics import RTDETR
+                    _model = RTDETR(model_path)
+                elif dtype in ("yolo-world", "yoloworld", "world"):
+                    from ultralytics import YOLOWorld
+                    _model = YOLOWorld(model_path)
+                    classes = list(getattr(settings, "OPEN_VOCAB_CLASSES", []) or [])
+                    if classes:
+                        _model.set_classes(classes)
+                else:  # yolov8 / yolo11 → YOLO
+                    from ultralytics import YOLO
+                    _model = YOLO(model_path)
+
                 _model.to(device)
-                use_half = device.startswith("cuda")
-                if use_half:
-                    from backend.config import settings
-                    use_half = getattr(settings, "GPU_HALF_PRECISION", True)
+                use_half = device.startswith("cuda") and getattr(settings, "GPU_HALF_PRECISION", True)
                 elapsed_ms = (time.time() - t0) * 1000
-                logger.info("YOLOv8n loaded on %s (FP16=%s) in %.0fms", device, use_half, elapsed_ms)
+                logger.info("Detector '%s' (%s) loaded on %s (FP16=%s) in %.0fms",
+                            dtype, model_path, device, use_half, elapsed_ms)
             except Exception as e:
-                logger.error("Failed to load YOLO model: %s", e)
+                logger.error("Failed to load detector model: %s", e)
                 raise
     return _model
 
@@ -111,11 +140,13 @@ def _get_pose_model():
             try:
                 t0 = time.time()
                 from ultralytics import YOLO
+                from backend.config import settings
+                pose_path = getattr(settings, "POSE_MODEL", "yolov8n-pose.pt") or "yolov8n-pose.pt"
                 device = _resolve_device()
-                _pose_model = YOLO("yolov8n-pose.pt")
+                _pose_model = YOLO(pose_path)
                 _pose_model.to(device)
                 elapsed_ms = (time.time() - t0) * 1000
-                logger.info("YOLOv8n-pose loaded on %s in %.0fms", device, elapsed_ms)
+                logger.info("Pose model '%s' loaded on %s in %.0fms", pose_path, device, elapsed_ms)
             except Exception as e:
                 logger.error("Failed to load YOLO-pose model: %s", e)
                 raise
@@ -228,6 +259,10 @@ class PoseAnalyzer:
         if pre_assault:
             features["pre_assault"] = pre_assault
 
+        fall = self.detect_fall(track_id, keypoints, bbox)
+        if fall:
+            features["fall"] = fall
+
         staking = self.detect_staking(keypoints, bbox, is_stationary, dwell_time)
         if staking:
             features["staking"] = staking
@@ -243,6 +278,63 @@ class PoseAnalyzer:
                 features["evasive"] = evasive
 
         return features
+
+    def detect_fall(
+        self, track_id: int, keypoints: np.ndarray,
+        bbox: Tuple[int, int, int, int],
+    ) -> Optional[Dict[str, Any]]:
+        """Pose-based fall: the torso goes from UPRIGHT (vertical shoulder→hip
+        vector) to PRONE (horizontal) within a short window, with the shoulders
+        dropping downward. Far more robust than bbox aspect ratio — a crouch or
+        sit keeps the torso vertical, so it does NOT fire.
+        """
+        def _torso(kp) -> Optional[Tuple[float, float, float, float]]:
+            ls = self._kp_xy(kp, self.LEFT_SHOULDER); rs = self._kp_xy(kp, self.RIGHT_SHOULDER)
+            lh = self._kp_xy(kp, self.LEFT_HIP); rh = self._kp_xy(kp, self.RIGHT_HIP)
+            sx = next((p for p in ((ls, rs)) if p), None)
+            if not (ls or rs) or not (lh or rh):
+                return None
+            sx = (ls[0] + rs[0]) / 2 if (ls and rs) else (ls or rs)[0]
+            sy = (ls[1] + rs[1]) / 2 if (ls and rs) else (ls or rs)[1]
+            hx = (lh[0] + rh[0]) / 2 if (lh and rh) else (lh or rh)[0]
+            hy = (lh[1] + rh[1]) / 2 if (lh and rh) else (lh or rh)[1]
+            return (sx, sy, hx, hy)
+
+        history = self.get_history(track_id)  # includes the current frame
+        if len(history) < 4:
+            return None
+
+        cur = _torso(keypoints)
+        if cur is None:
+            return None
+        sx, sy, hx, hy = cur
+        dx, dy = abs(hx - sx), abs(hy - sy)
+        cur_vert = dy / (dx + dy + 1e-6)        # ~1 upright, ~0 horizontal/prone
+        if cur_vert > 0.45:                      # still upright → not a fall
+            return None
+
+        was_upright = False
+        earlier_sy = None
+        for kp in history[-12:-1]:
+            prev = _torso(kp)
+            if prev is None:
+                continue
+            psx, psy, phx, phy = prev
+            pvert = abs(phy - psy) / (abs(phx - psx) + abs(phy - psy) + 1e-6)
+            if pvert >= 0.6:
+                was_upright = True
+                earlier_sy = psy if earlier_sy is None else min(earlier_sy, psy)
+
+        if not was_upright or earlier_sy is None or sy <= earlier_sy:
+            return None  # never upright, or shoulders did not drop
+
+        conf = min(0.95, 0.65 + (0.45 - cur_vert))
+        return {
+            "detected": True,
+            "verticality": round(cur_vert, 2),
+            "shoulder_drop_px": round(sy - earlier_sy, 1),
+            "confidence": round(conf, 2),
+        }
 
     def detect_blading(
         self, keypoints: np.ndarray, bbox: Tuple[int, int, int, int],
@@ -518,7 +610,13 @@ class YOLODetector:
         "laptop", "umbrella", "dog", "cat", "skateboard",
     }
 
-    def __init__(self, confidence_threshold: float = 0.35, track: bool = True):
+    def __init__(self, confidence_threshold: Optional[float] = None, track: bool = True):
+        if confidence_threshold is None:
+            try:
+                from backend.config import settings
+                confidence_threshold = float(getattr(settings, "YOLO_CONFIDENCE", 0.35))
+            except Exception:
+                confidence_threshold = 0.35
         self.confidence_threshold = confidence_threshold
         self.track = track
         self._tracked_objects: Dict[int, TrackedObject] = {}
@@ -535,14 +633,16 @@ class YOLODetector:
         now = time.time()
 
         try:
+            from backend.config import settings as _cfg
             device = _resolve_device()
-            use_half = device.startswith("cuda")
+            use_half = device.startswith("cuda") and getattr(_cfg, "GPU_HALF_PRECISION", True)
+            tracker_cfg = getattr(_cfg, "TRACKER_CONFIG", "botsort.yaml")
             if self.track:
                 results = model.track(
                     frame,
                     persist=True,
                     conf=self.confidence_threshold,
-                    tracker="bytetrack.yaml",
+                    tracker=tracker_cfg,
                     verbose=False,
                     device=device,
                     half=use_half,
@@ -646,6 +746,61 @@ class YOLODetector:
     def get_person_count(self, camera_id: str) -> int:
         tracks = self._track_history.get(camera_id, {})
         return sum(1 for obj in tracks.values() if obj.class_name == "person")
+
+    # Severity for each pose behaviour the PoseAnalyzer can emit.
+    _POSE_SEVERITY = {
+        "fall": "critical", "pre_assault": "high", "concealed_carry": "high",
+        "blading": "medium", "evasive": "medium", "target_fixation": "low",
+        "staking": "low",
+    }
+
+    def pose_behaviors(self, frame: np.ndarray, camera_id: str = "default") -> List[Dict[str, Any]]:
+        """Run pose estimation + PoseAnalyzer with the pose model's OWN tracking
+        and return behaviour threats (fall, pre-assault, concealed-carry, …) as
+        threat_engine dicts. This is independent of the detector's track IDs, so
+        it works in the live loop (the detector-coupled analyze_micro_behavior
+        cannot, since the two models do not share track IDs).
+        """
+        try:
+            pose_results = self.detect_pose(frame, camera_id)
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("pose_behaviors: detect_pose failed: %s", exc)
+            return []
+
+        # Only "fall" is emitted by default — it is well-calibrated (a crouch/sit
+        # does not fire). The other micro-behaviours (pre_assault, blading, …) are
+        # aggressively tuned and false-positive prone, so they are opt-in via
+        # POSE_MICROBEHAVIORS_ENABLED to avoid re-introducing alert noise.
+        try:
+            from backend.config import settings
+            micro_enabled = getattr(settings, "POSE_MICROBEHAVIORS_ENABLED", False)
+        except Exception:
+            micro_enabled = False
+
+        out: List[Dict[str, Any]] = []
+        for pr in pose_results:
+            tid = pr.get("track_id")
+            kps = pr.get("keypoints")
+            bbox = pr.get("bbox")
+            if tid is None or kps is None or not bbox:
+                continue
+            try:
+                feats = pose_analyzer.analyze(track_id=int(tid), keypoints=kps, bbox=tuple(bbox))
+            except Exception:  # noqa: BLE001
+                continue
+            for name, info in (feats or {}).items():
+                if name != "fall" and not micro_enabled:
+                    continue
+                conf = float(info.get("confidence", 0.6)) if isinstance(info, dict) else 0.6
+                out.append({
+                    "signature": name,
+                    "description": f"pose behaviour '{name}' on person track {tid}",
+                    "severity": self._POSE_SEVERITY.get(name, "medium"),
+                    "confidence": conf,
+                    "detection_method": "pose",
+                    "track_id": tid,
+                })
+        return out
 
     def detect_pose(
         self,

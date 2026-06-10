@@ -34,30 +34,36 @@ class Settings(BaseSettings):
     # ── Ollama AI (all models) ─────────────────────────────────
     OLLAMA_HOST: str = "http://localhost:11434"
 
-    # Model tiers — intelligent routing
+    # Model tiers — intelligent routing.
+    # Defaults are LOCAL Ollama models so the system is fully functional out of
+    # the box without a .env. Override per-deployment as needed.
     # Tier 1: Heavy reasoning (investigations, forensics, copilot)
-    OLLAMA_REASONING_MODEL: str = "gemma3:4b"
+    OLLAMA_REASONING_MODEL: str = "qwen2.5:7b"
     # Tier 2: Standard tasks (perception agents, text analysis)
-    OLLAMA_STANDARD_MODEL: str = "gemma3:4b"
+    OLLAMA_STANDARD_MODEL: str = "qwen2.5:7b"
     # Tier 3: Vision analysis (frame analysis, image understanding)
-    OLLAMA_VISION_MODEL: str = "gemma3:4b"
+    OLLAMA_VISION_MODEL: str = "qwen2.5vl:7b"
     # Tier 4: Fast/lightweight (quick classifications, simple responses)
-    OLLAMA_FAST_MODEL: str = "gemma3:4b"
-    # Fallback models (tried in order if primary fails)
-    OLLAMA_FALLBACK_MODELS: str = "qwen3.5:0.8b"
+    OLLAMA_FAST_MODEL: str = "qwen2.5:7b"
+    # Fallback models (tried in order if primary fails) — stays local.
+    OLLAMA_FALLBACK_MODELS: str = "qwen2.5:7b"
 
     # Legacy alias
-    OLLAMA_TEXT_MODEL: str = "gemma3:4b"
+    OLLAMA_TEXT_MODEL: str = "qwen2.5:7b"
 
     # ── AI Provider ────────────────────────────────────────
-    AI_PROVIDER: str = "gemini"  # Primary: Gemini, Fallback: Ollama
+    # LOCAL-FIRST by default: all AI runs through Ollama. Cloud (Gemini) is an
+    # optional opt-in — set AI_PROVIDER=gemini, GEMINI_ENABLED=true and supply
+    # GEMINI_API_KEY to enable the cloud path (with automatic Ollama fallback).
+    AI_PROVIDER: str = "ollama"
     # No hardcoded key: supply via GEMINI_API_KEY env var. Any committed key is compromised.
     GEMINI_API_KEY: str = ""
     GEMINI_MODEL: str = "gemini-3.1-flash-lite-preview"  # Fast, cheap — agents/perception
     GEMINI_STANDARD_MODEL: str = "gemini-3-flash-preview"  # Standard — analysis/copilot
     GEMINI_PRO_MODEL: str = "gemini-3.1-pro-preview"  # Deep reasoning — investigations
     GEMINI_RATE_LIMIT: int = 10  # Max requests per minute (safe limit to prevent suspension)
-    GEMINI_ENABLED: bool = True
+    # Cloud disabled by default — flip to true (with a key) to use Gemini as primary.
+    GEMINI_ENABLED: bool = False
 
     # ── CLIP Video Embedding ──────────────────────────────
     HF_TOKEN: str = ""
@@ -78,6 +84,46 @@ class Settings(BaseSettings):
     # ── GPU / CUDA ─────────────────────────────────────────
     YOLO_DEVICE: str = "auto"  # "auto" | "cpu" | "cuda" | "cuda:0"
     GPU_HALF_PRECISION: bool = True  # FP16 for faster inference on RTX cards
+
+    # ── Object detector (pluggable) ────────────────────────
+    # DETECTOR_TYPE selects the backbone; all are ultralytics-native:
+    #   "rtdetr"     — RT-DETR transformer, NMS-free, strong on small/occluded
+    #                  objects (default). DETECTOR_MODEL e.g. rtdetr-l.pt
+    #   "yolo-world" — open-vocabulary: detects OPEN_VOCAB_CLASSES by text prompt
+    #   "yolo11" / "yolov8" — classic YOLO (yolo11m.pt / yolov8n.pt)
+    DETECTOR_TYPE: str = "rtdetr"
+    DETECTOR_MODEL: str = "rtdetr-l.pt"   # empty → derived from DETECTOR_TYPE
+    YOLO_CONFIDENCE: float = 0.35
+    TRACKER_CONFIG: str = "botsort.yaml"  # BoT-SORT re-ID (vs "bytetrack.yaml")
+    # Open-vocabulary threat prompts (used only when DETECTOR_TYPE="yolo-world").
+    OPEN_VOCAB_CLASSES: list = [
+        "person", "car", "truck", "bus", "motorcycle", "bicycle",
+        "knife", "gun", "rifle", "pistol", "weapon",
+        "fire", "smoke",
+        "backpack", "handbag", "suitcase",
+        "person lying on the ground", "person climbing a fence",
+    ]
+    # Stronger pose backbone — keypoints drive pose-based fall/behaviour detection.
+    POSE_MODEL: str = "yolo11m-pose.pt"
+    # Run the pose pipeline in the live loop (fall, pre-assault, concealed-carry,
+    # …). It is the authoritative fall source; the temporal bbox-aspect fall is
+    # used only when this is off. Throttled to every Nth analysed frame.
+    POSE_BEHAVIOR_ENABLED: bool = True
+    POSE_BEHAVIOR_EVERY_N: int = 5
+    # The other pose micro-behaviours (pre_assault, blading, target_fixation,
+    # concealed_carry, evasive, staking) are aggressively tuned and false-positive
+    # prone — off by default. Only the calibrated "fall" is emitted otherwise.
+    POSE_MICROBEHAVIORS_ENABLED: bool = False
+
+    # ── SAM2 segmentation (occlusion-robust masks) ─────────
+    # On-demand, lazily-loaded. Provides pixel-precise object masks (true extent
+    # under occlusion) prompted by detector boxes. "sam2_t.pt" (tiny) is
+    # VRAM-friendly alongside Ollama + the detector.
+    SAM2_ENABLED: bool = True
+    SAM2_MODEL: str = "sam2_t.pt"
+    # In the live loop, SAM2 runs ONLY on flagged (threatened) tracks, capped at
+    # this many objects per frame to bound cost.
+    SAM2_MAX_OBJECTS: int = 5
 
     # ── Qdrant ────────────────────────────────────────────────
     QDRANT_HOST: str = "localhost"
@@ -100,7 +146,16 @@ class Settings(BaseSettings):
     PERSISTENCE_GATE_ENABLED: bool = True
     PERSISTENCE_MIN_OCCURRENCES: int = 2
     PERSISTENCE_WINDOW_SECONDS: float = 10.0
+
+    # Minimum confidence a threat must reach before it is persisted as an
+    # event/alert. Filters low-confidence hallucinations (e.g. a vision model
+    # loosely mentioning a threat word) so only genuine detections surface.
+    MIN_THREAT_CONFIDENCE: float = 0.6
     LOG_LEVEL: str = "INFO"
+    # Echo every SQL statement (with bound parameters) to the logs. Off by
+    # default — it is extremely verbose and leaks PII into logs. Enable only for
+    # local query debugging.
+    SQL_ECHO: bool = False
     CORS_ORIGINS: str = '["http://localhost:3000","http://localhost:3737","http://localhost:8000"]'
 
     # ── Celery ────────────────────────────────────────────────
@@ -110,6 +165,18 @@ class Settings(BaseSettings):
     MAX_CAMERAS: int = 16
     FRAME_BUFFER_SIZE: int = 30
     DEFAULT_FPS: int = 15
+    # Live detection uses the verified-vision pipeline: structured scene
+    # intelligence + an adversarial verifier, so only threats a skeptic confirms
+    # against the frame become alerts (hallucination-resistant). Set False to
+    # fall back to the legacy keyword scene analyzer.
+    VISION_VERIFIED_DETECTION: bool = True
+
+    # Run AI threat analysis on local USB/laptop webcams (digit-only sources).
+    # Off by default: a laptop webcam pointed at a desk is not a security feed,
+    # and analysing it only produces hallucinated detections. Webcams still
+    # stream to the video wall; real network cameras (RTSP/ONVIF URLs) are
+    # always analysed regardless of this flag.
+    WEBCAM_MONITORING_ENABLED: bool = False
 
     # ── Auto Recording ──────────────────────────────────────
     AUTO_RECORD_ENABLED: bool = True
@@ -118,7 +185,22 @@ class Settings(BaseSettings):
     AUTO_RECORD_RETENTION_HOURS: int = 72  # auto-delete chunks older than this
 
     # ── Autonomous Threat Response ────────────────────────────
-    AUTONOMOUS_RESPONSE_ENABLED: bool = True
+    # Off by default: the pipeline can take real outward actions (recording, SOP
+    # activation, emergency-services lookup, operator notification). Enable only
+    # deliberately. Even when enabled, SHADOW_MODE logs the planned actions
+    # without executing them, and responses are skipped below CONFIDENCE_MIN so a
+    # hallucinated low-confidence detection cannot trigger real actions.
+    AUTONOMOUS_RESPONSE_ENABLED: bool = False
+    AUTONOMOUS_RESPONSE_CONFIDENCE_MIN: float = 0.75
+    AUTONOMOUS_RESPONSE_SHADOW_MODE: bool = True
+    # How often the red-team agent runs an adversarial probe (seconds). Hourly by
+    # default — every 5 min was alert-fatigue noise.
+    RED_TEAM_INTERVAL_SECONDS: int = 3600
+
+    # Multi-tenant administration. Off by default: this is a single-deployment
+    # product with no per-tenant data isolation, so creating additional tenants
+    # is a no-op surface. Enabling it only re-exposes the tenant CRUD.
+    MULTI_TENANT_ENABLED: bool = False
     FACILITY_LATITUDE: float = 24.7136  # Default: Riyadh
     FACILITY_LONGITUDE: float = 46.6753
     EMERGENCY_SEARCH_RADIUS_KM: float = 5.0

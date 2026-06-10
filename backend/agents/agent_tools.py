@@ -98,9 +98,15 @@ async def get_all_cameras_status() -> dict:
     cached = _cache_get("get_all_cameras_status")
     if cached is not None:
         return cached
+    from backend.config import settings
     async with async_session() as db:
         result = await db.execute(select(Camera).where(Camera.is_active.is_(True)))
         cameras = result.scalars().all()
+        # Exclude local USB/laptop webcams (digit-only source) from the agents'
+        # analysis view unless explicitly enabled — they only yield hallucinated
+        # detections. They still stream to the video wall via the camera API.
+        if not settings.WEBCAM_MONITORING_ENABLED:
+            cameras = [c for c in cameras if not (c.source or "").isdigit()]
         result_data = {
             "success": True,
             "total": len(cameras),
@@ -455,8 +461,51 @@ async def create_alert(
     description: str,
     confidence: float,
 ) -> dict:
-    """Create a new security alert."""
+    """Create a new security alert.
+
+    The camera_id MUST reference a real, registered camera. Alerts naming an
+    unknown/fabricated camera are rejected — this is the guard that stops the
+    reasoning agents from hallucinating alerts against invented camera IDs
+    (e.g. "cam_01", "CAM_001"). A camera-less (system) alert is allowed.
+    """
+    import uuid as _uuid
+    from sqlalchemy import or_
+
     async with async_session() as db:
+        cid = (camera_id or "").strip()
+        cam = None
+        if cid:
+            conds = [Camera.name == cid, Camera.source == cid]
+            try:
+                conds.append(Camera.id == _uuid.UUID(cid))
+            except (ValueError, TypeError):
+                pass
+            cam = (await db.execute(select(Camera).where(or_(*conds)))).scalars().first()
+        if cam is None:
+            # An agent alert MUST be attributed to a real, registered camera.
+            # This blocks both invented camera IDs ("cam_01") and camera-less
+            # "system" alerts conjured by the LLM. Genuine system/infrastructure
+            # alerts are raised by the monitoring/health services, not by agents.
+            logger.warning("create_alert rejected — no real camera for '%s' (%s)", camera_id, threat_type)
+            return {
+                "success": False,
+                "error": (
+                    f"Alert NOT created: '{camera_id or '(none)'}' is not a real camera. "
+                    f"Only real, registered cameras may raise alerts — do not invent camera "
+                    f"IDs or raise camera-less alerts."
+                ),
+            }
+        resolved_camera_id = str(cam.id)
+
+        # Normalise a possibly-percentage confidence (LLMs sometimes pass 95).
+        try:
+            confidence = float(confidence)
+            if confidence > 1.0:
+                confidence = confidence / 100.0
+            confidence = max(0.0, min(1.0, confidence))
+        except (TypeError, ValueError):
+            confidence = 0.5
+
         sev = AlertSeverity(severity) if severity in [s.value for s in AlertSeverity] else AlertSeverity.MEDIUM
         alert = Alert(
             title=f"{threat_type} detected",
@@ -464,7 +513,7 @@ async def create_alert(
             severity=sev,
             status=AlertStatus.NEW,
             threat_type=threat_type,
-            source_camera=camera_id,
+            source_camera=resolved_camera_id,
             confidence=confidence,
         )
         db.add(alert)
@@ -478,7 +527,7 @@ async def create_alert(
                 "title": alert.title,
                 "severity": severity,
                 "status": "new",
-                "source_camera": camera_id,
+                "source_camera": resolved_camera_id,
             })
         except Exception:
             pass
@@ -566,10 +615,29 @@ async def trigger_recording(
 
 
 async def create_investigation_case(
-    title: str, description: str, severity: str
+    title: str, description: str, severity: str, alert_id: str
 ) -> dict:
-    """Create a new investigation case."""
+    """Create a new investigation case from a REAL alert.
+
+    A case must be opened against an existing alert (its alert_id) — this stops
+    agents fabricating investigations out of hallucinated incidents.
+    """
+    import uuid as _uuid
     async with async_session() as db:
+        alert = None
+        try:
+            alert = await db.get(Alert, _uuid.UUID(str(alert_id)))
+        except (ValueError, TypeError):
+            alert = None
+        if alert is None:
+            logger.warning("create_investigation_case rejected — unknown alert_id '%s' (%s)", alert_id, title)
+            return {
+                "success": False,
+                "error": (
+                    f"Case NOT created: alert_id '{alert_id}' is not a real alert. "
+                    f"A case must reference an existing alert — do not invent incidents."
+                ),
+            }
         sev = AlertSeverity(severity) if severity in [s.value for s in AlertSeverity] else AlertSeverity.MEDIUM
         case = Case(
             title=title,
@@ -1172,13 +1240,14 @@ TOOL_REGISTRY: dict[str, dict] = {
     },
     "create_investigation_case": {
         "fn": create_investigation_case,
-        "description": "Create a new investigation case.",
+        "description": "Open an investigation case for an EXISTING alert. Requires the real alert_id of the alert being investigated.",
         "parameters": {
             "title": {"type": "string", "description": "Case title"},
             "description": {"type": "string", "description": "Case description"},
             "severity": {"type": "string", "description": "Case severity"},
+            "alert_id": {"type": "string", "description": "UUID of the real alert this case investigates"},
         },
-        "required": ["title", "description", "severity"],
+        "required": ["title", "description", "severity", "alert_id"],
     },
     "attach_evidence_to_case": {
         "fn": attach_evidence_to_case,

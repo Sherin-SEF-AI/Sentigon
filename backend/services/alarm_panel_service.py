@@ -156,6 +156,33 @@ class SIAReceiver:
             await self._server.wait_closed()
 
 
+class AlarmAdapter:
+    """Hardware seam for alarm-panel commands (arm/disarm/bypass).
+
+    Swap ``SimulatedAlarmAdapter`` for a real panel driver (SIA/Contact-ID over
+    IP, DMP, Honeywell, …) by implementing these methods.
+    """
+
+    async def set_arm_state(self, panel: "AlarmPanel", state: "PanelArmState") -> bool:
+        raise NotImplementedError
+
+    async def set_zone_bypass(self, panel: "AlarmPanel", zone: "AlarmZone", bypassed: bool) -> bool:
+        raise NotImplementedError
+
+
+class SimulatedAlarmAdapter(AlarmAdapter):
+    """Software adapter — updates in-memory panel/zone state (no hardware)."""
+
+    async def set_arm_state(self, panel: "AlarmPanel", state: "PanelArmState") -> bool:
+        panel.arm_state = state
+        return True
+
+    async def set_zone_bypass(self, panel: "AlarmPanel", zone: "AlarmZone", bypassed: bool) -> bool:
+        zone.bypassed = bypassed
+        zone.state = AlarmZoneState.BYPASS if bypassed else AlarmZoneState.NORMAL
+        return True
+
+
 class AlarmPanelService:
     def __init__(self):
         self.panels: Dict[str, AlarmPanel] = {}
@@ -165,6 +192,9 @@ class AlarmPanelService:
         self._alert_callback: Optional[Callable] = None
         self._sia_receiver: Optional[SIAReceiver] = None
         self._parser = ContactIDParser()
+        # Pluggable hardware seam — simulated by default (no real panel).
+        self.adapter: AlarmAdapter = SimulatedAlarmAdapter()
+        self._hydrated = False
         self._stats = {"total_events": 0, "alarms": 0, "troubles": 0, "arm_disarm": 0}
 
     def register_panel(self, panel: AlarmPanel):
@@ -271,25 +301,27 @@ class AlarmPanelService:
         if not panel:
             return False
         modes = {"away": PanelArmState.ARMED_AWAY, "stay": PanelArmState.ARMED_STAY, "night": PanelArmState.ARMED_NIGHT}
-        panel.arm_state = modes.get(mode, PanelArmState.ARMED_AWAY)
+        await self.adapter.set_arm_state(panel, modes.get(mode, PanelArmState.ARMED_AWAY))
+        await self._persist_arm_state(panel_id, panel.arm_state.value)
         return True
 
     async def disarm_panel(self, panel_id: str) -> bool:
         panel = self.panels.get(panel_id)
         if not panel:
             return False
-        panel.arm_state = PanelArmState.DISARMED
+        await self.adapter.set_arm_state(panel, PanelArmState.DISARMED)
         for zone in panel.zones.values():
             if zone.state == AlarmZoneState.ALARM:
                 zone.state = AlarmZoneState.NORMAL
+        await self._persist_arm_state(panel_id, panel.arm_state.value)
         return True
 
     async def bypass_zone(self, panel_id: str, zone_number: int) -> bool:
         panel = self.panels.get(panel_id)
         if not panel or zone_number not in panel.zones:
             return False
-        panel.zones[zone_number].state = AlarmZoneState.BYPASS
-        panel.zones[zone_number].bypassed = True
+        await self.adapter.set_zone_bypass(panel, panel.zones[zone_number], True)
+        await self._persist_zone_bypass(panel_id, zone_number, True)
         return True
 
     def get_events(self, panel_id: str = None, is_alarm: bool = None, limit: int = 100) -> List[Dict]:
@@ -320,6 +352,143 @@ class AlarmPanelService:
             "stats": self._stats,
             "sia_receiver": self._sia_receiver is not None,
         }
+
+    # ── Persistence (write-through cache over the DB) ─────────────
+
+    @staticmethod
+    def _arm_state_from_str(value: str) -> "PanelArmState":
+        try:
+            return PanelArmState(value)
+        except ValueError:
+            return PanelArmState.DISARMED
+
+    @staticmethod
+    def _zone_type_from_str(value: str) -> "AlarmZoneType":
+        try:
+            return AlarmZoneType(value)
+        except ValueError:
+            return AlarmZoneType.PERIMETER
+
+    async def ensure_hydrated(self) -> None:
+        if self._hydrated:
+            return
+        try:
+            from sqlalchemy import select
+            from backend.database import async_session
+            from backend.models.alarm_models import AlarmPanelRow, AlarmZoneRow
+            async with async_session() as s:
+                for p in (await s.execute(select(AlarmPanelRow))).scalars().all():
+                    self.panels[p.panel_id] = AlarmPanel(
+                        panel_id=p.panel_id, name=p.name, model=p.model or "",
+                        ip_address=p.ip_address or "", port=p.port or 0,
+                        arm_state=self._arm_state_from_str(p.arm_state or "disarmed"),
+                    )
+                for z in (await s.execute(select(AlarmZoneRow))).scalars().all():
+                    panel = self.panels.get(z.panel_id)
+                    if panel is not None:
+                        panel.zones[z.zone_number] = AlarmZone(
+                            zone_number=z.zone_number, name=z.name,
+                            zone_type=self._zone_type_from_str(z.zone_type or "burglary"),
+                            bypassed=z.bypassed, camera_id=z.camera_id,
+                            partition=z.partition or 1,
+                        )
+            self._hydrated = True
+        except Exception as e:  # noqa: BLE001
+            logger.warning("Alarm hydrate failed: %s", e)
+
+    async def _persist_arm_state(self, panel_id: str, arm_state: str) -> None:
+        try:
+            from sqlalchemy import update
+            from backend.database import async_session
+            from backend.models.alarm_models import AlarmPanelRow
+            async with async_session() as s:
+                await s.execute(update(AlarmPanelRow).where(AlarmPanelRow.panel_id == panel_id).values(arm_state=arm_state))
+                await s.commit()
+        except Exception as e:  # noqa: BLE001
+            logger.debug("persist arm_state failed: %s", e)
+
+    async def _persist_zone_bypass(self, panel_id: str, zone_number: int, bypassed: bool) -> None:
+        try:
+            from sqlalchemy import update
+            from backend.database import async_session
+            from backend.models.alarm_models import AlarmZoneRow
+            async with async_session() as s:
+                await s.execute(update(AlarmZoneRow).where(
+                    AlarmZoneRow.panel_id == panel_id, AlarmZoneRow.zone_number == zone_number,
+                ).values(bypassed=bypassed))
+                await s.commit()
+        except Exception as e:  # noqa: BLE001
+            logger.debug("persist zone bypass failed: %s", e)
+
+    async def save_panel(self, data: Dict[str, Any]) -> AlarmPanel:
+        """Create or update a panel (DB + in-memory)."""
+        await self.ensure_hydrated()
+        from sqlalchemy import select
+        from backend.database import async_session
+        from backend.models.alarm_models import AlarmPanelRow
+        panel_id = str(data.get("panel_id") or f"panel_{int(time.time()*1000)}")
+        async with async_session() as s:
+            row = (await s.execute(select(AlarmPanelRow).where(AlarmPanelRow.panel_id == panel_id))).scalar_one_or_none()
+            if row is None:
+                row = AlarmPanelRow(panel_id=panel_id)
+                s.add(row)
+            for f in ("name", "model", "ip_address", "port", "arm_state"):
+                if f in data and data[f] is not None:
+                    setattr(row, f, data[f])
+            if row.name is None:
+                row.name = f"Panel {panel_id}"
+            await s.commit()
+            await s.refresh(row)
+        existing = self.panels.get(panel_id)
+        panel = AlarmPanel(
+            panel_id=row.panel_id, name=row.name, model=row.model or "",
+            ip_address=row.ip_address or "", port=row.port or 0,
+            arm_state=self._arm_state_from_str(row.arm_state or "disarmed"),
+            zones=existing.zones if existing else {},
+        )
+        self.panels[panel_id] = panel
+        return panel
+
+    async def remove_panel(self, panel_id: str) -> bool:
+        await self.ensure_hydrated()
+        from sqlalchemy import delete
+        from backend.database import async_session
+        from backend.models.alarm_models import AlarmPanelRow
+        async with async_session() as s:
+            await s.execute(delete(AlarmPanelRow).where(AlarmPanelRow.panel_id == panel_id))
+            await s.commit()
+        return self.panels.pop(panel_id, None) is not None
+
+    async def save_zone(self, panel_id: str, data: Dict[str, Any]) -> AlarmZone:
+        """Create or update a zone on a panel (DB + in-memory)."""
+        await self.ensure_hydrated()
+        if panel_id not in self.panels:
+            raise ValueError("panel not found")
+        from sqlalchemy import select
+        from backend.database import async_session
+        from backend.models.alarm_models import AlarmZoneRow
+        zone_number = int(data.get("zone_number"))
+        async with async_session() as s:
+            row = (await s.execute(select(AlarmZoneRow).where(
+                AlarmZoneRow.panel_id == panel_id, AlarmZoneRow.zone_number == zone_number,
+            ))).scalar_one_or_none()
+            if row is None:
+                row = AlarmZoneRow(panel_id=panel_id, zone_number=zone_number)
+                s.add(row)
+            for f in ("name", "zone_type", "partition", "camera_id", "bypassed"):
+                if f in data and data[f] is not None:
+                    setattr(row, f, data[f])
+            if row.name is None:
+                row.name = f"Zone {zone_number}"
+            await s.commit()
+            await s.refresh(row)
+        zone = AlarmZone(
+            zone_number=row.zone_number, name=row.name,
+            zone_type=self._zone_type_from_str(row.zone_type or "burglary"),
+            bypassed=row.bypassed, camera_id=row.camera_id, partition=row.partition or 1,
+        )
+        self.panels[panel_id].zones[zone_number] = zone
+        return zone
 
     async def shutdown(self):
         if self._sia_receiver:

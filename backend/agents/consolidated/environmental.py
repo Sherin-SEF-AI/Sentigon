@@ -74,7 +74,7 @@ class EnvironmentalAgent(BaseAgent):
                 "when thresholds are breached."
             ),
             tier="perception",
-            model_name="gemma3:4b",
+            model_name="qwen2.5:7b",
             tool_names=[
                 "capture_frame",
                 "get_all_cameras_status",
