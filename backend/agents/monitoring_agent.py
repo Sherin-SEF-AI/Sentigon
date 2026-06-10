@@ -46,6 +46,8 @@ logger = logging.getLogger(__name__)
 
 # AI vision is expensive; only invoke it every N frames per camera.
 _AI_EVERY_N_FRAMES = 15
+# Refresh learned adaptive thresholds from the baseline service this often.
+_THRESHOLD_REFRESH_EVERY_N = 300
 # Minimum seconds between full pipeline runs for a single camera.
 _MIN_INTERVAL_SECONDS = 1.0
 
@@ -100,6 +102,16 @@ class MonitoringAgent:
         # ── 2-3. Threat evaluation ────────────────────────────────
         counter = self._frame_counters.get(camera_id, 0) + 1
         self._frame_counters[camera_id] = counter
+
+        # Refresh learned adaptive thresholds into the sync cache (throttled).
+        if counter % _THRESHOLD_REFRESH_EVERY_N == 1:
+            try:
+                from backend.services.adaptive_thresholds import adaptive_thresholds
+                zid = zone_info.get("id") if zone_info else None
+                async with async_session() as _db:
+                    await adaptive_thresholds.refresh(_db, camera_id, zid)
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("threshold refresh failed for %s: %s", camera_id, exc)
 
         if settings.VISION_VERIFIED_DETECTION:
             # Verified-vision path: structured scene intelligence + an adversarial
