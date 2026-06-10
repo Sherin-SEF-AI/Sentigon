@@ -19,8 +19,11 @@ logger = logging.getLogger(__name__)
 
 # ── Reconnect constants ───────────────────────────────────────
 _BACKOFF_BASE: float = 1.0
-_BACKOFF_MAX: float = 60.0
+_BACKOFF_MAX: float = 15.0
 _MAX_RETRIES: int = 50
+# If the decoded image stops changing for this long while read() still returns
+# frames (a frozen V4L2 buffer / "Bad file descriptor"), force a reconnect.
+_STALE_SECONDS: float = 8.0
 
 
 @dataclass
@@ -114,57 +117,82 @@ class CameraStream:
             self._capture = None
         logger.info("Camera %s stopped", self.camera_id)
 
+    def _reconnect(self) -> bool:
+        """Release and reopen the capture device. Returns True if reopened."""
+        try:
+            if self._capture is not None:
+                self._capture.release()
+        except Exception:
+            pass
+        try:
+            self._capture = self._open_capture()
+            return bool(self._capture and self._capture.isOpened())
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Camera %s: reopen raised: %s", self.camera_id, exc)
+            return False
+
     def _capture_loop(self):
-        """Main capture loop running in its own thread."""
+        """Main capture loop running in its own thread.
+
+        Self-healing: never permanently gives up — a failing device keeps being
+        retried at the capped backoff. A staleness watchdog also reconnects when
+        the device keeps returning the SAME (frozen) frame, which V4L2 webcams do
+        on a "Bad file descriptor" without surfacing a read error.
+        """
         frame_interval = 1.0 / self.fps if self.fps > 0 else 1.0 / 15
         retry_count = 0
+        last_thumb = None
+        last_change = time.time()
 
         while self._running:
-            ret, frame = self._capture.read()
-            if not ret:
+            try:
+                ret, frame = self._capture.read()
+            except Exception as exc:  # noqa: BLE001
+                logger.warning("Camera %s: read() raised: %s", self.camera_id, exc)
+                ret, frame = False, None
+
+            if not ret or frame is None:
                 self._drop_count += 1
                 self._consecutive_failures += 1
                 retry_count += 1
-
-                if retry_count > self.max_retries:
-                    self.error = f"Max retries ({self.max_retries}) exceeded"
-                    logger.error(
-                        "Camera %s: %s — stopping capture", self.camera_id, self.error
-                    )
-                    self._running = False
-                    break
-
-                # Exponential backoff: 1s, 2s, 4s, 8s, 16s, ... capped at 60s
-                backoff = min(_BACKOFF_BASE * (2 ** (retry_count - 1)), _BACKOFF_MAX)
+                backoff = min(_BACKOFF_BASE * (2 ** min(retry_count - 1, 8)), _BACKOFF_MAX)
                 self.error = "Frame read failed"
-                logger.warning(
-                    "Camera %s: frame read failed (attempt %d/%d), "
-                    "backoff %.1fs, drops=%d",
-                    self.camera_id, retry_count, self.max_retries,
-                    backoff, self._drop_count,
-                )
+                if retry_count <= self.max_retries or retry_count % 20 == 0:
+                    logger.warning(
+                        "Camera %s: frame read failed (attempt %d), backoff %.1fs, drops=%d",
+                        self.camera_id, retry_count, backoff, self._drop_count,
+                    )
                 time.sleep(backoff)
-
-                # Attempt reconnect
-                self._capture.release()
-                self._capture = self._open_capture()
-                if not self._capture.isOpened():
-                    logger.error(
-                        "Camera %s: reconnect failed (attempt %d/%d)",
-                        self.camera_id, retry_count, self.max_retries,
-                    )
-                else:
-                    logger.info(
-                        "Camera %s: reconnected after %d retries",
-                        self.camera_id, retry_count,
-                    )
+                if self._reconnect() and retry_count > 1:
+                    logger.info("Camera %s: reconnected after %d retries", self.camera_id, retry_count)
+                # NOTE: we never set _running=False here — the stream keeps trying
+                # to recover indefinitely (capped backoff) instead of freezing.
                 continue
 
-            # Successful frame
+            now = time.time()
+
+            # Staleness watchdog — detect a frozen feed (identical frames).
+            try:
+                thumb = frame[::32, ::32].copy()
+            except Exception:
+                thumb = None
+            if last_thumb is None or thumb is None or not np.array_equal(thumb, last_thumb):
+                last_change = now
+            last_thumb = thumb
+            if now - last_change > _STALE_SECONDS:
+                logger.warning(
+                    "Camera %s: feed frozen for %.0fs — forcing reconnect",
+                    self.camera_id, now - last_change,
+                )
+                self._reconnect()
+                last_change = time.time()
+                last_thumb = None
+                continue
+
+            # Successful, fresh frame
             self.error = None
             retry_count = 0
             self._consecutive_failures = 0
-            now = time.time()
             with self._lock:
                 self._buffer.append((now, frame))
                 self._frame_count += 1
