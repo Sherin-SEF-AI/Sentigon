@@ -97,20 +97,30 @@ class MonitoringAgent:
         # ── 1. YOLO detection ─────────────────────────────────────
         detections = yolo_detector.detect(frame, camera_id=camera_id)
 
-        # ── 2. Optional Gemini Flash analysis ─────────────────────
+        # ── 2-3. Threat evaluation ────────────────────────────────
         counter = self._frame_counters.get(camera_id, 0) + 1
         self._frame_counters[camera_id] = counter
 
-        gemini_result: Optional[Dict[str, Any]] = None
-        if counter % _AI_EVERY_N_FRAMES == 0:
-            gemini_result = await gemini_analyzer.analyze_frame(
-                frame, detections=detections, camera_id=camera_id,
+        if settings.VISION_VERIFIED_DETECTION:
+            # Verified-vision path: structured scene intelligence + an adversarial
+            # verifier. Hallucination-resistant — only threats a skeptic confirms
+            # against the frame become alerts. The legacy keyword analyzer is
+            # bypassed (gemini_result=None) so threat_engine only does concrete
+            # YOLO-class matching, avoiding the false-positive flood.
+            threats = threat_engine.evaluate_hybrid(detections, None, zone_info)
+            if counter % _AI_EVERY_N_FRAMES == 0:
+                threats.extend(
+                    await self._verified_vision_threats(frame, detections, camera_id)
+                )
+        else:
+            gemini_result: Optional[Dict[str, Any]] = None
+            if counter % _AI_EVERY_N_FRAMES == 0:
+                gemini_result = await gemini_analyzer.analyze_frame(
+                    frame, detections=detections, camera_id=camera_id,
+                )
+            threats = threat_engine.evaluate_hybrid(
+                detections, gemini_result, zone_info,
             )
-
-        # ── 3. Threat evaluation ──────────────────────────────────
-        threats = threat_engine.evaluate_hybrid(
-            detections, gemini_result, zone_info,
-        )
 
         # ── 3b. Phase 3: Context-Aware Re-scoring ──────────────────
         if _phase3_available:
@@ -414,6 +424,59 @@ class MonitoringAgent:
     # ------------------------------------------------------------------ #
     #  Database helpers                                                   #
     # ------------------------------------------------------------------ #
+
+    async def _verified_vision_threats(
+        self,
+        frame,
+        detections: Optional[Dict[str, Any]],
+        camera_id: str,
+    ) -> List[Dict[str, Any]]:
+        """Verified-vision threat source for the live pipeline.
+
+        Runs structured scene intelligence over the frame, then has the
+        adversarial verifier re-examine each medium+ threat. Returns
+        threat_engine-format dicts for ONLY the threats the skeptic confirms —
+        the core anti-false-positive path now wired into real-time monitoring.
+        """
+        try:
+            import cv2 as _cv2
+            ok, buf = _cv2.imencode(".jpg", frame, [int(_cv2.IMWRITE_JPEG_QUALITY), 80])
+            if not ok:
+                return []
+            img = buf.tobytes()
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("verified_vision encode failed: %s", exc)
+            return []
+
+        try:
+            from backend.services.scene_intelligence import scene_intelligence
+            from backend.services.threat_verifier import threat_verifier
+            scene = await scene_intelligence.analyze(img, detections=detections, camera_id=camera_id)
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("verified_vision analyze failed: %s", exc)
+            return []
+
+        ta = scene.get("threat_assessment", {}) if isinstance(scene, dict) else {}
+        if ta.get("level") not in ("medium", "high", "critical"):
+            return []
+
+        out: List[Dict[str, Any]] = []
+        for thr in ta.get("threats", []):
+            try:
+                v = await threat_verifier.verify(thr, img, {"camera": camera_id})
+            except Exception:  # noqa: BLE001
+                continue
+            if v.get("verdict") == "confirmed":
+                out.append({
+                    "signature": thr.get("type", "threat"),
+                    "description": thr.get("evidence") or thr.get("type", "verified threat"),
+                    "severity": ta.get("level", "medium"),
+                    "confidence": float(v.get("confidence") or thr.get("confidence") or 0.6),
+                    "detection_method": "verified_vision",
+                })
+        if out:
+            logger.info("verified_vision: %d confirmed threat(s) on camera %s", len(out), camera_id)
+        return out
 
     async def _get_active_cameras(self) -> List[Camera]:
         """Return cameras that are both active and online.

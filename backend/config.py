@@ -125,6 +125,12 @@ class Settings(BaseSettings):
     MAX_CAMERAS: int = 16
     FRAME_BUFFER_SIZE: int = 30
     DEFAULT_FPS: int = 15
+    # Live detection uses the verified-vision pipeline: structured scene
+    # intelligence + an adversarial verifier, so only threats a skeptic confirms
+    # against the frame become alerts (hallucination-resistant). Set False to
+    # fall back to the legacy keyword scene analyzer.
+    VISION_VERIFIED_DETECTION: bool = True
+
     # Run AI threat analysis on local USB/laptop webcams (digit-only sources).
     # Off by default: a laptop webcam pointed at a desk is not a security feed,
     # and analysing it only produces hallucinated detections. Webcams still
