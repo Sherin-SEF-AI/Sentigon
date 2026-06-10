@@ -160,6 +160,40 @@ async def deep_analyze(body: SceneAnalyzeRequest):
     }
 
 
+class SegmentRequest(BaseModel):
+    camera_id: Optional[str] = None
+    image_base64: Optional[str] = None
+    bboxes: Optional[List[List[float]]] = Field(None, description="Optional explicit box prompts")
+
+
+@router.post("/segment")
+async def segment_scene(body: SegmentRequest):
+    """SAM2 mask segmentation of a frame (occlusion-robust object extent).
+
+    If no bboxes are supplied, the detector's boxes are used as prompts so SAM2
+    segments the currently-detected objects.
+    """
+    import cv2
+    import numpy as np
+    from backend.services.sam_segmenter import sam_segmenter
+
+    proxy = SceneAnalyzeRequest(camera_id=body.camera_id, image_base64=body.image_base64)
+    image_bytes, cam_label = _decode_scene_image(proxy)
+    frame = cv2.imdecode(np.frombuffer(image_bytes, np.uint8), cv2.IMREAD_COLOR)
+    if frame is None:
+        raise HTTPException(status_code=400, detail="Could not decode image")
+
+    bboxes = body.bboxes
+    if not bboxes:
+        from backend.services.yolo_detector import yolo_detector
+        det = yolo_detector.detect(frame, camera_id=cam_label or "segment")
+        bboxes = [d["bbox"] for d in det.get("detections", []) if d.get("bbox")]
+
+    result = sam_segmenter.segment(frame, bboxes=bboxes or None)
+    result["prompted_boxes"] = len(bboxes or [])
+    return result
+
+
 # ── Request/Response Models ──────────────────────────────────────
 
 class InvestigateRequest(BaseModel):

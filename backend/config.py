@@ -115,6 +115,13 @@ class Settings(BaseSettings):
     # prone — off by default. Only the calibrated "fall" is emitted otherwise.
     POSE_MICROBEHAVIORS_ENABLED: bool = False
 
+    # ── SAM2 segmentation (occlusion-robust masks) ─────────
+    # On-demand, lazily-loaded. Provides pixel-precise object masks (true extent
+    # under occlusion) prompted by detector boxes. "sam2_t.pt" (tiny) is
+    # VRAM-friendly alongside Ollama + the detector.
+    SAM2_ENABLED: bool = True
+    SAM2_MODEL: str = "sam2_t.pt"
+
     # ── Qdrant ────────────────────────────────────────────────
     QDRANT_HOST: str = "localhost"
     QDRANT_PORT: int = 6333
