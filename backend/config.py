@@ -121,6 +121,9 @@ class Settings(BaseSettings):
     # VRAM-friendly alongside Ollama + the detector.
     SAM2_ENABLED: bool = True
     SAM2_MODEL: str = "sam2_t.pt"
+    # In the live loop, SAM2 runs ONLY on flagged (threatened) tracks, capped at
+    # this many objects per frame to bound cost.
+    SAM2_MAX_OBJECTS: int = 5
 
     # ── Qdrant ────────────────────────────────────────────────
     QDRANT_HOST: str = "localhost"

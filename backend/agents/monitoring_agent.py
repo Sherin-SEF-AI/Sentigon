@@ -145,6 +145,16 @@ class MonitoringAgent:
             except Exception as exc:  # noqa: BLE001
                 logger.debug("pose behaviours failed for %s: %s", camera_id, exc)
 
+        # ── 3a-ter. SAM2 mask enrichment for FLAGGED objects ──────
+        # Only objects referenced by a threat get a pixel-precise SAM2 mask
+        # (occlusion-robust extent), attached to the threat + its detection so it
+        # carries through to the alert. Runs only when there are threats, capped.
+        if getattr(settings, "SAM2_ENABLED", False) and threats:
+            try:
+                self._enrich_flagged_with_masks(frame, detections, threats)
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("SAM2 enrichment failed for %s: %s", camera_id, exc)
+
         # ── 3b. Phase 3: Context-Aware Re-scoring ──────────────────
         if _phase3_available:
             try:
@@ -500,6 +510,53 @@ class MonitoringAgent:
         if out:
             logger.info("verified_vision: %d confirmed threat(s) on camera %s", len(out), camera_id)
         return out
+
+    def _enrich_flagged_with_masks(self, frame, detections: Dict[str, Any], threats: List[Dict[str, Any]]) -> None:
+        """Attach SAM2 pixel-precise masks to objects flagged by a threat.
+
+        For each threat that references a track_id, SAM2 segments that object's
+        box (occlusion-robust extent). The mask metadata (area, polygon,
+        mask-bbox) is attached to the threat and its detection so it flows into
+        the alert. Capped at SAM2_MAX_OBJECTS prompts per frame.
+        """
+        flagged = {t.get("track_id") for t in threats if t.get("track_id") is not None}
+        if not flagged:
+            return
+        box_by_tid: Dict[Any, list] = {}
+        for d in detections.get("detections", []) if isinstance(detections, dict) else []:
+            tid = d.get("track_id")
+            if tid in flagged and d.get("bbox") and tid not in box_by_tid:
+                box_by_tid[tid] = d["bbox"]
+        if not box_by_tid:
+            return
+
+        cap = max(1, int(getattr(settings, "SAM2_MAX_OBJECTS", 5)))
+        items = list(box_by_tid.items())[:cap]
+        tids = [t for t, _ in items]
+        boxes = [b for _, b in items]
+
+        from backend.services.sam_segmenter import sam_segmenter
+        res = sam_segmenter.segment(frame, bboxes=boxes)
+        objs = res.get("objects", []) if isinstance(res, dict) else []
+
+        masks_by_tid: Dict[Any, Dict[str, Any]] = {}
+        for i, tid in enumerate(tids):
+            if i < len(objs):
+                o = objs[i]
+                masks_by_tid[tid] = {
+                    "area_px": o.get("area_px"),
+                    "polygon": o.get("polygon"),
+                    "mask_bbox": o.get("bbox"),
+                    "source": "sam2",
+                }
+        if not masks_by_tid:
+            return
+        for t in threats:
+            if t.get("track_id") in masks_by_tid:
+                t["mask"] = masks_by_tid[t["track_id"]]
+        for d in detections.get("detections", []):
+            if d.get("track_id") in masks_by_tid:
+                d["mask"] = masks_by_tid[d["track_id"]]
 
     async def _get_active_cameras(self) -> List[Camera]:
         """Return cameras that are both active and online.
