@@ -473,7 +473,7 @@ async def create_alert(
 
     async with async_session() as db:
         cid = (camera_id or "").strip()
-        resolved_camera_id: str | None = None
+        cam = None
         if cid:
             conds = [Camera.name == cid, Camera.source == cid]
             try:
@@ -481,16 +481,21 @@ async def create_alert(
             except (ValueError, TypeError):
                 pass
             cam = (await db.execute(select(Camera).where(or_(*conds)))).scalars().first()
-            if cam is None:
-                logger.warning("create_alert rejected — unknown camera '%s' (%s)", camera_id, threat_type)
-                return {
-                    "success": False,
-                    "error": (
-                        f"Unknown camera '{camera_id}'. Alert NOT created — only real, "
-                        f"registered cameras may raise alerts. Do not invent camera IDs."
-                    ),
-                }
-            resolved_camera_id = str(cam.id)
+        if cam is None:
+            # An agent alert MUST be attributed to a real, registered camera.
+            # This blocks both invented camera IDs ("cam_01") and camera-less
+            # "system" alerts conjured by the LLM. Genuine system/infrastructure
+            # alerts are raised by the monitoring/health services, not by agents.
+            logger.warning("create_alert rejected — no real camera for '%s' (%s)", camera_id, threat_type)
+            return {
+                "success": False,
+                "error": (
+                    f"Alert NOT created: '{camera_id or '(none)'}' is not a real camera. "
+                    f"Only real, registered cameras may raise alerts — do not invent camera "
+                    f"IDs or raise camera-less alerts."
+                ),
+            }
+        resolved_camera_id = str(cam.id)
 
         # Normalise a possibly-percentage confidence (LLMs sometimes pass 95).
         try:
@@ -610,10 +615,29 @@ async def trigger_recording(
 
 
 async def create_investigation_case(
-    title: str, description: str, severity: str
+    title: str, description: str, severity: str, alert_id: str
 ) -> dict:
-    """Create a new investigation case."""
+    """Create a new investigation case from a REAL alert.
+
+    A case must be opened against an existing alert (its alert_id) — this stops
+    agents fabricating investigations out of hallucinated incidents.
+    """
+    import uuid as _uuid
     async with async_session() as db:
+        alert = None
+        try:
+            alert = await db.get(Alert, _uuid.UUID(str(alert_id)))
+        except (ValueError, TypeError):
+            alert = None
+        if alert is None:
+            logger.warning("create_investigation_case rejected — unknown alert_id '%s' (%s)", alert_id, title)
+            return {
+                "success": False,
+                "error": (
+                    f"Case NOT created: alert_id '{alert_id}' is not a real alert. "
+                    f"A case must reference an existing alert — do not invent incidents."
+                ),
+            }
         sev = AlertSeverity(severity) if severity in [s.value for s in AlertSeverity] else AlertSeverity.MEDIUM
         case = Case(
             title=title,
@@ -1216,13 +1240,14 @@ TOOL_REGISTRY: dict[str, dict] = {
     },
     "create_investigation_case": {
         "fn": create_investigation_case,
-        "description": "Create a new investigation case.",
+        "description": "Open an investigation case for an EXISTING alert. Requires the real alert_id of the alert being investigated.",
         "parameters": {
             "title": {"type": "string", "description": "Case title"},
             "description": {"type": "string", "description": "Case description"},
             "severity": {"type": "string", "description": "Case severity"},
+            "alert_id": {"type": "string", "description": "UUID of the real alert this case investigates"},
         },
-        "required": ["title", "description", "severity"],
+        "required": ["title", "description", "severity", "alert_id"],
     },
     "attach_evidence_to_case": {
         "fn": attach_evidence_to_case,
