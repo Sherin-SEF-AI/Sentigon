@@ -422,6 +422,12 @@ class AutonomousResponseOrchestrator:
 
     async def _step_incident_recording(self, response: Dict[str, Any]):
         """Step 5 — Start incident recording on the source camera."""
+        if settings.AUTONOMOUS_RESPONSE_SHADOW_MODE:
+            await self._broadcast_step(response, 5, "incident_recording", "completed", {
+                "shadow": True,
+                "message": f"[SHADOW] would start incident recording on {response.get('source_camera', '')}",
+            })
+            return
         await self._broadcast_step(response, 5, "incident_recording", "executing", {
             "message": "Starting incident recording…",
         })
@@ -448,6 +454,12 @@ class AutonomousResponseOrchestrator:
 
     async def _step_sop_activation(self, response: Dict[str, Any]):
         """Step 6 — Find and activate matching SOP."""
+        if settings.AUTONOMOUS_RESPONSE_SHADOW_MODE:
+            await self._broadcast_step(response, 6, "sop_activated", "completed", {
+                "shadow": True,
+                "message": f"[SHADOW] would activate the SOP for {response['threat_type']}",
+            })
+            return
         await self._broadcast_step(response, 6, "sop_activated", "executing", {
             "message": f"Searching SOP for {response['threat_type']}…",
         })
@@ -540,6 +552,12 @@ class AutonomousResponseOrchestrator:
 
     async def _step_emergency_services(self, response: Dict[str, Any]):
         """Step 8 — Locate nearby emergency services via geolocation."""
+        if settings.AUTONOMOUS_RESPONSE_SHADOW_MODE:
+            await self._broadcast_step(response, 8, "emergency_services_located", "completed", {
+                "shadow": True,
+                "message": "[SHADOW] would query nearby emergency services",
+            })
+            return
         await self._broadcast_step(response, 8, "emergency_services_located", "executing", {
             "message": "Locating nearby emergency services…",
         })
@@ -578,6 +596,12 @@ class AutonomousResponseOrchestrator:
 
     async def _step_notify_operators(self, response: Dict[str, Any]):
         """Step 9 — Broadcast full alert to all connected operators."""
+        if settings.AUTONOMOUS_RESPONSE_SHADOW_MODE:
+            await self._broadcast_step(response, 9, "operators_notified", "completed", {
+                "shadow": True,
+                "message": "[SHADOW] would notify all connected operators",
+            })
+            return
         await self._broadcast_step(response, 9, "operators_notified", "executing", {
             "message": "Notifying all connected operators…",
         })

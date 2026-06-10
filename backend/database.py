@@ -9,7 +9,7 @@ from backend.config import settings
 
 engine = create_async_engine(
     settings.DATABASE_URL,
-    echo=settings.APP_ENV == "development",
+    echo=settings.SQL_ECHO,
     pool_size=20,
     max_overflow=10,
     pool_pre_ping=True,

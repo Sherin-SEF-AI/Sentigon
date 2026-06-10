@@ -5,14 +5,24 @@ from __future__ import annotations
 import logging
 from typing import Dict, List, Optional
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 
+from backend.api.auth import require_role
+from backend.models.models import UserRole
 from backend.services.sso_service import sso_service, SSOProvider
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/api/sso", tags=["SSO & Identity"])
+# Every SSO/identity endpoint manages authentication infrastructure (providers,
+# directory sync, API keys, MFA) and must require ADMIN. A router-level
+# dependency gates the whole surface — there is no unauthenticated SSO route.
+# (SSO_ENABLED is false by default; this router is not even mounted until then.)
+router = APIRouter(
+    prefix="/api/sso",
+    tags=["SSO & Identity"],
+    dependencies=[Depends(require_role(UserRole.ADMIN))],
+)
 
 
 # ═══════════════════════════════════════════════════════════════════════════

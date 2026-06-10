@@ -112,6 +112,10 @@ class Settings(BaseSettings):
     # loosely mentioning a threat word) so only genuine detections surface.
     MIN_THREAT_CONFIDENCE: float = 0.6
     LOG_LEVEL: str = "INFO"
+    # Echo every SQL statement (with bound parameters) to the logs. Off by
+    # default — it is extremely verbose and leaks PII into logs. Enable only for
+    # local query debugging.
+    SQL_ECHO: bool = False
     CORS_ORIGINS: str = '["http://localhost:3000","http://localhost:3737","http://localhost:8000"]'
 
     # ── Celery ────────────────────────────────────────────────
@@ -135,7 +139,14 @@ class Settings(BaseSettings):
     AUTO_RECORD_RETENTION_HOURS: int = 72  # auto-delete chunks older than this
 
     # ── Autonomous Threat Response ────────────────────────────
-    AUTONOMOUS_RESPONSE_ENABLED: bool = True
+    # Off by default: the pipeline can take real outward actions (recording, SOP
+    # activation, emergency-services lookup, operator notification). Enable only
+    # deliberately. Even when enabled, SHADOW_MODE logs the planned actions
+    # without executing them, and responses are skipped below CONFIDENCE_MIN so a
+    # hallucinated low-confidence detection cannot trigger real actions.
+    AUTONOMOUS_RESPONSE_ENABLED: bool = False
+    AUTONOMOUS_RESPONSE_CONFIDENCE_MIN: float = 0.75
+    AUTONOMOUS_RESPONSE_SHADOW_MODE: bool = True
     FACILITY_LATITUDE: float = 24.7136  # Default: Riyadh
     FACILITY_LONGITUDE: float = 46.6753
     EMERGENCY_SEARCH_RADIUS_KM: float = 5.0

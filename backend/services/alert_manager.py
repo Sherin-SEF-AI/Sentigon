@@ -125,11 +125,22 @@ class AlertManager:
                 except Exception as wh_err:
                     logger.debug("webhook.dispatch_failed: %s", wh_err)
 
-                # Trigger autonomous threat response for high/critical alerts
+                # Trigger autonomous threat response for high/critical alerts.
+                # Gated: feature must be enabled AND confidence must clear the
+                # floor, so a low-confidence (hallucinated) detection cannot set
+                # the response pipeline in motion.
                 if severity in ("critical", "high"):
                     try:
                         from backend.config import settings as _cfg
-                        if _cfg.AUTONOMOUS_RESPONSE_ENABLED:
+                        conf = float(alert_data.get("confidence", 0.0) or 0.0)
+                        if not _cfg.AUTONOMOUS_RESPONSE_ENABLED:
+                            pass
+                        elif conf < _cfg.AUTONOMOUS_RESPONSE_CONFIDENCE_MIN:
+                            logger.info(
+                                "Autonomous response skipped for alert %s — confidence %.2f < %.2f",
+                                str(alert.id)[:8], conf, _cfg.AUTONOMOUS_RESPONSE_CONFIDENCE_MIN,
+                            )
+                        else:
                             from backend.services.autonomous_response import autonomous_response
                             asyncio.create_task(
                                 autonomous_response.trigger_response(str(alert.id), alert_data)
