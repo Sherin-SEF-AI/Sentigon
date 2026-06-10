@@ -103,15 +103,18 @@ class MonitoringAgent:
         counter = self._frame_counters.get(camera_id, 0) + 1
         self._frame_counters[camera_id] = counter
 
-        # Refresh learned adaptive thresholds into the sync cache (throttled).
+        # Refresh learned adaptive thresholds + active BOLOs into sync caches (throttled).
         if counter % _THRESHOLD_REFRESH_EVERY_N == 1:
             try:
                 from backend.services.adaptive_thresholds import adaptive_thresholds
                 zid = zone_info.get("id") if zone_info else None
                 async with async_session() as _db:
                     await adaptive_thresholds.refresh(_db, camera_id, zid)
+                    if getattr(settings, "BOLO_REALTIME_ENABLED", True):
+                        from backend.services.bolo_matcher import bolo_matcher
+                        await bolo_matcher.refresh(_db)
             except Exception as exc:  # noqa: BLE001
-                logger.debug("threshold refresh failed for %s: %s", camera_id, exc)
+                logger.debug("threshold/bolo refresh failed for %s: %s", camera_id, exc)
 
         if settings.VISION_VERIFIED_DETECTION:
             # Verified-vision path: structured scene intelligence + an adversarial
@@ -156,6 +159,16 @@ class MonitoringAgent:
                 threats.extend(yolo_detector.pose_behaviors(frame, camera_id))
             except Exception as exc:  # noqa: BLE001
                 logger.debug("pose behaviours failed for %s: %s", camera_id, exc)
+
+        # ── 3a-quater. Real-time BOLO appearance matching ────────
+        # Embed each new person track once and match against active person BOLOs.
+        if getattr(settings, "BOLO_REALTIME_ENABLED", True):
+            try:
+                from backend.services.bolo_matcher import bolo_matcher
+                if bolo_matcher.has_active():
+                    threats.extend(bolo_matcher.scan_frame(frame, detections, camera_id))
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("BOLO scan failed for %s: %s", camera_id, exc)
 
         # ── 3a-ter. SAM2 mask enrichment for FLAGGED objects ──────
         # Only objects referenced by a threat get a pixel-precise SAM2 mask

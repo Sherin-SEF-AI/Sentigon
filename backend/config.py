@@ -125,6 +125,10 @@ class Settings(BaseSettings):
     # this many objects per frame to bound cost.
     SAM2_MAX_OBJECTS: int = 5
 
+    # ── Real-time BOLO appearance matching ─────────────────
+    BOLO_REALTIME_ENABLED: bool = True
+    BOLO_MATCH_THRESHOLD: float = 0.82
+
     # ── Qdrant ────────────────────────────────────────────────
     QDRANT_HOST: str = "localhost"
     QDRANT_PORT: int = 6333
