@@ -9,14 +9,20 @@ Prefix: /api/emergency
 from __future__ import annotations
 
 import logging
-from typing import Optional
+import time
+from typing import Dict, Optional
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/emergency", tags=["emergency"])
+
+# Per-IP rate limit for the unauthenticated activate endpoint — prevents
+# spoofed-emergency floods. Minimum seconds between activations from one IP.
+_ACTIVATE_MIN_INTERVAL_S = 5.0
+_last_activation: Dict[str, float] = {}
 
 
 # ── Schemas ───────────────────────────────────────────────────────────────────
@@ -77,14 +83,33 @@ async def get_history(limit: int = 20):
 
 
 @router.post("/activate")
-async def activate_emergency(body: ActivateRequest):
+async def activate_emergency(body: ActivateRequest, request: Request):
     """Activate an emergency code.
 
-    No auth required — emergencies must work even if auth is broken.
+    No auth required — emergencies must work even if auth is broken — but the
+    code must be a known emergency code and the caller is rate-limited per IP to
+    prevent spoofed-emergency floods. The source IP is logged.
     """
+    src_ip = request.client.host if request.client else "unknown"
+
+    # Validate against the known-codes allowlist (reject arbitrary strings).
+    from backend.services.emergency_codes import MASTER_CODES
+    if body.code not in MASTER_CODES:
+        logger.warning("emergency.activate.unknown_code code=%s ip=%s", body.code, src_ip)
+        raise HTTPException(status_code=422, detail=f"Unknown emergency code: '{body.code}'")
+
+    # Per-IP rate limit.
+    now = time.time()
+    last = _last_activation.get(src_ip, 0.0)
+    if now - last < _ACTIVATE_MIN_INTERVAL_S:
+        logger.warning("emergency.activate.rate_limited code=%s ip=%s", body.code, src_ip)
+        raise HTTPException(status_code=429, detail="Too many emergency activations — slow down")
+    _last_activation[src_ip] = now
+
     try:
         from backend.services.emergency_codes import activate_emergency as _activate
 
+        logger.warning("emergency.api.activate_request code=%s ip=%s", body.code, src_ip)
         record = _activate(
             code=body.code,
             activated_by="operator",

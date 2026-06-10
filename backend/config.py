@@ -147,6 +147,9 @@ class Settings(BaseSettings):
     AUTONOMOUS_RESPONSE_ENABLED: bool = False
     AUTONOMOUS_RESPONSE_CONFIDENCE_MIN: float = 0.75
     AUTONOMOUS_RESPONSE_SHADOW_MODE: bool = True
+    # How often the red-team agent runs an adversarial probe (seconds). Hourly by
+    # default — every 5 min was alert-fatigue noise.
+    RED_TEAM_INTERVAL_SECONDS: int = 3600
     FACILITY_LATITUDE: float = 24.7136  # Default: Riyadh
     FACILITY_LONGITUDE: float = 46.6753
     EMERGENCY_SEARCH_RADIUS_KM: float = 5.0
