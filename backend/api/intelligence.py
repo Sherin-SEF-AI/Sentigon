@@ -100,6 +100,66 @@ async def verify_threat(body: VerifyThreatRequest):
     return await threat_verifier.verify(body.threat, image_bytes, {"camera": cam_label})
 
 
+@router.post("/deep-analyze")
+async def deep_analyze(body: SceneAnalyzeRequest):
+    """Agentic deep analysis of a frame — the full AI-analyst chain.
+
+    Stage 1: structured scene intelligence (scene graph, activities, anomalies).
+    Stage 2: adversarial verification of medium+ threats (skeptic).
+    Stage 3: a senior-analyst reasoning synthesis over the verified findings that
+             produces a situation summary, a priority, an alert decision, and
+             prioritised operator actions.
+    """
+    import json as _json
+    from backend.services.scene_intelligence import scene_intelligence
+    from backend.services.threat_verifier import threat_verifier
+    from backend.services.ai_text_service import ai_generate_text
+
+    image_bytes, cam_label = _decode_scene_image(body)
+    scene = await scene_intelligence.analyze(image_bytes, camera_id=cam_label)
+
+    ta = scene.get("threat_assessment", {})
+    confirmed = []
+    for thr in ta.get("threats", []) if ta.get("level") in _VERIFY_LEVELS else []:
+        v = await threat_verifier.verify(thr, image_bytes, {"camera": cam_label})
+        thr["verification"] = v
+        if v["verdict"] == "confirmed":
+            confirmed.append(thr)
+
+    # Stage 3 — senior-analyst reasoning synthesis (text, no vision needed).
+    synth_prompt = (
+        "You are a senior SOC analyst. Given the structured machine analysis of a "
+        "surveillance frame below, reason briefly then return ONLY this JSON:\n"
+        '{"situation": "1-2 sentence assessment", "priority": "routine|attention|urgent|emergency", '
+        '"should_alert": true|false, "recommended_actions": ["..."], "rationale": "why"}\n\n'
+        "Be calibrated: a quiet/benign scene is 'routine', should_alert=false, actions []. "
+        "Only escalate on VERIFIED threats.\n\n"
+        f"SCENE CAPTION: {scene.get('caption','')}\n"
+        f"ACTIVITIES: {scene.get('activities', [])}\n"
+        f"ANOMALIES: {scene.get('anomalies', [])}\n"
+        f"VERIFIED THREATS: {_json.dumps(confirmed)[:1500]}\n"
+        f"SCENE THREAT LEVEL (pre-verification): {ta.get('level','none')}\n"
+    )
+    try:
+        synth_text = await ai_generate_text(synth_prompt, max_tokens=600, temperature=0.2, tier="reasoning")
+        from backend.services.ollama_provider import _parse_json_response
+        assessment = _parse_json_response(synth_text)
+        if "raw_response" in assessment and len(assessment) == 1:
+            assessment = {"situation": synth_text[:400], "priority": "routine",
+                          "should_alert": False, "recommended_actions": [], "rationale": ""}
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("deep_analyze synthesis failed: %s", exc)
+        assessment = {"situation": scene.get("caption", ""), "priority": "routine",
+                      "should_alert": False, "recommended_actions": [], "rationale": "synthesis_unavailable"}
+
+    return {
+        "camera": cam_label,
+        "scene": scene,
+        "verified_threats": confirmed,
+        "assessment": assessment,
+    }
+
+
 # ── Request/Response Models ──────────────────────────────────────
 
 class InvestigateRequest(BaseModel):
