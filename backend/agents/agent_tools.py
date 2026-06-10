@@ -461,8 +461,46 @@ async def create_alert(
     description: str,
     confidence: float,
 ) -> dict:
-    """Create a new security alert."""
+    """Create a new security alert.
+
+    The camera_id MUST reference a real, registered camera. Alerts naming an
+    unknown/fabricated camera are rejected — this is the guard that stops the
+    reasoning agents from hallucinating alerts against invented camera IDs
+    (e.g. "cam_01", "CAM_001"). A camera-less (system) alert is allowed.
+    """
+    import uuid as _uuid
+    from sqlalchemy import or_
+
     async with async_session() as db:
+        cid = (camera_id or "").strip()
+        resolved_camera_id: str | None = None
+        if cid:
+            conds = [Camera.name == cid, Camera.source == cid]
+            try:
+                conds.append(Camera.id == _uuid.UUID(cid))
+            except (ValueError, TypeError):
+                pass
+            cam = (await db.execute(select(Camera).where(or_(*conds)))).scalars().first()
+            if cam is None:
+                logger.warning("create_alert rejected — unknown camera '%s' (%s)", camera_id, threat_type)
+                return {
+                    "success": False,
+                    "error": (
+                        f"Unknown camera '{camera_id}'. Alert NOT created — only real, "
+                        f"registered cameras may raise alerts. Do not invent camera IDs."
+                    ),
+                }
+            resolved_camera_id = str(cam.id)
+
+        # Normalise a possibly-percentage confidence (LLMs sometimes pass 95).
+        try:
+            confidence = float(confidence)
+            if confidence > 1.0:
+                confidence = confidence / 100.0
+            confidence = max(0.0, min(1.0, confidence))
+        except (TypeError, ValueError):
+            confidence = 0.5
+
         sev = AlertSeverity(severity) if severity in [s.value for s in AlertSeverity] else AlertSeverity.MEDIUM
         alert = Alert(
             title=f"{threat_type} detected",
@@ -470,7 +508,7 @@ async def create_alert(
             severity=sev,
             status=AlertStatus.NEW,
             threat_type=threat_type,
-            source_camera=camera_id,
+            source_camera=resolved_camera_id,
             confidence=confidence,
         )
         db.add(alert)
@@ -484,7 +522,7 @@ async def create_alert(
                 "title": alert.title,
                 "severity": severity,
                 "status": "new",
-                "source_camera": camera_id,
+                "source_camera": resolved_camera_id,
             })
         except Exception:
             pass
