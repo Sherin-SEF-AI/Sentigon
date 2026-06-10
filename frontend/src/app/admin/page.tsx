@@ -901,6 +901,7 @@ export default function AdminPage() {
   });
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [multiTenantEnabled, setMultiTenantEnabled] = useState(false);
 
   /* ── Fetch tenants ── */
   const fetchTenants = useCallback(async () => {
@@ -912,15 +913,15 @@ export default function AdminPage() {
         total_users: number;
         total_cameras: number;
         total_sites: number;
+        multi_tenant_enabled?: boolean;
       }>("/api/admin/tenants");
 
-      // Merge with any localStorage demo tenants
-      const localRaw = localStorage.getItem("sentinel_tenants");
-      const localTenants: Tenant[] = localRaw ? JSON.parse(localRaw) : [];
+      setMultiTenantEnabled(Boolean(data.multi_tenant_enabled));
 
-      // Merge branding from localStorage branding store
+      // Merge branding from localStorage branding store. Demo tenants from
+      // localStorage are NOT merged — only real backend tenants are shown.
       const brandingMap = JSON.parse(localStorage.getItem("sentinel_branding") || "{}");
-      const merged = [...data.tenants, ...localTenants].map((t) => ({
+      const merged = data.tenants.map((t) => ({
         ...t,
         branding: brandingMap[t.id] ?? t.branding,
       }));
@@ -928,9 +929,9 @@ export default function AdminPage() {
       setTenants(merged);
       setStats({
         total_orgs: merged.length,
-        total_users: data.total_users + localTenants.reduce((s, t) => s + t.user_count, 0),
-        total_cameras: data.total_cameras + localTenants.reduce((s, t) => s + t.camera_count, 0),
-        total_sites: data.total_sites + localTenants.reduce((s, t) => s + t.site_count, 0),
+        total_users: data.total_users,
+        total_cameras: data.total_cameras,
+        total_sites: data.total_sites,
       });
     } catch {
       // Fallback: backend unavailable — show empty state
@@ -1062,8 +1063,9 @@ export default function AdminPage() {
           </button>
         ))}
 
-        {/* Create org button — only on organisations tab */}
-        {activeTab === "organizations" && (
+        {/* Create org button — only on organisations tab, and only when
+            multi-tenancy is enabled (otherwise creating tenants is a no-op). */}
+        {activeTab === "organizations" && multiTenantEnabled && (
           <div className="ml-auto pb-1">
             <button
               onClick={() => setShowCreateModal(true)}

@@ -571,8 +571,8 @@ _optional_routers = [
     ("backend.api.intercom", "router"),
     # SSO / Identity
     ("backend.api.sso", "router"),
-    # Evidence chain-of-custody
-    ("backend.api.evidence_chain", "router"),
+    # NOTE: /api/evidence-chain unmounted — redundant with the DB-backed
+    # /api/evidence (upload/verify/chain-of-custody) which the UI actually uses.
     # Production infrastructure
     ("backend.api.health", "router"),
     # Phase 2B routers

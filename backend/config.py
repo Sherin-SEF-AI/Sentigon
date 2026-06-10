@@ -150,6 +150,11 @@ class Settings(BaseSettings):
     # How often the red-team agent runs an adversarial probe (seconds). Hourly by
     # default — every 5 min was alert-fatigue noise.
     RED_TEAM_INTERVAL_SECONDS: int = 3600
+
+    # Multi-tenant administration. Off by default: this is a single-deployment
+    # product with no per-tenant data isolation, so creating additional tenants
+    # is a no-op surface. Enabling it only re-exposes the tenant CRUD.
+    MULTI_TENANT_ENABLED: bool = False
     FACILITY_LATITUDE: float = 24.7136  # Default: Riyadh
     FACILITY_LONGITUDE: float = 46.6753
     EMERGENCY_SEARCH_RADIUS_KM: float = 5.0

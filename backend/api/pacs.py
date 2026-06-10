@@ -402,6 +402,24 @@ async def ac_list_doors(_user=Depends(get_current_user)):
                     "zone": None,
                 })
 
+            # Merge in persisted (configured) doors so a door created via
+            # /api/pacs/doors-config appears and is lock/unlock-operable here,
+            # even before it has any access events.
+            from backend.services.pacs_service import pacs_service
+            await pacs_service.ensure_hydrated()
+            seen = {d["door_id"] for d in doors}
+            for cfg in pacs_service.doors.values():
+                if cfg.door_id in seen:
+                    continue
+                doors.append({
+                    "id": cfg.door_id,
+                    "name": cfg.name,
+                    "door_id": cfg.door_id,
+                    "state": _DERIVED_STATE.get(cfg.door_id, "locked" if cfg.locked else "unlocked"),
+                    "last_event_time": None,
+                    "zone": cfg.zone or None,
+                })
+
             return doors
     except HTTPException:
         raise

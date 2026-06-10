@@ -134,6 +134,7 @@ async def activate_license(req: ActivateRequest):
 @admin_router.get("/tenants")
 async def list_tenants():
     """Return all tenants. The primary tenant's counts reflect the live DB."""
+    from backend.config import settings
     await _hydrate_primary_counts()
     return {
         "tenants": _tenants,
@@ -141,12 +142,19 @@ async def list_tenants():
         "total_users": sum(t["user_count"] for t in _tenants),
         "total_cameras": sum(t["camera_count"] for t in _tenants),
         "total_sites": sum(t["site_count"] for t in _tenants),
+        "multi_tenant_enabled": settings.MULTI_TENANT_ENABLED,
     }
 
 
 @admin_router.post("/tenants")
 async def create_tenant(body: TenantCreate):
     """Create a new tenant organisation."""
+    from backend.config import settings
+    if not settings.MULTI_TENANT_ENABLED:
+        raise HTTPException(
+            status_code=403,
+            detail="Multi-tenancy is disabled (single-deployment product). Set MULTI_TENANT_ENABLED to enable.",
+        )
     if any(t["slug"] == body.slug for t in _tenants):
         raise HTTPException(status_code=409, detail="Slug already exists.")
 
@@ -178,6 +186,9 @@ async def create_tenant(body: TenantCreate):
 @admin_router.patch("/tenants/{tenant_id}/disable")
 async def toggle_tenant(tenant_id: str):
     """Toggle a tenant's disabled state."""
+    from backend.config import settings
+    if not settings.MULTI_TENANT_ENABLED:
+        raise HTTPException(status_code=403, detail="Multi-tenancy is disabled.")
     tenant = _find_tenant(tenant_id)
     if not tenant:
         raise HTTPException(status_code=404, detail="Tenant not found.")
