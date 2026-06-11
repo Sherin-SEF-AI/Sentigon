@@ -160,6 +160,24 @@ async def deep_analyze(body: SceneAnalyzeRequest):
     }
 
 
+class AnalyzeAudioRequest(BaseModel):
+    audio_base64: str = Field(..., description="WAV audio (base64)")
+
+
+@router.post("/analyze-audio")
+async def analyze_audio(body: AnalyzeAudioRequest):
+    """Detect security-relevant sound events (gunshot/glass/scream/alarm) in a WAV
+    clip via the local audio DSP engine."""
+    import base64
+    from backend.services.audio_detection_service import audio_detection_service
+    try:
+        raw = base64.b64decode(body.audio_base64.split(",", 1)[-1])
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid audio_base64")
+    events = audio_detection_service.analyze_bytes(raw)
+    return {"event_count": len(events), "events": events}
+
+
 class ReadPlateRequest(BaseModel):
     image_base64: str = Field(..., description="Image containing a plate (base64)")
     bbox: Optional[List[float]] = Field(None, description="Optional vehicle/plate crop [x1,y1,x2,y2]")

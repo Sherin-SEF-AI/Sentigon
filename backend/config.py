@@ -134,6 +134,9 @@ class Settings(BaseSettings):
     ALPR_GPU: bool = False          # CPU by default to avoid GPU contention with Ollama
     ALPR_MIN_CONFIDENCE: float = 0.4
 
+    # ── Audio event detection (DSP; pluggable deep model) ──
+    AUDIO_DETECTION_ENABLED: bool = True
+
     # ── Qdrant ────────────────────────────────────────────────
     QDRANT_HOST: str = "localhost"
     QDRANT_PORT: int = 6333
