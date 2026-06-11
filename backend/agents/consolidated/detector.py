@@ -165,27 +165,52 @@ class DetectorAgent(BaseAgent):
         if not vehicles:
             return None
         cam_name = cam.get("name", camera_id)
-        result = await self.execute_tool_loop(
-            prompt=(
-                f"Analyze current frame from camera {camera_id} ({cam_name}). "
-                f"{len(vehicles)} vehicle(s) detected. Use analyze_frame_with_gemini to "
-                f"read all visible license plates. For each plate report: plate_text, "
-                f"vehicle_type, vehicle_color, confidence. Then use store_observation to "
-                f"record each reading with category='plate_read'."
-            ),
-            context_data={"camera_id": camera_id, "vehicle_count": len(vehicles), "task": "lpr"},
-        )
-        resp = result.get("response", "")
+
+        # Real local ALPR (EasyOCR) — fast, deterministic plate reads instead of
+        # the slow/inconsistent vision-model path. Each vehicle box is OCR'd and
+        # checked against active vehicle BOLOs.
+        from backend.services.alpr_service import alpr_service
+        if not alpr_service.available():
+            return None
+        from backend.services.video_capture import capture_manager
+        stream = capture_manager.get_stream(camera_id)
+        latest = stream.get_latest_frame() if stream else None
+        if latest is None:
+            return None
+        _, frame = latest
+
+        reads: list[dict] = []
+        bolo_hits: list[dict] = []
+        for v in vehicles:
+            bbox = v.get("bbox")
+            if not bbox:
+                continue
+            r = await alpr_service.read_and_match(frame, bbox)
+            if r.get("plate"):
+                reads.append({"plate": r["plate"], "confidence": r.get("confidence"), "track_id": v.get("track_id")})
+                if r.get("matches"):
+                    bolo_hits.append({"plate": r["plate"], "matches": r["matches"], "track_id": v.get("track_id")})
+        if not reads:
+            return None
+
         await self.send_message(CH_PERCEPTIONS, {
             "type": "plate_read", "camera_id": camera_id, "camera_name": cam_name,
-            "vehicle_count": len(vehicles), "analysis": resp[:500],
+            "plates": reads, "bolo_hits": bolo_hits,
             "timestamp": datetime.now(timezone.utc).isoformat(),
         })
+        for hit in bolo_hits:
+            await self.send_message(CH_PERCEPTIONS, {
+                "type": "bolo_vehicle_match", "camera_id": camera_id, "camera_name": cam_name,
+                "plate": hit["plate"], "severity": "high",
+                "reason": "; ".join(m.get("reason", "BOLO vehicle") for m in hit["matches"]),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            })
         await self.log_action("lpr_scan", {
             "camera_id": camera_id, "vehicles_detected": len(vehicles),
-            "decision": f"LPR scan {cam_name}: {len(vehicles)} vehicle(s)",
+            "decision": f"ALPR {cam_name}: read {len(reads)} plate(s), {len(bolo_hits)} BOLO hit(s)",
         })
-        return {"vehicles_scanned": len(vehicles), "response": resp[:300]}
+        return {"vehicles_scanned": len(vehicles), "plates_read": len(reads),
+                "bolo_hits": len(bolo_hits), "plates": [r["plate"] for r in reads]}
 
     # ── Pipeline: PPE Compliance ──────────────────────────────────
 
