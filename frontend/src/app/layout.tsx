@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { Inter } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -69,9 +69,11 @@ import CopilotWidget from "@/components/copilot/CopilotWidget";
 import { NAV_GROUPS } from "@/lib/nav";
 import { CommandPalette } from "@/components/common/CommandPalette";
 import { NotificationCenter } from "@/components/common/NotificationCenter";
+import { TopBar } from "@/components/layout/TopBar";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
 /* ------------------------------------------------------------------ */
 /*  Navigation structure — grouped with collapsible sections           */
@@ -129,16 +131,18 @@ function Sidebar() {
   return (
     <aside
       className={cn(
-        "flex h-screen flex-col border-r border-gray-800/60 bg-gray-950 py-2 transition-all duration-200",
+        "flex h-screen flex-col border-r border-border bg-surface-0 py-2 transition-all duration-200",
         collapsed ? "w-12" : "w-14 lg:w-52"
       )}
     >
       {/* Brand */}
-      <Link href="/" className="mb-1 flex items-center gap-2 px-2.5 shrink-0">
-        <Shield className="h-5 w-5 text-cyan-400 shrink-0" />
+      <Link href="/" className="mb-2 flex items-center gap-2 px-2.5 shrink-0">
+        <span className="grid h-7 w-7 place-items-center rounded-md border border-accent/30 bg-accent/10 shrink-0">
+          <Shield className="h-4 w-4 text-accent shrink-0" />
+        </span>
         {!collapsed && (
-          <span className="hidden text-[11px] font-bold tracking-widest text-gray-100 uppercase lg:block">
-            Sentinel AI
+          <span className="hidden text-[12px] font-bold tracking-[0.2em] text-foreground uppercase lg:block">
+            Sentinel<span className="text-accent">AI</span>
           </span>
         )}
       </Link>
@@ -185,10 +189,10 @@ function Sidebar() {
                 <button
                   onClick={() => toggleGroup(group.label)}
                   className={cn(
-                    "hidden lg:flex w-full items-center justify-between rounded-md px-2 py-1 text-[9px] font-bold uppercase tracking-wider transition-colors",
+                    "hidden lg:flex w-full items-center justify-between rounded-md px-2 py-1 text-[9px] font-bold uppercase tracking-widest transition-colors",
                     hasActiveItem
-                      ? "text-cyan-500"
-                      : "text-gray-600 hover:text-gray-400"
+                      ? "text-accent"
+                      : "text-muted-foreground/70 hover:text-muted-foreground"
                   )}
                 >
                   <span>{group.label}</span>
@@ -213,10 +217,10 @@ function Sidebar() {
                         key={href}
                         href={href}
                         className={cn(
-                          "flex items-center gap-2 rounded-md px-2 py-1 text-[11px] font-medium transition-colors group",
+                          "relative flex items-center gap-2 rounded-md px-2 py-1 text-[11px] font-medium transition-colors group",
                           isActive
-                            ? "bg-cyan-900/30 text-cyan-400 border border-cyan-800/40"
-                            : "text-gray-500 hover:bg-gray-800/50 hover:text-gray-300 border border-transparent"
+                            ? "bg-accent/10 text-accent before:absolute before:left-0 before:top-1/2 before:h-3.5 before:w-0.5 before:-translate-y-1/2 before:rounded-full before:bg-accent"
+                            : "text-muted-foreground hover:bg-surface-2 hover:text-foreground"
                         )}
                         title={collapsed ? label : undefined}
                       >
@@ -242,7 +246,7 @@ function Sidebar() {
       {/* Collapse toggle */}
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="hidden lg:flex items-center justify-center mx-1.5 mt-1 rounded-md py-1 text-gray-600 hover:bg-gray-800/50 hover:text-gray-400 transition-colors"
+        className="hidden lg:flex items-center justify-center mx-1.5 mt-1 rounded-md py-1 text-muted-foreground/70 hover:bg-surface-2 hover:text-foreground transition-colors"
         title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
       >
         {collapsed ? (
@@ -255,7 +259,7 @@ function Sidebar() {
       {/* Logout */}
       <button
         onClick={handleLogout}
-        className="flex items-center gap-2 rounded-md px-2 py-1.5 text-[11px] font-medium text-gray-600 transition-colors hover:bg-red-900/20 hover:text-red-400 mx-1.5 mt-0.5"
+        className="flex items-center gap-2 rounded-md px-2 py-1.5 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-destructive/15 hover:text-destructive mx-1.5 mt-0.5"
         title={collapsed ? "Logout" : undefined}
       >
         <LogOut className="h-3.5 w-3.5 shrink-0" />
@@ -309,7 +313,7 @@ export default function RootLayout({
 
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.variable} font-sans antialiased bg-[#030712] text-gray-100`}>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased bg-background text-foreground`}>
         <ToastProvider>
           <ConfirmProvider>
             {authed === null ? (
@@ -320,14 +324,17 @@ export default function RootLayout({
               children
             ) : (
               <>
-                <div className="flex h-screen overflow-hidden">
+                <div className="flex h-screen overflow-hidden bg-vignette">
                   <Sidebar />
-                  <main className="flex-1 overflow-auto">
-                    {/* Keyed by route so a crashed page recovers on navigation,
-                        and a thrown page can't white-screen the whole shell. */}
-                    <ErrorBoundary name="page" key={pathname}>
-                      {children}
-                    </ErrorBoundary>
+                  <main className="flex flex-1 flex-col overflow-hidden">
+                    <TopBar onSearch={() => setCmdOpen(true)} />
+                    <div className="flex-1 overflow-auto bg-grid">
+                      {/* Keyed by route so a crashed page recovers on navigation,
+                          and a thrown page can't white-screen the whole shell. */}
+                      <ErrorBoundary name="page" key={pathname}>
+                        {children}
+                      </ErrorBoundary>
+                    </div>
                   </main>
                   <ErrorBoundary name="copilot">
                     <CopilotWidget />
