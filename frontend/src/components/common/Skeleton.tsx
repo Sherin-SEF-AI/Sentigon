@@ -7,8 +7,10 @@ interface SkeletonProps {
 export function Skeleton({ className = "" }: SkeletonProps) {
   return (
     <div
-      className={`animate-pulse bg-zinc-800 rounded ${className}`}
-    />
+      className={`relative overflow-hidden rounded bg-surface-2 ${className}`}
+    >
+      <div className="absolute inset-0 animate-shimmer" />
+    </div>
   );
 }
 

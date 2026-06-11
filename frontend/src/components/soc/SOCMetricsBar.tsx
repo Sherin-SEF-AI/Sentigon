@@ -26,8 +26,8 @@ function Metric({ icon, label, value, accent, pulse }: MetricProps) {
   return (
     <div
       className={cn(
-        "flex items-center gap-2 rounded-md border border-gray-800/50 bg-gray-900/40 px-2.5 py-1.5 transition-colors",
-        "hover:bg-gray-900/60 hover:border-gray-700/50",
+        "flex items-center gap-2 rounded-md border border-border bg-surface-1 px-2.5 py-1.5 transition-colors elev-1",
+        "hover:bg-surface-2 hover:border-border-strong",
         pulse && "animate-pulse"
       )}
     >
@@ -40,10 +40,10 @@ function Metric({ icon, label, value, accent, pulse }: MetricProps) {
         {icon}
       </div>
       <div className="min-w-0">
-        <p className="text-[8px] font-medium uppercase tracking-wider text-gray-500 leading-none">
+        <p className="text-[8px] font-medium uppercase tracking-widest text-muted-foreground leading-none">
           {label}
         </p>
-        <p className="text-sm font-bold tabular-nums text-gray-100 leading-tight mt-0.5">
+        <p className="data text-sm font-bold text-foreground leading-tight mt-0.5">
           {value}
         </p>
       </div>
