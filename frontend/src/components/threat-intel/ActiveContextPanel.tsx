@@ -73,7 +73,7 @@ interface AgentSummary {
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
 
-const CARD = "rounded-lg border border-gray-800 bg-gray-900/60 backdrop-blur p-4";
+const CARD = "rounded-lg border border-border bg-surface-2/60 backdrop-blur p-4";
 
 const AUTO_REFRESH_MS = 30_000;
 
@@ -112,18 +112,18 @@ function SectionHeader({
       className="flex w-full items-center gap-2.5 py-2 text-left transition-colors hover:opacity-80"
     >
       {expanded ? (
-        <ChevronDown className="h-3.5 w-3.5 shrink-0 text-gray-500" />
+        <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
       ) : (
-        <ChevronRight className="h-3.5 w-3.5 shrink-0 text-gray-500" />
+        <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
       )}
       <Icon className={cn("h-4 w-4 shrink-0", iconColor)} />
-      <span className="flex-1 text-xs font-bold uppercase tracking-widest text-gray-400">
+      <span className="flex-1 text-xs font-bold uppercase tracking-widest text-muted-foreground">
         {label}
       </span>
       <span
         className={cn(
           "flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-bold",
-          count > 0 ? countColor : "bg-gray-800 text-gray-600"
+          count > 0 ? countColor : "bg-surface-3 text-muted-foreground"
         )}
       >
         {count}
@@ -152,8 +152,8 @@ function ContextListItem({
   return (
     <div
       className={cn(
-        "rounded-md border border-gray-800/50 transition-colors cursor-pointer",
-        expanded ? "bg-gray-800/40" : "bg-gray-900/30 hover:bg-gray-800/20"
+        "rounded-md border border-border/50 transition-colors cursor-pointer",
+        expanded ? "bg-surface-3/40" : "bg-surface-2/30 hover:bg-surface-3/20"
       )}
       onClick={() => setExpanded(!expanded)}
     >
@@ -167,14 +167,14 @@ function ContextListItem({
           />
         )}
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium text-gray-200 leading-snug">
+          <p className="text-xs font-medium text-foreground leading-snug">
             {title}
           </p>
           {meta && (
-            <p className="mt-0.5 text-[10px] text-gray-500">{meta}</p>
+            <p className="mt-0.5 text-[10px] text-muted-foreground">{meta}</p>
           )}
           {expanded && description && (
-            <p className="mt-1.5 text-[11px] leading-relaxed text-gray-400">
+            <p className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground">
               {description}
             </p>
           )}
@@ -275,10 +275,10 @@ export default function ActiveContextPanel({
             <Zap className="h-5 w-5 text-cyan-400" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-gray-100">
+            <h2 className="text-sm font-bold text-foreground">
               Active Threat Context
             </h2>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Live situational awareness -- auto-refreshes every 30s
             </p>
           </div>
@@ -288,8 +288,8 @@ export default function ActiveContextPanel({
           onClick={handleRefresh}
           disabled={loading}
           className={cn(
-            "flex items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs font-medium text-gray-400 transition-colors",
-            "hover:bg-gray-800 hover:text-gray-200",
+            "flex items-center gap-1.5 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs font-medium text-muted-foreground transition-colors",
+            "hover:bg-surface-3 hover:text-foreground",
             "disabled:opacity-40 disabled:cursor-not-allowed"
           )}
         >
@@ -312,7 +312,7 @@ export default function ActiveContextPanel({
       {loading && !context && (
         <div className={cn(CARD, "flex flex-col items-center justify-center py-12")}>
           <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
-          <p className="mt-3 text-xs text-gray-500">
+          <p className="mt-3 text-xs text-muted-foreground">
             Loading threat context...
           </p>
         </div>
@@ -334,16 +334,16 @@ export default function ActiveContextPanel({
           {summaryLoading && !agentSummary ? (
             <div className="flex items-center gap-2 py-2">
               <Loader2 className="h-3.5 w-3.5 animate-spin text-cyan-500" />
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-muted-foreground">
                 Generating summary...
               </span>
             </div>
           ) : agentSummary ? (
-            <p className="text-sm leading-relaxed text-gray-300">
+            <p className="text-sm leading-relaxed text-foreground">
               {agentSummary}
             </p>
           ) : (
-            <p className="text-xs italic text-gray-600">
+            <p className="text-xs italic text-muted-foreground">
               No agent summary available at this time.
             </p>
           )}
@@ -353,7 +353,7 @@ export default function ActiveContextPanel({
       {/* Context sections */}
       {context && (
         <div className={CARD}>
-          <div className="space-y-1 divide-y divide-gray-800/50">
+          <div className="space-y-1 divide-y divide-border/50">
             {/* ---- Threats ---- */}
             <div>
               <SectionHeader
@@ -368,7 +368,7 @@ export default function ActiveContextPanel({
               {expandedSections.threats && (
                 <div className="space-y-1.5 pb-3 pl-6">
                   {context.threats.length === 0 ? (
-                    <p className="py-2 text-xs italic text-gray-600">
+                    <p className="py-2 text-xs italic text-muted-foreground">
                       No active threats detected.
                     </p>
                   ) : (
@@ -400,7 +400,7 @@ export default function ActiveContextPanel({
               {expandedSections.weather && (
                 <div className="space-y-1.5 pb-3 pl-6">
                   {context.weather_warnings.length === 0 ? (
-                    <p className="py-2 text-xs italic text-gray-600">
+                    <p className="py-2 text-xs italic text-muted-foreground">
                       No weather warnings in effect.
                     </p>
                   ) : (
@@ -431,7 +431,7 @@ export default function ActiveContextPanel({
               {expandedSections.events && (
                 <div className="space-y-1.5 pb-3 pl-6">
                   {context.nearby_events.length === 0 ? (
-                    <p className="py-2 text-xs italic text-gray-600">
+                    <p className="py-2 text-xs italic text-muted-foreground">
                       No nearby events reported.
                     </p>
                   ) : (
@@ -466,7 +466,7 @@ export default function ActiveContextPanel({
               {expandedSections.bulletins && (
                 <div className="space-y-1.5 pb-3 pl-6">
                   {context.community_bulletins.length === 0 ? (
-                    <p className="py-2 text-xs italic text-gray-600">
+                    <p className="py-2 text-xs italic text-muted-foreground">
                       No community bulletins at this time.
                     </p>
                   ) : (

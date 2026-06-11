@@ -48,14 +48,14 @@ export default function ConfidenceSlider({
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between">
-        <label className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">
+        <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
           {label}
         </label>
         <div className="flex items-center gap-2">
-          <span className="text-xs font-mono font-bold text-gray-300 tabular-nums">
+          <span className="text-xs font-mono font-bold text-foreground tabular-nums">
             {displayValue}
           </span>
-          <span className="text-[9px] text-gray-600">
+          <span className="text-[9px] text-muted-foreground">
             ({confidenceLabel(value)})
           </span>
         </div>
@@ -68,9 +68,9 @@ export default function ConfidenceSlider({
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value))}
         disabled={disabled}
-        className={`w-full h-1.5 rounded-full appearance-none bg-gray-800 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${confidenceColor(value)}`}
+        className={`w-full h-1.5 rounded-full appearance-none bg-surface-3 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${confidenceColor(value)}`}
       />
-      <div className="flex justify-between text-[9px] text-gray-700">
+      <div className="flex justify-between text-[9px] text-muted-foreground">
         <span>{showPercent ? "0%" : min}</span>
         <span>{showPercent ? "100%" : max}</span>
       </div>

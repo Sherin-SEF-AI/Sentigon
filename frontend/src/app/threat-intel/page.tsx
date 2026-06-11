@@ -166,7 +166,7 @@ const IOC_COLORS: Record<string, string> = {
 
 function IocBadge({ type, value }: { type: string; value: string }) {
   const Icon = IOC_ICONS[type] || Crosshair;
-  const color = IOC_COLORS[type] || "text-gray-400 bg-gray-800 border-gray-700";
+  const color = IOC_COLORS[type] || "text-muted-foreground bg-surface-3 border-border-strong";
 
   return (
     <div
@@ -189,7 +189,7 @@ function IocBadge({ type, value }: { type: string; value: string }) {
 function ActionTag({ action }: { action: string }) {
   const label = action.replace(/_/g, " ");
   return (
-    <span className="inline-flex items-center gap-1 rounded bg-gray-800 border border-gray-700 px-1.5 py-0.5 text-[10px] font-medium text-gray-400">
+    <span className="inline-flex items-center gap-1 rounded bg-surface-3 border border-border-strong px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
       <Zap className="h-2.5 w-2.5 text-cyan-500" />
       {label}
     </span>
@@ -212,15 +212,15 @@ function StatCard({
   accent?: string;
 }) {
   return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-4">
+    <div className="rounded-xl border border-border bg-surface-2/50 p-4">
       <div className="flex items-center gap-2 mb-2">
         <Icon className={cn("h-4 w-4", accent)} />
-        <span className="text-xs font-medium uppercase tracking-wider text-gray-500">
+        <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           {label}
         </span>
       </div>
       <div className="flex items-baseline gap-1">
-        <span className="text-2xl font-bold text-gray-100">{value}</span>
+        <span className="text-2xl font-bold text-foreground">{value}</span>
       </div>
     </div>
   );
@@ -289,25 +289,25 @@ function AddThreatModal({
       />
 
       {/* Modal */}
-      <div className="relative z-10 w-full max-w-2xl rounded-2xl border border-gray-800 bg-gray-950 shadow-2xl shadow-black/50">
+      <div className="relative z-10 w-full max-w-2xl rounded-2xl border border-border bg-surface-0 shadow-2xl shadow-black/50">
         {/* Modal header */}
-        <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-900/30 border border-cyan-800/50">
               <Plus className="h-5 w-5 text-cyan-400" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-gray-100">
+              <h2 className="text-sm font-bold text-foreground">
                 Add Threat Intelligence
               </h2>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 Manually ingest a new threat intel entry
               </p>
             </div>
           </div>
           <button
             onClick={handleClose}
-            className="rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-800 hover:text-gray-300"
+            className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
           >
             <X className="h-5 w-5" />
           </button>
@@ -318,7 +318,7 @@ function AddThreatModal({
           {/* Row 1: Title + Source */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Title *
               </label>
               <input
@@ -326,11 +326,11 @@ function AddThreatModal({
                 value={form.title}
                 onChange={(e) => updateField("title", e.target.value)}
                 placeholder="e.g., Known malicious IP range"
-                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm text-gray-100 placeholder-gray-600 outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
+                className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Source *
               </label>
               <input
@@ -338,7 +338,7 @@ function AddThreatModal({
                 value={form.source}
                 onChange={(e) => updateField("source", e.target.value)}
                 placeholder="e.g., OSINT, FBI, Internal"
-                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm text-gray-100 placeholder-gray-600 outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
+                className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
               />
             </div>
           </div>
@@ -346,14 +346,14 @@ function AddThreatModal({
           {/* Row 2: Threat Type + Severity */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Threat Type
               </label>
               <div className="relative">
                 <select
                   value={form.threat_type}
                   onChange={(e) => updateField("threat_type", e.target.value)}
-                  className="w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2.5 text-sm text-gray-300 outline-none focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
+                  className="w-full appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2.5 text-sm text-foreground outline-none focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
                 >
                   {THREAT_TYPE_OPTIONS.filter((o) => o.value !== "all").map(
                     (opt) => (
@@ -363,18 +363,18 @@ function AddThreatModal({
                     )
                   )}
                 </select>
-                <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+                <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
               </div>
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Severity
               </label>
               <div className="relative">
                 <select
                   value={form.severity}
                   onChange={(e) => updateField("severity", e.target.value)}
-                  className="w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2.5 text-sm text-gray-300 outline-none focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
+                  className="w-full appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2.5 text-sm text-foreground outline-none focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
                 >
                   {SEVERITY_OPTIONS.filter((o) => o.value !== "all").map(
                     (opt) => (
@@ -384,7 +384,7 @@ function AddThreatModal({
                     )
                   )}
                 </select>
-                <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+                <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
               </div>
             </div>
           </div>
@@ -392,14 +392,14 @@ function AddThreatModal({
           {/* Row 3: IOC Type + IOC Value */}
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 IOC Type
               </label>
               <div className="relative">
                 <select
                   value={form.ioc_type}
                   onChange={(e) => updateField("ioc_type", e.target.value)}
-                  className="w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2.5 text-sm text-gray-300 outline-none focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
+                  className="w-full appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2.5 text-sm text-foreground outline-none focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
                 >
                   {IOC_TYPE_OPTIONS.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -407,11 +407,11 @@ function AddThreatModal({
                     </option>
                   ))}
                 </select>
-                <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+                <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
               </div>
             </div>
             <div className="col-span-2">
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 IOC Value *
               </label>
               <input
@@ -419,14 +419,14 @@ function AddThreatModal({
                 value={form.ioc_value}
                 onChange={(e) => updateField("ioc_value", e.target.value)}
                 placeholder="e.g., 192.168.1.100 or ABC-1234"
-                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm text-gray-100 placeholder-gray-600 outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
+                className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
               />
             </div>
           </div>
 
           {/* Description */}
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Description
             </label>
             <textarea
@@ -434,14 +434,14 @@ function AddThreatModal({
               onChange={(e) => updateField("description", e.target.value)}
               placeholder="Describe the threat intelligence detail..."
               rows={3}
-              className="w-full resize-none rounded-lg border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm text-gray-100 placeholder-gray-600 outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
+              className="w-full resize-none rounded-lg border border-border-strong bg-surface-2 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
             />
           </div>
 
           {/* Confidence */}
           <div>
             <div className="mb-1.5 flex items-center justify-between">
-              <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Confidence
               </label>
               <span className="text-sm font-bold tabular-nums text-cyan-400">
@@ -458,7 +458,7 @@ function AddThreatModal({
               }
               className="w-full cursor-pointer accent-cyan-500"
             />
-            <div className="mt-1 flex justify-between text-[10px] text-gray-600">
+            <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
               <span>Low</span>
               <span>Medium</span>
               <span>High</span>
@@ -467,7 +467,7 @@ function AddThreatModal({
 
           {/* Auto Actions */}
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Auto Actions
             </label>
             <div className="mb-2 flex flex-wrap gap-1.5">
@@ -492,7 +492,7 @@ function AddThreatModal({
                 onChange={(e) => {
                   addAction(e.target.value);
                 }}
-                className="w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2 text-xs text-gray-400 outline-none focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
+                className="w-full appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2 text-xs text-muted-foreground outline-none focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
               >
                 <option value="">Select action to add...</option>
                 {AUTO_ACTION_OPTIONS.filter(
@@ -503,16 +503,16 @@ function AddThreatModal({
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             </div>
           </div>
         </div>
 
         {/* Modal footer */}
-        <div className="flex items-center justify-end gap-3 border-t border-gray-800 px-6 py-4">
+        <div className="flex items-center justify-end gap-3 border-t border-border px-6 py-4">
           <button
             onClick={handleClose}
-            className="rounded-lg border border-gray-700 bg-gray-900 px-4 py-2 text-xs font-medium text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
+            className="rounded-lg border border-border-strong bg-surface-2 px-4 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
           >
             Cancel
           </button>
@@ -554,8 +554,8 @@ function ThreatRow({
   return (
     <div
       className={cn(
-        "border border-gray-800 rounded-lg transition-all duration-200",
-        expanded ? "bg-gray-900/90" : "bg-gray-900/50 hover:bg-gray-800/50"
+        "border border-border rounded-lg transition-all duration-200",
+        expanded ? "bg-surface-2/90" : "bg-surface-2/50 hover:bg-surface-3/50"
       )}
     >
       {/* Main row */}
@@ -575,18 +575,18 @@ function ThreatRow({
         </span>
 
         {/* Title */}
-        <span className="flex-1 truncate text-sm font-medium text-gray-200">
+        <span className="flex-1 truncate text-sm font-medium text-foreground">
           {entry.title}
         </span>
 
         {/* Source */}
-        <span className="hidden items-center gap-1 text-xs text-gray-500 md:flex">
+        <span className="hidden items-center gap-1 text-xs text-muted-foreground md:flex">
           <ExternalLink className="h-3 w-3" />
           {entry.source}
         </span>
 
         {/* Threat type */}
-        <span className="hidden shrink-0 rounded border border-gray-700 bg-gray-800 px-2 py-0.5 text-[10px] font-medium text-gray-400 lg:inline-flex">
+        <span className="hidden shrink-0 rounded border border-border-strong bg-surface-3 px-2 py-0.5 text-[10px] font-medium text-muted-foreground lg:inline-flex">
           {entry.threat_type.replace(/_/g, " ")}
         </span>
 
@@ -601,7 +601,7 @@ function ThreatRow({
         </span>
 
         {/* First seen */}
-        <span className="hidden shrink-0 items-center gap-1 text-[11px] text-gray-500 sm:flex">
+        <span className="hidden shrink-0 items-center gap-1 text-[11px] text-muted-foreground sm:flex">
           <Clock className="h-3 w-3" />
           {timeAgo(entry.first_seen)}
         </span>
@@ -609,7 +609,7 @@ function ThreatRow({
         {/* Expand indicator */}
         <ChevronDown
           className={cn(
-            "h-4 w-4 shrink-0 text-gray-600 transition-transform duration-200",
+            "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
             expanded && "rotate-180"
           )}
         />
@@ -617,15 +617,15 @@ function ThreatRow({
 
       {/* Expanded detail */}
       {expanded && (
-        <div className="border-t border-gray-800 px-4 py-4 space-y-4">
+        <div className="border-t border-border px-4 py-4 space-y-4">
           {/* Description */}
           {entry.description && (
             <div>
-              <h4 className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <h4 className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 <Eye className="h-3.5 w-3.5" />
                 Description
               </h4>
-              <p className="text-sm leading-relaxed text-gray-300">
+              <p className="text-sm leading-relaxed text-foreground">
                 {entry.description}
               </p>
             </div>
@@ -633,15 +633,15 @@ function ThreatRow({
 
           {/* IOC detail */}
           <div>
-            <h4 className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <h4 className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               <Crosshair className="h-3.5 w-3.5 text-purple-400" />
               Indicator of Compromise
             </h4>
             <div className="rounded-lg border border-purple-900/50 bg-purple-950/20 px-3 py-2">
               <div className="flex items-center gap-3">
                 <IocBadge type={entry.ioc_type} value={entry.ioc_value} />
-                <span className="text-xs text-gray-500">
-                  Type: <span className="font-medium text-gray-400">{entry.ioc_type.replace(/_/g, " ")}</span>
+                <span className="text-xs text-muted-foreground">
+                  Type: <span className="font-medium text-muted-foreground">{entry.ioc_type.replace(/_/g, " ")}</span>
                 </span>
               </div>
             </div>
@@ -650,7 +650,7 @@ function ThreatRow({
           {/* Auto Actions */}
           {entry.auto_actions && entry.auto_actions.length > 0 && (
             <div>
-              <h4 className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <h4 className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 <Zap className="h-3.5 w-3.5 text-cyan-400" />
                 Auto Actions
               </h4>
@@ -663,33 +663,33 @@ function ThreatRow({
           )}
 
           {/* Metadata row */}
-          <div className="flex flex-wrap gap-4 text-xs text-gray-500">
+          <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
             <span>
               ID:{" "}
-              <span className="font-mono text-gray-400">
+              <span className="font-mono text-muted-foreground">
                 {entry.id.slice(0, 8)}
               </span>
             </span>
             <span>
               Source:{" "}
-              <span className="text-gray-400">{entry.source}</span>
+              <span className="text-muted-foreground">{entry.source}</span>
             </span>
             <span>
               First Seen:{" "}
-              <span className="text-gray-400">
+              <span className="text-muted-foreground">
                 {formatDateTime(entry.first_seen)}
               </span>
             </span>
             <span>
               Last Seen:{" "}
-              <span className="text-gray-400">
+              <span className="text-muted-foreground">
                 {formatDateTime(entry.last_seen)}
               </span>
             </span>
             {entry.expires_at && (
               <span>
                 Expires:{" "}
-                <span className="text-gray-400">
+                <span className="text-muted-foreground">
                   {formatDateTime(entry.expires_at)}
                 </span>
               </span>
@@ -877,18 +877,18 @@ export default function ThreatIntelPage() {
 
   /* --- Render --- */
   return (
-    <div className="flex h-full flex-col bg-gray-950">
+    <div className="flex h-full flex-col bg-surface-0">
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-900/30 border border-cyan-800/50">
             <Globe className="h-5 w-5 text-cyan-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Threat Intelligence
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               External threat feeds, IOCs, and automated response actions
             </p>
           </div>
@@ -900,8 +900,8 @@ export default function ThreatIntelPage() {
             onClick={fetchEntries}
             disabled={loading}
             className={cn(
-              "flex items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs font-medium text-gray-400 transition-colors",
-              "hover:bg-gray-800 hover:text-gray-200",
+              "flex items-center gap-1.5 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs font-medium text-muted-foreground transition-colors",
+              "hover:bg-surface-3 hover:text-foreground",
               "disabled:opacity-40 disabled:cursor-not-allowed"
             )}
           >
@@ -923,7 +923,7 @@ export default function ThreatIntelPage() {
       </div>
 
       {/* ---- Stats bar ---- */}
-      <div className="border-b border-gray-800 px-6 py-4">
+      <div className="border-b border-border px-6 py-4">
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           <StatCard
             label="Active Threats"
@@ -953,7 +953,7 @@ export default function ThreatIntelPage() {
       </div>
 
       {/* ---- Tabs ---- */}
-      <div className="flex items-center gap-1 border-b border-gray-800 px-6">
+      <div className="flex items-center gap-1 border-b border-border px-6">
         {([
           { key: "threats" as const, label: "Threats" },
           { key: "feeds" as const, label: "Feeds" },
@@ -967,7 +967,7 @@ export default function ThreatIntelPage() {
               "flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors",
               activeTab === tab.key
                 ? "border-cyan-500 text-cyan-400"
-                : "border-transparent text-gray-500 hover:text-gray-300"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             )}
           >
             {tab.label}
@@ -995,16 +995,16 @@ export default function ThreatIntelPage() {
       )}
 
       {/* ---- Threats Tab: Filter bar ---- */}
-      {activeTab === "threats" && <div className="flex flex-wrap items-center gap-3 border-b border-gray-800 px-6 py-3">
+      {activeTab === "threats" && <div className="flex flex-wrap items-center gap-3 border-b border-border px-6 py-3">
         {/* Search */}
         <div className="relative flex-1 min-w-[200px] max-w-sm">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search threats, IOCs, sources..."
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 pl-9 pr-3 py-2 text-xs text-gray-300 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 pl-9 pr-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
           />
         </div>
 
@@ -1013,7 +1013,7 @@ export default function ThreatIntelPage() {
           <select
             value={severityFilter}
             onChange={(e) => setSeverityFilter(e.target.value)}
-            className="appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
           >
             {SEVERITY_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -1021,7 +1021,7 @@ export default function ThreatIntelPage() {
               </option>
             ))}
           </select>
-          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
         </div>
 
         {/* Type filter */}
@@ -1029,7 +1029,7 @@ export default function ThreatIntelPage() {
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
           >
             {THREAT_TYPE_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -1037,12 +1037,12 @@ export default function ThreatIntelPage() {
               </option>
             ))}
           </select>
-          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
         </div>
 
         {/* Sort controls */}
         <div className="ml-auto flex items-center gap-2">
-          <span className="text-[10px] font-medium uppercase tracking-wider text-gray-600">
+          <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
             Sort by
           </span>
           {(
@@ -1059,7 +1059,7 @@ export default function ThreatIntelPage() {
                 "flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium transition-colors",
                 sortField === key
                   ? "bg-cyan-900/30 text-cyan-400 border border-cyan-800/50"
-                  : "text-gray-500 hover:text-gray-300"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               {label}
@@ -1070,7 +1070,7 @@ export default function ThreatIntelPage() {
           ))}
 
           {/* Results count */}
-          <span className="ml-2 text-xs text-gray-500">
+          <span className="ml-2 text-xs text-muted-foreground">
             {filtered.length} of {totalActive}
           </span>
         </div>
@@ -1082,7 +1082,7 @@ export default function ThreatIntelPage() {
         {loading && (
           <div className="flex flex-col items-center justify-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-            <p className="mt-3 text-sm text-gray-500">
+            <p className="mt-3 text-sm text-muted-foreground">
               Loading threat intelligence...
             </p>
           </div>
@@ -1095,7 +1095,7 @@ export default function ThreatIntelPage() {
             <p className="text-sm text-red-400">{error}</p>
             <button
               onClick={fetchEntries}
-              className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+              className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             >
               Retry
             </button>
@@ -1105,11 +1105,11 @@ export default function ThreatIntelPage() {
         {/* Empty state */}
         {!loading && !error && entries.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20">
-            <Globe className="mb-2 h-10 w-10 text-gray-700" />
-            <p className="text-sm font-medium text-gray-400">
+            <Globe className="mb-2 h-10 w-10 text-muted-foreground" />
+            <p className="text-sm font-medium text-muted-foreground">
               No threat intelligence entries
             </p>
-            <p className="mt-1 text-xs text-gray-600">
+            <p className="mt-1 text-xs text-muted-foreground">
               Add a new entry or connect external threat feeds
             </p>
             <button
@@ -1125,11 +1125,11 @@ export default function ThreatIntelPage() {
         {/* Filtered empty state */}
         {!loading && !error && entries.length > 0 && filtered.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20">
-            <Search className="mb-2 h-8 w-8 text-gray-700" />
-            <p className="text-sm font-medium text-gray-400">
+            <Search className="mb-2 h-8 w-8 text-muted-foreground" />
+            <p className="text-sm font-medium text-muted-foreground">
               No matching threats
             </p>
-            <p className="mt-1 text-xs text-gray-600">
+            <p className="mt-1 text-xs text-muted-foreground">
               Adjust your filters or search criteria
             </p>
             <button
@@ -1138,7 +1138,7 @@ export default function ThreatIntelPage() {
                 setTypeFilter("all");
                 setSearchQuery("");
               }}
-              className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+              className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             >
               Clear filters
             </button>
@@ -1162,15 +1162,15 @@ export default function ThreatIntelPage() {
 
       {/* ---- Footer status bar ---- */}
       {!loading && !error && entries.length > 0 && (
-        <div className="flex items-center justify-between border-t border-gray-800 px-6 py-3">
-          <div className="flex items-center gap-4 text-xs text-gray-500">
+        <div className="flex items-center justify-between border-t border-border px-6 py-3">
+          <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">
               <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
               Live feed connected
             </span>
             <span>
               Last updated:{" "}
-              <span className="text-gray-400">
+              <span className="text-muted-foreground">
                 {new Date().toLocaleTimeString("en-US", {
                   hour: "2-digit",
                   minute: "2-digit",
@@ -1180,7 +1180,7 @@ export default function ThreatIntelPage() {
               </span>
             </span>
           </div>
-          <div className="flex items-center gap-3 text-xs text-gray-600">
+          <div className="flex items-center gap-3 text-xs text-muted-foreground">
             {criticalCount > 0 && (
               <span className="flex items-center gap-1 text-red-400">
                 <AlertTriangle className="h-3 w-3" />

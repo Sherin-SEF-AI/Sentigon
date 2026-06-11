@@ -163,12 +163,12 @@ function FloorPlanCanvas({
     <div
       ref={containerRef}
       className={cn(
-        "relative w-full overflow-hidden rounded-lg border-2 border-dashed bg-gray-900/80",
+        "relative w-full overflow-hidden rounded-lg border-2 border-dashed bg-surface-2/80",
         toolMode === "place"
           ? "border-cyan-600 cursor-crosshair"
           : toolMode === "move"
           ? "border-amber-600 cursor-move"
-          : "border-gray-700 cursor-default",
+          : "border-border-strong cursor-default",
         !imageUrl && "flex items-center justify-center"
       )}
       style={{ minHeight: 500, aspectRatio: "16/10" }}
@@ -188,16 +188,16 @@ function FloorPlanCanvas({
             onLoad={() => setImgLoaded(true)}
           />
           {!imgLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
+            <div className="absolute inset-0 flex items-center justify-center bg-surface-2">
               <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
             </div>
           )}
         </>
       ) : (
-        <div className="flex flex-col items-center gap-3 py-20 text-gray-600">
+        <div className="flex flex-col items-center gap-3 py-20 text-muted-foreground">
           <MapIcon className="h-16 w-16" />
           <p className="text-sm">No floor plan image uploaded</p>
-          <p className="text-xs text-gray-700">
+          <p className="text-xs text-muted-foreground">
             Upload an image to start placing devices
           </p>
         </div>
@@ -252,7 +252,7 @@ function FloorPlanCanvas({
 
             {/* Label */}
             {dev.label && (
-              <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-black/80 px-1.5 py-0.5 text-[9px] font-mono text-gray-300 border border-gray-700">
+              <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-black/80 px-1.5 py-0.5 text-[9px] font-mono text-foreground border border-border-strong">
                 {dev.label}
               </span>
             )}
@@ -261,7 +261,7 @@ function FloorPlanCanvas({
       })}
 
       {/* Tool mode indicator */}
-      <div className="absolute top-3 left-3 rounded-lg bg-black/70 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-300 border border-gray-700">
+      <div className="absolute top-3 left-3 rounded-lg bg-black/70 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground border border-border-strong">
         {toolMode === "place"
           ? `Click to place ${placeDeviceType}`
           : toolMode === "move"
@@ -288,9 +288,9 @@ function DevicePropertiesPanel({
   cameras: CameraOption[];
 }) {
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 space-y-4">
+    <div className="rounded-lg border border-border bg-surface-2/60 p-4 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-200">Device Properties</h3>
+        <h3 className="text-sm font-semibold text-foreground">Device Properties</h3>
         <button
           onClick={onDelete}
           className="flex items-center gap-1 rounded px-2 py-1 text-xs text-red-400 hover:bg-red-900/30 transition-colors"
@@ -303,14 +303,14 @@ function DevicePropertiesPanel({
       <div className="space-y-3">
         {/* Label */}
         <div>
-          <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-gray-500">
+          <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
             Label
           </label>
           <input
             type="text"
             value={device.label}
             onChange={(e) => onUpdate({ label: e.target.value })}
-            className="w-full rounded border border-gray-700 bg-gray-900 px-3 py-1.5 text-sm text-gray-100 focus:border-cyan-700 focus:outline-none"
+            className="w-full rounded border border-border-strong bg-surface-2 px-3 py-1.5 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
             placeholder="Camera name..."
           />
         </div>
@@ -318,13 +318,13 @@ function DevicePropertiesPanel({
         {/* Link to camera */}
         {device.device_type === "camera" && (
           <div>
-            <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-gray-500">
+            <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
               Linked Camera
             </label>
             <select
               value={device.device_id}
               onChange={(e) => onUpdate({ device_id: e.target.value })}
-              className="w-full rounded border border-gray-700 bg-gray-900 px-3 py-1.5 text-sm text-gray-100 focus:border-cyan-700 focus:outline-none"
+              className="w-full rounded border border-border-strong bg-surface-2 px-3 py-1.5 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
             >
               <option value="">Unlinked</option>
               {cameras.map((cam) => (
@@ -338,7 +338,7 @@ function DevicePropertiesPanel({
 
         {/* Rotation */}
         <div>
-          <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-gray-500">
+          <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
             Rotation: {device.rotation}°
           </label>
           <input
@@ -356,7 +356,7 @@ function DevicePropertiesPanel({
         {device.device_type === "camera" && (
           <>
             <div>
-              <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-gray-500">
+              <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                 Field of View: {device.fov_angle}°
               </label>
               <input
@@ -372,7 +372,7 @@ function DevicePropertiesPanel({
               />
             </div>
             <div>
-              <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-gray-500">
+              <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                 FOV Range: {device.fov_range}px
               </label>
               <input
@@ -392,7 +392,7 @@ function DevicePropertiesPanel({
 
         {/* Icon Size */}
         <div>
-          <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-gray-500">
+          <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
             Icon Size: {device.icon_size}px
           </label>
           <input
@@ -411,18 +411,18 @@ function DevicePropertiesPanel({
         {/* Position (read-only) */}
         <div className="flex gap-3">
           <div className="flex-1">
-            <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-gray-500">
+            <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
               X %
             </label>
-            <span className="font-mono text-xs text-gray-300">
+            <span className="font-mono text-xs text-foreground">
               {device.x_percent.toFixed(1)}
             </span>
           </div>
           <div className="flex-1">
-            <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-gray-500">
+            <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
               Y %
             </label>
-            <span className="font-mono text-xs text-gray-300">
+            <span className="font-mono text-xs text-foreground">
               {device.y_percent.toFixed(1)}
             </span>
           </div>
@@ -488,24 +488,24 @@ function CreateFloorPlanModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
       <form
         onSubmit={handleCreate}
-        className="w-full max-w-md rounded-xl border border-gray-800 bg-gray-900 p-6 shadow-2xl space-y-4"
+        className="w-full max-w-md rounded-xl border border-border bg-surface-2 p-6 shadow-2xl space-y-4"
       >
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-gray-100">New Floor Plan</h2>
+          <h2 className="text-lg font-bold text-foreground">New Floor Plan</h2>
           <button type="button" onClick={onClose}>
-            <X className="h-5 w-5 text-gray-500 hover:text-gray-300" />
+            <X className="h-5 w-5 text-muted-foreground hover:text-foreground" />
           </button>
         </div>
 
         <div>
-          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400">
+          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Name
           </label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2 text-sm text-gray-100 focus:border-cyan-700 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-0 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
             placeholder="Ground Floor — Building A"
             required
           />
@@ -513,26 +513,26 @@ function CreateFloorPlanModal({
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400">
+            <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Building
             </label>
             <input
               type="text"
               value={building}
               onChange={(e) => setBuilding(e.target.value)}
-              className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2 text-sm text-gray-100 focus:border-cyan-700 focus:outline-none"
+              className="w-full rounded-lg border border-border-strong bg-surface-0 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
               placeholder="Building A"
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400">
+            <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Floor Number
             </label>
             <input
               type="number"
               value={floor}
               onChange={(e) => setFloor(e.target.value)}
-              className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2 text-sm text-gray-100 focus:border-cyan-700 focus:outline-none"
+              className="w-full rounded-lg border border-border-strong bg-surface-0 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
             />
           </div>
         </div>
@@ -748,14 +748,14 @@ export default function FloorPlanEditorPage() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-gray-950">
+      <div className="flex h-screen items-center justify-center bg-surface-0">
         <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen bg-surface-0 text-foreground">
       <div className="mx-auto max-w-[1600px] space-y-5 px-6 py-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -764,10 +764,10 @@ export default function FloorPlanEditorPage() {
               <MapIcon className="h-5 w-5 text-cyan-400" />
             </div>
             <div>
-              <h1 className="text-lg font-bold tracking-wider text-gray-100 uppercase">
+              <h1 className="text-lg font-bold tracking-wider text-foreground uppercase">
                 Floor Plan Editor
               </h1>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 Upload plans, drag-drop cameras, sensors, and doors
               </p>
             </div>
@@ -805,13 +805,13 @@ export default function FloorPlanEditorPage() {
                   "flex items-center gap-2 whitespace-nowrap rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors",
                   activePlanId === plan.id
                     ? "border-cyan-700/60 bg-cyan-950/30 text-cyan-300"
-                    : "border-gray-800 bg-gray-900/60 text-gray-400 hover:border-gray-700 hover:text-gray-200"
+                    : "border-border bg-surface-2/60 text-muted-foreground hover:border-border-strong hover:text-foreground"
                 )}
               >
                 <MapIcon className="h-4 w-4" />
                 <span>{plan.name}</span>
                 {plan.building && (
-                  <span className="text-[10px] text-gray-600">
+                  <span className="text-[10px] text-muted-foreground">
                     {plan.building} F{plan.floor}
                   </span>
                 )}
@@ -821,10 +821,10 @@ export default function FloorPlanEditorPage() {
         )}
 
         {plans.length === 0 && (
-          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-800 py-24">
-            <MapIcon className="mb-3 h-14 w-14 text-gray-700" />
-            <p className="text-sm text-gray-500">No floor plans yet</p>
-            <p className="mt-1 text-xs text-gray-600">
+          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-24">
+            <MapIcon className="mb-3 h-14 w-14 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">No floor plans yet</p>
+            <p className="mt-1 text-xs text-muted-foreground">
               Create a floor plan to start placing cameras
             </p>
             <button
@@ -843,16 +843,16 @@ export default function FloorPlanEditorPage() {
             {/* Left: Canvas + Toolbar */}
             <div className="space-y-3">
               {/* Toolbar */}
-              <div className="flex items-center gap-2 rounded-lg border border-gray-800 bg-gray-900/60 px-4 py-2.5">
+              <div className="flex items-center gap-2 rounded-lg border border-border bg-surface-2/60 px-4 py-2.5">
                 {/* Tool Modes */}
-                <div className="flex items-center gap-1 border-r border-gray-700 pr-3 mr-1">
+                <div className="flex items-center gap-1 border-r border-border-strong pr-3 mr-1">
                   <button
                     onClick={() => setToolMode("select")}
                     className={cn(
                       "flex items-center gap-1.5 rounded px-3 py-1.5 text-xs font-medium transition-colors",
                       toolMode === "select"
                         ? "bg-cyan-900/40 text-cyan-400 border border-cyan-800/50"
-                        : "text-gray-400 hover:text-gray-200 hover:bg-gray-800"
+                        : "text-muted-foreground hover:text-foreground hover:bg-surface-3"
                     )}
                   >
                     <Eye className="h-3.5 w-3.5" />
@@ -864,7 +864,7 @@ export default function FloorPlanEditorPage() {
                       "flex items-center gap-1.5 rounded px-3 py-1.5 text-xs font-medium transition-colors",
                       toolMode === "move"
                         ? "bg-amber-900/40 text-amber-400 border border-amber-800/50"
-                        : "text-gray-400 hover:text-gray-200 hover:bg-gray-800"
+                        : "text-muted-foreground hover:text-foreground hover:bg-surface-3"
                     )}
                   >
                     <Move className="h-3.5 w-3.5" />
@@ -891,7 +891,7 @@ export default function FloorPlanEditorPage() {
                         "flex items-center gap-1.5 rounded px-3 py-1.5 text-xs font-medium transition-colors",
                         toolMode === "place" && placeDeviceType === type
                           ? "bg-emerald-900/40 text-emerald-400 border border-emerald-800/50"
-                          : "text-gray-400 hover:text-gray-200 hover:bg-gray-800"
+                          : "text-muted-foreground hover:text-foreground hover:bg-surface-3"
                       )}
                     >
                       <Plus className="h-3 w-3" />
@@ -915,7 +915,7 @@ export default function FloorPlanEditorPage() {
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploading}
-                  className="flex items-center gap-1.5 rounded px-3 py-1.5 text-xs font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-colors disabled:opacity-50"
+                  className="flex items-center gap-1.5 rounded px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-surface-3 transition-colors disabled:opacity-50"
                 >
                   {uploading ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -948,7 +948,7 @@ export default function FloorPlanEditorPage() {
               />
 
               {/* Stats Bar */}
-              <div className="flex items-center gap-6 rounded-lg border border-gray-800 bg-gray-900/60 px-4 py-2.5 text-xs text-gray-500">
+              <div className="flex items-center gap-6 rounded-lg border border-border bg-surface-2/60 px-4 py-2.5 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   <Camera className="h-3.5 w-3.5 text-cyan-400" />
                   {devices.filter((d) => d.device_type === "camera").length}{" "}
@@ -963,7 +963,7 @@ export default function FloorPlanEditorPage() {
                   <DoorOpen className="h-3.5 w-3.5 text-emerald-400" />
                   {devices.filter((d) => d.device_type === "door").length} Doors
                 </span>
-                <span className="ml-auto text-gray-600">
+                <span className="ml-auto text-muted-foreground">
                   {activePlan.name}
                   {activePlan.building && ` — ${activePlan.building}`}
                   {` — Floor ${activePlan.floor}`}
@@ -981,10 +981,10 @@ export default function FloorPlanEditorPage() {
                   cameras={cameras}
                 />
               ) : (
-                <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-6 flex flex-col items-center justify-center text-center">
-                  <Eye className="mb-3 h-8 w-8 text-gray-700" />
-                  <p className="text-sm text-gray-500">No device selected</p>
-                  <p className="mt-1 text-xs text-gray-600">
+                <div className="rounded-lg border border-border bg-surface-2/60 p-6 flex flex-col items-center justify-center text-center">
+                  <Eye className="mb-3 h-8 w-8 text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">No device selected</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
                     Click a device on the floor plan to edit its properties, or
                     use the toolbar to place new devices
                   </p>
@@ -992,13 +992,13 @@ export default function FloorPlanEditorPage() {
               )}
 
               {/* Device List */}
-              <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 space-y-3">
-                <h3 className="text-sm font-semibold text-gray-200">
+              <div className="rounded-lg border border-border bg-surface-2/60 p-4 space-y-3">
+                <h3 className="text-sm font-semibold text-foreground">
                   Devices on Plan ({devices.length})
                 </h3>
                 <div className="max-h-64 overflow-y-auto space-y-1">
                   {devices.length === 0 && (
-                    <p className="text-xs text-gray-600 py-4 text-center">
+                    <p className="text-xs text-muted-foreground py-4 text-center">
                       No devices placed yet
                     </p>
                   )}
@@ -1010,7 +1010,7 @@ export default function FloorPlanEditorPage() {
                         "w-full flex items-center gap-2 rounded px-3 py-2 text-left text-xs transition-colors",
                         selectedDeviceId === dev.id
                           ? "bg-cyan-950/30 border border-cyan-800/50 text-cyan-300"
-                          : "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
+                          : "text-muted-foreground hover:bg-surface-3 hover:text-foreground"
                       )}
                     >
                       {dev.device_type === "camera" ? (
@@ -1021,7 +1021,7 @@ export default function FloorPlanEditorPage() {
                         <DoorOpen className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
                       )}
                       <span className="truncate">{dev.label || dev.device_id || "Unnamed"}</span>
-                      <span className="ml-auto font-mono text-[9px] text-gray-600">
+                      <span className="ml-auto font-mono text-[9px] text-muted-foreground">
                         ({dev.x_percent.toFixed(0)}, {dev.y_percent.toFixed(0)})
                       </span>
                     </button>

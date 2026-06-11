@@ -86,12 +86,12 @@ export function SOCMetricsBar({ className, initialMetrics }: SOCMetricsBarProps)
     return (
       <div
         className={cn(
-          "flex items-center justify-center rounded-md border border-gray-800/50 bg-gray-950 px-3 py-2",
+          "flex items-center justify-center rounded-md border border-border/50 bg-surface-0 px-3 py-2",
           className
         )}
       >
         <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-cyan-400 border-t-transparent" />
-        <span className="ml-2 text-[10px] text-gray-500">Loading metrics...</span>
+        <span className="ml-2 text-[10px] text-muted-foreground">Loading metrics...</span>
       </div>
     );
   }
@@ -157,7 +157,7 @@ export function SOCMetricsBar({ className, initialMetrics }: SOCMetricsBarProps)
           "flex items-center gap-2 rounded-md border px-2.5 py-1.5 transition-colors ml-auto",
           isCriticalThreat
             ? "animate-pulse border-red-800/60 bg-red-950/30"
-            : "border-gray-800/50 bg-gray-900/40"
+            : "border-border/50 bg-surface-2/40"
         )}
       >
         <div
@@ -170,7 +170,7 @@ export function SOCMetricsBar({ className, initialMetrics }: SOCMetricsBarProps)
           <Radio className="h-3 w-3" />
         </div>
         <div className="min-w-0">
-          <p className="text-[8px] font-medium uppercase tracking-wider text-gray-500 leading-none">
+          <p className="text-[8px] font-medium uppercase tracking-wider text-muted-foreground leading-none">
             Threat
           </p>
           <p

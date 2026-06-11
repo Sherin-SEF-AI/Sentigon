@@ -66,14 +66,14 @@ interface ReconstructionPanelProps {
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
 
-const CARD = "rounded-lg border border-gray-800 bg-gray-900/50";
+const CARD = "rounded-lg border border-border bg-surface-2/50";
 
 const SEVERITY_COLORS: Record<string, string> = {
   critical: "bg-red-900/30 border-red-800/50 text-red-400",
   high: "bg-orange-900/30 border-orange-800/50 text-orange-400",
   medium: "bg-yellow-900/30 border-yellow-800/50 text-yellow-400",
   low: "bg-blue-900/30 border-blue-800/50 text-blue-400",
-  info: "bg-gray-800/30 border-gray-700/50 text-gray-400",
+  info: "bg-surface-3/30 border-border-strong/50 text-muted-foreground",
 };
 
 const RISK_COLORS: Record<string, string> = {
@@ -81,7 +81,7 @@ const RISK_COLORS: Record<string, string> = {
   high: "text-orange-400",
   medium: "text-yellow-400",
   low: "text-green-400",
-  none: "text-gray-400",
+  none: "text-muted-foreground",
 };
 
 function formatDuration(seconds: number): string {
@@ -154,12 +154,12 @@ export default function ReconstructionPanel({
         <div className="flex items-center gap-2">
           <Brain className="h-4 w-4 text-purple-400" />
           <h3 className="text-sm font-bold text-white">AI Reconstruction</h3>
-          <span className="text-[9px] text-gray-500 bg-gray-800 rounded px-1.5 py-0.5">AI-Powered</span>
+          <span className="text-[9px] text-muted-foreground bg-surface-3 rounded px-1.5 py-0.5">AI-Powered</span>
         </div>
         {result && (
           <button
             onClick={handleExportPdf}
-            className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-800 px-2 py-1 text-[10px] text-gray-300 hover:bg-gray-700 transition-colors"
+            className="flex items-center gap-1 rounded-lg border border-border-strong bg-surface-3 px-2 py-1 text-[10px] text-foreground hover:bg-surface-3 transition-colors"
           >
             <Download className="h-3 w-3" />
             Export PDF
@@ -170,7 +170,7 @@ export default function ReconstructionPanel({
       {/* Reconstruct button */}
       {!result && !loading && (
         <>
-          <p className="text-[10px] text-gray-500">
+          <p className="text-[10px] text-muted-foreground">
             AI analyzes all frames, detections, and agent actions to reconstruct a complete incident narrative with key moments, entity tracking, and risk assessment.
           </p>
           <button
@@ -188,8 +188,8 @@ export default function ReconstructionPanel({
       {loading && (
         <div className="flex flex-col items-center gap-3 py-8">
           <Loader2 className="h-6 w-6 animate-spin text-purple-400" />
-          <p className="text-xs text-gray-500">AI is reconstructing the incident...</p>
-          <p className="text-[10px] text-gray-600">Analyzing frames, detections, and agent actions</p>
+          <p className="text-xs text-muted-foreground">AI is reconstructing the incident...</p>
+          <p className="text-[10px] text-muted-foreground">Analyzing frames, detections, and agent actions</p>
         </div>
       )}
 
@@ -210,7 +210,7 @@ export default function ReconstructionPanel({
                 <FileText className="h-3 w-3 text-purple-400" />
                 <p className="text-[9px] font-bold uppercase tracking-wider text-purple-400">AI Narrative</p>
               </div>
-              <p className="text-xs text-gray-300 leading-relaxed whitespace-pre-wrap">
+              <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">
                 {result.narrative}
               </p>
             </div>
@@ -218,24 +218,24 @@ export default function ReconstructionPanel({
 
           {/* Risk Assessment */}
           {result.risk_assessment && (
-            <div className="flex items-center gap-4 rounded-md border border-gray-800/50 bg-gray-900/60 p-3">
+            <div className="flex items-center gap-4 rounded-md border border-border/50 bg-surface-2/60 p-3">
               <div className="flex items-center gap-1.5">
                 <Shield className="h-3.5 w-3.5 text-cyan-400" />
-                <span className="text-[10px] text-gray-500">Risk:</span>
-                <span className={cn("text-xs font-bold uppercase", RISK_COLORS[result.risk_assessment.overall_risk] || "text-gray-400")}>
+                <span className="text-[10px] text-muted-foreground">Risk:</span>
+                <span className={cn("text-xs font-bold uppercase", RISK_COLORS[result.risk_assessment.overall_risk] || "text-muted-foreground")}>
                   {result.risk_assessment.overall_risk}
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
                 <AlertTriangle className="h-3 w-3 text-amber-400" />
-                <span className="text-[10px] text-gray-500">{result.risk_assessment.threat_count} threats</span>
+                <span className="text-[10px] text-muted-foreground">{result.risk_assessment.threat_count} threats</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <Users className="h-3 w-3 text-cyan-400" />
-                <span className="text-[10px] text-gray-500">{result.risk_assessment.entity_count} entities</span>
+                <span className="text-[10px] text-muted-foreground">{result.risk_assessment.entity_count} entities</span>
               </div>
               {result.ai_provider && (
-                <span className="ml-auto text-[8px] text-gray-600">{result.ai_provider}</span>
+                <span className="ml-auto text-[8px] text-muted-foreground">{result.ai_provider}</span>
               )}
             </div>
           )}
@@ -245,14 +245,14 @@ export default function ReconstructionPanel({
             <div>
               <div className="flex items-center gap-1.5 mb-2">
                 <Zap className="h-3 w-3 text-amber-400" />
-                <p className="text-[9px] font-bold uppercase tracking-wider text-gray-500">Key Moments ({result.key_moments.length})</p>
+                <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Key Moments ({result.key_moments.length})</p>
               </div>
               <div className="space-y-1.5">
                 {result.key_moments.map((moment, i) => (
                   <div
                     key={i}
                     className={cn(
-                      "flex items-start gap-2 rounded-md border px-3 py-2 cursor-pointer hover:bg-gray-800/50 transition-colors",
+                      "flex items-start gap-2 rounded-md border px-3 py-2 cursor-pointer hover:bg-surface-3/50 transition-colors",
                       SEVERITY_COLORS[moment.severity] || SEVERITY_COLORS.info
                     )}
                     onClick={() => onSeekToOffset?.(moment.offset)}
@@ -263,7 +263,7 @@ export default function ReconstructionPanel({
                         <span className="text-[10px] font-mono font-bold">{formatDuration(moment.offset)}</span>
                         <span className="text-[8px] uppercase font-bold">{moment.severity}</span>
                         {moment.camera_id && (
-                          <span className="text-[8px] text-gray-500 flex items-center gap-0.5">
+                          <span className="text-[8px] text-muted-foreground flex items-center gap-0.5">
                             <Camera className="h-2 w-2" />{moment.camera_id.slice(0, 8)}
                           </span>
                         )}
@@ -281,24 +281,24 @@ export default function ReconstructionPanel({
             <div>
               <div className="flex items-center gap-1.5 mb-2">
                 <Users className="h-3 w-3 text-cyan-400" />
-                <p className="text-[9px] font-bold uppercase tracking-wider text-gray-500">Tracked Entities ({result.entity_summary.length})</p>
+                <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Tracked Entities ({result.entity_summary.length})</p>
               </div>
               <div className="space-y-1.5">
                 {result.entity_summary.map((entity, i) => (
-                  <div key={i} className="rounded-md border border-gray-800/50 bg-gray-900/40 px-3 py-2">
+                  <div key={i} className="rounded-md border border-border/50 bg-surface-2/40 px-3 py-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold text-gray-300">
+                      <span className="text-[10px] font-bold text-foreground">
                         {entity.entity_id}
                       </span>
                       <span className={cn(
                         "text-[8px] font-bold uppercase rounded px-1.5 py-0.5",
-                        RISK_COLORS[entity.risk_level] || "text-gray-500"
+                        RISK_COLORS[entity.risk_level] || "text-muted-foreground"
                       )}>
                         {entity.risk_level}
                       </span>
                     </div>
-                    <p className="text-[10px] text-gray-500 mt-0.5">{entity.description}</p>
-                    <div className="flex items-center gap-3 mt-1 text-[9px] text-gray-600">
+                    <p className="text-[10px] text-muted-foreground mt-0.5">{entity.description}</p>
+                    <div className="flex items-center gap-3 mt-1 text-[9px] text-muted-foreground">
                       <span>First: {entity.first_seen ? formatTimestamp(entity.first_seen) : "--"}</span>
                       <span>Last: {entity.last_seen ? formatTimestamp(entity.last_seen) : "--"}</span>
                     </div>
@@ -306,8 +306,8 @@ export default function ReconstructionPanel({
                       <div className="flex items-center gap-1 mt-1 flex-wrap">
                         {entity.cameras.map((cam, ci) => (
                           <span key={ci} className="flex items-center gap-0.5">
-                            {ci > 0 && <span className="text-gray-700 text-[8px]">&rarr;</span>}
-                            <span className="rounded bg-gray-800 px-1 py-0.5 text-[8px] font-mono text-gray-400">
+                            {ci > 0 && <span className="text-muted-foreground text-[8px]">&rarr;</span>}
+                            <span className="rounded bg-surface-3 px-1 py-0.5 text-[8px] font-mono text-muted-foreground">
                               {cam.slice(0, 8)}
                             </span>
                           </span>
@@ -325,7 +325,7 @@ export default function ReconstructionPanel({
             <div>
               <div className="flex items-center gap-1.5 mb-2">
                 <GitBranch className="h-3 w-3 text-green-400" />
-                <p className="text-[9px] font-bold uppercase tracking-wider text-gray-500">Causal Chain</p>
+                <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Causal Chain</p>
               </div>
               <div className="space-y-1">
                 {result.causal_chain.map((step, i) => (
@@ -334,7 +334,7 @@ export default function ReconstructionPanel({
                       <div className="h-2 w-2 rounded-full bg-green-500" />
                       {i < result.causal_chain.length - 1 && <div className="w-px h-5 bg-green-800/40 mt-0.5" />}
                     </div>
-                    <p className="text-[10px] text-gray-400">{step.description}</p>
+                    <p className="text-[10px] text-muted-foreground">{step.description}</p>
                   </div>
                 ))}
               </div>
@@ -346,11 +346,11 @@ export default function ReconstructionPanel({
             <div>
               <div className="flex items-center gap-1.5 mb-2">
                 <CheckCircle2 className="h-3 w-3 text-emerald-400" />
-                <p className="text-[9px] font-bold uppercase tracking-wider text-gray-500">Recommendations</p>
+                <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground">Recommendations</p>
               </div>
               <ul className="space-y-1">
                 {result.recommendations.map((rec, i) => (
-                  <li key={i} className="flex items-start gap-2 text-[10px] text-gray-400">
+                  <li key={i} className="flex items-start gap-2 text-[10px] text-muted-foreground">
                     <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-emerald-500" />
                     {rec}
                   </li>

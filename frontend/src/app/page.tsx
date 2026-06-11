@@ -378,7 +378,7 @@ export default function SOCDashboard() {
   return (
     <div className="flex h-full flex-col">
       {/* Top metrics bar - compact */}
-      <div className="border-b border-gray-800/40 px-3 py-1.5 flex items-center gap-2">
+      <div className="border-b border-border/40 px-3 py-1.5 flex items-center gap-2">
         {/* Power toggle */}
         <button
           onClick={handleToggle}
@@ -460,9 +460,9 @@ export default function SOCDashboard() {
 
           {/* Dropdown */}
           {perfDropdownOpen && (
-            <div className="absolute left-0 top-full mt-1 z-50 w-52 rounded-lg border border-gray-700/60 bg-gray-900/95 backdrop-blur-lg shadow-xl overflow-hidden">
-              <div className="px-3 py-1.5 border-b border-gray-800/50">
-                <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500">
+            <div className="absolute left-0 top-full mt-1 z-50 w-52 rounded-lg border border-border-strong/60 bg-surface-2/95 backdrop-blur-lg shadow-xl overflow-hidden">
+              <div className="px-3 py-1.5 border-b border-border/50">
+                <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
                   Performance Mode
                 </span>
               </div>
@@ -477,13 +477,13 @@ export default function SOCDashboard() {
                       "flex items-center gap-2.5 w-full px-3 py-2 text-left transition-colors",
                       isActive
                         ? `${mode.bg} ${mode.color}`
-                        : "text-gray-400 hover:bg-gray-800/60 hover:text-gray-200"
+                        : "text-muted-foreground hover:bg-surface-3/60 hover:text-foreground"
                     )}
                   >
-                    <ModeIcon className={cn("h-3.5 w-3.5 shrink-0", isActive ? mode.color : "text-gray-500")} />
+                    <ModeIcon className={cn("h-3.5 w-3.5 shrink-0", isActive ? mode.color : "text-muted-foreground")} />
                     <div className="min-w-0 flex-1">
                       <div className="text-xs font-semibold">{mode.label}</div>
-                      <div className="text-[9px] text-gray-500 truncate">{mode.desc}</div>
+                      <div className="text-[9px] text-muted-foreground truncate">{mode.desc}</div>
                     </div>
                     {isActive && (
                       <span className={cn("h-1.5 w-1.5 rounded-full shrink-0", mode.color.replace("text-", "bg-"))} />
@@ -508,7 +508,7 @@ export default function SOCDashboard() {
           {aiProvider === "gemini" ? "GEMINI" : "OLLAMA"}
         </span>
 
-        <div className="w-px h-4 bg-gray-800/60 shrink-0" />
+        <div className="w-px h-4 bg-surface-3/60 shrink-0" />
 
         <SOCMetricsBar
           initialMetrics={metrics ?? undefined}
@@ -520,7 +520,7 @@ export default function SOCDashboard() {
         />
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="rounded p-1 text-gray-500 hover:bg-gray-800/60 hover:text-gray-300 transition-colors shrink-0"
+          className="rounded p-1 text-muted-foreground hover:bg-surface-3/60 hover:text-foreground transition-colors shrink-0"
           title={sidebarOpen ? "Hide alerts (Ctrl+B)" : "Show alerts (Ctrl+B)"}
         >
           {sidebarOpen ? (
@@ -532,10 +532,10 @@ export default function SOCDashboard() {
       </div>
 
       {/* Analytics strip — collapsible */}
-      <div className="shrink-0 border-b border-gray-800/30">
+      <div className="shrink-0 border-b border-border/30">
         <button
           onClick={() => setAnalyticsOpen(!analyticsOpen)}
-          className="flex w-full items-center gap-2 px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-gray-600 hover:text-gray-400 hover:bg-gray-900/40 transition-colors"
+          className="flex w-full items-center gap-2 px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-muted-foreground hover:bg-surface-2/40 transition-colors"
         >
           <BarChart3 className="h-3 w-3" />
           Analytics
@@ -544,8 +544,8 @@ export default function SOCDashboard() {
         {analyticsOpen && (
           <div className="grid grid-cols-5 gap-3 px-3 pb-2">
             {/* Events sparkline */}
-            <div className="rounded-md border border-gray-800/50 bg-gray-900/40 p-2">
-              <p className="text-[8px] font-bold uppercase tracking-wider text-gray-500 mb-1">Events (24h)</p>
+            <div className="rounded-md border border-border/50 bg-surface-2/40 p-2">
+              <p className="text-[8px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Events (24h)</p>
               {eventsOverTime.length > 1 ? (
                 <svg viewBox="0 0 200 40" className="w-full h-8" preserveAspectRatio="none">
                   {(() => {
@@ -568,16 +568,16 @@ export default function SOCDashboard() {
                   })()}
                 </svg>
               ) : (
-                <p className="text-[9px] text-gray-600 h-8 flex items-center">No data</p>
+                <p className="text-[9px] text-muted-foreground h-8 flex items-center">No data</p>
               )}
-              <p className="text-[9px] text-gray-400 mt-0.5 tabular-nums">
+              <p className="text-[9px] text-muted-foreground mt-0.5 tabular-nums">
                 {eventsOverTime.reduce((s, d) => s + d.count, 0).toLocaleString()} total
               </p>
             </div>
 
             {/* Alerts by severity */}
-            <div className="rounded-md border border-gray-800/50 bg-gray-900/40 p-2">
-              <p className="text-[8px] font-bold uppercase tracking-wider text-gray-500 mb-1">Alerts by Severity</p>
+            <div className="rounded-md border border-border/50 bg-surface-2/40 p-2">
+              <p className="text-[8px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Alerts by Severity</p>
               {alertsBySeverity.length > 0 ? (
                 <div className="space-y-1">
                   {alertsBySeverity.map((s) => {
@@ -585,23 +585,23 @@ export default function SOCDashboard() {
                     const color = s.severity === "critical" ? "bg-red-500" : s.severity === "high" ? "bg-orange-500" : s.severity === "medium" ? "bg-yellow-500" : s.severity === "low" ? "bg-blue-400" : "bg-gray-500";
                     return (
                       <div key={s.severity} className="flex items-center gap-1.5">
-                        <span className="text-[8px] text-gray-500 w-12 text-right capitalize truncate">{s.severity}</span>
-                        <div className="flex-1 h-2.5 bg-gray-800/60 rounded-sm overflow-hidden">
+                        <span className="text-[8px] text-muted-foreground w-12 text-right capitalize truncate">{s.severity}</span>
+                        <div className="flex-1 h-2.5 bg-surface-3/60 rounded-sm overflow-hidden">
                           <div className={cn("h-full rounded-sm", color)} style={{ width: `${(s.count / maxC) * 100}%` }} />
                         </div>
-                        <span className="text-[9px] text-gray-400 tabular-nums w-6">{s.count}</span>
+                        <span className="text-[9px] text-muted-foreground tabular-nums w-6">{s.count}</span>
                       </div>
                     );
                   })}
                 </div>
               ) : (
-                <p className="text-[9px] text-gray-600 h-8 flex items-center">No data</p>
+                <p className="text-[9px] text-muted-foreground h-8 flex items-center">No data</p>
               )}
             </div>
 
             {/* Zone occupancy top-5 */}
-            <div className="rounded-md border border-gray-800/50 bg-gray-900/40 p-2">
-              <p className="text-[8px] font-bold uppercase tracking-wider text-gray-500 mb-1">Zone Occupancy (Top 5)</p>
+            <div className="rounded-md border border-border/50 bg-surface-2/40 p-2">
+              <p className="text-[8px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Zone Occupancy (Top 5)</p>
               {zoneOccupancy.length > 0 ? (
                 <div className="space-y-1">
                   {zoneOccupancy.map((z) => {
@@ -609,23 +609,23 @@ export default function SOCDashboard() {
                     const color = pct > 80 ? "bg-red-500" : pct > 50 ? "bg-yellow-500" : "bg-emerald-500";
                     return (
                       <div key={z.zone_name} className="flex items-center gap-1.5">
-                        <span className="text-[8px] text-gray-500 w-16 text-right truncate" title={z.zone_name}>{z.zone_name}</span>
-                        <div className="flex-1 h-2.5 bg-gray-800/60 rounded-sm overflow-hidden">
+                        <span className="text-[8px] text-muted-foreground w-16 text-right truncate" title={z.zone_name}>{z.zone_name}</span>
+                        <div className="flex-1 h-2.5 bg-surface-3/60 rounded-sm overflow-hidden">
                           <div className={cn("h-full rounded-sm", color)} style={{ width: `${Math.min(pct, 100)}%` }} />
                         </div>
-                        <span className="text-[9px] text-gray-400 tabular-nums w-8">{Math.round(pct)}%</span>
+                        <span className="text-[9px] text-muted-foreground tabular-nums w-8">{Math.round(pct)}%</span>
                       </div>
                     );
                   })}
                 </div>
               ) : (
-                <p className="text-[9px] text-gray-600 h-8 flex items-center">No data</p>
+                <p className="text-[9px] text-muted-foreground h-8 flex items-center">No data</p>
               )}
             </div>
 
             {/* Security Posture Score */}
-            <div className="rounded-md border border-gray-800/50 bg-gray-900/40 p-2">
-              <p className="text-[8px] font-bold uppercase tracking-wider text-gray-500 mb-1">Security Posture</p>
+            <div className="rounded-md border border-border/50 bg-surface-2/40 p-2">
+              <p className="text-[8px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Security Posture</p>
               {postureScore ? (
                 <div className="flex items-center gap-2">
                   <div className="relative h-10 w-10 shrink-0">
@@ -644,8 +644,8 @@ export default function SOCDashboard() {
                     <div className="space-y-0.5 mt-0.5">
                       {Object.entries(postureScore.components || {}).slice(0, 3).map(([key, val]: [string, any]) => (
                         <div key={key} className="flex items-center gap-1">
-                          <span className="text-[7px] text-gray-600 w-12 truncate">{key.replace(/_/g, " ")}</span>
-                          <div className="flex-1 h-1 bg-gray-800 rounded-full overflow-hidden">
+                          <span className="text-[7px] text-muted-foreground w-12 truncate">{key.replace(/_/g, " ")}</span>
+                          <div className="flex-1 h-1 bg-surface-3 rounded-full overflow-hidden">
                             <div className="h-full rounded-full" style={{ width: `${val.score}%`, backgroundColor: val.score >= 80 ? "#10b981" : val.score >= 50 ? "#eab308" : "#ef4444" }} />
                           </div>
                         </div>
@@ -654,13 +654,13 @@ export default function SOCDashboard() {
                   </div>
                 </div>
               ) : (
-                <p className="text-[9px] text-gray-600 h-8 flex items-center">Loading...</p>
+                <p className="text-[9px] text-muted-foreground h-8 flex items-center">Loading...</p>
               )}
             </div>
 
             {/* Predictive Threats */}
-            <div className="rounded-md border border-gray-800/50 bg-gray-900/40 p-2">
-              <p className="text-[8px] font-bold uppercase tracking-wider text-gray-500 mb-1">Threat Forecast</p>
+            <div className="rounded-md border border-border/50 bg-surface-2/40 p-2">
+              <p className="text-[8px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Threat Forecast</p>
               {predictions ? (
                 <div>
                   <div className="flex items-center gap-1 mb-1.5">
@@ -673,20 +673,20 @@ export default function SOCDashboard() {
                     <div className="space-y-1">
                       {predictions.temporal_predictions.slice(0, 3).map((p, i) => (
                         <div key={i} className="flex items-center gap-1 text-[8px]">
-                          <span className="text-gray-500 w-8 truncate">{p.hour}</span>
-                          <span className="text-gray-400 flex-1 truncate">{p.threat_type}</span>
-                          <span className={cn("font-bold tabular-nums", p.probability > 0.7 ? "text-red-400" : p.probability > 0.3 ? "text-yellow-400" : "text-gray-500")}>
+                          <span className="text-muted-foreground w-8 truncate">{p.hour}</span>
+                          <span className="text-muted-foreground flex-1 truncate">{p.threat_type}</span>
+                          <span className={cn("font-bold tabular-nums", p.probability > 0.7 ? "text-red-400" : p.probability > 0.3 ? "text-yellow-400" : "text-muted-foreground")}>
                             {Math.round(p.probability * 100)}%
                           </span>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-[8px] text-gray-600">No patterns detected</p>
+                    <p className="text-[8px] text-muted-foreground">No patterns detected</p>
                   )}
                 </div>
               ) : (
-                <p className="text-[9px] text-gray-600 h-8 flex items-center">Loading...</p>
+                <p className="text-[9px] text-muted-foreground h-8 flex items-center">Loading...</p>
               )}
             </div>
           </div>
@@ -695,12 +695,12 @@ export default function SOCDashboard() {
 
       {/* ── SLA Countdown row — top 3 urgent unresolved alerts ─── */}
       {urgentAlerts.length > 0 && (
-        <div className="shrink-0 border-b border-gray-800/30 px-3 py-1 flex items-center gap-2 overflow-x-auto">
+        <div className="shrink-0 border-b border-border/30 px-3 py-1 flex items-center gap-2 overflow-x-auto">
           <Activity className="h-3 w-3 text-amber-400 shrink-0" />
-          <span className="text-[8px] font-bold uppercase tracking-widest text-gray-600 shrink-0">SLA</span>
+          <span className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground shrink-0">SLA</span>
           {urgentAlerts.map((alert) => (
             <div key={alert.id} className="flex items-center gap-1.5 shrink-0">
-              <span className="text-[9px] text-gray-400 max-w-[120px] truncate" title={alert.title}>{alert.title}</span>
+              <span className="text-[9px] text-muted-foreground max-w-[120px] truncate" title={alert.title}>{alert.title}</span>
               <SLACountdown
                 deadline={slaDeadline(alert)}
                 severity={alert.severity as "critical" | "high" | "medium" | "low"}
@@ -713,7 +713,7 @@ export default function SOCDashboard() {
 
       {/* ── System Health Gauges row ───────────────────────────── */}
       {systemHealth && (
-        <div className="shrink-0 border-b border-gray-800/30 px-3 py-1 flex items-center gap-4">
+        <div className="shrink-0 border-b border-border/30 px-3 py-1 flex items-center gap-4">
           <SystemHealthGauge
             label="Backend"
             value={systemHealth.backend?.cpu_pct ?? 0}
@@ -764,8 +764,8 @@ export default function SOCDashboard() {
           />
           {/* Incident groups summary — minimal, beside gauges */}
           {incidentGroups.length > 0 && (
-            <div className="flex-1 min-w-0 ml-2 border-l border-gray-800/40 pl-3">
-              <p className="text-[8px] font-bold uppercase tracking-widest text-gray-600 mb-1">
+            <div className="flex-1 min-w-0 ml-2 border-l border-border/40 pl-3">
+              <p className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
                 Active Incidents ({incidentGroups.length})
               </p>
               <div className="flex flex-col gap-0.5 max-h-14 overflow-y-auto">
@@ -802,7 +802,7 @@ export default function SOCDashboard() {
                       {isOpen && (
                         <div className="ml-4 mt-0.5 space-y-px">
                           {grp.alerts.map((a) => (
-                            <div key={a.id} className="flex items-center gap-1 text-[8px] text-gray-500 px-1">
+                            <div key={a.id} className="flex items-center gap-1 text-[8px] text-muted-foreground px-1">
                               <span className={cn(
                                 "h-1 w-1 rounded-full shrink-0",
                                 a.severity === "critical" ? "bg-red-500"
@@ -811,7 +811,7 @@ export default function SOCDashboard() {
                                 : "bg-blue-400"
                               )} />
                               <span className="truncate flex-1">{a.title}</span>
-                              <span className="text-gray-700 tabular-nums shrink-0">
+                              <span className="text-muted-foreground tabular-nums shrink-0">
                                 {new Date(a.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                               </span>
                             </div>
@@ -836,14 +836,14 @@ export default function SOCDashboard() {
 
         {/* Right sidebar: Alerts — fixed position with internal scroll */}
         {sidebarOpen && (
-          <div className="flex w-72 flex-col border-l border-gray-800/40 xl:w-80 min-h-0 overflow-hidden">
+          <div className="flex w-72 flex-col border-l border-border/40 xl:w-80 min-h-0 overflow-hidden">
             <AlertFeed className="h-full border-l-0" />
           </div>
         )}
       </div>
 
       {/* System status footer */}
-      <div className="flex items-center gap-4 border-t border-gray-800/30 px-3 py-1 text-[9px] text-gray-600 shrink-0">
+      <div className="flex items-center gap-4 border-t border-border/30 px-3 py-1 text-[9px] text-muted-foreground shrink-0">
         <span>
           Mode:{" "}
           <span className={cn("font-bold uppercase", opMode === "autonomous" ? "text-emerald-500" : "text-amber-500")}>
@@ -852,7 +852,7 @@ export default function SOCDashboard() {
         </span>
         <span className="text-gray-800">|</span>
         <span>
-          Fleet: <span className="text-gray-400 font-mono">{fleet?.running ?? 0}/{fleet?.total_agents ?? 0}</span> agents
+          Fleet: <span className="text-muted-foreground font-mono">{fleet?.running ?? 0}/{fleet?.total_agents ?? 0}</span> agents
         </span>
         {degradedCount > 0 && (
           <>

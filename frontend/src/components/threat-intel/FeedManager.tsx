@@ -52,7 +52,7 @@ interface NewFeedForm {
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
 
-const CARD = "rounded-lg border border-gray-800 bg-gray-900/60 backdrop-blur p-4";
+const CARD = "rounded-lg border border-border bg-surface-2/60 backdrop-blur p-4";
 
 const FEED_TYPE_OPTIONS: { value: NewFeedForm["feed_type"]; label: string }[] = [
   { value: "webhook_incoming", label: "Webhook (Incoming)" },
@@ -84,7 +84,7 @@ const FEED_TYPE_COLOR: Record<string, string> = {
   webhook_incoming: "text-purple-400 bg-purple-900/30 border-purple-800/50",
   api_poll: "text-cyan-400 bg-cyan-900/30 border-cyan-800/50",
   rss: "text-orange-400 bg-orange-900/30 border-orange-800/50",
-  manual: "text-gray-400 bg-gray-800 border-gray-700",
+  manual: "text-muted-foreground bg-surface-3 border-border-strong",
 };
 
 const POLL_STATUS_STYLE: Record<string, string> = {
@@ -186,13 +186,13 @@ function AddFeedForm({
   return (
     <div className={cn(CARD, "border-cyan-800/50 bg-cyan-950/10")}>
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-200">
+        <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
           <Plus className="h-4 w-4 text-cyan-400" />
           Add New Feed
         </h3>
         <button
           onClick={onCancel}
-          className="rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-800 hover:text-gray-300"
+          className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
         >
           <X className="h-4 w-4" />
         </button>
@@ -202,7 +202,7 @@ function AddFeedForm({
         {/* Row 1: Name + Feed Type */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Feed Name *
             </label>
             <input
@@ -210,11 +210,11 @@ function AddFeedForm({
               value={form.name}
               onChange={(e) => updateField("name", e.target.value)}
               placeholder="e.g., AlienVault OTX"
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm text-gray-100 placeholder-gray-600 outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Feed Type
             </label>
             <div className="relative">
@@ -223,7 +223,7 @@ function AddFeedForm({
                 onChange={(e) =>
                   updateField("feed_type", e.target.value as NewFeedForm["feed_type"])
                 }
-                className="w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2.5 text-sm text-gray-300 outline-none focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
+                className="w-full appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2.5 text-sm text-foreground outline-none focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
               >
                 {FEED_TYPE_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -231,7 +231,7 @@ function AddFeedForm({
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             </div>
           </div>
         </div>
@@ -239,7 +239,7 @@ function AddFeedForm({
         {/* Row 2: URL + API Key */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               URL
             </label>
             <input
@@ -247,11 +247,11 @@ function AddFeedForm({
               value={form.url}
               onChange={(e) => updateField("url", e.target.value)}
               placeholder="https://feeds.example.com/api/v1"
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm text-gray-100 placeholder-gray-600 outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               API Key
             </label>
             <input
@@ -259,7 +259,7 @@ function AddFeedForm({
               value={form.api_key}
               onChange={(e) => updateField("api_key", e.target.value)}
               placeholder="Optional API key"
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm text-gray-100 placeholder-gray-600 outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
             />
           </div>
         </div>
@@ -267,7 +267,7 @@ function AddFeedForm({
         {/* Row 3: Poll Interval + Default Severity + Active */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Poll Interval (seconds)
             </label>
             <input
@@ -278,18 +278,18 @@ function AddFeedForm({
               onChange={(e) =>
                 updateField("poll_interval_seconds", Number(e.target.value))
               }
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm text-gray-100 outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Default Severity
             </label>
             <div className="relative">
               <select
                 value={form.default_severity}
                 onChange={(e) => updateField("default_severity", e.target.value)}
-                className="w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2.5 text-sm text-gray-300 outline-none focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
+                className="w-full appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2.5 text-sm text-foreground outline-none focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
               >
                 {SEVERITY_OPTIONS.map((s) => (
                   <option key={s} value={s}>
@@ -297,24 +297,24 @@ function AddFeedForm({
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             </div>
           </div>
           <div className="flex items-end">
             <button
               type="button"
               onClick={() => updateField("is_active", !form.is_active)}
-              className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm transition-colors hover:bg-gray-800"
+              className="flex items-center gap-2 rounded-lg border border-border-strong bg-surface-2 px-3 py-2.5 text-sm transition-colors hover:bg-surface-3"
             >
               {form.is_active ? (
                 <ToggleRight className="h-5 w-5 text-green-400" />
               ) : (
-                <ToggleLeft className="h-5 w-5 text-gray-500" />
+                <ToggleLeft className="h-5 w-5 text-muted-foreground" />
               )}
               <span
                 className={cn(
                   "text-xs font-medium",
-                  form.is_active ? "text-green-400" : "text-gray-500"
+                  form.is_active ? "text-green-400" : "text-muted-foreground"
                 )}
               >
                 {form.is_active ? "Active" : "Inactive"}
@@ -324,10 +324,10 @@ function AddFeedForm({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-3 border-t border-gray-800 pt-4">
+        <div className="flex items-center justify-end gap-3 border-t border-border pt-4">
           <button
             onClick={onCancel}
-            className="rounded-lg border border-gray-700 bg-gray-900 px-4 py-2 text-xs font-medium text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
+            className="rounded-lg border border-border-strong bg-surface-2 px-4 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
           >
             Cancel
           </button>
@@ -432,8 +432,8 @@ export default function FeedManager({ className }: { className?: string }) {
             <Rss className="h-5 w-5 text-cyan-400" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-gray-100">Feed Manager</h2>
-            <p className="text-xs text-gray-500">
+            <h2 className="text-sm font-bold text-foreground">Feed Manager</h2>
+            <p className="text-xs text-muted-foreground">
               Configure and monitor threat intelligence feeds
             </p>
           </div>
@@ -444,8 +444,8 @@ export default function FeedManager({ className }: { className?: string }) {
             onClick={fetchFeeds}
             disabled={loading}
             className={cn(
-              "flex items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs font-medium text-gray-400 transition-colors",
-              "hover:bg-gray-800 hover:text-gray-200",
+              "flex items-center gap-1.5 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs font-medium text-muted-foreground transition-colors",
+              "hover:bg-surface-3 hover:text-foreground",
               "disabled:opacity-40 disabled:cursor-not-allowed"
             )}
           >
@@ -495,18 +495,18 @@ export default function FeedManager({ className }: { className?: string }) {
         {loading && (
           <div className="flex flex-col items-center justify-center py-12">
             <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
-            <p className="mt-3 text-xs text-gray-500">Loading feeds...</p>
+            <p className="mt-3 text-xs text-muted-foreground">Loading feeds...</p>
           </div>
         )}
 
         {/* Empty */}
         {!loading && feeds.length === 0 && !error && (
           <div className="flex flex-col items-center justify-center py-12">
-            <Rss className="mb-2 h-8 w-8 text-gray-700" />
-            <p className="text-sm font-medium text-gray-400">
+            <Rss className="mb-2 h-8 w-8 text-muted-foreground" />
+            <p className="text-sm font-medium text-muted-foreground">
               No feeds configured
             </p>
-            <p className="mt-1 text-xs text-gray-600">
+            <p className="mt-1 text-xs text-muted-foreground">
               Add a feed to start ingesting threat intelligence
             </p>
           </div>
@@ -517,42 +517,42 @@ export default function FeedManager({ className }: { className?: string }) {
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-gray-800">
-                  <th className="pb-3 pr-4 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                <tr className="border-b border-border">
+                  <th className="pb-3 pr-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     Name
                   </th>
-                  <th className="pb-3 pr-4 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                  <th className="pb-3 pr-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     Type
                   </th>
-                  <th className="pb-3 pr-4 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                  <th className="pb-3 pr-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     URL
                   </th>
-                  <th className="pb-3 pr-4 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                  <th className="pb-3 pr-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     Severity
                   </th>
-                  <th className="pb-3 pr-4 text-[10px] font-bold uppercase tracking-widest text-gray-500 text-center">
+                  <th className="pb-3 pr-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground text-center">
                     Active
                   </th>
-                  <th className="pb-3 pr-4 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                  <th className="pb-3 pr-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     Last Poll
                   </th>
-                  <th className="pb-3 pr-4 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                  <th className="pb-3 pr-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     Status
                   </th>
-                  <th className="pb-3 text-[10px] font-bold uppercase tracking-widest text-gray-500 text-right">
+                  <th className="pb-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground text-right">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-800/50">
+              <tbody className="divide-y divide-border/50">
                 {feeds.map((feed) => (
                   <tr
                     key={feed.id}
-                    className="group transition-colors hover:bg-gray-800/30"
+                    className="group transition-colors hover:bg-surface-3/30"
                   >
                     {/* Name */}
                     <td className="py-3 pr-4">
-                      <span className="text-sm font-medium text-gray-200">
+                      <span className="text-sm font-medium text-foreground">
                         {feed.name}
                       </span>
                     </td>
@@ -565,10 +565,10 @@ export default function FeedManager({ className }: { className?: string }) {
                     {/* URL */}
                     <td className="py-3 pr-4">
                       <span
-                        className="flex items-center gap-1 text-xs font-mono text-gray-400"
+                        className="flex items-center gap-1 text-xs font-mono text-muted-foreground"
                         title={feed.url}
                       >
-                        <ExternalLink className="h-3 w-3 shrink-0 text-gray-600" />
+                        <ExternalLink className="h-3 w-3 shrink-0 text-muted-foreground" />
                         {truncateUrl(feed.url)}
                       </span>
                     </td>
@@ -588,7 +588,7 @@ export default function FeedManager({ className }: { className?: string }) {
                           </span>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-gray-500">
+                        <span className="inline-flex items-center gap-1 text-muted-foreground">
                           <ToggleLeft className="h-5 w-5" />
                           <span className="text-[10px] font-semibold uppercase">
                             Off
@@ -599,7 +599,7 @@ export default function FeedManager({ className }: { className?: string }) {
 
                     {/* Last poll */}
                     <td className="py-3 pr-4">
-                      <span className="flex items-center gap-1 text-xs text-gray-500">
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
                         <Clock className="h-3 w-3" />
                         {timeAgo(feed.last_poll_at)}
                       </span>
@@ -612,7 +612,7 @@ export default function FeedManager({ className }: { className?: string }) {
                           className={cn(
                             "inline-flex items-center gap-1 text-xs font-medium capitalize",
                             POLL_STATUS_STYLE[feed.last_poll_status] ||
-                              "text-gray-400"
+                              "text-muted-foreground"
                           )}
                         >
                           {feed.last_poll_status === "success" && (
@@ -624,7 +624,7 @@ export default function FeedManager({ className }: { className?: string }) {
                           {feed.last_poll_status}
                         </span>
                       ) : (
-                        <span className="text-xs text-gray-600">--</span>
+                        <span className="text-xs text-muted-foreground">--</span>
                       )}
                     </td>
 
@@ -634,7 +634,7 @@ export default function FeedManager({ className }: { className?: string }) {
                         onClick={() => handleDelete(feed.id)}
                         disabled={deletingId === feed.id}
                         className={cn(
-                          "rounded-lg p-2 text-gray-600 transition-colors",
+                          "rounded-lg p-2 text-muted-foreground transition-colors",
                           "hover:bg-red-900/30 hover:text-red-400",
                           "disabled:opacity-40 disabled:cursor-not-allowed"
                         )}
@@ -656,11 +656,11 @@ export default function FeedManager({ className }: { className?: string }) {
 
         {/* Footer count */}
         {!loading && feeds.length > 0 && (
-          <div className="mt-4 flex items-center justify-between border-t border-gray-800 pt-3">
-            <span className="text-xs text-gray-600">
+          <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
+            <span className="text-xs text-muted-foreground">
               {feeds.length} feed{feeds.length !== 1 ? "s" : ""} configured
             </span>
-            <span className="flex items-center gap-1.5 text-xs text-gray-600">
+            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <span
                 className={cn(
                   "h-2 w-2 rounded-full",

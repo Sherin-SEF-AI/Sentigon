@@ -88,9 +88,9 @@ function ZoneCard({ zone, status, evacuationActive, onMarkCleared }: ZoneCardPro
   const statusConfig = {
     not_started: {
       label: "Not Started",
-      color: "text-gray-400",
-      bg: "bg-gray-800/60",
-      border: "border-gray-700",
+      color: "text-muted-foreground",
+      bg: "bg-surface-3/60",
+      border: "border-border-strong",
       dot: "bg-gray-500",
       pulse: false,
     },
@@ -123,8 +123,8 @@ function ZoneCard({ zone, status, evacuationActive, onMarkCleared }: ZoneCardPro
       {/* Header */}
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <h3 className="font-bold text-gray-100 text-sm truncate">{zone.name}</h3>
-          <span className="text-[10px] uppercase tracking-wider text-gray-500">
+          <h3 className="font-bold text-foreground text-sm truncate">{zone.name}</h3>
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
             {zoneTypeLabel(zone.zone_type)}
           </span>
         </div>
@@ -135,14 +135,14 @@ function ZoneCard({ zone, status, evacuationActive, onMarkCleared }: ZoneCardPro
 
       {/* Occupancy */}
       <div className="flex items-center gap-1.5 text-sm">
-        <Users className="h-4 w-4 text-gray-500" />
-        <span className="text-gray-300 font-mono font-bold">
+        <Users className="h-4 w-4 text-muted-foreground" />
+        <span className="text-foreground font-mono font-bold">
           {zone.current_occupancy ?? "—"}
         </span>
         {zone.max_occupancy && (
-          <span className="text-gray-600 text-xs">/ {zone.max_occupancy}</span>
+          <span className="text-muted-foreground text-xs">/ {zone.max_occupancy}</span>
         )}
-        <span className="text-gray-600 text-xs ml-1">occupants</span>
+        <span className="text-muted-foreground text-xs ml-1">occupants</span>
       </div>
 
       {/* Status indicator */}
@@ -159,7 +159,7 @@ function ZoneCard({ zone, status, evacuationActive, onMarkCleared }: ZoneCardPro
             "w-full rounded-lg py-2 text-xs font-bold uppercase tracking-wider transition-all",
             status === "in_progress"
               ? "bg-emerald-700/40 border border-emerald-600/60 text-emerald-300 hover:bg-emerald-700/60"
-              : "bg-gray-700/40 border border-gray-600/60 text-gray-400 hover:bg-gray-600/40 hover:text-gray-200"
+              : "bg-surface-3/40 border border-border-strong/60 text-muted-foreground hover:bg-gray-600/40 hover:text-foreground"
           )}
         >
           Mark Cleared
@@ -203,7 +203,7 @@ function ConfirmDialog({ zones, onConfirm, onCancel, loading }: ConfirmDialogPro
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl border border-red-800/60 bg-gray-950 shadow-2xl shadow-red-900/20 p-6">
+      <div className="w-full max-w-md rounded-2xl border border-red-800/60 bg-surface-0 shadow-2xl shadow-red-900/20 p-6">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-red-900/40 border border-red-700/60">
@@ -211,16 +211,16 @@ function ConfirmDialog({ zones, onConfirm, onCancel, loading }: ConfirmDialogPro
           </div>
           <div>
             <h2 className="text-lg font-bold text-red-300">Confirm Evacuation</h2>
-            <p className="text-xs text-gray-500">This action will alert all personnel</p>
+            <p className="text-xs text-muted-foreground">This action will alert all personnel</p>
           </div>
-          <button onClick={onCancel} className="ml-auto text-gray-600 hover:text-gray-400">
+          <button onClick={onCancel} className="ml-auto text-muted-foreground hover:text-muted-foreground">
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Zone target */}
         <div className="mb-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Evacuate</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Evacuate</p>
           <div className="flex gap-3">
             <button
               onClick={() => setTarget("all")}
@@ -228,7 +228,7 @@ function ConfirmDialog({ zones, onConfirm, onCancel, loading }: ConfirmDialogPro
                 "flex-1 rounded-lg border py-2.5 text-sm font-bold transition-all",
                 target === "all"
                   ? "border-red-700/80 bg-red-900/30 text-red-300"
-                  : "border-gray-700 bg-gray-900 text-gray-500 hover:border-gray-600 hover:text-gray-300"
+                  : "border-border-strong bg-surface-2 text-muted-foreground hover:border-border-strong hover:text-foreground"
               )}
             >
               All Zones
@@ -239,7 +239,7 @@ function ConfirmDialog({ zones, onConfirm, onCancel, loading }: ConfirmDialogPro
                 "flex-1 rounded-lg border py-2.5 text-sm font-bold transition-all",
                 target === "specific"
                   ? "border-amber-700/80 bg-amber-900/30 text-amber-300"
-                  : "border-gray-700 bg-gray-900 text-gray-500 hover:border-gray-600 hover:text-gray-300"
+                  : "border-border-strong bg-surface-2 text-muted-foreground hover:border-border-strong hover:text-foreground"
               )}
             >
               Specific Zones
@@ -253,7 +253,7 @@ function ConfirmDialog({ zones, onConfirm, onCancel, loading }: ConfirmDialogPro
             {zones.map((zone) => (
               <label
                 key={zone.id}
-                className="flex items-center gap-3 rounded-lg border border-gray-800 bg-gray-900/60 p-3 cursor-pointer hover:border-gray-700 transition-colors"
+                className="flex items-center gap-3 rounded-lg border border-border bg-surface-2/60 p-3 cursor-pointer hover:border-border-strong transition-colors"
               >
                 <input
                   type="checkbox"
@@ -262,10 +262,10 @@ function ConfirmDialog({ zones, onConfirm, onCancel, loading }: ConfirmDialogPro
                   className="h-4 w-4 accent-amber-500 rounded"
                 />
                 <div>
-                  <p className="text-sm font-medium text-gray-200">{zone.name}</p>
-                  <p className="text-[10px] text-gray-500">{zoneTypeLabel(zone.zone_type)}</p>
+                  <p className="text-sm font-medium text-foreground">{zone.name}</p>
+                  <p className="text-[10px] text-muted-foreground">{zoneTypeLabel(zone.zone_type)}</p>
                 </div>
-                <span className="ml-auto text-xs text-gray-500 font-mono">
+                <span className="ml-auto text-xs text-muted-foreground font-mono">
                   {zone.current_occupancy ?? 0} people
                 </span>
               </label>
@@ -286,7 +286,7 @@ function ConfirmDialog({ zones, onConfirm, onCancel, loading }: ConfirmDialogPro
           <button
             onClick={onCancel}
             disabled={loading}
-            className="flex-1 rounded-xl border border-gray-700 bg-gray-900 py-3 text-sm font-bold text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors disabled:opacity-50"
+            className="flex-1 rounded-xl border border-border-strong bg-surface-2 py-3 text-sm font-bold text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors disabled:opacity-50"
           >
             Cancel
           </button>
@@ -478,14 +478,14 @@ export default function EvacuationPage() {
 
   /* --- Render --- */
   return (
-    <div className="flex h-full flex-col bg-gray-950 overflow-hidden">
+    <div className="flex h-full flex-col bg-surface-0 overflow-hidden">
       {/* ---- Header ---- */}
       <div
         className={cn(
           "flex items-center justify-between border-b px-6 py-4 transition-all duration-500",
           evacuationActive
             ? "border-red-800/60 bg-red-950/20"
-            : "border-gray-800 bg-gray-950"
+            : "border-border bg-surface-0"
         )}
       >
         <div className="flex items-center gap-3">
@@ -505,10 +505,10 @@ export default function EvacuationPage() {
             />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-wide text-gray-100">
+            <h1 className="text-xl font-bold tracking-wide text-foreground">
               Evacuation Management
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Emergency coordination for malls, hospitals, and public spaces
             </p>
           </div>
@@ -557,7 +557,7 @@ export default function EvacuationPage() {
             ) : (
               <button
                 onClick={handleCancel}
-                className="flex items-center gap-3 rounded-2xl border border-gray-600 bg-gray-800 px-8 py-5 text-lg font-black uppercase tracking-wider text-gray-200 shadow-lg hover:bg-gray-700 hover:text-white active:scale-95 transition-all duration-150 touch-manipulation"
+                className="flex items-center gap-3 rounded-2xl border border-border-strong bg-surface-3 px-8 py-5 text-lg font-black uppercase tracking-wider text-foreground shadow-lg hover:bg-surface-3 hover:text-white active:scale-95 transition-all duration-150 touch-manipulation"
               >
                 <XCircle className="h-7 w-7" />
                 CANCEL EVACUATION
@@ -567,7 +567,7 @@ export default function EvacuationPage() {
             <button
               onClick={fetchZones}
               disabled={loading}
-              className="flex items-center gap-2 rounded-xl border border-gray-700 bg-gray-800 px-4 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-700 hover:text-gray-200 transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 rounded-xl border border-border-strong bg-surface-3 px-4 py-3 text-sm font-semibold text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors disabled:opacity-50"
             >
               <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
               Refresh
@@ -619,7 +619,7 @@ export default function EvacuationPage() {
                 },
               ].map(({ label, value, color, bg }) => (
                 <div key={label} className={cn("rounded-xl border p-4 text-center", bg)}>
-                  <p className="text-xs text-gray-500 mb-1">{label}</p>
+                  <p className="text-xs text-muted-foreground mb-1">{label}</p>
                   <p className={cn("text-2xl font-black tabular-nums", color)}>{value}</p>
                 </div>
               ))}
@@ -629,10 +629,10 @@ export default function EvacuationPage() {
           {/* ---- Zone Status Grid ---- */}
           <section>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-gray-400">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
                 Zone Status
               </h2>
-              <span className="text-xs text-gray-600">{zones.length} zones total</span>
+              <span className="text-xs text-muted-foreground">{zones.length} zones total</span>
             </div>
 
             {loading ? (
@@ -645,15 +645,15 @@ export default function EvacuationPage() {
                 <p className="text-sm text-red-400">{error}</p>
                 <button
                   onClick={fetchZones}
-                  className="mt-3 text-xs text-gray-500 underline hover:text-gray-300"
+                  className="mt-3 text-xs text-muted-foreground underline hover:text-foreground"
                 >
                   Retry
                 </button>
               </div>
             ) : zones.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12">
-                <MapPin className="h-8 w-8 text-gray-700 mb-2" />
-                <p className="text-sm text-gray-500">No zones configured</p>
+                <MapPin className="h-8 w-8 text-muted-foreground mb-2" />
+                <p className="text-sm text-muted-foreground">No zones configured</p>
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
@@ -673,7 +673,7 @@ export default function EvacuationPage() {
           {/* ---- Assembly Points ---- */}
           {evacuationActive && (
             <section>
-              <h2 className="text-sm font-bold uppercase tracking-wider text-gray-400 mb-3">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-3">
                 Assembly Points — Headcount
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -682,11 +682,11 @@ export default function EvacuationPage() {
                   return (
                     <div
                       key={ap.id}
-                      className="rounded-xl border border-gray-700 bg-gray-900/60 p-4 flex flex-col gap-3"
+                      className="rounded-xl border border-border-strong bg-surface-2/60 p-4 flex flex-col gap-3"
                     >
                       <div>
-                        <p className="font-bold text-gray-100 text-sm">{ap.name}</p>
-                        <div className="flex items-center gap-1 text-[11px] text-gray-500">
+                        <p className="font-bold text-foreground text-sm">{ap.name}</p>
+                        <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
                           <MapPin className="h-3 w-3" />
                           {ap.location}
                         </div>
@@ -695,12 +695,12 @@ export default function EvacuationPage() {
                       {/* Progress bar */}
                       <div className="space-y-1">
                         <div className="flex justify-between text-xs">
-                          <span className="text-gray-500">Actual</span>
-                          <span className="font-mono font-bold text-gray-200">
+                          <span className="text-muted-foreground">Actual</span>
+                          <span className="font-mono font-bold text-foreground">
                             {ap.actual} / {ap.expected}
                           </span>
                         </div>
-                        <div className="h-2 rounded-full bg-gray-800 overflow-hidden">
+                        <div className="h-2 rounded-full bg-surface-3 overflow-hidden">
                           <div
                             className={cn(
                               "h-full rounded-full transition-all duration-300",
@@ -709,18 +709,18 @@ export default function EvacuationPage() {
                             style={{ width: `${pct}%` }}
                           />
                         </div>
-                        <p className="text-right text-[10px] text-gray-500">{pct}% accounted</p>
+                        <p className="text-right text-[10px] text-muted-foreground">{pct}% accounted</p>
                       </div>
 
                       {/* +/- controls */}
                       <div className="flex items-center gap-2 justify-center">
                         <button
                           onClick={() => updateActualCount(ap.id, -1)}
-                          className="h-9 w-9 rounded-lg border border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold text-lg flex items-center justify-center transition-colors"
+                          className="h-9 w-9 rounded-lg border border-border-strong bg-surface-3 text-foreground hover:bg-surface-3 font-bold text-lg flex items-center justify-center transition-colors"
                         >
                           −
                         </button>
-                        <span className="text-xl font-black text-gray-100 tabular-nums min-w-[2ch] text-center">
+                        <span className="text-xl font-black text-foreground tabular-nums min-w-[2ch] text-center">
                           {ap.actual}
                         </span>
                         <button
@@ -739,10 +739,10 @@ export default function EvacuationPage() {
 
           {/* ---- Not-active placeholder ---- */}
           {!evacuationActive && (
-            <div className="rounded-2xl border border-gray-800 bg-gray-900/30 p-10 text-center">
+            <div className="rounded-2xl border border-border bg-surface-2/30 p-10 text-center">
               <CheckCircle2 className="h-12 w-12 text-emerald-700 mx-auto mb-3" />
-              <p className="text-lg font-bold text-gray-400">No Active Evacuation</p>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-lg font-bold text-muted-foreground">No Active Evacuation</p>
+              <p className="text-sm text-muted-foreground mt-1">
                 All zones are operating normally. Press INITIATE EVACUATION to begin an emergency procedure.
               </p>
             </div>

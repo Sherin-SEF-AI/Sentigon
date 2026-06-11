@@ -37,7 +37,7 @@ const SEVERITY_LINE: Record<string, string> = {
   high: "border-orange-800",
   medium: "border-amber-800",
   low: "border-blue-800",
-  info: "border-gray-800",
+  info: "border-border",
 };
 
 function formatTime(ts: string): string {
@@ -80,8 +80,8 @@ export default function TimelineView({
 
   if (events.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-gray-800 bg-gray-900/20 px-4 py-6 text-center">
-        <p className="text-xs text-gray-600">No timeline events</p>
+      <div className="rounded-lg border border-dashed border-border bg-surface-2/20 px-4 py-6 text-center">
+        <p className="text-xs text-muted-foreground">No timeline events</p>
       </div>
     );
   }
@@ -89,7 +89,7 @@ export default function TimelineView({
   return (
     <div className="relative">
       {/* Vertical line */}
-      <div className="absolute left-3 top-3 bottom-3 w-px bg-gray-800" />
+      <div className="absolute left-3 top-3 bottom-3 w-px bg-surface-3" />
 
       <div className="space-y-0">
         {visible.map((event, idx) => {
@@ -101,7 +101,7 @@ export default function TimelineView({
               key={event.id}
               className={`relative flex gap-3 pl-1 ${
                 onEventClick
-                  ? "cursor-pointer hover:bg-gray-900/60 rounded-lg"
+                  ? "cursor-pointer hover:bg-surface-2/60 rounded-lg"
                   : ""
               } ${compact ? "py-1" : "py-2"}`}
               onClick={() => onEventClick?.(event)}
@@ -117,23 +117,23 @@ export default function TimelineView({
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   {event.icon && (
-                    <span className="text-gray-500">{event.icon}</span>
+                    <span className="text-muted-foreground">{event.icon}</span>
                   )}
-                  <span className="text-xs font-medium text-gray-200 truncate">
+                  <span className="text-xs font-medium text-foreground truncate">
                     {event.title}
                   </span>
                   {event.type && (
-                    <span className="text-[9px] rounded-full border border-gray-700 bg-gray-800 px-1.5 py-0.5 text-gray-500 uppercase tracking-wider">
+                    <span className="text-[9px] rounded-full border border-border-strong bg-surface-3 px-1.5 py-0.5 text-muted-foreground uppercase tracking-wider">
                       {event.type}
                     </span>
                   )}
-                  <span className="ml-auto text-[10px] text-gray-600 tabular-nums shrink-0">
+                  <span className="ml-auto text-[10px] text-muted-foreground tabular-nums shrink-0">
                     {formatDate(event.timestamp)} {formatTime(event.timestamp)}
                   </span>
                 </div>
 
                 {!compact && event.description && (
-                  <p className="mt-0.5 text-[11px] text-gray-500 line-clamp-2">
+                  <p className="mt-0.5 text-[11px] text-muted-foreground line-clamp-2">
                     {event.description}
                   </p>
                 )}
@@ -143,9 +143,9 @@ export default function TimelineView({
                     {Object.entries(event.metadata).map(([k, v]) => (
                       <span
                         key={k}
-                        className="text-[9px] text-gray-600"
+                        className="text-[9px] text-muted-foreground"
                       >
-                        <span className="text-gray-500">{k}:</span> {v}
+                        <span className="text-muted-foreground">{k}:</span> {v}
                       </span>
                     ))}
                   </div>

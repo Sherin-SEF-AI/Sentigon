@@ -34,7 +34,7 @@ export function ThreatIndicator({
           "flex items-center gap-2 rounded-md border px-3 py-2",
           isUrgent
             ? "border-red-800/40 bg-red-950/20"
-            : "border-gray-800/50 bg-gray-900/40",
+            : "border-border/50 bg-surface-2/40",
           isUrgent && "animate-threat-pulse",
           className
         )}
@@ -84,7 +84,7 @@ export function ThreatIndicator({
           )}
         </div>
         <div>
-          <p className="text-[8px] font-medium uppercase tracking-wider text-gray-500 leading-none">
+          <p className="text-[8px] font-medium uppercase tracking-wider text-muted-foreground leading-none">
             Threat Level
           </p>
           <p
@@ -184,7 +184,7 @@ export function ThreatIndicator({
           {levelLabels[level]}
         </span>
         <span
-          className="mt-0.5 text-gray-500 font-mono"
+          className="mt-0.5 text-muted-foreground font-mono"
           style={{ fontSize: size * 0.07 }}
         >
           THREAT

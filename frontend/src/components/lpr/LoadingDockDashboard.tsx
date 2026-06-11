@@ -33,7 +33,7 @@ interface LoadingDock {
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
 
-const CARD = "rounded-lg border border-gray-800 bg-gray-900/60 backdrop-blur p-4";
+const CARD = "rounded-lg border border-border bg-surface-2/60 backdrop-blur p-4";
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
@@ -53,7 +53,7 @@ function occupancyColorClass(percent: number): string {
 function occupancyBorderClass(percent: number): string {
   if (percent > 80) return "border-red-800/50";
   if (percent >= 50) return "border-yellow-800/40";
-  return "border-gray-800";
+  return "border-border";
 }
 
 function occupancyFill(percent: number): string {
@@ -114,10 +114,10 @@ export default function LoadingDockDashboard() {
             <Warehouse className="h-4 w-4 text-cyan-400" />
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-gray-300">
+            <h2 className="text-sm font-semibold text-foreground">
               Loading Dock Occupancy
             </h2>
-            <p className="text-[11px] text-gray-600">
+            <p className="text-[11px] text-muted-foreground">
               Real-time dock utilization across all zones
             </p>
           </div>
@@ -126,8 +126,8 @@ export default function LoadingDockDashboard() {
         <div className="flex items-center gap-3">
           {/* Overall stat */}
           {!loading && !error && docks.length > 0 && (
-            <div className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+            <div className="flex items-center gap-2 rounded-lg border border-border-strong bg-surface-3 px-3 py-1.5">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                 Overall
               </span>
               <span
@@ -138,7 +138,7 @@ export default function LoadingDockDashboard() {
               >
                 {overallPercent}%
               </span>
-              <span className="text-[10px] text-gray-600">
+              <span className="text-[10px] text-muted-foreground">
                 ({totalOccupied}/{totalSpots})
               </span>
             </div>
@@ -147,7 +147,7 @@ export default function LoadingDockDashboard() {
           <button
             onClick={fetchDocks}
             disabled={loading}
-            className="rounded-lg border border-gray-700 p-2 text-gray-500 transition-colors hover:bg-gray-800 hover:text-gray-300 disabled:opacity-50"
+            className="rounded-lg border border-border-strong p-2 text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground disabled:opacity-50"
           >
             <RefreshCw
               className={cn("h-4 w-4", loading && "animate-spin")}
@@ -160,7 +160,7 @@ export default function LoadingDockDashboard() {
       {loading && docks.length === 0 && (
         <div className="flex flex-col items-center justify-center py-16">
           <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-          <p className="mt-3 text-sm text-gray-500">Loading dock data...</p>
+          <p className="mt-3 text-sm text-muted-foreground">Loading dock data...</p>
         </div>
       )}
 
@@ -171,7 +171,7 @@ export default function LoadingDockDashboard() {
           <p className="text-sm text-red-400">{error}</p>
           <button
             onClick={fetchDocks}
-            className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             Retry
           </button>
@@ -181,11 +181,11 @@ export default function LoadingDockDashboard() {
       {/* Empty */}
       {!loading && !error && docks.length === 0 && (
         <div className="flex flex-col items-center justify-center py-16">
-          <Warehouse className="mb-2 h-10 w-10 text-gray-700" />
-          <p className="text-sm font-medium text-gray-400">
+          <Warehouse className="mb-2 h-10 w-10 text-muted-foreground" />
+          <p className="text-sm font-medium text-muted-foreground">
             No loading docks configured
           </p>
-          <p className="mt-1 text-xs text-gray-600">
+          <p className="mt-1 text-xs text-muted-foreground">
             Configure dock zones to start monitoring occupancy
           </p>
         </div>
@@ -211,17 +211,17 @@ export default function LoadingDockDashboard() {
               <div
                 key={dock.id}
                 className={cn(
-                  "rounded-xl border bg-gray-900/50 p-4 transition-shadow hover:shadow-lg hover:shadow-cyan-900/10",
+                  "rounded-xl border bg-surface-2/50 p-4 transition-shadow hover:shadow-lg hover:shadow-cyan-900/10",
                   occupancyBorderClass(percent)
                 )}
               >
                 {/* Zone type label */}
                 <div className="mb-3 flex items-center justify-between">
-                  <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                    <Truck className="h-3.5 w-3.5 text-gray-600" />
+                  <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <Truck className="h-3.5 w-3.5 text-muted-foreground" />
                     {dock.zone_type.replace(/_/g, " ")}
                   </span>
-                  <span className="flex items-center gap-1 text-[10px] text-gray-600">
+                  <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
                     <Clock className="h-3 w-3" />
                     Max {dock.max_dwell_minutes}m
                   </span>
@@ -265,28 +265,28 @@ export default function LoadingDockDashboard() {
                 {/* Spots detail */}
                 <div className="mt-3 flex items-center justify-between">
                   <div className="text-center">
-                    <span className="block text-lg font-bold tabular-nums text-gray-200">
+                    <span className="block text-lg font-bold tabular-nums text-foreground">
                       {dock.occupied_spots}
                     </span>
-                    <span className="text-[10px] text-gray-600">Occupied</span>
+                    <span className="text-[10px] text-muted-foreground">Occupied</span>
                   </div>
                   <div className="text-center">
-                    <span className="block text-lg font-bold tabular-nums text-gray-200">
+                    <span className="block text-lg font-bold tabular-nums text-foreground">
                       {dock.total_spots}
                     </span>
-                    <span className="text-[10px] text-gray-600">Total</span>
+                    <span className="text-[10px] text-muted-foreground">Total</span>
                   </div>
                   <div className="text-center">
                     <span className="block text-lg font-bold tabular-nums text-emerald-400">
                       {dock.total_spots - dock.occupied_spots}
                     </span>
-                    <span className="text-[10px] text-gray-600">Available</span>
+                    <span className="text-[10px] text-muted-foreground">Available</span>
                   </div>
                 </div>
 
                 {/* Simple bar fallback beneath the chart */}
                 <div className="mt-3">
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-800">
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-3">
                     <div
                       className={cn(
                         "h-full rounded-full transition-all duration-500",

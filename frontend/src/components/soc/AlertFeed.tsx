@@ -97,7 +97,7 @@ function AlertCard({ alert, onAcknowledge, onDismiss }: AlertCardProps) {
                     e.stopPropagation();
                     onDismiss(alert.id);
                   }}
-                  className="rounded px-1 py-px text-[7px] font-bold uppercase tracking-wider text-gray-500 hover:bg-gray-800/60 transition-colors"
+                  className="rounded px-1 py-px text-[7px] font-bold uppercase tracking-wider text-muted-foreground hover:bg-surface-3/60 transition-colors"
                   title="Dismiss"
                 >
                   DIS
@@ -111,7 +111,7 @@ function AlertCard({ alert, onAcknowledge, onDismiss }: AlertCardProps) {
                 "rounded px-1 py-px text-[7px] font-bold uppercase tracking-wider shrink-0",
                 alert.status === "resolved"
                   ? "text-emerald-500"
-                  : "text-gray-600"
+                  : "text-muted-foreground"
               )}
             >
               {alert.status === "resolved" ? "RES" : "DIS"}
@@ -133,12 +133,12 @@ function AlertCard({ alert, onAcknowledge, onDismiss }: AlertCardProps) {
             )}
             {alert.threat_type && (
               <>
-                <span className="text-gray-700">·</span>
+                <span className="text-muted-foreground">·</span>
                 <span className="truncate">{alert.threat_type}</span>
               </>
             )}
             {alert.confidence > 0 && (
-              <span className="text-gray-600 tabular-nums">
+              <span className="text-muted-foreground tabular-nums">
                 {Math.round(alert.confidence * 100)}%
               </span>
             )}
@@ -147,7 +147,7 @@ function AlertCard({ alert, onAcknowledge, onDismiss }: AlertCardProps) {
 
         {/* Expanded details — only description */}
         {expanded && alert.description && (
-          <p className="text-[9px] leading-tight text-gray-500 mt-0.5 ml-2.5 line-clamp-2">
+          <p className="text-[9px] leading-tight text-muted-foreground mt-0.5 ml-2.5 line-clamp-2">
             {alert.description}
           </p>
         )}
@@ -262,7 +262,7 @@ export function AlertFeed({ limit = 50, className }: AlertFeedProps) {
         {!loading && sorted.length === 0 && (
           <div className="flex flex-col items-center justify-center py-10 text-center">
             <CheckCircle2 className="mb-1.5 h-6 w-6 text-emerald-800" />
-            <p className="text-[10px] text-gray-600">No active alerts</p>
+            <p className="text-[10px] text-muted-foreground">No active alerts</p>
           </div>
         )}
 
@@ -277,8 +277,8 @@ export function AlertFeed({ limit = 50, className }: AlertFeedProps) {
       </div>
 
       {/* Footer — fixed at bottom */}
-      <div className="border-t border-gray-800/60 px-2 py-0.5 shrink-0">
-        <p className="text-center text-[8px] text-gray-700 font-mono">
+      <div className="border-t border-border/60 px-2 py-0.5 shrink-0">
+        <p className="text-center text-[8px] text-muted-foreground font-mono">
           {formatTimestamp(new Date().toISOString())}
         </p>
       </div>

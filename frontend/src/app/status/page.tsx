@@ -151,7 +151,7 @@ export default function SystemStatusPage() {
   const getAgentStatusColor = (running: boolean, hasError: boolean = false) => {
     if (hasError) return "text-red-500";
     if (running) return "text-green-400";
-    return "text-gray-500";
+    return "text-muted-foreground";
   };
 
   const getAgentStatusText = (running: boolean, hasError: boolean = false) => {
@@ -187,7 +187,7 @@ export default function SystemStatusPage() {
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">
           <Activity className="mx-auto h-12 w-12 animate-pulse text-blue-500" />
-          <p className="mt-4 text-gray-400">Loading system status...</p>
+          <p className="mt-4 text-muted-foreground">Loading system status...</p>
         </div>
       </div>
     );
@@ -198,7 +198,7 @@ export default function SystemStatusPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white">System Status</h1>
-          <p className="text-gray-400">Real-time overview of SENTINEL AI platform</p>
+          <p className="text-muted-foreground">Real-time overview of SENTINEL AI platform</p>
         </div>
         <Badge
           variant="outline"
@@ -210,59 +210,59 @@ export default function SystemStatusPage() {
 
       {/* System Overview Cards */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="border-blue-500/20 bg-gray-900">
+        <Card className="border-blue-500/20 bg-surface-2">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">Cameras</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Cameras</CardTitle>
             <Camera className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">
               {systemStatus?.cameras.active}/{systemStatus?.cameras.total}
             </div>
-            <p className="text-xs text-gray-500">Active / Total</p>
+            <p className="text-xs text-muted-foreground">Active / Total</p>
           </CardContent>
         </Card>
 
-        <Card className="border-purple-500/20 bg-gray-900">
+        <Card className="border-purple-500/20 bg-surface-2">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">Agents</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Agents</CardTitle>
             <Cpu className="h-4 w-4 text-purple-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">
               {agents.filter((a) => a.running).length}/{agents.length}
             </div>
-            <p className="text-xs text-gray-500">Running / Total</p>
+            <p className="text-xs text-muted-foreground">Running / Total</p>
           </CardContent>
         </Card>
 
-        <Card className="border-green-500/20 bg-gray-900">
+        <Card className="border-green-500/20 bg-surface-2">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">Connections</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Connections</CardTitle>
             <Network className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">
               {systemStatus?.websockets.connections || 0}
             </div>
-            <p className="text-xs text-gray-500">Active WebSockets</p>
+            <p className="text-xs text-muted-foreground">Active WebSockets</p>
           </CardContent>
         </Card>
 
-        <Card className="border-orange-500/20 bg-gray-900">
+        <Card className="border-orange-500/20 bg-surface-2">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-400">Recent Alerts</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Recent Alerts</CardTitle>
             <Zap className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">{alerts.length}</div>
-            <p className="text-xs text-gray-500">Last 5 alerts</p>
+            <p className="text-xs text-muted-foreground">Last 5 alerts</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Infrastructure Metrics Gauges */}
-      <Card className="border-gray-800 bg-gray-900">
+      <Card className="border-border bg-surface-2">
         <CardHeader>
           <CardTitle className="flex items-center text-white">
             <Cpu className="mr-2 h-5 w-5 text-cyan-400" />
@@ -309,7 +309,7 @@ export default function SystemStatusPage() {
       {/* Service Dependencies + Performance Trending — side by side */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Service Dependency Visualization */}
-        <Card className="border-gray-800 bg-gray-900">
+        <Card className="border-border bg-surface-2">
           <CardHeader>
             <CardTitle className="flex items-center text-white">
               <Network className="mr-2 h-5 w-5 text-indigo-400" />
@@ -331,27 +331,27 @@ export default function SystemStatusPage() {
                       {idx === 0 ? (
                         <div className="h-2 w-px" />
                       ) : (
-                        <div className="h-2 w-px bg-gray-700" />
+                        <div className="h-2 w-px bg-surface-3" />
                       )}
                       <div
                         className={`h-3 w-3 rounded-full border-2 ${
                           up === null
-                            ? "border-gray-600 bg-gray-700"
+                            ? "border-border-strong bg-surface-3"
                             : up
                             ? "border-green-500 bg-green-500"
                             : "border-red-500 bg-red-500"
                         }`}
                       />
                       {idx < SERVICE_CHAIN.length - 1 && (
-                        <div className="flex-1 w-px bg-gray-700" />
+                        <div className="flex-1 w-px bg-surface-3" />
                       )}
                     </div>
-                    <div className="flex flex-1 items-center justify-between rounded-lg border border-gray-800 bg-gray-950 px-3 py-2 my-0.5">
-                      <span className="text-sm text-gray-200">{label}</span>
+                    <div className="flex flex-1 items-center justify-between rounded-lg border border-border bg-surface-0 px-3 py-2 my-0.5">
+                      <span className="text-sm text-foreground">{label}</span>
                       <span
                         className={`text-xs font-semibold ${
                           up === null
-                            ? "text-gray-500"
+                            ? "text-muted-foreground"
                             : up
                             ? "text-green-400"
                             : "text-red-400"
@@ -368,7 +368,7 @@ export default function SystemStatusPage() {
         </Card>
 
         {/* API Response Time Sparkline */}
-        <Card className="border-gray-800 bg-gray-900">
+        <Card className="border-border bg-surface-2">
           <CardHeader>
             <CardTitle className="flex items-center text-white">
               <Activity className="mr-2 h-5 w-5 text-emerald-400" />
@@ -380,7 +380,7 @@ export default function SystemStatusPage() {
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center gap-4 py-4">
             {responseTimes.length < 2 ? (
-              <p className="text-sm text-gray-500">Collecting data…</p>
+              <p className="text-sm text-muted-foreground">Collecting data…</p>
             ) : (
               <>
                 <MetricSparkline
@@ -392,22 +392,22 @@ export default function SystemStatusPage() {
                   showValue
                   unit=" ms"
                 />
-                <div className="flex gap-6 text-xs text-gray-500">
+                <div className="flex gap-6 text-xs text-muted-foreground">
                   <span>
                     Min:{" "}
-                    <span className="font-mono text-gray-300">
+                    <span className="font-mono text-foreground">
                       {Math.min(...responseTimes)} ms
                     </span>
                   </span>
                   <span>
                     Max:{" "}
-                    <span className="font-mono text-gray-300">
+                    <span className="font-mono text-foreground">
                       {Math.max(...responseTimes)} ms
                     </span>
                   </span>
                   <span>
                     Avg:{" "}
-                    <span className="font-mono text-gray-300">
+                    <span className="font-mono text-foreground">
                       {Math.round(
                         responseTimes.reduce((a, b) => a + b, 0) /
                           responseTimes.length
@@ -423,7 +423,7 @@ export default function SystemStatusPage() {
       </div>
 
       {/* Camera Grid */}
-      <Card className="border-gray-800 bg-gray-900">
+      <Card className="border-border bg-surface-2">
         <CardHeader>
           <CardTitle className="flex items-center text-white">
             <Camera className="mr-2 h-5 w-5" />
@@ -436,16 +436,16 @@ export default function SystemStatusPage() {
             {cameras.map((cam) => (
               <div
                 key={cam.id}
-                className="rounded-lg border border-gray-800 bg-gray-950 p-4 hover:border-blue-500/50 transition-colors"
+                className="rounded-lg border border-border bg-surface-0 p-4 hover:border-blue-500/50 transition-colors"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <h3 className="font-semibold text-white">{cam.name}</h3>
-                    <p className="text-xs text-gray-500">{cam.location}</p>
+                    <p className="text-xs text-muted-foreground">{cam.location}</p>
                   </div>
                   <div className={`h-3 w-3 rounded-full ${getCameraStatusColor(cam.status)}`} />
                 </div>
-                <div className="mt-3 flex items-center justify-between text-xs text-gray-400">
+                <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
                   <span>{cam.resolution || "N/A"}</span>
                   <span>{cam.fps ? `${cam.fps} FPS` : "N/A"}</span>
                 </div>
@@ -456,7 +456,7 @@ export default function SystemStatusPage() {
       </Card>
 
       {/* Agent Fleet Status */}
-      <Card className="border-gray-800 bg-gray-900">
+      <Card className="border-border bg-surface-2">
         <CardHeader>
           <CardTitle className="flex items-center text-white">
             <Server className="mr-2 h-5 w-5" />
@@ -479,7 +479,7 @@ export default function SystemStatusPage() {
                       <div className={`text-xl ${getAgentStatusColor(agent.running, !!agent.last_error)}`}>●</div>
                       <div>
                         <p className="font-medium text-white">{agent.name.replace(/_/g, " ")}</p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-muted-foreground">
                           {agent.cycle_count} cycles | {agent.error_count} errors
                         </p>
                       </div>
@@ -509,7 +509,7 @@ export default function SystemStatusPage() {
                         <p className="text-sm font-medium text-white">
                           {agent.name.replace(/_/g, " ")}
                         </p>
-                        <p className="text-xs text-gray-500">{agent.cycle_count} cycles</p>
+                        <p className="text-xs text-muted-foreground">{agent.cycle_count} cycles</p>
                       </div>
                     </div>
                   </div>
@@ -534,7 +534,7 @@ export default function SystemStatusPage() {
                         <p className="text-sm font-medium text-white">
                           {agent.name.replace(/_/g, " ")}
                         </p>
-                        <p className="text-xs text-gray-500">{agent.cycle_count} cycles</p>
+                        <p className="text-xs text-muted-foreground">{agent.cycle_count} cycles</p>
                       </div>
                     </div>
                   </div>
@@ -559,7 +559,7 @@ export default function SystemStatusPage() {
                         <p className="text-sm font-medium text-white">
                           {agent.name.replace(/_/g, " ")}
                         </p>
-                        <p className="text-xs text-gray-500">{agent.cycle_count} cycles</p>
+                        <p className="text-xs text-muted-foreground">{agent.cycle_count} cycles</p>
                       </div>
                     </div>
                   </div>
@@ -571,7 +571,7 @@ export default function SystemStatusPage() {
       </Card>
 
       {/* Recent Alerts */}
-      <Card className="border-gray-800 bg-gray-900">
+      <Card className="border-border bg-surface-2">
         <CardHeader>
           <CardTitle className="flex items-center text-white">
             <Zap className="mr-2 h-5 w-5" />
@@ -582,23 +582,23 @@ export default function SystemStatusPage() {
         <CardContent>
           <div className="space-y-2">
             {alerts.length === 0 ? (
-              <p className="text-center text-gray-500 py-4">No recent alerts</p>
+              <p className="text-center text-muted-foreground py-4">No recent alerts</p>
             ) : (
               alerts.map((alert) => (
                 <div
                   key={alert.id}
-                  className="flex items-center justify-between rounded-lg border border-gray-800 bg-gray-950 p-3 hover:border-gray-700 transition-colors"
+                  className="flex items-center justify-between rounded-lg border border-border bg-surface-0 p-3 hover:border-border-strong transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <div className={`h-2 w-2 rounded-full ${getSeverityColor(alert.severity)}`} />
                     <div>
                       <p className="text-sm font-medium text-white">{alert.title}</p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-muted-foreground">
                         {new Date(alert.created_at).toLocaleString()}
                       </p>
                     </div>
                   </div>
-                  <Badge variant="outline" className="border-gray-700 text-gray-400">
+                  <Badge variant="outline" className="border-border-strong text-muted-foreground">
                     {alert.status}
                   </Badge>
                 </div>

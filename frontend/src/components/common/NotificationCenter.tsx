@@ -126,8 +126,8 @@ export function NotificationCenter() {
         onClick={() => setOpen((o) => !o)}
         title="Notifications"
         className={cn(
-          "relative flex h-9 w-9 items-center justify-center rounded-lg border border-gray-800 bg-gray-950/80 text-gray-400 backdrop-blur transition-colors hover:text-gray-200",
-          open && "text-gray-200"
+          "relative flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface-0/80 text-muted-foreground backdrop-blur transition-colors hover:text-foreground",
+          open && "text-foreground"
         )}
       >
         <Bell className="h-4 w-4" />
@@ -146,23 +146,23 @@ export function NotificationCenter() {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-80 overflow-hidden rounded-xl border border-gray-800 bg-gray-950 shadow-2xl">
-          <div className="flex items-center justify-between border-b border-gray-800 px-3 py-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+        <div className="absolute right-0 mt-2 w-80 overflow-hidden rounded-xl border border-border bg-surface-0 shadow-2xl">
+          <div className="flex items-center justify-between border-b border-border px-3 py-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Notifications
             </span>
             <div className="flex items-center gap-2">
               {items.length > 0 && (
                 <button
                   onClick={() => setItems([])}
-                  className="text-[11px] text-gray-500 hover:text-gray-300"
+                  className="text-[11px] text-muted-foreground hover:text-foreground"
                 >
                   Clear
                 </button>
               )}
               <button
                 onClick={() => setOpen(false)}
-                className="text-gray-500 hover:text-gray-300"
+                className="text-muted-foreground hover:text-foreground"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -171,15 +171,15 @@ export function NotificationCenter() {
 
           <div className="max-h-96 overflow-auto">
             {items.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-gray-600">
+              <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
                 <Bell className="mb-2 h-6 w-6 opacity-40" />
                 <p className="text-xs">No notifications yet</p>
-                <p className="mt-0.5 text-[10px] text-gray-700">
+                <p className="mt-0.5 text-[10px] text-muted-foreground">
                   {connected ? "Listening for live events…" : "Reconnecting…"}
                 </p>
               </div>
             ) : (
-              <ul className="divide-y divide-gray-800/60">
+              <ul className="divide-y divide-border/60">
                 {items.map((n) => (
                   <li key={n.id} className="px-3 py-2.5">
                     <div className="flex items-start gap-2">
@@ -191,15 +191,15 @@ export function NotificationCenter() {
                       />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="truncate text-sm font-medium text-gray-200">
+                          <span className="truncate text-sm font-medium text-foreground">
                             {n.title}
                           </span>
-                          <span className="shrink-0 text-[10px] text-gray-600">
+                          <span className="shrink-0 text-[10px] text-muted-foreground">
                             {timeAgo(n.receivedAt)}
                           </span>
                         </div>
                         {n.message && (
-                          <p className="mt-0.5 line-clamp-2 text-[11px] text-gray-500">
+                          <p className="mt-0.5 line-clamp-2 text-[11px] text-muted-foreground">
                             {n.message}
                           </p>
                         )}

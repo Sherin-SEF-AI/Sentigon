@@ -32,7 +32,7 @@ import type { PatrolShift, PatrolRoute } from "@/lib/types";
 const STATUS_COLORS: Record<string, string> = {
   scheduled: "text-blue-400 bg-blue-900/30 border-blue-700/50",
   active: "text-green-400 bg-green-900/30 border-green-700/50",
-  completed: "text-gray-400 bg-gray-800/50 border-gray-700/50",
+  completed: "text-muted-foreground bg-surface-3/50 border-border-strong/50",
   cancelled: "text-red-400 bg-red-900/30 border-red-700/50",
 };
 
@@ -98,7 +98,7 @@ function CoverageSection({
   const { bar, text } = coveragePctColor(pct);
 
   return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900/50 px-5 py-4">
+    <div className="rounded-xl border border-border bg-surface-2/50 px-5 py-4">
       <div className="mb-3 flex items-center justify-between">
         <h3 className="flex items-center gap-2 text-sm font-semibold text-cyan-400">
           <Search className="h-4 w-4" />
@@ -110,20 +110,20 @@ function CoverageSection({
       </div>
 
       {/* Progress bar */}
-      <div className="mb-2 h-3 w-full rounded-full bg-gray-800">
+      <div className="mb-2 h-3 w-full rounded-full bg-surface-3">
         <div
           className={cn("h-3 rounded-full transition-all duration-500", bar)}
           style={{ width: `${pct}%` }}
         />
       </div>
 
-      <div className="flex items-center justify-between text-[11px] text-gray-500">
+      <div className="flex items-center justify-between text-[11px] text-muted-foreground">
         <span>
-          <span className="font-semibold text-gray-300">
+          <span className="font-semibold text-foreground">
             {coverage.zones_covered}
           </span>{" "}
           of{" "}
-          <span className="font-semibold text-gray-300">{zonesTotal}</span>{" "}
+          <span className="font-semibold text-foreground">{zonesTotal}</span>{" "}
           zones covered
         </span>
         <span
@@ -151,27 +151,27 @@ function PatrolMetricsRow({ metrics }: { metrics: PatrolMetrics }) {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {/* Total Patrols 7d */}
-      <div className="rounded-xl border border-gray-800 bg-gray-900/50 px-4 py-3">
+      <div className="rounded-xl border border-border bg-surface-2/50 px-4 py-3">
         <div className="flex items-center gap-2 mb-1">
           <Activity className="h-3.5 w-3.5 text-cyan-500" />
-          <span className="text-[10px] uppercase tracking-wider text-gray-500">
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
             Total Patrols (7d)
           </span>
         </div>
-        <div className="text-xl font-bold text-gray-100">
+        <div className="text-xl font-bold text-foreground">
           {metrics.totalPatrols7d}
         </div>
       </div>
 
       {/* Avg Completion Time */}
-      <div className="rounded-xl border border-gray-800 bg-gray-900/50 px-4 py-3">
+      <div className="rounded-xl border border-border bg-surface-2/50 px-4 py-3">
         <div className="flex items-center gap-2 mb-1">
           <Clock className="h-3.5 w-3.5 text-blue-400" />
-          <span className="text-[10px] uppercase tracking-wider text-gray-500">
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
             Avg Completion
           </span>
         </div>
-        <div className="text-xl font-bold text-gray-100">
+        <div className="text-xl font-bold text-foreground">
           {metrics.avgCompletionMinutes != null
             ? `${metrics.avgCompletionMinutes}m`
             : "---"}
@@ -179,10 +179,10 @@ function PatrolMetricsRow({ metrics }: { metrics: PatrolMetrics }) {
       </div>
 
       {/* Coverage Score */}
-      <div className="rounded-xl border border-gray-800 bg-gray-900/50 px-4 py-3">
+      <div className="rounded-xl border border-border bg-surface-2/50 px-4 py-3">
         <div className="flex items-center gap-2 mb-1">
           <TrendingUp className="h-3.5 w-3.5 text-green-400" />
-          <span className="text-[10px] uppercase tracking-wider text-gray-500">
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
             Coverage Score
           </span>
         </div>
@@ -197,14 +197,14 @@ function PatrolMetricsRow({ metrics }: { metrics: PatrolMetrics }) {
       </div>
 
       {/* Incidents Found During Patrol */}
-      <div className="rounded-xl border border-gray-800 bg-gray-900/50 px-4 py-3">
+      <div className="rounded-xl border border-border bg-surface-2/50 px-4 py-3">
         <div className="flex items-center gap-2 mb-1">
           <AlertCircle className="h-3.5 w-3.5 text-amber-400" />
-          <span className="text-[10px] uppercase tracking-wider text-gray-500">
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
             Incidents Found
           </span>
         </div>
-        <div className="text-xl font-bold text-gray-100">
+        <div className="text-xl font-bold text-foreground">
           {metrics.incidentsFound}
         </div>
       </div>
@@ -495,35 +495,35 @@ export default function PatrolCommandPage() {
 
   /* --- Render --- */
   return (
-    <div className="flex h-full flex-col bg-gray-950">
+    <div className="flex h-full flex-col bg-surface-0">
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-900/30 border border-cyan-800/50">
             <Shield className="h-5 w-5 text-cyan-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Patrol Command
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Manage guard shifts, patrol routes, and checkpoint tracking
             </p>
           </div>
         </div>
 
         {/* Quick stats */}
-        <div className="hidden items-center gap-4 text-xs text-gray-500 md:flex">
+        <div className="hidden items-center gap-4 text-xs text-muted-foreground md:flex">
           <span>
             <span className="font-semibold text-green-400">{activeShifts}</span>{" "}
             active
           </span>
-          <span className="text-gray-700">|</span>
+          <span className="text-muted-foreground">|</span>
           <span>
             <span className="font-semibold text-blue-400">{scheduledShifts}</span>{" "}
             scheduled
           </span>
-          <span className="text-gray-700">|</span>
+          <span className="text-muted-foreground">|</span>
           <span>
             <span className="font-semibold text-cyan-400">{activeRoutes}</span>{" "}
             routes
@@ -535,7 +535,7 @@ export default function PatrolCommandPage() {
       {loading && (
         <div className="flex flex-1 items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-          <span className="ml-3 text-sm text-gray-500">
+          <span className="ml-3 text-sm text-muted-foreground">
             Loading patrol data...
           </span>
         </div>
@@ -548,7 +548,7 @@ export default function PatrolCommandPage() {
           <p className="text-sm text-red-400">{error}</p>
           <button
             onClick={fetchData}
-            className="mt-4 flex items-center gap-2 rounded-lg border border-gray-700 px-4 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="mt-4 flex items-center gap-2 rounded-lg border border-border-strong px-4 py-2 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             Retry
@@ -566,8 +566,8 @@ export default function PatrolCommandPage() {
           {/* Two-column layout */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {/* Left: Patrol Shifts Table (2/3) */}
-            <div className="lg:col-span-2 rounded-xl border border-gray-800 bg-gray-900/50">
-              <div className="flex items-center justify-between border-b border-gray-800 px-5 py-3">
+            <div className="lg:col-span-2 rounded-xl border border-border bg-surface-2/50">
+              <div className="flex items-center justify-between border-b border-border px-5 py-3">
                 <h2 className="flex items-center gap-2 text-sm font-semibold text-cyan-400">
                   <Clock className="h-4 w-4" />
                   Active Patrol Shifts
@@ -587,12 +587,12 @@ export default function PatrolCommandPage() {
                   )}
                   <button
                     onClick={() => setShowCreateForm((v) => !v)}
-                    className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+                    className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
                   >
                     <Plus className="h-3.5 w-3.5" />
                     New Shift
                   </button>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-muted-foreground">
                     {shifts.length} total
                   </span>
                 </div>
@@ -600,10 +600,10 @@ export default function PatrolCommandPage() {
 
               {/* ---- Create Shift Form ---- */}
               {showCreateForm && (
-                <div className="border-b border-gray-800 bg-gray-900/80 px-5 py-4">
+                <div className="border-b border-border bg-surface-2/80 px-5 py-4">
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
                     <div>
-                      <label className="mb-1 block text-[10px] uppercase tracking-wider text-gray-500">
+                      <label className="mb-1 block text-[10px] uppercase tracking-wider text-muted-foreground">
                         Guard ID
                       </label>
                       <input
@@ -613,11 +613,11 @@ export default function PatrolCommandPage() {
                         onChange={(e) =>
                           setCreateForm((f) => ({ ...f, guard_id: e.target.value }))
                         }
-                        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-xs text-gray-200 placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
+                        className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
                       />
                     </div>
                     <div>
-                      <label className="mb-1 block text-[10px] uppercase tracking-wider text-gray-500">
+                      <label className="mb-1 block text-[10px] uppercase tracking-wider text-muted-foreground">
                         Zone IDs (comma-separated)
                       </label>
                       <input
@@ -627,11 +627,11 @@ export default function PatrolCommandPage() {
                         onChange={(e) =>
                           setCreateForm((f) => ({ ...f, zone_ids: e.target.value }))
                         }
-                        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-xs text-gray-200 placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
+                        className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
                       />
                     </div>
                     <div>
-                      <label className="mb-1 block text-[10px] uppercase tracking-wider text-gray-500">
+                      <label className="mb-1 block text-[10px] uppercase tracking-wider text-muted-foreground">
                         Start Time
                       </label>
                       <input
@@ -640,7 +640,7 @@ export default function PatrolCommandPage() {
                         onChange={(e) =>
                           setCreateForm((f) => ({ ...f, start_time: e.target.value }))
                         }
-                        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-xs text-gray-200 focus:border-cyan-600 focus:outline-none [color-scheme:dark]"
+                        className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none [color-scheme:dark]"
                       />
                     </div>
                     <div className="flex items-end gap-2">
@@ -663,7 +663,7 @@ export default function PatrolCommandPage() {
                       </button>
                       <button
                         onClick={() => setShowCreateForm(false)}
-                        className="rounded-lg border border-gray-700 px-3 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+                        className="rounded-lg border border-border-strong px-3 py-2 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
                       >
                         Cancel
                       </button>
@@ -675,7 +675,7 @@ export default function PatrolCommandPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-gray-800 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                    <tr className="border-b border-border text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                       <th className="px-5 py-3">Guard</th>
                       <th className="px-5 py-3">Zones</th>
                       <th className="px-5 py-3">Status</th>
@@ -688,7 +688,7 @@ export default function PatrolCommandPage() {
                       <tr>
                         <td
                           colSpan={5}
-                          className="px-5 py-10 text-center text-gray-600"
+                          className="px-5 py-10 text-center text-muted-foreground"
                         >
                           No patrol shifts found
                         </td>
@@ -701,7 +701,7 @@ export default function PatrolCommandPage() {
                       return (
                         <tr
                           key={shift.id}
-                          className="border-b border-gray-800/50 transition-colors hover:bg-gray-900/80 group"
+                          className="border-b border-border/50 transition-colors hover:bg-surface-2/80 group"
                           style={{ cursor: "pointer" }}
                         >
                           {/* Wrap entire row content in a single td with inner grid for expand support */}
@@ -716,11 +716,11 @@ export default function PatrolCommandPage() {
                               {/* Guard */}
                               <div className="px-5 py-3 flex items-center gap-2">
                                 {isExpanded ? (
-                                  <ChevronUp className="h-3 w-3 text-gray-500" />
+                                  <ChevronUp className="h-3 w-3 text-muted-foreground" />
                                 ) : (
-                                  <ChevronDown className="h-3 w-3 text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                  <ChevronDown className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                                 )}
-                                <span className="font-mono text-xs text-gray-300">
+                                <span className="font-mono text-xs text-foreground">
                                   {shift.guard_id
                                     ? shift.guard_id.slice(0, 8)
                                     : "Unassigned"}
@@ -734,17 +734,17 @@ export default function PatrolCommandPage() {
                                     shift.zone_ids.slice(0, 3).map((z, i) => (
                                       <span
                                         key={i}
-                                        className="inline-flex items-center gap-1 rounded bg-gray-800 px-2 py-0.5 text-[10px] text-gray-400"
+                                        className="inline-flex items-center gap-1 rounded bg-surface-3 px-2 py-0.5 text-[10px] text-muted-foreground"
                                       >
                                         <MapPin className="h-2.5 w-2.5" />
                                         {z.slice(0, 6)}
                                       </span>
                                     ))
                                   ) : (
-                                    <span className="text-xs text-gray-600">---</span>
+                                    <span className="text-xs text-muted-foreground">---</span>
                                   )}
                                   {shift.zone_ids.length > 3 && (
-                                    <span className="text-[10px] text-gray-500">
+                                    <span className="text-[10px] text-muted-foreground">
                                       +{shift.zone_ids.length - 3}
                                     </span>
                                   )}
@@ -774,7 +774,7 @@ export default function PatrolCommandPage() {
                               </div>
 
                               {/* Start Time */}
-                              <div className="px-5 py-3 text-xs text-gray-400">
+                              <div className="px-5 py-3 text-xs text-muted-foreground">
                                 {shift.start_time
                                   ? formatTimestamp(shift.start_time)
                                   : "---"}
@@ -784,15 +784,15 @@ export default function PatrolCommandPage() {
                               <div className="px-5 py-3">
                                 <div className="flex items-center gap-2">
                                   <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
-                                  <span className="text-xs text-gray-300">
+                                  <span className="text-xs text-foreground">
                                     {shift.checkpoints_completed.length}
                                   </span>
-                                  <span className="text-xs text-gray-600">
+                                  <span className="text-xs text-muted-foreground">
                                     / {shift.route_waypoints.length}
                                   </span>
                                 </div>
                                 {shift.route_waypoints.length > 0 && (
-                                  <div className="mt-1 h-1 w-20 rounded-full bg-gray-800">
+                                  <div className="mt-1 h-1 w-20 rounded-full bg-surface-3">
                                     <div
                                       className="h-1 rounded-full bg-cyan-500 transition-all"
                                       style={{
@@ -810,11 +810,11 @@ export default function PatrolCommandPage() {
 
                             {/* Expanded detail panel */}
                             {isExpanded && (
-                              <div className="border-t border-gray-800/50 bg-gray-950/50 px-5 py-4">
+                              <div className="border-t border-border/50 bg-surface-0/50 px-5 py-4">
                                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                   {/* All Zone IDs */}
                                   <div>
-                                    <h4 className="mb-2 text-[10px] uppercase tracking-wider text-gray-500">
+                                    <h4 className="mb-2 text-[10px] uppercase tracking-wider text-muted-foreground">
                                       All Zone IDs ({shift.zone_ids.length})
                                     </h4>
                                     <div className="flex flex-wrap gap-1.5">
@@ -822,14 +822,14 @@ export default function PatrolCommandPage() {
                                         shift.zone_ids.map((z, i) => (
                                           <span
                                             key={i}
-                                            className="inline-flex items-center gap-1 rounded bg-gray-800 px-2 py-1 text-[11px] text-gray-300 border border-gray-700/50"
+                                            className="inline-flex items-center gap-1 rounded bg-surface-3 px-2 py-1 text-[11px] text-foreground border border-border-strong/50"
                                           >
                                             <MapPin className="h-3 w-3 text-cyan-500" />
                                             {z}
                                           </span>
                                         ))
                                       ) : (
-                                        <span className="text-xs text-gray-600">
+                                        <span className="text-xs text-muted-foreground">
                                           No zones assigned
                                         </span>
                                       )}
@@ -838,7 +838,7 @@ export default function PatrolCommandPage() {
 
                                   {/* Checkpoints list */}
                                   <div>
-                                    <h4 className="mb-2 text-[10px] uppercase tracking-wider text-gray-500">
+                                    <h4 className="mb-2 text-[10px] uppercase tracking-wider text-muted-foreground">
                                       Checkpoints Completed ({shift.checkpoints_completed.length})
                                     </h4>
                                     {shift.checkpoints_completed.length > 0 ? (
@@ -848,14 +848,14 @@ export default function PatrolCommandPage() {
                                           return (
                                             <div
                                               key={i}
-                                              className="flex items-center gap-2 rounded bg-gray-800/60 px-2 py-1 text-[11px]"
+                                              className="flex items-center gap-2 rounded bg-surface-3/60 px-2 py-1 text-[11px]"
                                             >
                                               <CheckCircle2 className="h-3 w-3 text-green-500 shrink-0" />
-                                              <span className="font-mono text-gray-300">
+                                              <span className="font-mono text-foreground">
                                                 {(cpObj.checkpoint_id as string) || `#${i + 1}`}
                                               </span>
                                               {typeof cpObj.timestamp === "string" && (
-                                                <span className="text-gray-500 ml-auto">
+                                                <span className="text-muted-foreground ml-auto">
                                                   {formatTimestamp(cpObj.timestamp)}
                                                 </span>
                                               )}
@@ -864,7 +864,7 @@ export default function PatrolCommandPage() {
                                         })}
                                       </div>
                                     ) : (
-                                      <span className="text-xs text-gray-600">
+                                      <span className="text-xs text-muted-foreground">
                                         No checkpoints recorded yet
                                       </span>
                                     )}
@@ -884,7 +884,7 @@ export default function PatrolCommandPage() {
 
                                 {/* Record Checkpoint button for active/scheduled shifts */}
                                 {(shift.status === "active" || shift.status === "scheduled") && (
-                                  <div className="mt-3 flex items-center gap-3 border-t border-gray-800/50 pt-3">
+                                  <div className="mt-3 flex items-center gap-3 border-t border-border/50 pt-3">
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
@@ -931,31 +931,31 @@ export default function PatrolCommandPage() {
             </div>
 
             {/* Right: Patrol Routes (1/3) */}
-            <div className="rounded-xl border border-gray-800 bg-gray-900/50">
-              <div className="flex items-center justify-between border-b border-gray-800 px-5 py-3">
+            <div className="rounded-xl border border-border bg-surface-2/50">
+              <div className="flex items-center justify-between border-b border-border px-5 py-3">
                 <h2 className="flex items-center gap-2 text-sm font-semibold text-cyan-400">
                   <Route className="h-4 w-4" />
                   Patrol Routes
                 </h2>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-muted-foreground">
                   {routes.length} routes
                 </span>
               </div>
 
-              <div className="divide-y divide-gray-800/50 max-h-[480px] overflow-y-auto scrollbar-thin scrollbar-track-gray-900 scrollbar-thumb-gray-800">
+              <div className="divide-y divide-border/50 max-h-[480px] overflow-y-auto scrollbar-thin scrollbar-track-gray-900 scrollbar-thumb-gray-800">
                 {routes.length === 0 && (
                   <div className="flex flex-col items-center py-10">
-                    <Route className="mb-2 h-8 w-8 text-gray-700" />
-                    <p className="text-xs text-gray-600">No routes available</p>
+                    <Route className="mb-2 h-8 w-8 text-muted-foreground" />
+                    <p className="text-xs text-muted-foreground">No routes available</p>
                   </div>
                 )}
                 {routes.map((route) => (
                   <div
                     key={route.id}
-                    className="px-5 py-4 transition-colors hover:bg-gray-900/80"
+                    className="px-5 py-4 transition-colors hover:bg-surface-2/80"
                   >
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-medium text-gray-200">
+                      <h3 className="text-sm font-medium text-foreground">
                         {route.name}
                       </h3>
                       {route.is_active ? (
@@ -963,7 +963,7 @@ export default function PatrolCommandPage() {
                           Active
                         </span>
                       ) : (
-                        <span className="rounded-full bg-gray-800 px-2 py-0.5 text-[10px] font-semibold text-gray-500 border border-gray-700/50">
+                        <span className="rounded-full bg-surface-3 px-2 py-0.5 text-[10px] font-semibold text-muted-foreground border border-border-strong/50">
                           Inactive
                         </span>
                       )}
@@ -971,10 +971,10 @@ export default function PatrolCommandPage() {
 
                     {/* Risk Score */}
                     <div className="mt-2 flex items-center gap-2">
-                      <span className="text-[10px] uppercase tracking-wider text-gray-500">
+                      <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
                         Risk
                       </span>
-                      <div className="flex-1 h-2 rounded-full bg-gray-800">
+                      <div className="flex-1 h-2 rounded-full bg-surface-3">
                         <div
                           className={cn(
                             "h-2 rounded-full transition-all",
@@ -994,7 +994,7 @@ export default function PatrolCommandPage() {
                     </div>
 
                     {/* Meta */}
-                    <div className="mt-2 flex items-center gap-3 text-[11px] text-gray-500">
+                    <div className="mt-2 flex items-center gap-3 text-[11px] text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <MapPin className="h-3 w-3" />
                         {route.zone_sequence.length} zones
@@ -1011,8 +1011,8 @@ export default function PatrolCommandPage() {
           </div>
 
           {/* Coverage Stats Panel */}
-          <div className="rounded-xl border border-gray-800 bg-gray-900/50">
-            <div className="flex items-center justify-between border-b border-gray-800 px-5 py-3">
+          <div className="rounded-xl border border-border bg-surface-2/50">
+            <div className="flex items-center justify-between border-b border-border px-5 py-3">
               <h2 className="flex items-center gap-2 text-sm font-semibold text-cyan-400">
                 <BarChart3 className="h-4 w-4" />
                 Patrol Coverage
@@ -1020,7 +1020,7 @@ export default function PatrolCommandPage() {
               <button
                 onClick={fetchCoverage}
                 disabled={coverageLoading}
-                className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors disabled:opacity-50"
               >
                 <RefreshCw
                   className={cn(
@@ -1035,7 +1035,7 @@ export default function PatrolCommandPage() {
             {coverageLoading && !coverage && (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="h-5 w-5 animate-spin text-cyan-400" />
-                <span className="ml-2 text-xs text-gray-500">
+                <span className="ml-2 text-xs text-muted-foreground">
                   Loading coverage data...
                 </span>
               </div>
@@ -1051,48 +1051,48 @@ export default function PatrolCommandPage() {
 
                 {/* Summary cards */}
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
-                  <div className="rounded-lg border border-gray-800 bg-gray-950/50 px-3 py-2.5">
-                    <div className="text-[10px] uppercase tracking-wider text-gray-500">
+                  <div className="rounded-lg border border-border bg-surface-0/50 px-3 py-2.5">
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
                       Time Range
                     </div>
-                    <div className="mt-1 text-lg font-bold text-gray-200">
+                    <div className="mt-1 text-lg font-bold text-foreground">
                       {coverage.time_range_hours}h
                     </div>
                   </div>
-                  <div className="rounded-lg border border-gray-800 bg-gray-950/50 px-3 py-2.5">
-                    <div className="text-[10px] uppercase tracking-wider text-gray-500">
+                  <div className="rounded-lg border border-border bg-surface-0/50 px-3 py-2.5">
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
                       Total Patrols
                     </div>
-                    <div className="mt-1 text-lg font-bold text-gray-200">
+                    <div className="mt-1 text-lg font-bold text-foreground">
                       {coverage.total_patrols}
                     </div>
                   </div>
-                  <div className="rounded-lg border border-gray-800 bg-gray-950/50 px-3 py-2.5">
-                    <div className="text-[10px] uppercase tracking-wider text-gray-500">
+                  <div className="rounded-lg border border-border bg-surface-0/50 px-3 py-2.5">
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
                       Active
                     </div>
                     <div className="mt-1 text-lg font-bold text-green-400">
                       {coverage.active_patrols}
                     </div>
                   </div>
-                  <div className="rounded-lg border border-gray-800 bg-gray-950/50 px-3 py-2.5">
-                    <div className="text-[10px] uppercase tracking-wider text-gray-500">
+                  <div className="rounded-lg border border-border bg-surface-0/50 px-3 py-2.5">
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
                       Completed
                     </div>
                     <div className="mt-1 text-lg font-bold text-blue-400">
                       {coverage.completed_patrols}
                     </div>
                   </div>
-                  <div className="rounded-lg border border-gray-800 bg-gray-950/50 px-3 py-2.5">
-                    <div className="text-[10px] uppercase tracking-wider text-gray-500">
+                  <div className="rounded-lg border border-border bg-surface-0/50 px-3 py-2.5">
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
                       Checkpoints
                     </div>
                     <div className="mt-1 text-lg font-bold text-cyan-400">
                       {coverage.total_checkpoints_recorded}
                     </div>
                   </div>
-                  <div className="rounded-lg border border-gray-800 bg-gray-950/50 px-3 py-2.5">
-                    <div className="text-[10px] uppercase tracking-wider text-gray-500">
+                  <div className="rounded-lg border border-border bg-surface-0/50 px-3 py-2.5">
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
                       Zones Covered
                     </div>
                     <div className="mt-1 text-lg font-bold text-yellow-400">
@@ -1104,7 +1104,7 @@ export default function PatrolCommandPage() {
                 {/* Per-zone breakdown */}
                 {Object.keys(coverage.zone_coverage).length > 0 && (
                   <div className="mt-4">
-                    <h4 className="mb-2 text-[10px] uppercase tracking-wider text-gray-500">
+                    <h4 className="mb-2 text-[10px] uppercase tracking-wider text-muted-foreground">
                       Zone Breakdown
                     </h4>
                     <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
@@ -1112,16 +1112,16 @@ export default function PatrolCommandPage() {
                         ([zoneId, stats]) => (
                           <div
                             key={zoneId}
-                            className="flex items-center justify-between rounded-lg border border-gray-800 bg-gray-950/50 px-3 py-2"
+                            className="flex items-center justify-between rounded-lg border border-border bg-surface-0/50 px-3 py-2"
                           >
-                            <span className="flex items-center gap-1.5 text-xs text-gray-300">
+                            <span className="flex items-center gap-1.5 text-xs text-foreground">
                               <MapPin className="h-3 w-3 text-cyan-500" />
                               {zoneId.length > 12
                                 ? zoneId.slice(0, 12) + "..."
                                 : zoneId}
                             </span>
                             <div className="flex items-center gap-2 text-[10px]">
-                              <span className="text-gray-500">
+                              <span className="text-muted-foreground">
                                 {stats.patrol_count} patrols
                               </span>
                               <span className="text-green-400">
@@ -1139,8 +1139,8 @@ export default function PatrolCommandPage() {
 
             {!coverageLoading && !coverage && (
               <div className="flex flex-col items-center py-8">
-                <BarChart3 className="mb-2 h-8 w-8 text-gray-700" />
-                <p className="text-xs text-gray-600">
+                <BarChart3 className="mb-2 h-8 w-8 text-muted-foreground" />
+                <p className="text-xs text-muted-foreground">
                   Coverage data unavailable
                 </p>
               </div>
@@ -1148,12 +1148,12 @@ export default function PatrolCommandPage() {
           </div>
 
           {/* Bottom: Generate Route */}
-          <div className="flex items-center justify-between rounded-xl border border-gray-800 bg-gray-900/50 px-6 py-4">
+          <div className="flex items-center justify-between rounded-xl border border-border bg-surface-2/50 px-6 py-4">
             <div>
-              <h3 className="text-sm font-semibold text-gray-200">
+              <h3 className="text-sm font-semibold text-foreground">
                 AI Route Generation
               </h3>
-              <p className="mt-0.5 text-xs text-gray-500">
+              <p className="mt-0.5 text-xs text-muted-foreground">
                 Automatically generate an optimized patrol route based on
                 current threat landscape and zone risk scores
               </p>

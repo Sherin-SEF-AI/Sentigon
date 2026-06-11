@@ -83,22 +83,22 @@ export function AgenticVideoWall({
   const fullscreenFrame = fullscreenCameraId ? frames[fullscreenCameraId] : null;
 
   return (
-    <div className="flex h-full flex-col bg-gray-950 min-h-0 overflow-hidden">
+    <div className="flex h-full flex-col bg-surface-0 min-h-0 overflow-hidden">
       {/* Compact header bar */}
-      <header className="flex items-center justify-between border-b border-gray-800/60 bg-gray-950 px-3 py-1.5 shrink-0">
+      <header className="flex items-center justify-between border-b border-border/60 bg-surface-0 px-3 py-1.5 shrink-0">
         <div className="flex items-center gap-2">
           <Camera className="h-3.5 w-3.5 text-cyan-400" />
-          <span className="text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+          <span className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">
             Video Wall
           </span>
-          <span className="text-[10px] text-gray-600 font-mono">
+          <span className="text-[10px] text-muted-foreground font-mono">
             {cameraCount} feed{cameraCount !== 1 ? "s" : ""}
           </span>
         </div>
 
         <div className="flex items-center gap-2">
           {/* Layout switcher */}
-          <div className="flex items-center rounded-md bg-gray-900/80 border border-gray-800/50 p-0.5">
+          <div className="flex items-center rounded-md bg-surface-2/80 border border-border/50 p-0.5">
             {LAYOUT_OPTIONS.map(({ value, icon: Icon, label }) => (
               <button
                 key={value}
@@ -107,7 +107,7 @@ export function AgenticVideoWall({
                   "rounded px-1.5 py-0.5 text-[9px] font-medium transition-all flex items-center gap-1",
                   gridLayout === value
                     ? "bg-cyan-900/50 text-cyan-400 shadow-sm"
-                    : "text-gray-500 hover:text-gray-300 hover:bg-gray-800/60"
+                    : "text-muted-foreground hover:text-foreground hover:bg-surface-3/60"
                 )}
                 title={label}
               >
@@ -138,7 +138,7 @@ export function AgenticVideoWall({
           {selectedCameraId && !fullscreenCameraId && (
             <button
               onClick={enterFullscreen}
-              className="rounded p-1 text-gray-500 transition-colors hover:bg-gray-800 hover:text-gray-200"
+              className="rounded p-1 text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
               title="Expand selected camera"
             >
               <Maximize2 className="h-3.5 w-3.5" />
@@ -147,7 +147,7 @@ export function AgenticVideoWall({
           {fullscreenCameraId && (
             <button
               onClick={exitFullscreen}
-              className="rounded p-1 text-gray-500 transition-colors hover:bg-gray-800 hover:text-gray-200"
+              className="rounded p-1 text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
               title="Exit fullscreen"
             >
               <Minimize2 className="h-3.5 w-3.5" />
@@ -161,17 +161,17 @@ export function AgenticVideoWall({
         {!connected && cameraCount === 0 ? (
           <div className="flex h-full items-center justify-center">
             <div className="text-center">
-              <WifiOff className="mx-auto h-8 w-8 text-gray-600 mb-2" />
-              <p className="text-sm text-gray-400">Connecting to camera feeds...</p>
-              <p className="text-xs text-gray-600 mt-1">Waiting for WebSocket connection</p>
+              <WifiOff className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
+              <p className="text-sm text-muted-foreground">Connecting to camera feeds...</p>
+              <p className="text-xs text-muted-foreground mt-1">Waiting for WebSocket connection</p>
             </div>
           </div>
         ) : cameraCount === 0 ? (
           <div className="flex h-full items-center justify-center">
             <div className="text-center">
-              <Camera className="mx-auto h-8 w-8 text-gray-600 mb-2" />
-              <p className="text-sm text-gray-400">No active camera feeds</p>
-              <p className="text-xs text-gray-600 mt-1">Start a camera from Settings or the Cameras page</p>
+              <Camera className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
+              <p className="text-sm text-muted-foreground">No active camera feeds</p>
+              <p className="text-xs text-muted-foreground mt-1">Start a camera from Settings or the Cameras page</p>
             </div>
           </div>
         ) : fullscreenCameraId && fullscreenFrame ? (

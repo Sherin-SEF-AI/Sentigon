@@ -49,8 +49,8 @@ function ConversationEntry({
   return (
     <div
       className={cn(
-        "rounded-lg border border-gray-800 transition-all duration-200",
-        expanded ? "bg-gray-900/80 ring-1 ring-purple-900/30" : "bg-gray-900/50 hover:bg-gray-900/70"
+        "rounded-lg border border-border transition-all duration-200",
+        expanded ? "bg-surface-2/80 ring-1 ring-purple-900/30" : "bg-surface-2/50 hover:bg-surface-2/70"
       )}
     >
       {/* Summary row */}
@@ -63,18 +63,18 @@ function ConversationEntry({
         <div className="flex-1 min-w-0 space-y-1">
           {/* Decision summary */}
           {entry.decision && (
-            <p className="text-sm font-medium text-gray-200 line-clamp-2">
+            <p className="text-sm font-medium text-foreground line-clamp-2">
               {entry.decision}
             </p>
           )}
           {!entry.decision && entry.response_summary && (
-            <p className="text-sm text-gray-300 line-clamp-2">
+            <p className="text-sm text-foreground line-clamp-2">
               {entry.response_summary}
             </p>
           )}
 
           {/* Meta row */}
-          <div className="flex flex-wrap items-center gap-3 text-[10px] text-gray-500">
+          <div className="flex flex-wrap items-center gap-3 text-[10px] text-muted-foreground">
             <span className="flex items-center gap-1">
               <Clock className="h-2.5 w-2.5" />
               {formatTimestamp(entry.timestamp)}
@@ -107,7 +107,7 @@ function ConversationEntry({
 
         <ChevronDown
           className={cn(
-            "mt-1 h-4 w-4 shrink-0 text-gray-600 transition-transform duration-200",
+            "mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
             expanded && "rotate-180"
           )}
         />
@@ -115,14 +115,14 @@ function ConversationEntry({
 
       {/* Expanded details */}
       {expanded && (
-        <div className="border-t border-gray-800 px-4 py-3 space-y-3">
+        <div className="border-t border-border px-4 py-3 space-y-3">
           {/* Prompt */}
           {(entry.full_prompt || entry.prompt_summary) && (
             <div>
-              <h4 className="mb-1 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+              <h4 className="mb-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 Prompt
               </h4>
-              <div className="rounded-md border border-gray-800 bg-gray-950 p-3 text-xs leading-relaxed text-gray-400 max-h-48 overflow-y-auto">
+              <div className="rounded-md border border-border bg-surface-0 p-3 text-xs leading-relaxed text-muted-foreground max-h-48 overflow-y-auto">
                 {entry.full_prompt || entry.prompt_summary}
               </div>
             </div>
@@ -131,7 +131,7 @@ function ConversationEntry({
           {/* Response */}
           {(entry.full_response || entry.response_summary) && (
             <div>
-              <h4 className="mb-1 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+              <h4 className="mb-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 Response
               </h4>
               <div className="rounded-md border border-purple-900/40 bg-purple-950/10 p-3 text-xs leading-relaxed text-purple-300 max-h-48 overflow-y-auto">
@@ -143,21 +143,21 @@ function ConversationEntry({
           {/* Tools called */}
           {entry.tools_called && entry.tools_called.length > 0 && (
             <div>
-              <h4 className="mb-1 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+              <h4 className="mb-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 Tools Called
               </h4>
               <div className="space-y-1">
                 {entry.tools_called.map((tool, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-2 rounded border border-gray-800 bg-gray-950/80 px-2.5 py-1.5"
+                    className="flex items-center gap-2 rounded border border-border bg-surface-0/80 px-2.5 py-1.5"
                   >
                     <Wrench className="h-3 w-3 shrink-0 text-blue-400" />
                     <span className="font-mono text-xs text-blue-300">
                       {tool.name}
                     </span>
                     {tool.params && (
-                      <span className="ml-auto truncate text-[10px] text-gray-600 max-w-[200px]">
+                      <span className="ml-auto truncate text-[10px] text-muted-foreground max-w-[200px]">
                         {JSON.stringify(tool.params)}
                       </span>
                     )}
@@ -170,7 +170,7 @@ function ConversationEntry({
           {/* Decision */}
           {entry.decision && (
             <div>
-              <h4 className="mb-1 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+              <h4 className="mb-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 Decision
               </h4>
               <p className="rounded-md border border-green-900/40 bg-green-950/10 p-3 text-xs text-green-300">
@@ -180,7 +180,7 @@ function ConversationEntry({
           )}
 
           {/* Stats */}
-          <div className="flex flex-wrap gap-4 text-[11px] text-gray-500">
+          <div className="flex flex-wrap gap-4 text-[11px] text-muted-foreground">
             {entry.confidence != null && (
               <span>
                 Confidence:{" "}
@@ -192,7 +192,7 @@ function ConversationEntry({
             {entry.tokens_used != null && (
               <span>
                 Tokens:{" "}
-                <span className="font-mono text-gray-300">
+                <span className="font-mono text-foreground">
                   {entry.tokens_used.toLocaleString()}
                 </span>
               </span>
@@ -200,7 +200,7 @@ function ConversationEntry({
             {entry.latency_ms != null && (
               <span>
                 Latency:{" "}
-                <span className="font-mono text-gray-300">
+                <span className="font-mono text-foreground">
                   {entry.latency_ms}ms
                 </span>
               </span>
@@ -268,15 +268,15 @@ export default function AgentConversation({
   return (
     <div
       className={cn(
-        "flex flex-col rounded-lg border border-gray-800 bg-gray-950",
+        "flex flex-col rounded-lg border border-border bg-surface-0",
         className
       )}
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-4 py-3">
+      <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-2">
           <Brain className="h-4 w-4 text-purple-400" />
-          <h3 className="text-sm font-semibold text-gray-200">
+          <h3 className="text-sm font-semibold text-foreground">
             Reasoning Chain
           </h3>
           <span className="rounded-full bg-purple-900/30 border border-purple-800/40 px-2 py-0.5 text-[10px] font-semibold text-purple-400">
@@ -286,15 +286,15 @@ export default function AgentConversation({
       </div>
 
       {/* Search bar */}
-      <div className="border-b border-gray-800 px-4 py-2">
+      <div className="border-b border-border px-4 py-2">
         <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-600" />
+          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search decisions..."
-            className="w-full rounded-md border border-gray-700 bg-gray-900 py-1.5 pl-8 pr-3 text-xs text-gray-300 placeholder-gray-600 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700"
+            className="w-full rounded-md border border-border-strong bg-surface-2 py-1.5 pl-8 pr-3 text-xs text-foreground placeholder-gray-600 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700"
           />
         </div>
       </div>
@@ -304,7 +304,7 @@ export default function AgentConversation({
         {loading && (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-6 w-6 animate-spin text-purple-400" />
-            <span className="ml-2 text-sm text-gray-500">
+            <span className="ml-2 text-sm text-muted-foreground">
               Loading reasoning chain...
             </span>
           </div>
@@ -316,7 +316,7 @@ export default function AgentConversation({
             <p className="text-sm text-red-400">{error}</p>
             <button
               onClick={fetchDecisions}
-              className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 transition-colors"
+              className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 transition-colors"
             >
               Retry
             </button>
@@ -325,8 +325,8 @@ export default function AgentConversation({
 
         {!loading && !error && filtered.length === 0 && (
           <div className="flex flex-col items-center justify-center py-12">
-            <Brain className="mb-2 h-6 w-6 text-gray-700" />
-            <p className="text-xs text-gray-600">
+            <Brain className="mb-2 h-6 w-6 text-muted-foreground" />
+            <p className="text-xs text-muted-foreground">
               {searchQuery ? "No matching decisions" : "No decisions recorded"}
             </p>
           </div>

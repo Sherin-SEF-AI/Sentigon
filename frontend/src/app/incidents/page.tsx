@@ -110,7 +110,7 @@ const STATUS_COLORS: Record<string, string> = {
   assigned: "text-blue-400 bg-blue-900/30",
   in_progress: "text-cyan-400 bg-cyan-900/30",
   resolved: "text-green-400 bg-green-900/30",
-  closed: "text-gray-400 bg-gray-800",
+  closed: "text-muted-foreground bg-surface-3",
   reviewed: "text-emerald-400 bg-emerald-900/30",
 };
 
@@ -135,7 +135,7 @@ function slaTimeRemaining(deadline: string | null): {
   text: string;
   color: string;
 } {
-  if (!deadline) return { text: "No SLA", color: "text-gray-500" };
+  if (!deadline) return { text: "No SLA", color: "text-muted-foreground" };
   const remaining = new Date(deadline).getTime() - Date.now();
   if (remaining <= 0) return { text: "BREACHED", color: "text-red-500" };
   const minutes = Math.floor(remaining / 60000);
@@ -168,7 +168,7 @@ function WorkflowStepper({ currentStatus }: { currentStatus: string }) {
                   "border-cyan-400 bg-cyan-400/20 text-cyan-400 ring-2 ring-cyan-400/30",
                 !isComplete &&
                   !isCurrent &&
-                  "border-gray-700 bg-gray-800 text-gray-600"
+                  "border-border-strong bg-surface-3 text-muted-foreground"
               )}
             >
               {isComplete ? (
@@ -181,7 +181,7 @@ function WorkflowStepper({ currentStatus }: { currentStatus: string }) {
               <div
                 className={cn(
                   "h-px w-4",
-                  isComplete ? "bg-green-500/50" : "bg-gray-700"
+                  isComplete ? "bg-green-500/50" : "bg-surface-3"
                 )}
               />
             )}
@@ -273,30 +273,30 @@ function LinkEvidenceModal({
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      <div className="w-full max-w-lg rounded-xl border border-gray-800 bg-[#030712] shadow-2xl flex flex-col max-h-[80vh]">
+      <div className="w-full max-w-lg rounded-xl border border-border bg-[#030712] shadow-2xl flex flex-col max-h-[80vh]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-800 px-5 py-4 shrink-0">
+        <div className="flex items-center justify-between border-b border-border px-5 py-4 shrink-0">
           <div className="flex items-center gap-2">
             <Paperclip className="h-4 w-4 text-cyan-400" />
-            <h2 className="text-sm font-bold text-gray-100">Link Evidence</h2>
+            <h2 className="text-sm font-bold text-foreground">Link Evidence</h2>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-800 hover:text-gray-300"
+            className="rounded-lg p-1.5 text-muted-foreground hover:bg-surface-3 hover:text-foreground"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-gray-800 shrink-0">
+        <div className="flex border-b border-border shrink-0">
           <button
             onClick={() => setTab("select")}
             className={cn(
               "flex items-center gap-1.5 border-b-2 px-4 py-2.5 text-xs font-medium transition-colors",
               tab === "select"
                 ? "border-cyan-400 text-cyan-400"
-                : "border-transparent text-gray-500 hover:text-gray-300"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             )}
           >
             <Link2 className="h-3.5 w-3.5" />
@@ -308,7 +308,7 @@ function LinkEvidenceModal({
               "flex items-center gap-1.5 border-b-2 px-4 py-2.5 text-xs font-medium transition-colors",
               tab === "upload"
                 ? "border-cyan-400 text-cyan-400"
-                : "border-transparent text-gray-500 hover:text-gray-300"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             )}
           >
             <Upload className="h-3.5 w-3.5" />
@@ -321,12 +321,12 @@ function LinkEvidenceModal({
             <div className="space-y-3">
               {/* Search */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+                <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
                 <input
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search evidence by label or type..."
-                  className="w-full rounded-lg border border-gray-700 bg-gray-900 pl-9 pr-3 py-2 text-xs text-gray-300 placeholder:text-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                  className="w-full rounded-lg border border-border-strong bg-surface-2 pl-9 pr-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
                 />
               </div>
 
@@ -336,9 +336,9 @@ function LinkEvidenceModal({
                   <Loader2 className="h-5 w-5 animate-spin text-cyan-400" />
                 </div>
               ) : filteredEvidence.length === 0 ? (
-                <div className="flex flex-col items-center justify-center rounded-lg border border-gray-800 bg-gray-900/40 py-8 text-center">
-                  <FileText className="mb-2 h-8 w-8 text-gray-700" />
-                  <p className="text-xs text-gray-500">No evidence found</p>
+                <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-surface-2/40 py-8 text-center">
+                  <FileText className="mb-2 h-8 w-8 text-muted-foreground" />
+                  <p className="text-xs text-muted-foreground">No evidence found</p>
                 </div>
               ) : (
                 <div className="space-y-1.5 max-h-64 overflow-y-auto pr-1">
@@ -350,7 +350,7 @@ function LinkEvidenceModal({
                         "w-full flex items-start gap-3 rounded-lg border px-3 py-2.5 text-left transition-colors",
                         selectedId === ev.id
                           ? "border-cyan-600/60 bg-cyan-900/20"
-                          : "border-gray-800 bg-gray-900/40 hover:border-gray-700 hover:bg-gray-900/70"
+                          : "border-border bg-surface-2/40 hover:border-border-strong hover:bg-surface-2/70"
                       )}
                     >
                       <div
@@ -358,7 +358,7 @@ function LinkEvidenceModal({
                           "mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border",
                           selectedId === ev.id
                             ? "border-cyan-400 bg-cyan-400/20"
-                            : "border-gray-700 bg-gray-800"
+                            : "border-border-strong bg-surface-3"
                         )}
                       >
                         {selectedId === ev.id && (
@@ -366,13 +366,13 @@ function LinkEvidenceModal({
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-xs font-medium text-gray-200">
+                        <p className="truncate text-xs font-medium text-foreground">
                           {ev.label || ev.id.slice(0, 16)}
                         </p>
                         <div className="mt-0.5 flex items-center gap-2">
-                          <span className="text-[10px] text-gray-500 uppercase">{ev.type}</span>
+                          <span className="text-[10px] text-muted-foreground uppercase">{ev.type}</span>
                           {ev.timestamp && (
-                            <span className="text-[10px] text-gray-600">
+                            <span className="text-[10px] text-muted-foreground">
                               {formatTimestamp(ev.timestamp)}
                             </span>
                           )}
@@ -385,7 +385,7 @@ function LinkEvidenceModal({
             </div>
           ) : (
             <div className="space-y-3">
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 Upload a new file — it will be saved as evidence and automatically linked to this incident.
               </p>
               <FileUpload
@@ -402,10 +402,10 @@ function LinkEvidenceModal({
 
         {/* Footer */}
         {tab === "select" && (
-          <div className="flex items-center justify-end gap-3 border-t border-gray-800 px-5 py-3 shrink-0">
+          <div className="flex items-center justify-end gap-3 border-t border-border px-5 py-3 shrink-0">
             <button
               onClick={onClose}
-              className="rounded-lg border border-gray-700 px-4 py-2 text-xs font-medium text-gray-400 hover:bg-gray-800 hover:text-gray-200"
+              className="rounded-lg border border-border-strong px-4 py-2 text-xs font-medium text-muted-foreground hover:bg-surface-3 hover:text-foreground"
             >
               Cancel
             </button>
@@ -530,14 +530,14 @@ function IncidentDetailPanel({
 
   return (
     <>
-      <div className="fixed inset-y-0 right-0 z-50 flex w-[520px] flex-col border-l border-gray-800 bg-[#030712] shadow-2xl">
+      <div className="fixed inset-y-0 right-0 z-50 flex w-[520px] flex-col border-l border-border bg-[#030712] shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-800 px-5 py-4">
+        <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <div className="min-w-0 flex-1">
-            <h2 className="truncate text-sm font-bold text-gray-100">
+            <h2 className="truncate text-sm font-bold text-foreground">
               {incident.title}
             </h2>
-            <p className="mt-0.5 text-xs text-gray-500">
+            <p className="mt-0.5 text-xs text-muted-foreground">
               ID: {incident.id.slice(0, 12)}
             </p>
           </div>
@@ -545,7 +545,7 @@ function IncidentDetailPanel({
             {/* Link Evidence Button */}
             <button
               onClick={() => setShowLinkEvidence(true)}
-              className="flex items-center gap-1.5 rounded-lg bg-gray-800 border border-gray-700 px-2.5 py-1.5 text-xs font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+              className="flex items-center gap-1.5 rounded-lg bg-surface-3 border border-border-strong px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-surface-3 hover:text-white transition-colors"
               title="Link Evidence"
             >
               <Paperclip className="h-3.5 w-3.5" />
@@ -558,7 +558,7 @@ function IncidentDetailPanel({
             </button>
             <button
               onClick={onClose}
-              className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-800 hover:text-gray-300"
+              className="rounded-lg p-1.5 text-muted-foreground hover:bg-surface-3 hover:text-foreground"
             >
               <X className="h-4 w-4" />
             </button>
@@ -579,20 +579,20 @@ function IncidentDetailPanel({
             <span
               className={cn(
                 "rounded px-2 py-0.5 text-[10px] font-semibold uppercase",
-                STATUS_COLORS[incident.status] || "text-gray-400 bg-gray-800"
+                STATUS_COLORS[incident.status] || "text-muted-foreground bg-surface-3"
               )}
             >
               {incident.status.replace("_", " ")}
             </span>
-            <span className="text-[10px] text-gray-500">
+            <span className="text-[10px] text-muted-foreground">
               {incident.type}
             </span>
           </div>
 
           {/* SLA Timer */}
-          <div className="flex items-center gap-2 rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2">
-            <Timer className="h-4 w-4 text-gray-500" />
-            <span className="text-xs text-gray-400">SLA:</span>
+          <div className="flex items-center gap-2 rounded-lg border border-border bg-surface-2/50 px-3 py-2">
+            <Timer className="h-4 w-4 text-muted-foreground" />
+            <span className="text-xs text-muted-foreground">SLA:</span>
             <span className={cn("text-sm font-mono font-bold", sla.color)}>
               {sla.text}
             </span>
@@ -600,7 +600,7 @@ function IncidentDetailPanel({
 
           {/* Workflow Stepper */}
           <div>
-            <h4 className="mb-2 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+            <h4 className="mb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
               Workflow
             </h4>
             <WorkflowStepper currentStatus={incident.status} />
@@ -625,10 +625,10 @@ function IncidentDetailPanel({
           {/* Description */}
           {incident.description && (
             <div>
-              <h4 className="mb-1 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+              <h4 className="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                 Description
               </h4>
-              <p className="text-sm text-gray-300 leading-relaxed">
+              <p className="text-sm text-foreground leading-relaxed">
                 {incident.description}
               </p>
             </div>
@@ -636,31 +636,31 @@ function IncidentDetailPanel({
 
           {/* Details */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-3">
-              <span className="text-[10px] text-gray-500 uppercase">Zone</span>
-              <p className="mt-0.5 text-sm font-medium text-gray-200">
+            <div className="rounded-lg border border-border bg-surface-2/50 p-3">
+              <span className="text-[10px] text-muted-foreground uppercase">Zone</span>
+              <p className="mt-0.5 text-sm font-medium text-foreground">
                 {incident.zone_name || "---"}
               </p>
             </div>
-            <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-3">
-              <span className="text-[10px] text-gray-500 uppercase">
+            <div className="rounded-lg border border-border bg-surface-2/50 p-3">
+              <span className="text-[10px] text-muted-foreground uppercase">
                 Assigned To
               </span>
-              <p className="mt-0.5 text-sm font-medium text-gray-200">
+              <p className="mt-0.5 text-sm font-medium text-foreground">
                 {incident.assigned_to || "Unassigned"}
               </p>
             </div>
-            <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-3">
-              <span className="text-[10px] text-gray-500 uppercase">
+            <div className="rounded-lg border border-border bg-surface-2/50 p-3">
+              <span className="text-[10px] text-muted-foreground uppercase">
                 Created
               </span>
-              <p className="mt-0.5 text-sm font-medium text-gray-200">
+              <p className="mt-0.5 text-sm font-medium text-foreground">
                 {formatTimestamp(incident.created_at)}
               </p>
             </div>
-            <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-3">
-              <span className="text-[10px] text-gray-500 uppercase">Type</span>
-              <p className="mt-0.5 text-sm font-medium text-gray-200">
+            <div className="rounded-lg border border-border bg-surface-2/50 p-3">
+              <span className="text-[10px] text-muted-foreground uppercase">Type</span>
+              <p className="mt-0.5 text-sm font-medium text-foreground">
                 {incident.type}
               </p>
             </div>
@@ -669,7 +669,7 @@ function IncidentDetailPanel({
           {/* Linked Evidence */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-500">
+              <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                 Linked Evidence
                 {linkedEvidence.length > 0 && (
                   <span className="ml-1.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-cyan-900/50 px-1 text-[9px] font-bold text-cyan-400">
@@ -687,12 +687,12 @@ function IncidentDetailPanel({
             </div>
             {loadingEvidence ? (
               <div className="flex items-center gap-2 py-2">
-                <Loader2 className="h-3.5 w-3.5 animate-spin text-gray-500" />
-                <span className="text-xs text-gray-600">Loading evidence...</span>
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />
+                <span className="text-xs text-muted-foreground">Loading evidence...</span>
               </div>
             ) : linkedEvidence.length === 0 ? (
-              <div className="rounded-lg border border-dashed border-gray-800 bg-gray-900/20 px-4 py-3 text-center">
-                <p className="text-xs text-gray-600">No evidence linked yet</p>
+              <div className="rounded-lg border border-dashed border-border bg-surface-2/20 px-4 py-3 text-center">
+                <p className="text-xs text-muted-foreground">No evidence linked yet</p>
                 <button
                   onClick={() => setShowLinkEvidence(true)}
                   className="mt-1 text-[11px] text-cyan-500 hover:text-cyan-400"
@@ -705,21 +705,21 @@ function IncidentDetailPanel({
                 {linkedEvidence.map((ev) => (
                   <div
                     key={ev.id}
-                    className="flex items-center gap-2 rounded-lg border border-gray-800 bg-gray-900/40 px-3 py-2"
+                    className="flex items-center gap-2 rounded-lg border border-border bg-surface-2/40 px-3 py-2"
                   >
                     <FileText className="h-3.5 w-3.5 shrink-0 text-cyan-500" />
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-xs font-medium text-gray-300">
+                      <p className="truncate text-xs font-medium text-foreground">
                         {ev.label || ev.id.slice(0, 16)}
                       </p>
-                      <p className="text-[10px] text-gray-600 uppercase">{ev.type}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase">{ev.type}</p>
                     </div>
                     {ev.url && (
                       <a
                         href={ev.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="shrink-0 rounded p-1 text-gray-600 hover:text-cyan-400"
+                        className="shrink-0 rounded p-1 text-muted-foreground hover:text-cyan-400"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <Eye className="h-3.5 w-3.5" />
@@ -733,7 +733,7 @@ function IncidentDetailPanel({
 
           {/* Assign */}
           <div>
-            <h4 className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+            <h4 className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
               Assignment
             </h4>
             {showAssignInput ? (
@@ -742,7 +742,7 @@ function IncidentDetailPanel({
                   value={assignInput}
                   onChange={(e) => setAssignInput(e.target.value)}
                   placeholder="Enter user ID or name..."
-                  className="flex-1 rounded-lg border border-gray-700 bg-gray-900 px-3 py-1.5 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none"
+                  className="flex-1 rounded-lg border border-border-strong bg-surface-2 px-3 py-1.5 text-xs text-foreground focus:border-cyan-700 focus:outline-none"
                 />
                 <button
                   onClick={handleAssign}
@@ -757,7 +757,7 @@ function IncidentDetailPanel({
                 </button>
                 <button
                   onClick={() => setShowAssignInput(false)}
-                  className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-800"
+                  className="rounded-lg p-1.5 text-muted-foreground hover:bg-surface-3"
                 >
                   <X className="h-3.5 w-3.5" />
                 </button>
@@ -775,7 +775,7 @@ function IncidentDetailPanel({
 
           {/* AI Summary */}
           <div>
-            <h4 className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+            <h4 className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
               AI Summary
             </h4>
             {aiSummary ? (
@@ -802,29 +802,29 @@ function IncidentDetailPanel({
 
           {/* Timeline */}
           <div>
-            <h4 className="mb-2 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+            <h4 className="mb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
               Timeline
             </h4>
             {timeline.length === 0 ? (
-              <p className="text-xs text-gray-600">No timeline entries yet.</p>
+              <p className="text-xs text-muted-foreground">No timeline entries yet.</p>
             ) : (
               <div className="space-y-2">
                 {timeline.map((entry) => (
                   <div
                     key={entry.id}
-                    className="flex items-start gap-2 rounded-lg border border-gray-800 bg-gray-900/40 p-2.5"
+                    className="flex items-start gap-2 rounded-lg border border-border bg-surface-2/40 p-2.5"
                   >
                     <div className="mt-0.5 h-2 w-2 shrink-0 rounded-full bg-cyan-500" />
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-semibold text-gray-200">
+                        <span className="text-xs font-semibold text-foreground">
                           {entry.action}
                         </span>
-                        <span className="text-[10px] text-gray-500">
+                        <span className="text-[10px] text-muted-foreground">
                           {formatTimestamp(entry.timestamp)}
                         </span>
                       </div>
-                      <p className="mt-0.5 text-[11px] text-gray-400">
+                      <p className="mt-0.5 text-[11px] text-muted-foreground">
                         {entry.actor} &mdash; {entry.details}
                       </p>
                     </div>
@@ -903,12 +903,12 @@ function NewIncidentModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="w-full max-w-lg rounded-xl border border-gray-800 bg-[#030712] p-6 shadow-2xl">
+      <div className="w-full max-w-lg rounded-xl border border-border bg-[#030712] p-6 shadow-2xl">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-bold text-gray-100">New Incident</h2>
+          <h2 className="text-lg font-bold text-foreground">New Incident</h2>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-800 hover:text-gray-300"
+            className="rounded-lg p-1.5 text-muted-foreground hover:bg-surface-3 hover:text-foreground"
           >
             <X className="h-4 w-4" />
           </button>
@@ -916,19 +916,19 @@ function NewIncidentModal({
 
         <div className="space-y-4">
           <div>
-            <label className="mb-1 block text-xs font-semibold text-gray-400">
+            <label className="mb-1 block text-xs font-semibold text-muted-foreground">
               Title *
             </label>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Incident title..."
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-semibold text-gray-400">
+            <label className="mb-1 block text-xs font-semibold text-muted-foreground">
               Description
             </label>
             <textarea
@@ -936,19 +936,19 @@ function NewIncidentModal({
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
               placeholder="Describe the incident..."
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700 resize-none"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700 resize-none"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-xs font-semibold text-gray-400">
+              <label className="mb-1 block text-xs font-semibold text-muted-foreground">
                 Severity
               </label>
               <select
                 value={severity}
                 onChange={(e) => setSeverity(e.target.value)}
-                className="w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-300 focus:border-cyan-700 focus:outline-none"
+                className="w-full appearance-none rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
               >
                 <option value="critical">Critical</option>
                 <option value="high">High</option>
@@ -957,13 +957,13 @@ function NewIncidentModal({
               </select>
             </div>
             <div>
-              <label className="mb-1 block text-xs font-semibold text-gray-400">
+              <label className="mb-1 block text-xs font-semibold text-muted-foreground">
                 Type
               </label>
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className="w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-300 focus:border-cyan-700 focus:outline-none"
+                className="w-full appearance-none rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
               >
                 <option value="security">Security</option>
                 <option value="safety">Safety</option>
@@ -976,14 +976,14 @@ function NewIncidentModal({
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-semibold text-gray-400">
+            <label className="mb-1 block text-xs font-semibold text-muted-foreground">
               Zone
             </label>
             <input
               value={zoneName}
               onChange={(e) => setZoneName(e.target.value)}
               placeholder="Zone name (optional)..."
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             />
           </div>
 
@@ -994,7 +994,7 @@ function NewIncidentModal({
           <div className="flex items-center justify-end gap-3 pt-2">
             <button
               onClick={onClose}
-              className="rounded-lg border border-gray-700 px-4 py-2 text-xs font-medium text-gray-400 hover:bg-gray-800 hover:text-gray-200"
+              className="rounded-lg border border-border-strong px-4 py-2 text-xs font-medium text-muted-foreground hover:bg-surface-3 hover:text-foreground"
             >
               Cancel
             </button>
@@ -1090,8 +1090,8 @@ export default function IncidentManagementPage() {
     }
   };
 
-  const sev = (s: string) => SEVERITY_COLORS[s] || "text-gray-400 bg-gray-800 border-gray-700";
-  const stat = (s: string) => STATUS_COLORS[s] || "text-gray-400 bg-gray-800";
+  const sev = (s: string) => SEVERITY_COLORS[s] || "text-muted-foreground bg-surface-3 border-border-strong";
+  const stat = (s: string) => STATUS_COLORS[s] || "text-muted-foreground bg-surface-3";
 
   const linkEvidenceIncident = linkEvidenceRowId
     ? incidents.find((i) => i.id === linkEvidenceRowId) ?? null
@@ -1100,16 +1100,16 @@ export default function IncidentManagementPage() {
   return (
     <div className="flex h-full flex-col bg-[#030712]">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-900/30 border border-red-800/50">
             <Shield className="h-5 w-5 text-red-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Incident Management
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Track, manage, and resolve security incidents
             </p>
           </div>
@@ -1125,12 +1125,12 @@ export default function IncidentManagementPage() {
 
       {/* Stats Bar */}
       {stats && (
-        <div className="grid grid-cols-4 gap-4 border-b border-gray-800 px-6 py-3">
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/60 p-3">
+        <div className="grid grid-cols-4 gap-4 border-b border-border px-6 py-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/60 p-3">
             <AlertTriangle className="h-5 w-5 text-red-400" />
             <div>
-              <p className="text-lg font-bold text-gray-100">{stats.open}</p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+              <p className="text-lg font-bold text-foreground">{stats.open}</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 Open Incidents
               </p>
             </div>
@@ -1141,29 +1141,29 @@ export default function IncidentManagementPage() {
               <p className="text-lg font-bold text-red-400">
                 {stats.sla_breaches}
               </p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 SLA Breaches
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/60 p-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/60 p-3">
             <CheckCircle2 className="h-5 w-5 text-green-400" />
             <div>
-              <p className="text-lg font-bold text-gray-100">
+              <p className="text-lg font-bold text-foreground">
                 {stats.resolved_today}
               </p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 Resolved Today
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/60 p-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/60 p-3">
             <TrendingUp className="h-5 w-5 text-cyan-400" />
             <div>
-              <p className="text-lg font-bold text-gray-100">
+              <p className="text-lg font-bold text-foreground">
                 {stats.avg_response_time_minutes}m
               </p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 Avg Response
               </p>
             </div>
@@ -1172,12 +1172,12 @@ export default function IncidentManagementPage() {
       )}
 
       {/* Filter Bar */}
-      <div className="flex flex-wrap items-center gap-3 border-b border-gray-800 px-6 py-3">
+      <div className="flex flex-wrap items-center gap-3 border-b border-border px-6 py-3">
         <div className="relative">
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
           >
             <option value="all">All Statuses</option>
             {WORKFLOW_STEPS.map((s) => (
@@ -1186,14 +1186,14 @@ export default function IncidentManagementPage() {
               </option>
             ))}
           </select>
-          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
         </div>
 
         <div className="relative">
           <select
             value={filterSeverity}
             onChange={(e) => setFilterSeverity(e.target.value)}
-            className="appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
           >
             <option value="all">All Severities</option>
             <option value="critical">Critical</option>
@@ -1201,16 +1201,16 @@ export default function IncidentManagementPage() {
             <option value="medium">Medium</option>
             <option value="low">Low</option>
           </select>
-          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
         </div>
 
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search incidents..."
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 pl-9 pr-3 py-2 text-xs text-gray-300 placeholder:text-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 pl-9 pr-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
           />
         </div>
       </div>
@@ -1220,7 +1220,7 @@ export default function IncidentManagementPage() {
         {loading && (
           <div className="flex flex-col items-center justify-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-            <p className="mt-3 text-sm text-gray-500">Loading incidents...</p>
+            <p className="mt-3 text-sm text-muted-foreground">Loading incidents...</p>
           </div>
         )}
 
@@ -1230,7 +1230,7 @@ export default function IncidentManagementPage() {
             <p className="text-sm text-red-400">{error}</p>
             <button
               onClick={fetchIncidents}
-              className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200"
+              className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground"
             >
               Retry
             </button>
@@ -1240,10 +1240,10 @@ export default function IncidentManagementPage() {
         {!loading && !error && incidents.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20">
             <CheckCircle2 className="mb-2 h-10 w-10 text-emerald-700" />
-            <p className="text-sm font-medium text-gray-400">
+            <p className="text-sm font-medium text-muted-foreground">
               No incidents found
             </p>
-            <p className="mt-1 text-xs text-gray-600">
+            <p className="mt-1 text-xs text-muted-foreground">
               Adjust your filters or create a new incident
             </p>
           </div>
@@ -1252,7 +1252,7 @@ export default function IncidentManagementPage() {
         {!loading && !error && incidents.length > 0 && (
           <table className="w-full text-left text-sm">
             <thead className="sticky top-0 z-10 bg-zinc-900/90 backdrop-blur">
-              <tr className="border-b border-gray-800 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+              <tr className="border-b border-border text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                 <th className="px-6 py-3">Title</th>
                 <th className="px-3 py-3">Severity</th>
                 <th className="px-3 py-3">Status</th>
@@ -1272,12 +1272,12 @@ export default function IncidentManagementPage() {
                     key={inc.id}
                     onClick={() => setSelectedIncident(inc)}
                     className={cn(
-                      "border-b border-gray-800/50 cursor-pointer transition-colors hover:bg-zinc-900/70",
+                      "border-b border-border/50 cursor-pointer transition-colors hover:bg-zinc-900/70",
                       selectedIncident?.id === inc.id && "bg-zinc-900/90"
                     )}
                   >
                     <td className="px-6 py-3">
-                      <span className="font-medium text-gray-200 truncate block max-w-[240px]">
+                      <span className="font-medium text-foreground truncate block max-w-[240px]">
                         {inc.title}
                       </span>
                     </td>
@@ -1301,17 +1301,17 @@ export default function IncidentManagementPage() {
                         {inc.status.replace("_", " ")}
                       </span>
                     </td>
-                    <td className="px-3 py-3 text-xs text-gray-400">
+                    <td className="px-3 py-3 text-xs text-muted-foreground">
                       {inc.type}
                     </td>
                     <td className="px-3 py-3">
-                      <span className="flex items-center gap-1 text-xs text-gray-400">
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
                         <MapPin className="h-3 w-3" />
                         {inc.zone_name || "---"}
                       </span>
                     </td>
                     <td className="px-3 py-3">
-                      <span className="flex items-center gap-1 text-xs text-gray-400">
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
                         <User className="h-3 w-3" />
                         {inc.assigned_to || "Unassigned"}
                       </span>
@@ -1333,19 +1333,19 @@ export default function IncidentManagementPage() {
                           e.stopPropagation();
                           setLinkEvidenceRowId(inc.id);
                         }}
-                        className="flex items-center gap-1 rounded px-2 py-1 text-[11px] text-gray-400 hover:bg-gray-800 hover:text-cyan-400 transition-colors"
+                        className="flex items-center gap-1 rounded px-2 py-1 text-[11px] text-muted-foreground hover:bg-surface-3 hover:text-cyan-400 transition-colors"
                         title="Link Evidence"
                       >
                         <Paperclip className="h-3 w-3" />
                         {inc.evidence_count != null && inc.evidence_count > 0 ? (
                           <span className="font-semibold text-cyan-400">{inc.evidence_count}</span>
                         ) : (
-                          <span className="text-gray-600">Link</span>
+                          <span className="text-muted-foreground">Link</span>
                         )}
                       </button>
                     </td>
                     <td className="px-3 py-3">
-                      <span className="flex items-center gap-1 text-[11px] text-gray-500">
+                      <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
                         <Clock className="h-3 w-3" />
                         {timeAgo(inc.created_at)}
                       </span>
@@ -1360,21 +1360,21 @@ export default function IncidentManagementPage() {
 
       {/* Pagination */}
       {!loading && !error && incidents.length > 0 && (
-        <div className="flex items-center justify-between border-t border-gray-800 px-6 py-3">
+        <div className="flex items-center justify-between border-t border-border px-6 py-3">
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="flex items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-900 px-3 py-1.5 text-xs font-medium text-gray-400 hover:bg-gray-800 hover:text-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
+            className="flex items-center gap-1.5 rounded-lg border border-border-strong bg-surface-2 px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-surface-3 hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed"
           >
             Previous
           </button>
-          <span className="text-xs text-gray-500">
-            Page <span className="font-semibold text-gray-300">{page}</span>
+          <span className="text-xs text-muted-foreground">
+            Page <span className="font-semibold text-foreground">{page}</span>
           </span>
           <button
             onClick={() => setPage((p) => p + 1)}
             disabled={!hasMore}
-            className="flex items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-900 px-3 py-1.5 text-xs font-medium text-gray-400 hover:bg-gray-800 hover:text-gray-200 disabled:opacity-30 disabled:cursor-not-allowed"
+            className="flex items-center gap-1.5 rounded-lg border border-border-strong bg-surface-2 px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-surface-3 hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed"
           >
             Next
           </button>

@@ -31,7 +31,7 @@ interface Violation {
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
 
-const CARD = "rounded-lg border border-gray-800 bg-gray-900/60 backdrop-blur p-4";
+const CARD = "rounded-lg border border-border bg-surface-2/60 backdrop-blur p-4";
 
 const EVENT_TYPES = [
   "all",
@@ -121,10 +121,10 @@ export default function ViolationTable({ onPlateClick }: ViolationTableProps) {
     <div className={CARD}>
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="flex items-center gap-2 text-sm font-semibold text-gray-300">
+        <h2 className="flex items-center gap-2 text-sm font-semibold text-foreground">
           <AlertTriangle className="h-4 w-4 text-amber-400" />
           Vehicle Violations
-          <span className="ml-1 text-xs font-normal text-gray-600">
+          <span className="ml-1 text-xs font-normal text-muted-foreground">
             ({filtered.length})
           </span>
         </h2>
@@ -135,19 +135,19 @@ export default function ViolationTable({ onPlateClick }: ViolationTableProps) {
           <div className="relative">
             <button
               onClick={() => setShowFilterDropdown(!showFilterDropdown)}
-              className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-300 transition-colors hover:border-gray-600"
+              className="flex items-center gap-2 rounded-lg border border-border-strong bg-surface-3 px-3 py-1.5 text-xs text-foreground transition-colors hover:border-border-strong"
             >
-              <Filter className="h-3.5 w-3.5 text-gray-500" />
+              <Filter className="h-3.5 w-3.5 text-muted-foreground" />
               <span className="capitalize">
                 {eventTypeFilter === "all"
                   ? "All Types"
                   : eventTypeFilter.replace(/_/g, " ")}
               </span>
-              <ChevronDown className="h-3 w-3 text-gray-500" />
+              <ChevronDown className="h-3 w-3 text-muted-foreground" />
             </button>
 
             {showFilterDropdown && (
-              <div className="absolute right-0 top-full z-20 mt-1 w-52 rounded-lg border border-gray-700 bg-gray-900 py-1 shadow-xl">
+              <div className="absolute right-0 top-full z-20 mt-1 w-52 rounded-lg border border-border-strong bg-surface-2 py-1 shadow-xl">
                 {EVENT_TYPES.map((type) => (
                   <button
                     key={type}
@@ -159,7 +159,7 @@ export default function ViolationTable({ onPlateClick }: ViolationTableProps) {
                       "w-full px-3 py-1.5 text-left text-xs capitalize transition-colors",
                       eventTypeFilter === type
                         ? "bg-cyan-900/30 text-cyan-400"
-                        : "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
+                        : "text-muted-foreground hover:bg-surface-3 hover:text-foreground"
                     )}
                   >
                     {type === "all" ? "All Types" : type.replace(/_/g, " ")}
@@ -170,7 +170,7 @@ export default function ViolationTable({ onPlateClick }: ViolationTableProps) {
           </div>
 
           {/* Resolved toggle */}
-          <div className="flex items-center rounded-lg border border-gray-700 bg-gray-800 p-0.5">
+          <div className="flex items-center rounded-lg border border-border-strong bg-surface-3 p-0.5">
             {(["all", "open", "resolved"] as const).map((opt) => (
               <button
                 key={opt}
@@ -178,8 +178,8 @@ export default function ViolationTable({ onPlateClick }: ViolationTableProps) {
                 className={cn(
                   "rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider transition-colors",
                   resolvedFilter === opt
-                    ? "bg-gray-700 text-gray-200"
-                    : "text-gray-500 hover:text-gray-300"
+                    ? "bg-surface-3 text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 {opt}
@@ -193,7 +193,7 @@ export default function ViolationTable({ onPlateClick }: ViolationTableProps) {
       {loading && (
         <div className="flex flex-col items-center justify-center py-16">
           <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-          <p className="mt-3 text-sm text-gray-500">Loading violations...</p>
+          <p className="mt-3 text-sm text-muted-foreground">Loading violations...</p>
         </div>
       )}
 
@@ -204,7 +204,7 @@ export default function ViolationTable({ onPlateClick }: ViolationTableProps) {
           <p className="text-sm text-red-400">{error}</p>
           <button
             onClick={fetchViolations}
-            className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             Retry
           </button>
@@ -214,9 +214,9 @@ export default function ViolationTable({ onPlateClick }: ViolationTableProps) {
       {/* Empty */}
       {!loading && !error && filtered.length === 0 && (
         <div className="flex flex-col items-center justify-center py-16">
-          <CheckCircle2 className="mb-2 h-10 w-10 text-gray-700" />
-          <p className="text-sm font-medium text-gray-400">No violations found</p>
-          <p className="mt-1 text-xs text-gray-600">
+          <CheckCircle2 className="mb-2 h-10 w-10 text-muted-foreground" />
+          <p className="text-sm font-medium text-muted-foreground">No violations found</p>
+          <p className="mt-1 text-xs text-muted-foreground">
             {eventTypeFilter !== "all" || resolvedFilter !== "all"
               ? "Try adjusting your filters"
               : "No violations have been recorded"}
@@ -226,10 +226,10 @@ export default function ViolationTable({ onPlateClick }: ViolationTableProps) {
 
       {/* Table */}
       {!loading && !error && filtered.length > 0 && (
-        <div className="overflow-x-auto rounded-lg border border-gray-800">
+        <div className="overflow-x-auto rounded-lg border border-border">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-800 text-left text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+              <tr className="border-b border-border text-left text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                 <th className="px-4 py-3">Event Type</th>
                 <th className="px-4 py-3">Plate</th>
                 <th className="px-4 py-3 text-center">Severity</th>
@@ -243,12 +243,12 @@ export default function ViolationTable({ onPlateClick }: ViolationTableProps) {
               {filtered.map((v) => (
                 <tr
                   key={v.id}
-                  className="border-b border-gray-800/50 transition-colors hover:bg-gray-800/30"
+                  className="border-b border-border/50 transition-colors hover:bg-surface-3/30"
                 >
                   {/* Event Type */}
                   <td className="px-4 py-3">
-                    <span className="inline-flex items-center gap-1.5 text-xs capitalize text-gray-300">
-                      <AlertTriangle className="h-3 w-3 text-gray-600" />
+                    <span className="inline-flex items-center gap-1.5 text-xs capitalize text-foreground">
+                      <AlertTriangle className="h-3 w-3 text-muted-foreground" />
                       {v.event_type.replace(/_/g, " ")}
                     </span>
                   </td>
@@ -257,7 +257,7 @@ export default function ViolationTable({ onPlateClick }: ViolationTableProps) {
                   <td className="px-4 py-3">
                     <button
                       onClick={() => onPlateClick?.(v.plate_text)}
-                      className="inline-flex items-center rounded-md border border-gray-700 bg-gray-800 px-2.5 py-1 font-mono text-xs font-bold tracking-wider text-gray-100 transition-colors hover:border-cyan-700 hover:text-cyan-400"
+                      className="inline-flex items-center rounded-md border border-border-strong bg-surface-3 px-2.5 py-1 font-mono text-xs font-bold tracking-wider text-foreground transition-colors hover:border-cyan-700 hover:text-cyan-400"
                     >
                       {v.plate_text}
                     </button>
@@ -293,7 +293,7 @@ export default function ViolationTable({ onPlateClick }: ViolationTableProps) {
 
                   {/* Details */}
                   <td className="max-w-[200px] px-4 py-3">
-                    <span className="block truncate text-xs text-gray-400">
+                    <span className="block truncate text-xs text-muted-foreground">
                       {v.details}
                     </span>
                   </td>
@@ -315,11 +315,11 @@ export default function ViolationTable({ onPlateClick }: ViolationTableProps) {
 
                   {/* Time */}
                   <td className="px-4 py-3">
-                    <span className="flex items-center gap-1 text-xs text-gray-500">
+                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Clock className="h-3 w-3" />
                       {timeAgo(v.created_at)}
                     </span>
-                    <span className="mt-0.5 block text-[11px] text-gray-600">
+                    <span className="mt-0.5 block text-[11px] text-muted-foreground">
                       {formatTimestamp(v.created_at)}
                     </span>
                   </td>

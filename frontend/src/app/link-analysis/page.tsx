@@ -517,9 +517,9 @@ export default function LinkAnalysisPage() {
   /* ---------------------------------------------------------------- */
 
   return (
-    <div className="flex h-full flex-col bg-gray-950">
+    <div className="flex h-full flex-col bg-surface-0">
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-900/30 border border-purple-800/50">
             <svg
@@ -537,11 +537,11 @@ export default function LinkAnalysisPage() {
             </svg>
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Link Analysis{" "}
               <span className="text-cyan-400">&mdash; Knowledge Graph</span>
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Entity relationships and connection mapping
             </p>
           </div>
@@ -556,7 +556,7 @@ export default function LinkAnalysisPage() {
               className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
                 pathfindMode
                   ? "border-cyan-700 bg-cyan-900/30 text-cyan-400"
-                  : "border-gray-700 bg-gray-900 text-gray-400 hover:bg-gray-800 hover:text-gray-200"
+                  : "border-border-strong bg-surface-2 text-muted-foreground hover:bg-surface-3 hover:text-foreground"
               }`}
             >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -579,7 +579,7 @@ export default function LinkAnalysisPage() {
             ) : (
               <button
                 onClick={handleDetectCommunities}
-                className="flex items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-900 px-3 py-1.5 text-xs font-medium text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+                className="flex items-center gap-1.5 rounded-lg border border-border-strong bg-surface-2 px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
               >
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <circle cx="12" cy="12" r="3" /><circle cx="5" cy="5" r="2" /><circle cx="19" cy="5" r="2" /><circle cx="5" cy="19" r="2" /><circle cx="19" cy="19" r="2" />
@@ -620,8 +620,8 @@ export default function LinkAnalysisPage() {
 
       {/* ---- Filter bar ---- */}
       {!loading && !error && allTypes.length > 0 && (
-        <div className="flex flex-wrap items-center gap-3 border-b border-gray-800 px-6 py-3">
-          <span className="text-[10px] uppercase tracking-wider text-gray-500 mr-1">
+        <div className="flex flex-wrap items-center gap-3 border-b border-border px-6 py-3">
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground mr-1">
             Node Types:
           </span>
           {allTypes.map((type) => (
@@ -633,13 +633,13 @@ export default function LinkAnalysisPage() {
                 type="checkbox"
                 checked={visibleTypes.has(type)}
                 onChange={() => toggleType(type)}
-                className="h-3 w-3 rounded border-gray-600 bg-gray-800 text-cyan-500 focus:ring-cyan-700 focus:ring-offset-0"
+                className="h-3 w-3 rounded border-border-strong bg-surface-3 text-cyan-500 focus:ring-cyan-700 focus:ring-offset-0"
               />
               <span
                 className="inline-block h-2.5 w-2.5 rounded-full"
                 style={{ backgroundColor: getColor(type) }}
               />
-              <span className="text-xs text-gray-400 capitalize">{type}</span>
+              <span className="text-xs text-muted-foreground capitalize">{type}</span>
             </label>
           ))}
 
@@ -679,7 +679,7 @@ export default function LinkAnalysisPage() {
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
               />
             </svg>
-            <p className="mt-3 text-sm text-gray-500">
+            <p className="mt-3 text-sm text-muted-foreground">
               Loading knowledge graph...
             </p>
           </div>
@@ -704,7 +704,7 @@ export default function LinkAnalysisPage() {
             <p className="text-sm text-red-400">{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+              className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             >
               Retry
             </button>
@@ -719,7 +719,7 @@ export default function LinkAnalysisPage() {
               <svg
                 ref={svgRef}
                 viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
-                className="w-full h-full min-h-[500px] rounded-lg border border-gray-800 bg-gray-900/40"
+                className="w-full h-full min-h-[500px] rounded-lg border border-border bg-surface-2/40"
                 style={{ maxHeight: "calc(100vh - 200px)" }}
               >
                 {/* Edges */}
@@ -891,16 +891,16 @@ export default function LinkAnalysisPage() {
               {/* Edge hover tooltip */}
               {hoveredEdge && (
                 <div
-                  className="pointer-events-none absolute z-10 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 shadow-xl"
+                  className="pointer-events-none absolute z-10 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 shadow-xl"
                   style={{
                     left: hoveredEdge.x + 12,
                     top: hoveredEdge.y - 10,
                   }}
                 >
-                  <p className="text-[11px] font-medium text-gray-200">
+                  <p className="text-[11px] font-medium text-foreground">
                     {hoveredEdge.edge.relationship}
                   </p>
-                  <p className="text-[10px] text-gray-500">
+                  <p className="text-[10px] text-muted-foreground">
                     Weight:{" "}
                     <span className="font-mono text-cyan-400">
                       {(hoveredEdge.edge.weight ?? 1).toFixed(2)}
@@ -911,22 +911,22 @@ export default function LinkAnalysisPage() {
             </div>
 
             {/* Sidebar: Node detail + Threat Intelligence */}
-            <div className="w-72 shrink-0 border-l border-gray-800 overflow-y-auto">
+            <div className="w-72 shrink-0 border-l border-border overflow-y-auto">
               {/* Threat Graph Intelligence Panel */}
               {threatIntel && (threatIntel.node_count > 0 || threatIntel.nodes?.length > 0) && (
-                <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-3 m-3">
+                <div className="rounded-lg border border-border bg-surface-2/50 p-3 m-3">
                   <h3 className="text-xs font-bold text-white mb-2 flex items-center gap-1.5">
                     <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
                     Threat Entity Intelligence
                   </h3>
                   <div className="grid grid-cols-3 gap-2 mb-3">
-                    <div className="rounded-md border border-gray-800/50 bg-gray-900/60 px-2 py-1.5 text-center">
+                    <div className="rounded-md border border-border/50 bg-surface-2/60 px-2 py-1.5 text-center">
                       <p className="text-lg font-bold text-white tabular-nums">{threatIntel.node_count ?? threatIntel.nodes?.length ?? 0}</p>
-                      <p className="text-[8px] text-gray-500 uppercase">Entities</p>
+                      <p className="text-[8px] text-muted-foreground uppercase">Entities</p>
                     </div>
-                    <div className="rounded-md border border-gray-800/50 bg-gray-900/60 px-2 py-1.5 text-center">
+                    <div className="rounded-md border border-border/50 bg-surface-2/60 px-2 py-1.5 text-center">
                       <p className="text-lg font-bold text-white tabular-nums">{threatIntel.edge_count ?? threatIntel.edges?.length ?? 0}</p>
-                      <p className="text-[8px] text-gray-500 uppercase">Relationships</p>
+                      <p className="text-[8px] text-muted-foreground uppercase">Relationships</p>
                     </div>
                     <div className="rounded-md border border-red-800/30 bg-red-900/10 px-2 py-1.5 text-center">
                       <p className="text-lg font-bold text-red-400 tabular-nums">
@@ -946,8 +946,8 @@ export default function LinkAnalysisPage() {
                         {highRisk.slice(0, 5).map((entity: any) => (
                           <div key={entity.entity_id} className="flex items-center gap-2 rounded-md border border-red-800/20 bg-red-900/5 px-2 py-1">
                             <span className="h-1.5 w-1.5 rounded-full bg-red-500 shrink-0" />
-                            <span className="text-[10px] text-gray-300 flex-1 truncate">{entity.entity_id}</span>
-                            <span className="text-[8px] text-gray-500">{entity.entity_type}</span>
+                            <span className="text-[10px] text-foreground flex-1 truncate">{entity.entity_id}</span>
+                            <span className="text-[8px] text-muted-foreground">{entity.entity_type}</span>
                             <span className="text-[8px] font-bold text-red-400">{Math.round(entity.risk_score * 100)}%</span>
                           </div>
                         ))}
@@ -961,9 +961,9 @@ export default function LinkAnalysisPage() {
                     const uniqueLabels: string[] = [...new Set(allLabels)];
                     if (uniqueLabels.length === 0) return null;
                     return (
-                      <div className="flex flex-wrap gap-1 pt-2 border-t border-gray-800/30">
+                      <div className="flex flex-wrap gap-1 pt-2 border-t border-border/30">
                         {uniqueLabels.slice(0, 8).map((label: string) => (
-                          <span key={label} className="rounded-full border border-gray-700/50 bg-gray-800/40 px-2 py-0.5 text-[8px] text-gray-400">
+                          <span key={label} className="rounded-full border border-border-strong/50 bg-surface-3/40 px-2 py-0.5 text-[8px] text-muted-foreground">
                             {label}
                           </span>
                         ))}
@@ -979,12 +979,12 @@ export default function LinkAnalysisPage() {
                   <h4 className="text-[10px] font-bold uppercase tracking-wider text-cyan-400 mb-2">
                     Shortest Path
                   </h4>
-                  <div className="flex items-center gap-1.5 text-xs text-gray-300 mb-1">
+                  <div className="flex items-center gap-1.5 text-xs text-foreground mb-1">
                     <span className="font-medium text-cyan-300">{pathStart.label}</span>
-                    <span className="text-gray-600">→</span>
+                    <span className="text-muted-foreground">→</span>
                     <span className="font-medium text-cyan-300">{pathEnd.label}</span>
                   </div>
-                  <p className="text-[10px] text-gray-500">
+                  <p className="text-[10px] text-muted-foreground">
                     {pathNodeSet.size} nodes, {pathEdgeKeySet.size} edges
                   </p>
                 </div>
@@ -993,7 +993,7 @@ export default function LinkAnalysisPage() {
               {selectedNode && !pathfindMode ? (
                 <div className="p-4 space-y-4">
                   <div>
-                    <h3 className="text-sm font-bold text-gray-100 mb-1">
+                    <h3 className="text-sm font-bold text-foreground mb-1">
                       {selectedNode.label}
                     </h3>
                     <div className="flex items-center gap-2 mb-2">
@@ -1003,7 +1003,7 @@ export default function LinkAnalysisPage() {
                           backgroundColor: getNodeColor(selectedNode),
                         }}
                       />
-                      <span className="text-xs text-gray-400 capitalize">
+                      <span className="text-xs text-muted-foreground capitalize">
                         {selectedNode.type}
                       </span>
                       {showCommunities && communityMap && (
@@ -1012,15 +1012,15 @@ export default function LinkAnalysisPage() {
                         </span>
                       )}
                     </div>
-                    <div className="text-xs text-gray-500 space-y-1">
+                    <div className="text-xs text-muted-foreground space-y-1">
                       <div>
-                        <span className="text-gray-600">ID:</span>{" "}
-                        <span className="font-mono text-gray-400">
+                        <span className="text-muted-foreground">ID:</span>{" "}
+                        <span className="font-mono text-muted-foreground">
                           {selectedNode.id.slice(0, 12)}
                         </span>
                       </div>
                       <div>
-                        <span className="text-gray-600">Weight:</span>{" "}
+                        <span className="text-muted-foreground">Weight:</span>{" "}
                         <span className="font-mono text-cyan-400">
                           {selectedNode.weight.toFixed(2)}
                         </span>
@@ -1030,11 +1030,11 @@ export default function LinkAnalysisPage() {
 
                   {/* Connected edges */}
                   <div>
-                    <h4 className="text-[10px] uppercase tracking-wider text-gray-500 mb-2">
+                    <h4 className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2">
                       Connections ({connectedEdges.length})
                     </h4>
                     {connectedEdges.length === 0 ? (
-                      <p className="text-xs text-gray-600">
+                      <p className="text-xs text-muted-foreground">
                         No connections found
                       </p>
                     ) : (
@@ -1054,7 +1054,7 @@ export default function LinkAnalysisPage() {
                           return (
                             <div
                               key={i}
-                              className="rounded border border-gray-800 bg-gray-900/60 p-2 cursor-pointer hover:bg-gray-800/60 transition-colors"
+                              className="rounded border border-border bg-surface-2/60 p-2 cursor-pointer hover:bg-surface-3/60 transition-colors"
                               onClick={() => {
                                 if (otherNode) setSelectedNode(otherNode);
                               }}
@@ -1068,12 +1068,12 @@ export default function LinkAnalysisPage() {
                                     }}
                                   />
                                 )}
-                                <span className="text-xs text-gray-300 truncate">
+                                <span className="text-xs text-foreground truncate">
                                   {otherNode?.label || otherId.slice(0, 8)}
                                 </span>
                               </div>
                               <div className="flex items-center justify-between gap-2">
-                                <span className="text-[10px] text-gray-500 capitalize">
+                                <span className="text-[10px] text-muted-foreground capitalize">
                                   {edge.relationship}
                                 </span>
                                 <div className="flex items-center gap-1.5">
@@ -1085,7 +1085,7 @@ export default function LinkAnalysisPage() {
                                       height: Math.max(1, Math.round(strokeWidth / 2)),
                                     }}
                                   />
-                                  <span className="text-[10px] font-mono text-gray-600">
+                                  <span className="text-[10px] font-mono text-muted-foreground">
                                     w:{edgeW.toFixed(1)}
                                   </span>
                                 </div>
@@ -1101,7 +1101,7 @@ export default function LinkAnalysisPage() {
                 !pathfindMode && (
                   <div className="flex flex-col items-center justify-center h-full text-center px-4">
                     <svg
-                      className="h-8 w-8 text-gray-700 mb-2"
+                      className="h-8 w-8 text-muted-foreground mb-2"
                       fill="none"
                       viewBox="0 0 24 24"
                       strokeWidth={1}
@@ -1113,7 +1113,7 @@ export default function LinkAnalysisPage() {
                         d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672Zm-7.518-.267A8.25 8.25 0 1 1 20.25 10.5M8.288 14.212A5.25 5.25 0 1 1 17.25 10.5"
                       />
                     </svg>
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-muted-foreground">
                       Click a node to view details
                     </p>
                   </div>

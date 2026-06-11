@@ -74,7 +74,7 @@ const SEVERITY_COLORS: Record<string, string> = {
 };
 
 const CARD =
-  "rounded-lg border border-gray-800 bg-gray-900/60 p-4 flex flex-col";
+  "rounded-lg border border-border bg-surface-2/60 p-4 flex flex-col";
 
 const TICK_STYLE = { fill: "#9ca3af", fontSize: 12 };
 
@@ -102,12 +102,12 @@ function ChartCard({
   return (
     <div className={cn(CARD, className)}>
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-300">{title}</h3>
+        <h3 className="text-sm font-semibold text-foreground">{title}</h3>
         {onExport && (
           <button
             onClick={onExport}
             title="Export chart data as CSV"
-            className="flex items-center gap-1 rounded-md border border-gray-700 bg-gray-800 px-2 py-1 text-[10px] font-medium text-gray-400 transition-colors hover:bg-gray-700 hover:text-gray-200"
+            className="flex items-center gap-1 rounded-md border border-border-strong bg-surface-3 px-2 py-1 text-[10px] font-medium text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
           >
             <Download className="h-3 w-3" />
             CSV
@@ -132,8 +132,8 @@ function DarkTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-md border border-gray-700 bg-gray-900 px-3 py-2 text-xs shadow-lg">
-      {label && <p className="mb-1 text-gray-400">{label}</p>}
+    <div className="rounded-md border border-border-strong bg-surface-2 px-3 py-2 text-xs shadow-lg">
+      {label && <p className="mb-1 text-muted-foreground">{label}</p>}
       {payload.map((p) => (
         <p key={p.name} style={{ color: p.color || "#06b6d4" }}>
           {p.name}: {p.value}
@@ -181,9 +181,9 @@ function AnomalyTooltip({
       "rounded-md border px-3 py-2 text-xs shadow-lg",
       isAnomaly
         ? "border-red-700 bg-red-950"
-        : "border-gray-700 bg-gray-900"
+        : "border-border-strong bg-surface-2"
     )}>
-      {label && <p className="mb-1 text-gray-400">{label}</p>}
+      {label && <p className="mb-1 text-muted-foreground">{label}</p>}
       {isAnomaly && (
         <p className="mb-1 flex items-center gap-1 font-semibold text-red-400">
           <AlertCircle className="h-3 w-3" />
@@ -385,16 +385,16 @@ export default function AnalyticsPage() {
   /* ---------- render --------------------------------------------------------- */
 
   return (
-    <div className="flex h-full flex-col overflow-auto bg-gray-950 text-gray-100">
+    <div className="flex h-full flex-col overflow-auto bg-surface-0 text-foreground">
       {/* Header */}
-      <header className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <header className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <BarChart3 className="h-6 w-6 text-cyan-400" />
           <h1 className="text-xl font-bold tracking-tight">Security Analytics</h1>
         </div>
 
         {/* Time range selector */}
-        <div className="flex gap-1 rounded-lg border border-gray-800 bg-gray-900/60 p-1">
+        <div className="flex gap-1 rounded-lg border border-border bg-surface-2/60 p-1">
           {TIME_RANGES.map((r) => (
             <button
               key={r.hours}
@@ -403,7 +403,7 @@ export default function AnalyticsPage() {
                 "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
                 hours === r.hours
                   ? "bg-cyan-500/20 text-cyan-400"
-                  : "text-gray-400 hover:text-gray-200"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               {r.label}
@@ -582,11 +582,11 @@ export default function AnalyticsPage() {
             <Spinner />
           ) : forecastUnavailable || forecastChartData.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center gap-3 py-16">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-700 bg-gray-800">
-                <TrendingUp className="h-6 w-6 text-gray-600" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-full border border-border-strong bg-surface-3">
+                <TrendingUp className="h-6 w-6 text-muted-foreground" />
               </div>
-              <p className="text-sm font-medium text-gray-500">Forecast unavailable</p>
-              <p className="text-xs text-gray-600">
+              <p className="text-sm font-medium text-muted-foreground">Forecast unavailable</p>
+              <p className="text-xs text-muted-foreground">
                 The threat forecast engine is not reachable or has no data for the next 24 hours.
               </p>
             </div>

@@ -72,7 +72,7 @@ interface MultiCameraReplayGridProps {
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
 
-const CARD = "rounded-lg border border-gray-800 bg-gray-900/60 backdrop-blur";
+const CARD = "rounded-lg border border-border bg-surface-2/60 backdrop-blur";
 const SPEED_OPTIONS = [0.25, 0.5, 1, 2, 4];
 const SLICE_DURATION = 30;
 const FRAME_WIDTH = 640;
@@ -240,13 +240,13 @@ export default function MultiCameraReplayGrid({
         <div className="flex items-center gap-3">
           <Grid3x3 className="h-5 w-5 text-cyan-400" />
           <div>
-            <h2 className="text-sm font-bold text-gray-100">{meta.title}</h2>
-            <p className="mt-0.5 text-[10px] text-gray-500 font-mono">
+            <h2 className="text-sm font-bold text-foreground">{meta.title}</h2>
+            <p className="mt-0.5 text-[10px] text-muted-foreground font-mono">
               Multi-Camera View &middot; {formatTimestamp(meta.start_time)}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-3 text-xs text-gray-400">
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
             <Camera className="h-3.5 w-3.5" /> {cameraIds.length} cameras
           </span>
@@ -260,7 +260,7 @@ export default function MultiCameraReplayGrid({
             onClick={() => setShowOverlays(!showOverlays)}
             className={cn(
               "rounded-lg p-1.5 transition-colors",
-              showOverlays ? "bg-cyan-900/30 text-cyan-400" : "bg-gray-800 text-gray-500"
+              showOverlays ? "bg-cyan-900/30 text-cyan-400" : "bg-surface-3 text-muted-foreground"
             )}
             title={showOverlays ? "Hide detection overlays" : "Show detection overlays"}
           >
@@ -275,12 +275,12 @@ export default function MultiCameraReplayGrid({
         <div className={cn(CARD, "relative overflow-hidden p-0")}>
           <button
             onClick={() => setExpandedCamera(null)}
-            className="absolute top-2 right-2 z-10 rounded-lg bg-gray-950/80 p-1.5 text-gray-400 hover:text-gray-200 transition-colors border border-gray-700"
+            className="absolute top-2 right-2 z-10 rounded-lg bg-surface-0/80 p-1.5 text-muted-foreground hover:text-foreground transition-colors border border-border-strong"
             title="Back to grid"
           >
             <Minimize2 className="h-4 w-4" />
           </button>
-          <div className="absolute top-2 left-2 z-10 rounded bg-gray-950/80 px-2 py-1 text-[10px] font-mono text-cyan-400 border border-gray-700">
+          <div className="absolute top-2 left-2 z-10 rounded bg-surface-0/80 px-2 py-1 text-[10px] font-mono text-cyan-400 border border-border-strong">
             {expandedCamera.length > 16 ? expandedCamera.slice(0, 16) + "..." : expandedCamera}
           </div>
           {(() => {
@@ -298,7 +298,7 @@ export default function MultiCameraReplayGrid({
                 )}
               </div>
             ) : (
-              <div className="flex items-center justify-center py-20 text-gray-600">
+              <div className="flex items-center justify-center py-20 text-muted-foreground">
                 <Camera className="h-8 w-8" />
               </div>
             );
@@ -324,7 +324,7 @@ export default function MultiCameraReplayGrid({
               >
                 {/* Camera label */}
                 <div className="absolute top-1.5 left-1.5 z-10 flex items-center gap-1.5">
-                  <span className="rounded bg-gray-950/80 px-1.5 py-0.5 text-[9px] font-mono text-cyan-400 border border-gray-700">
+                  <span className="rounded bg-surface-0/80 px-1.5 py-0.5 text-[9px] font-mono text-cyan-400 border border-border-strong">
                     {camId.length > 12 ? camId.slice(0, 12) + "..." : camId}
                   </span>
                   {detCount > 0 && (
@@ -336,7 +336,7 @@ export default function MultiCameraReplayGrid({
 
                 {/* Expand icon on hover */}
                 <div className="absolute top-1.5 right-1.5 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Maximize2 className="h-3.5 w-3.5 text-gray-400" />
+                  <Maximize2 className="h-3.5 w-3.5 text-muted-foreground" />
                 </div>
 
                 {frame?.frame_url ? (
@@ -356,8 +356,8 @@ export default function MultiCameraReplayGrid({
                     )}
                   </div>
                 ) : (
-                  <div className="flex aspect-video items-center justify-center bg-gray-950">
-                    <Camera className="h-6 w-6 text-gray-700" />
+                  <div className="flex aspect-video items-center justify-center bg-surface-0">
+                    <Camera className="h-6 w-6 text-muted-foreground" />
                   </div>
                 )}
               </div>
@@ -389,7 +389,7 @@ export default function MultiCameraReplayGrid({
             step={0.5}
             value={currentOffset}
             onChange={handleScrub}
-            className="mt-3 w-full cursor-pointer appearance-none bg-transparent [&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-gray-700 [&::-webkit-slider-thumb]:mt-[-4px] [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cyan-400 [&::-webkit-slider-thumb]:shadow-[0_0_6px_rgba(34,211,238,0.5)] [&::-moz-range-track]:h-1.5 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-gray-700 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-cyan-400"
+            className="mt-3 w-full cursor-pointer appearance-none bg-transparent [&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-surface-3 [&::-webkit-slider-thumb]:mt-[-4px] [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cyan-400 [&::-webkit-slider-thumb]:shadow-[0_0_6px_rgba(34,211,238,0.5)] [&::-moz-range-track]:h-1.5 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-surface-3 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-cyan-400"
           />
         </div>
       </div>
@@ -399,14 +399,14 @@ export default function MultiCameraReplayGrid({
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => { const v = Math.max(0, currentOffset - 10); setCurrentOffset(v); fetchSlice(v); }}
-            className="rounded-lg p-2 text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="rounded-lg p-2 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             title="Back 10s"
           >
             <Rewind className="h-4 w-4" />
           </button>
           <button
             onClick={() => setCurrentOffset((v) => Math.max(0, v - 1))}
-            className="rounded-lg p-2 text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="rounded-lg p-2 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             title="Back 1s"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -422,32 +422,32 @@ export default function MultiCameraReplayGrid({
           )}
           <button
             onClick={() => setCurrentOffset((v) => Math.min(duration, v + 1))}
-            className="rounded-lg p-2 text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="rounded-lg p-2 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             title="Forward 1s"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
           <button
             onClick={() => { const v = Math.min(duration, currentOffset + 10); setCurrentOffset(v); fetchSlice(v); }}
-            className="rounded-lg p-2 text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="rounded-lg p-2 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             title="Forward 10s"
           >
             <FastForward className="h-4 w-4" />
           </button>
-          <button onClick={handleStop} className="rounded-lg p-2 text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" title="Stop">
+          <button onClick={handleStop} className="rounded-lg p-2 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors" title="Stop">
             <Square className="h-4 w-4" />
           </button>
         </div>
 
         <div className="flex items-center gap-1">
-          <span className="mr-1.5 text-[10px] uppercase tracking-wider text-gray-500">Speed</span>
+          <span className="mr-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">Speed</span>
           {SPEED_OPTIONS.map((s) => (
             <button
               key={s}
               onClick={() => setSpeed(s)}
               className={cn(
                 "rounded px-2 py-1 text-xs font-mono font-semibold transition-colors",
-                speed === s ? "bg-cyan-600 text-white" : "bg-gray-800/60 text-gray-500 hover:bg-gray-800 hover:text-gray-300"
+                speed === s ? "bg-cyan-600 text-white" : "bg-surface-3/60 text-muted-foreground hover:bg-surface-3 hover:text-foreground"
               )}
             >
               {s}x
@@ -455,9 +455,9 @@ export default function MultiCameraReplayGrid({
           ))}
         </div>
 
-        <div className="text-right font-mono text-xs text-gray-400">
+        <div className="text-right font-mono text-xs text-muted-foreground">
           <span className="text-cyan-400">{formatDuration(currentOffset)}</span>
-          <span className="text-gray-600"> / </span>
+          <span className="text-muted-foreground"> / </span>
           <span>{formatDuration(duration)}</span>
         </div>
       </div>

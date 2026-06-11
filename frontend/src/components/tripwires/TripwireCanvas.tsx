@@ -226,7 +226,7 @@ export default function TripwireCanvas({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1.5 text-[11px] text-gray-400">
+        <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
           <Crosshair className="h-3.5 w-3.5 text-cyan-400" />
           {!hasA
             ? "Click to place point A"
@@ -237,7 +237,7 @@ export default function TripwireCanvas({
         <button
           type="button"
           onClick={reset}
-          className="flex items-center gap-1 rounded-md border border-gray-700 px-2 py-1 text-[11px] text-gray-400 transition-colors hover:border-gray-600 hover:text-gray-200"
+          className="flex items-center gap-1 rounded-md border border-border-strong px-2 py-1 text-[11px] text-muted-foreground transition-colors hover:border-border-strong hover:text-foreground"
         >
           <RotateCcw className="h-3 w-3" />
           Reset
@@ -249,18 +249,18 @@ export default function TripwireCanvas({
         width={res.w}
         height={res.h}
         onClick={handleClick}
-        className="w-full cursor-crosshair rounded-lg border border-gray-800"
+        className="w-full cursor-crosshair rounded-lg border border-border"
         style={{ aspectRatio: `${res.w} / ${res.h}` }}
       />
 
-      <div className="flex items-center gap-4 text-[11px] text-gray-500">
+      <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
         <span>
           A: {hasA ? `(${pointA[0]}, ${pointA[1]})` : "—"}
         </span>
         <span>
           B: {hasB ? `(${pointB[0]}, ${pointB[1]})` : "—"}
         </span>
-        <span className="text-gray-600">
+        <span className="text-muted-foreground">
           frame {res.w}×{res.h}
           {!bgReady && cameraId ? " · no live frame (grid)" : ""}
         </span>

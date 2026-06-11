@@ -43,7 +43,7 @@ interface FlowPatterns {
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
 
-const CARD = "rounded-lg border border-gray-800 bg-gray-900/60 backdrop-blur p-4";
+const CARD = "rounded-lg border border-border bg-surface-2/60 backdrop-blur p-4";
 
 type TimeRange = "24h" | "48h" | "7d";
 
@@ -80,20 +80,20 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
   if (!active || !payload || payload.length === 0) return null;
 
   return (
-    <div className="rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 shadow-xl">
-      <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
+    <div className="rounded-lg border border-border-strong bg-surface-2 px-3 py-2 shadow-xl">
+      <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
         {label}
       </p>
       {payload.map((entry) => (
         <div key={entry.name} className="flex items-center justify-between gap-4 text-xs">
-          <span className="flex items-center gap-1.5 capitalize text-gray-400">
+          <span className="flex items-center gap-1.5 capitalize text-muted-foreground">
             <span
               className="inline-block h-2 w-2 rounded-full"
               style={{ backgroundColor: entry.color }}
             />
             {entry.name}
           </span>
-          <span className="font-mono tabular-nums text-gray-200">{entry.value}</span>
+          <span className="font-mono tabular-nums text-foreground">{entry.value}</span>
         </div>
       ))}
     </div>
@@ -181,17 +181,17 @@ export default function VehicleFlowChart({
             <Activity className="h-4 w-4 text-cyan-400" />
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-gray-300">
+            <h2 className="text-sm font-semibold text-foreground">
               Vehicle Flow Patterns
             </h2>
-            <p className="text-[11px] text-gray-600">
+            <p className="text-[11px] text-muted-foreground">
               Hourly vehicle traffic analysis
             </p>
           </div>
         </div>
 
         {/* Time range selector */}
-        <div className="flex items-center rounded-lg border border-gray-700 bg-gray-800 p-0.5">
+        <div className="flex items-center rounded-lg border border-border-strong bg-surface-3 p-0.5">
           {(["24h", "48h", "7d"] as TimeRange[]).map((range) => (
             <button
               key={range}
@@ -199,8 +199,8 @@ export default function VehicleFlowChart({
               className={cn(
                 "rounded-md px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider transition-colors",
                 timeRange === range
-                  ? "bg-gray-700 text-cyan-400"
-                  : "text-gray-500 hover:text-gray-300"
+                  ? "bg-surface-3 text-cyan-400"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               {range}
@@ -213,7 +213,7 @@ export default function VehicleFlowChart({
       {loading && (
         <div className="flex flex-col items-center justify-center py-16">
           <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-          <p className="mt-3 text-sm text-gray-500">Loading flow data...</p>
+          <p className="mt-3 text-sm text-muted-foreground">Loading flow data...</p>
         </div>
       )}
 
@@ -224,7 +224,7 @@ export default function VehicleFlowChart({
           <p className="text-sm text-red-400">{error}</p>
           <button
             onClick={fetchFlow}
-            className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             Retry
           </button>
@@ -239,7 +239,7 @@ export default function VehicleFlowChart({
             {stats.map((stat) => (
               <div
                 key={stat.label}
-                className="flex items-center gap-2.5 rounded-xl border border-gray-800 bg-gray-900/50 px-4 py-3 min-w-[140px]"
+                className="flex items-center gap-2.5 rounded-xl border border-border bg-surface-2/50 px-4 py-3 min-w-[140px]"
               >
                 <stat.icon className={cn("h-4 w-4 shrink-0", stat.accent)} />
                 <div>
@@ -251,7 +251,7 @@ export default function VehicleFlowChart({
                   >
                     {stat.value}
                   </span>
-                  <span className="text-[10px] text-gray-500 whitespace-nowrap">
+                  <span className="text-[10px] text-muted-foreground whitespace-nowrap">
                     {stat.label}
                   </span>
                 </div>
@@ -262,7 +262,7 @@ export default function VehicleFlowChart({
           {/* Vehicle type legend */}
           <div className="mb-3 flex items-center gap-4">
             {Object.entries(AREA_COLORS).map(([key, colors]) => (
-              <span key={key} className="flex items-center gap-1.5 text-[10px] text-gray-500">
+              <span key={key} className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
                 <span
                   className="inline-block h-2 w-2 rounded-full"
                   style={{ backgroundColor: colors.fill }}
@@ -275,8 +275,8 @@ export default function VehicleFlowChart({
           {/* Chart */}
           {flowData.data.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12">
-              <Activity className="mb-2 h-10 w-10 text-gray-700" />
-              <p className="text-sm font-medium text-gray-400">
+              <Activity className="mb-2 h-10 w-10 text-muted-foreground" />
+              <p className="text-sm font-medium text-muted-foreground">
                 No flow data available for this period
               </p>
             </div>

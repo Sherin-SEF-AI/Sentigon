@@ -109,7 +109,7 @@ function Skeleton({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "animate-pulse rounded bg-gray-800/60",
+        "animate-pulse rounded bg-surface-3/60",
         className
       )}
     />
@@ -118,7 +118,7 @@ function Skeleton({ className }: { className?: string }) {
 
 function CardSkeleton() {
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-4 space-y-3">
+    <div className="rounded-lg border border-border bg-surface-2/50 p-4 space-y-3">
       <Skeleton className="h-4 w-1/3" />
       <Skeleton className="h-3 w-full" />
       <Skeleton className="h-3 w-4/5" />
@@ -448,18 +448,18 @@ export default function ForensicsPage() {
   return (
     <div className="flex h-full flex-col overflow-hidden">
       {/* ── Header ─────────────────────────────────────────────── */}
-      <header className="flex items-center gap-3 border-b border-gray-800 bg-gray-950 px-6 py-4">
+      <header className="flex items-center gap-3 border-b border-border bg-surface-0 px-6 py-4">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-900/30 border border-cyan-800/50">
           <Microscope className="h-5 w-5 text-cyan-400" />
         </div>
         <div>
-          <h1 className="text-lg font-semibold text-gray-100">Forensic Analysis</h1>
-          <p className="text-xs text-gray-500">Deep-dive frame analysis, timelines &amp; cross-camera correlation</p>
+          <h1 className="text-lg font-semibold text-foreground">Forensic Analysis</h1>
+          <p className="text-xs text-muted-foreground">Deep-dive frame analysis, timelines &amp; cross-camera correlation</p>
         </div>
       </header>
 
       {/* ── Tabs ──────────────────────────────────────────────── */}
-      <div className="flex items-center gap-1 border-b border-gray-800 px-6 bg-gray-950">
+      <div className="flex items-center gap-1 border-b border-border px-6 bg-surface-0">
         {([
           { key: "analysis" as const, label: "Frame Analysis", icon: Microscope },
           { key: "replay" as const, label: "Incident Replay", icon: Play },
@@ -472,7 +472,7 @@ export default function ForensicsPage() {
               "flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors",
               forensicTab === tab.key
                 ? "border-cyan-500 text-cyan-400"
-                : "border-transparent text-gray-500 hover:text-gray-300"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             )}
           >
             {tab.label}
@@ -484,7 +484,7 @@ export default function ForensicsPage() {
       {forensicTab === "replay" && (
         <div className="flex flex-1 overflow-hidden">
           {/* Left: incident list + replay player */}
-          <div className="flex w-2/3 flex-col overflow-y-auto border-r border-gray-800 p-6 space-y-6">
+          <div className="flex w-2/3 flex-col overflow-y-auto border-r border-border p-6 space-y-6">
             {!selectedIncidentId ? (
               <IncidentList onSelect={handleSelectIncident} />
             ) : (
@@ -492,22 +492,22 @@ export default function ForensicsPage() {
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <button
                     onClick={handleClearIncident}
-                    className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-300 transition-colors"
+                    className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
                   >
                     &larr; Back to incidents
                   </button>
 
                   <div className="flex items-center gap-2 flex-wrap">
                     {/* Playback speed control */}
-                    <div className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-800/50 p-0.5">
-                      <Gauge className="h-3 w-3 text-gray-500 ml-1.5" />
+                    <div className="flex items-center gap-1 rounded-lg border border-border-strong bg-surface-3/50 p-0.5">
+                      <Gauge className="h-3 w-3 text-muted-foreground ml-1.5" />
                       {REPLAY_SPEEDS.map((s) => (
                         <button
                           key={s}
                           onClick={() => setReplaySpeed(s)}
                           className={cn(
                             "rounded-md px-2 py-1 text-[10px] font-medium transition-colors tabular-nums",
-                            replaySpeed === s ? "bg-cyan-600 text-white" : "text-gray-400 hover:text-gray-200"
+                            replaySpeed === s ? "bg-cyan-600 text-white" : "text-muted-foreground hover:text-foreground"
                           )}
                         >
                           {s}x
@@ -519,7 +519,7 @@ export default function ForensicsPage() {
                     <button
                       onClick={handleExportClip}
                       disabled={exportClipLoading}
-                      className="flex items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-800/60 px-3 py-1.5 text-[10px] font-medium text-gray-300 hover:border-gray-600 hover:text-white transition-colors disabled:opacity-50"
+                      className="flex items-center gap-1.5 rounded-lg border border-border-strong bg-surface-3/60 px-3 py-1.5 text-[10px] font-medium text-foreground hover:border-border-strong hover:text-white transition-colors disabled:opacity-50"
                     >
                       {exportClipLoading ? (
                         <Loader2 className="h-3 w-3 animate-spin" />
@@ -530,12 +530,12 @@ export default function ForensicsPage() {
                     </button>
 
                     {/* View toggle: Single vs Multi-Camera */}
-                    <div className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-800/50 p-0.5">
+                    <div className="flex items-center gap-1 rounded-lg border border-border-strong bg-surface-3/50 p-0.5">
                       <button
                         onClick={() => setMultiCameraView(false)}
                         className={cn(
                           "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[10px] font-medium transition-colors",
-                          !multiCameraView ? "bg-cyan-600 text-white" : "text-gray-400 hover:text-gray-200"
+                          !multiCameraView ? "bg-cyan-600 text-white" : "text-muted-foreground hover:text-foreground"
                         )}
                       >
                         <Monitor className="h-3 w-3" /> Single Camera
@@ -544,7 +544,7 @@ export default function ForensicsPage() {
                         onClick={() => setMultiCameraView(true)}
                         className={cn(
                           "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[10px] font-medium transition-colors",
-                          multiCameraView ? "bg-cyan-600 text-white" : "text-gray-400 hover:text-gray-200"
+                          multiCameraView ? "bg-cyan-600 text-white" : "text-muted-foreground hover:text-foreground"
                         )}
                       >
                         <Grid3x3 className="h-3 w-3" /> Multi-Camera
@@ -573,39 +573,39 @@ export default function ForensicsPage() {
             {selectedIncidentId ? (
               <>
                 {/* ── Chain of Custody ─────────────────────── */}
-                <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-4 space-y-3">
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
+                <div className="rounded-lg border border-border bg-surface-2/50 p-4 space-y-3">
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                     <ListOrdered className="h-4 w-4 text-cyan-400" />
                     Chain of Custody
                   </div>
                   {chainOfCustodyLoading && (
                     <div className="flex items-center gap-2 py-2">
-                      <Loader2 className="h-3.5 w-3.5 animate-spin text-gray-500" />
-                      <span className="text-xs text-gray-500">Loading...</span>
+                      <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />
+                      <span className="text-xs text-muted-foreground">Loading...</span>
                     </div>
                   )}
                   {!chainOfCustodyLoading && chainOfCustodyUnavailable && (
-                    <p className="text-xs text-gray-500 italic">
+                    <p className="text-xs text-muted-foreground italic">
                       Chain of custody tracking not available
                     </p>
                   )}
                   {!chainOfCustodyLoading && chainOfCustody && chainOfCustody.length === 0 && (
-                    <p className="text-xs text-gray-600">No custody entries recorded</p>
+                    <p className="text-xs text-muted-foreground">No custody entries recorded</p>
                   )}
                   {!chainOfCustodyLoading && chainOfCustody && chainOfCustody.length > 0 && (
                     <div className="max-h-48 overflow-y-auto space-y-1.5">
                       {chainOfCustody.map((entry, i) => (
                         <div
                           key={i}
-                          className="rounded border border-gray-800 bg-gray-950/60 px-3 py-2 text-xs"
+                          className="rounded border border-border bg-surface-0/60 px-3 py-2 text-xs"
                         >
                           <div className="flex items-center justify-between gap-2 mb-0.5">
-                            <span className="font-mono text-[10px] text-gray-500">
+                            <span className="font-mono text-[10px] text-muted-foreground">
                               {formatTimestamp(entry.timestamp)}
                             </span>
                             <span className="text-[10px] text-cyan-400 font-medium">{entry.actor}</span>
                           </div>
-                          <p className="text-gray-300">{entry.action}</p>
+                          <p className="text-foreground">{entry.action}</p>
                         </div>
                       ))}
                     </div>
@@ -624,8 +624,8 @@ export default function ForensicsPage() {
               </>
             ) : (
               <div className="flex flex-col items-center justify-center py-20">
-                <Play className="h-10 w-10 text-gray-700 mb-3" />
-                <p className="text-sm text-gray-500">Select an incident to view AI reconstruction, agent decisions, and run simulations</p>
+                <Play className="h-10 w-10 text-muted-foreground mb-3" />
+                <p className="text-sm text-muted-foreground">Select an incident to view AI reconstruction, agent decisions, and run simulations</p>
               </div>
             )}
           </div>
@@ -642,10 +642,10 @@ export default function ForensicsPage() {
       {/* ── Analysis Tab Body ────────────────────────────────── */}
       {forensicTab === "analysis" && <div className="flex flex-1 overflow-hidden">
         {/* ============ LEFT PANEL (2/3) ======================== */}
-        <div className="flex w-2/3 flex-col overflow-y-auto border-r border-gray-800 p-6 space-y-6">
+        <div className="flex w-2/3 flex-col overflow-y-auto border-r border-border p-6 space-y-6">
           {/* Camera / Event selector */}
-          <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-5 space-y-4">
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
+          <div className="rounded-lg border border-border bg-surface-2/50 p-5 space-y-4">
+            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
               <Camera className="h-4 w-4 text-cyan-400" />
               Select Camera &amp; Event
             </div>
@@ -656,17 +656,17 @@ export default function ForensicsPage() {
                 <button
                   type="button"
                   onClick={() => setCameraDropdownOpen(!cameraDropdownOpen)}
-                  className="flex w-full items-center justify-between rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-sm text-gray-100 hover:border-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                  className="flex w-full items-center justify-between rounded-lg border border-border-strong bg-surface-2 px-4 py-2.5 text-sm text-foreground hover:border-border-strong focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
                 >
-                  <span className={selectedCamera ? "text-gray-100" : "text-gray-500"}>
+                  <span className={selectedCamera ? "text-foreground" : "text-muted-foreground"}>
                     {selectedCamera ? selectedCamera.name : "Choose a camera..."}
                   </span>
-                  <ChevronDown className="h-4 w-4 text-gray-500" />
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
                 </button>
                 {cameraDropdownOpen && (
-                  <div className="absolute z-20 mt-1 max-h-56 w-full overflow-y-auto rounded-lg border border-gray-700 bg-gray-900 shadow-xl">
+                  <div className="absolute z-20 mt-1 max-h-56 w-full overflow-y-auto rounded-lg border border-border-strong bg-surface-2 shadow-xl">
                     {cameras.length === 0 && (
-                      <div className="px-4 py-3 text-xs text-gray-500">No cameras available</div>
+                      <div className="px-4 py-3 text-xs text-muted-foreground">No cameras available</div>
                     )}
                     {cameras.map((cam) => (
                       <button
@@ -677,8 +677,8 @@ export default function ForensicsPage() {
                           setCameraDropdownOpen(false);
                         }}
                         className={cn(
-                          "flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm transition-colors hover:bg-gray-800",
-                          cam.id === selectedCameraId ? "bg-cyan-900/20 text-cyan-400" : "text-gray-300"
+                          "flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm transition-colors hover:bg-surface-3",
+                          cam.id === selectedCameraId ? "bg-cyan-900/20 text-cyan-400" : "text-foreground"
                         )}
                       >
                         <span
@@ -689,7 +689,7 @@ export default function ForensicsPage() {
                         />
                         {cam.name}
                         {cam.location && (
-                          <span className="ml-auto text-xs text-gray-600">{cam.location}</span>
+                          <span className="ml-auto text-xs text-muted-foreground">{cam.location}</span>
                         )}
                       </button>
                     ))}
@@ -703,7 +703,7 @@ export default function ForensicsPage() {
                   value={selectedEventId}
                   onChange={(e) => setSelectedEventId(e.target.value)}
                   disabled={events.length === 0}
-                  className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-sm text-gray-100 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700 disabled:opacity-50"
+                  className="w-full rounded-lg border border-border-strong bg-surface-2 px-4 py-2.5 text-sm text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700 disabled:opacity-50"
                 >
                   <option value="">Select event...</option>
                   {events.map((ev) => (
@@ -738,7 +738,7 @@ export default function ForensicsPage() {
                     setCopied(true);
                     setTimeout(() => setCopied(false), 2000);
                   }}
-                  className="flex items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-sm text-gray-300 transition-colors hover:bg-gray-700"
+                  className="flex items-center gap-1.5 rounded-lg border border-border-strong bg-surface-3 px-4 py-2.5 text-sm text-foreground transition-colors hover:bg-surface-3"
                 >
                   {copied ? <CheckCircle2 className="h-4 w-4 text-green-400" /> : <Copy className="h-4 w-4" />}
                   {copied ? "Copied!" : "Copy Results"}
@@ -772,12 +772,12 @@ export default function ForensicsPage() {
             <div className="space-y-4">
               {/* Scene Description */}
               {ga?.scene_description && (
-                <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-5 space-y-2">
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
+                <div className="rounded-lg border border-border bg-surface-2/50 p-5 space-y-2">
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                     <Eye className="h-4 w-4 text-cyan-400" />
                     Scene Description
                   </div>
-                  <p className="text-sm leading-relaxed text-gray-400">
+                  <p className="text-sm leading-relaxed text-muted-foreground">
                     {ga.scene_description}
                   </p>
                 </div>
@@ -785,8 +785,8 @@ export default function ForensicsPage() {
 
               {/* Risk Assessment */}
               {ga?.overall_risk && (
-                <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-5 space-y-2">
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
+                <div className="rounded-lg border border-border bg-surface-2/50 p-5 space-y-2">
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                     <Shield className="h-4 w-4 text-cyan-400" />
                     Risk Assessment
                   </div>
@@ -800,8 +800,8 @@ export default function ForensicsPage() {
                       {ga.overall_risk}
                     </span>
                     {ga.activity_level && (
-                      <span className="text-xs text-gray-500">
-                        Activity: <span className="text-gray-300">{ga.activity_level}</span>
+                      <span className="text-xs text-muted-foreground">
+                        Activity: <span className="text-foreground">{ga.activity_level}</span>
                       </span>
                     )}
                   </div>
@@ -811,56 +811,56 @@ export default function ForensicsPage() {
               {/* Persons & Vehicles (side by side) */}
               <div className="grid grid-cols-2 gap-4">
                 {/* Persons */}
-                <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-5 space-y-3">
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
+                <div className="rounded-lg border border-border bg-surface-2/50 p-5 space-y-3">
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                     <Users className="h-4 w-4 text-cyan-400" />
                     Person Descriptions
                     {ga?.persons && (
-                      <span className="ml-auto text-xs text-gray-600">{ga.persons.length} detected</span>
+                      <span className="ml-auto text-xs text-muted-foreground">{ga.persons.length} detected</span>
                     )}
                   </div>
                   {ga?.persons && ga.persons.length > 0 ? (
                     <ul className="space-y-2">
                       {ga.persons.map((p, i) => (
-                        <li key={i} className="rounded border border-gray-800 bg-gray-950/50 px-3 py-2">
-                          <p className="text-xs font-medium text-gray-300">{p.description}</p>
-                          <p className="mt-0.5 text-xs text-gray-500">Behavior: {p.behavior}</p>
+                        <li key={i} className="rounded border border-border bg-surface-0/50 px-3 py-2">
+                          <p className="text-xs font-medium text-foreground">{p.description}</p>
+                          <p className="mt-0.5 text-xs text-muted-foreground">Behavior: {p.behavior}</p>
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-xs text-gray-600">No persons detected</p>
+                    <p className="text-xs text-muted-foreground">No persons detected</p>
                   )}
                 </div>
 
                 {/* Vehicles */}
-                <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-5 space-y-3">
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
+                <div className="rounded-lg border border-border bg-surface-2/50 p-5 space-y-3">
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                     <Car className="h-4 w-4 text-cyan-400" />
                     Vehicle Descriptions
                     {ga?.vehicles && (
-                      <span className="ml-auto text-xs text-gray-600">{ga.vehicles.length} detected</span>
+                      <span className="ml-auto text-xs text-muted-foreground">{ga.vehicles.length} detected</span>
                     )}
                   </div>
                   {ga?.vehicles && ga.vehicles.length > 0 ? (
                     <ul className="space-y-2">
                       {ga.vehicles.map((v, i) => (
-                        <li key={i} className="rounded border border-gray-800 bg-gray-950/50 px-3 py-2">
-                          <p className="text-xs font-medium text-gray-300">{v.type}</p>
-                          <p className="mt-0.5 text-xs text-gray-500">Behavior: {v.behavior}</p>
+                        <li key={i} className="rounded border border-border bg-surface-0/50 px-3 py-2">
+                          <p className="text-xs font-medium text-foreground">{v.type}</p>
+                          <p className="mt-0.5 text-xs text-muted-foreground">Behavior: {v.behavior}</p>
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-xs text-gray-600">No vehicles detected</p>
+                    <p className="text-xs text-muted-foreground">No vehicles detected</p>
                   )}
                 </div>
               </div>
 
               {/* Anomalies */}
               {ga?.anomalies && ga.anomalies.length > 0 && (
-                <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-5 space-y-3">
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
+                <div className="rounded-lg border border-border bg-surface-2/50 p-5 space-y-3">
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                     <AlertTriangle className="h-4 w-4 text-yellow-500" />
                     Anomalies Detected
                   </div>
@@ -880,8 +880,8 @@ export default function ForensicsPage() {
 
               {/* Threat Indicators */}
               {ga?.threat_indicators && ga.threat_indicators.length > 0 && (
-                <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-5 space-y-3">
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
+                <div className="rounded-lg border border-border bg-surface-2/50 p-5 space-y-3">
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                     <Target className="h-4 w-4 text-red-400" />
                     Threat Indicators
                   </div>
@@ -889,13 +889,13 @@ export default function ForensicsPage() {
                     {ga.threat_indicators.map((t, i) => (
                       <div
                         key={i}
-                        className="flex items-center gap-3 rounded border border-gray-800 bg-gray-950/50 px-3 py-2"
+                        className="flex items-center gap-3 rounded border border-border bg-surface-0/50 px-3 py-2"
                       >
                         <span className="inline-flex items-center rounded bg-red-900/30 px-2 py-0.5 text-[10px] font-bold uppercase text-red-400 border border-red-800/50">
                           {t.type}
                         </span>
-                        <span className="flex-1 text-xs text-gray-400">{t.description}</span>
-                        <span className="text-xs font-mono text-gray-500">
+                        <span className="flex-1 text-xs text-muted-foreground">{t.description}</span>
+                        <span className="text-xs font-mono text-muted-foreground">
                           {(t.confidence * 100).toFixed(0)}%
                         </span>
                       </div>
@@ -906,8 +906,8 @@ export default function ForensicsPage() {
 
               {/* Recommended Actions */}
               {ga?.recommended_actions && ga.recommended_actions.length > 0 && (
-                <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-5 space-y-3">
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
+                <div className="rounded-lg border border-border bg-surface-2/50 p-5 space-y-3">
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                     <CheckCircle2 className="h-4 w-4 text-green-400" />
                     Recommended Actions
                   </div>
@@ -915,7 +915,7 @@ export default function ForensicsPage() {
                     {ga.recommended_actions.map((action, i) => (
                       <li
                         key={i}
-                        className="flex items-start gap-2 text-xs text-gray-400"
+                        className="flex items-start gap-2 text-xs text-muted-foreground"
                       >
                         <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-500" />
                         {action}
@@ -927,11 +927,11 @@ export default function ForensicsPage() {
 
               {/* Context Events */}
               {analysisResult.context_events.length > 0 && (
-                <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-5 space-y-3">
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
+                <div className="rounded-lg border border-border bg-surface-2/50 p-5 space-y-3">
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                     <FileText className="h-4 w-4 text-cyan-400" />
                     Context Events
-                    <span className="ml-auto text-xs text-gray-600">
+                    <span className="ml-auto text-xs text-muted-foreground">
                       {analysisResult.context_events.length} nearby events
                     </span>
                   </div>
@@ -939,9 +939,9 @@ export default function ForensicsPage() {
                     {analysisResult.context_events.map((ce, i) => (
                       <div
                         key={i}
-                        className="flex items-center gap-3 rounded border border-gray-800 bg-gray-950/50 px-3 py-2 text-xs"
+                        className="flex items-center gap-3 rounded border border-border bg-surface-0/50 px-3 py-2 text-xs"
                       >
-                        <span className="font-mono text-gray-500">
+                        <span className="font-mono text-muted-foreground">
                           {ce.timestamp ? formatTimestamp(ce.timestamp as string) : "--"}
                         </span>
                         <span
@@ -952,8 +952,8 @@ export default function ForensicsPage() {
                         >
                           {(ce.severity as string) || "info"}
                         </span>
-                        <span className="text-gray-400">{(ce.event_type as string) || "unknown"}</span>
-                        <span className="flex-1 truncate text-gray-600">
+                        <span className="text-muted-foreground">{(ce.event_type as string) || "unknown"}</span>
+                        <span className="flex-1 truncate text-muted-foreground">
                           {(ce.description as string) || ""}
                         </span>
                       </div>
@@ -978,11 +978,11 @@ export default function ForensicsPage() {
           {/* Empty state */}
           {!analysisResult && !analysisLoading && !analysisError && (
             <div className="flex flex-1 flex-col items-center justify-center py-20 text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-800/50 border border-gray-700 mb-4">
-                <Upload className="h-7 w-7 text-gray-600" />
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-3/50 border border-border-strong mb-4">
+                <Upload className="h-7 w-7 text-muted-foreground" />
               </div>
-              <p className="text-sm font-medium text-gray-400">Select a camera and event to begin analysis</p>
-              <p className="mt-1 text-xs text-gray-600">
+              <p className="text-sm font-medium text-muted-foreground">Select a camera and event to begin analysis</p>
+              <p className="mt-1 text-xs text-muted-foreground">
                 Choose a camera from the dropdown, pick an event, then click &quot;Analyze Frame&quot;
               </p>
             </div>
@@ -990,19 +990,19 @@ export default function ForensicsPage() {
         </div>
 
         {/* ============ RIGHT PANEL (1/3) ======================= */}
-        <div className="flex w-1/3 flex-col overflow-y-auto bg-gray-950 p-6 space-y-6">
-          <div className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+        <div className="flex w-1/3 flex-col overflow-y-auto bg-surface-0 p-6 space-y-6">
+          <div className="text-sm font-semibold text-foreground uppercase tracking-wider">
             Investigation Tools
           </div>
 
           {/* ── Evidence Timeline Builder (NL) ──────────────── */}
-          <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-4">
+          <div className="rounded-lg border border-border bg-surface-2/50 p-4">
             <div className="flex items-center gap-2 mb-3">
               <Clock className="h-4 w-4 text-cyan-400" />
               <h3 className="text-sm font-bold text-white">Evidence Timeline Builder</h3>
-              <span className="text-[9px] text-gray-500 bg-gray-800 rounded px-1.5 py-0.5">AI-Powered</span>
+              <span className="text-[9px] text-muted-foreground bg-surface-3 rounded px-1.5 py-0.5">AI-Powered</span>
             </div>
-            <p className="text-xs text-gray-500 mb-3">
+            <p className="text-xs text-muted-foreground mb-3">
               Describe what you&apos;re looking for in natural language. SENTINEL AI will search cameras, events, and alerts to build a court-ready evidence timeline.
             </p>
             <div className="flex gap-2 mb-3">
@@ -1012,7 +1012,7 @@ export default function ForensicsPage() {
                 onChange={(e) => setEvidenceTimelineQuery(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleBuildEvidenceTimeline()}
                 placeholder='e.g. "Find everything involving the person near loading dock from 2pm-5pm"'
-                className="flex-1 rounded-md border border-gray-700 bg-gray-800/60 px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-cyan-500/50 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
+                className="flex-1 rounded-md border border-border-strong bg-surface-3/60 px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-cyan-500/50 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
               />
               <button
                 onClick={handleBuildEvidenceTimeline}
@@ -1029,9 +1029,9 @@ export default function ForensicsPage() {
               <div className="space-y-3">
                 {/* Narrative */}
                 {evidenceTimelineResult.narrative && (
-                  <div className="rounded-md border border-gray-800/50 bg-gray-900/60 p-3">
-                    <p className="text-[9px] font-bold uppercase tracking-wider text-gray-500 mb-1">AI Narrative</p>
-                    <p className="text-xs text-gray-300 leading-relaxed whitespace-pre-wrap">{evidenceTimelineResult.narrative}</p>
+                  <div className="rounded-md border border-border/50 bg-surface-2/60 p-3">
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground mb-1">AI Narrative</p>
+                    <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">{evidenceTimelineResult.narrative}</p>
                   </div>
                 )}
 
@@ -1053,10 +1053,10 @@ export default function ForensicsPage() {
                 {/* Timeline entries */}
                 {evidenceTimelineResult.timeline?.length > 0 && (
                   <div>
-                    <p className="text-[9px] font-bold uppercase tracking-wider text-gray-500 mb-2">Evidence Timeline ({evidenceTimelineResult.timeline.length} entries)</p>
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Evidence Timeline ({evidenceTimelineResult.timeline.length} entries)</p>
                     <div className="space-y-1">
                       {evidenceTimelineResult.timeline.map((entry: any, i: number) => (
-                        <div key={i} className="flex items-start gap-2 rounded-md border border-gray-800/40 bg-gray-900/40 px-3 py-2">
+                        <div key={i} className="flex items-start gap-2 rounded-md border border-border/40 bg-surface-2/40 px-3 py-2">
                           <div className="flex flex-col items-center shrink-0 pt-0.5">
                             <div className={cn(
                               "h-2 w-2 rounded-full",
@@ -1064,18 +1064,18 @@ export default function ForensicsPage() {
                               entry.evidence_type === "clip_match" ? "bg-purple-500" :
                               "bg-cyan-500"
                             )} />
-                            {i < evidenceTimelineResult.timeline.length - 1 && <div className="w-px h-6 bg-gray-700/40 mt-1" />}
+                            {i < evidenceTimelineResult.timeline.length - 1 && <div className="w-px h-6 bg-surface-3/40 mt-1" />}
                           </div>
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2">
-                              <span className="text-[9px] text-gray-500 tabular-nums">{entry.timestamp ? new Date(entry.timestamp).toLocaleTimeString() : "\u2014"}</span>
-                              <span className="text-[8px] font-bold uppercase text-gray-600">{entry.evidence_type}</span>
+                              <span className="text-[9px] text-muted-foreground tabular-nums">{entry.timestamp ? new Date(entry.timestamp).toLocaleTimeString() : "\u2014"}</span>
+                              <span className="text-[8px] font-bold uppercase text-muted-foreground">{entry.evidence_type}</span>
                               {entry.camera_id && <span className="text-[8px] text-cyan-500/60">{entry.camera_name || entry.camera_id}</span>}
                             </div>
-                            <p className="text-[10px] text-gray-400">{entry.description}</p>
+                            <p className="text-[10px] text-muted-foreground">{entry.description}</p>
                           </div>
                           {entry.confidence != null && (
-                            <span className="text-[8px] text-gray-500 tabular-nums shrink-0">{Math.round(entry.confidence * 100)}%</span>
+                            <span className="text-[8px] text-muted-foreground tabular-nums shrink-0">{Math.round(entry.confidence * 100)}%</span>
                           )}
                         </div>
                       ))}
@@ -1084,9 +1084,9 @@ export default function ForensicsPage() {
                 )}
 
                 {/* Evidence quality + chain of custody */}
-                <div className="flex items-center gap-4 text-[9px] text-gray-600 pt-2 border-t border-gray-800/30">
-                  <span>Quality: <span className={cn("font-bold", evidenceTimelineResult.evidence_quality === "strong" ? "text-emerald-400" : evidenceTimelineResult.evidence_quality === "moderate" ? "text-yellow-400" : "text-gray-400")}>{evidenceTimelineResult.evidence_quality || "N/A"}</span></span>
-                  <span>Items: <span className="text-gray-400 font-bold">{evidenceTimelineResult.total_items ?? 0}</span></span>
+                <div className="flex items-center gap-4 text-[9px] text-muted-foreground pt-2 border-t border-border/30">
+                  <span>Quality: <span className={cn("font-bold", evidenceTimelineResult.evidence_quality === "strong" ? "text-emerald-400" : evidenceTimelineResult.evidence_quality === "moderate" ? "text-yellow-400" : "text-muted-foreground")}>{evidenceTimelineResult.evidence_quality || "N/A"}</span></span>
+                  <span>Items: <span className="text-muted-foreground font-bold">{evidenceTimelineResult.total_items ?? 0}</span></span>
                   {evidenceTimelineResult.chain_of_custody && <span>Chain of Custody: <span className="text-emerald-400 font-bold">Verified</span></span>}
                 </div>
               </div>
@@ -1094,33 +1094,33 @@ export default function ForensicsPage() {
           </div>
 
           {/* ── Timeline Builder ────────────────────────────── */}
-          <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-5 space-y-4">
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
+          <div className="rounded-lg border border-border bg-surface-2/50 p-5 space-y-4">
+            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
               <Clock className="h-4 w-4 text-cyan-400" />
               Build Timeline
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-500">
+                <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   Start Time
                 </label>
                 <input
                   type="datetime-local"
                   value={timelineStart}
                   onChange={(e) => setTimelineStart(e.target.value)}
-                  className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-100 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700 [color-scheme:dark]"
+                  className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700 [color-scheme:dark]"
                 />
               </div>
               <div>
-                <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-500">
+                <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   End Time
                 </label>
                 <input
                   type="datetime-local"
                   value={timelineEnd}
                   onChange={(e) => setTimelineEnd(e.target.value)}
-                  className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-100 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700 [color-scheme:dark]"
+                  className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700 [color-scheme:dark]"
                 />
               </div>
             </div>
@@ -1159,7 +1159,7 @@ export default function ForensicsPage() {
             {/* Timeline results */}
             {timelineResult && !timelineLoading && (
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs text-gray-500">
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
                   <span>{timelineResult.total_entries} entries</span>
                   <span>
                     {formatTimestamp(timelineResult.start_time)} - {formatTimestamp(timelineResult.end_time)}
@@ -1169,7 +1169,7 @@ export default function ForensicsPage() {
                   {timelineResult.entries.map((entry) => (
                     <div
                       key={entry.id}
-                      className="relative flex items-start gap-3 rounded border border-gray-800 bg-gray-950/50 px-3 py-2"
+                      className="relative flex items-start gap-3 rounded border border-border bg-surface-0/50 px-3 py-2"
                     >
                       {/* Timeline dot */}
                       <div className="mt-1.5 flex flex-col items-center">
@@ -1182,7 +1182,7 @@ export default function ForensicsPage() {
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-[10px] text-gray-500">
+                          <span className="font-mono text-[10px] text-muted-foreground">
                             {formatTimestamp(entry.timestamp)}
                           </span>
                           <span
@@ -1194,9 +1194,9 @@ export default function ForensicsPage() {
                             {entry.severity}
                           </span>
                         </div>
-                        <p className="mt-0.5 truncate text-xs text-gray-400">
+                        <p className="mt-0.5 truncate text-xs text-muted-foreground">
                           {entry.event_type && (
-                            <span className="font-medium text-gray-300">{entry.event_type}: </span>
+                            <span className="font-medium text-foreground">{entry.event_type}: </span>
                           )}
                           {entry.description || "No description"}
                         </p>
@@ -1207,7 +1207,7 @@ export default function ForensicsPage() {
 
                 {/* Timeline summary */}
                 {timelineResult.summary && (
-                  <div className="mt-2 rounded border border-gray-800 bg-gray-900/30 px-3 py-2 text-[10px] text-gray-500">
+                  <div className="mt-2 rounded border border-border bg-surface-2/30 px-3 py-2 text-[10px] text-muted-foreground">
                     Events: {(timelineResult.summary as Record<string, unknown>).total_events as number || 0} |
                     Alerts: {(timelineResult.summary as Record<string, unknown>).total_alerts as number || 0}
                   </div>
@@ -1217,14 +1217,14 @@ export default function ForensicsPage() {
           </div>
 
           {/* ── Cross-Camera Correlation ────────────────────── */}
-          <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-5 space-y-4">
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
+          <div className="rounded-lg border border-border bg-surface-2/50 p-5 space-y-4">
+            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
               <GitBranch className="h-4 w-4 text-cyan-400" />
               Cross-Camera Correlation
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-500">
+              <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Anchor Event ID
               </label>
               <input
@@ -1232,7 +1232,7 @@ export default function ForensicsPage() {
                 value={correlationEventId || selectedEventId}
                 onChange={(e) => setCorrelationEventId(e.target.value)}
                 placeholder="Event ID to correlate..."
-                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
               />
             </div>
 
@@ -1271,8 +1271,8 @@ export default function ForensicsPage() {
             {correlationResult && !correlationLoading && (
               <div className="space-y-3">
                 {/* Overall score */}
-                <div className="flex items-center justify-between rounded border border-gray-800 bg-gray-950/50 px-3 py-2">
-                  <span className="text-xs text-gray-500">Correlation Score</span>
+                <div className="flex items-center justify-between rounded border border-border bg-surface-0/50 px-3 py-2">
+                  <span className="text-xs text-muted-foreground">Correlation Score</span>
                   <span
                     className={cn(
                       "text-sm font-bold font-mono",
@@ -1292,7 +1292,7 @@ export default function ForensicsPage() {
                   {correlationResult.cameras_involved.map((camId) => (
                     <span
                       key={camId}
-                      className="inline-flex items-center gap-1 rounded bg-gray-800 px-2 py-0.5 text-[10px] font-mono text-gray-400"
+                      className="inline-flex items-center gap-1 rounded bg-surface-3 px-2 py-0.5 text-[10px] font-mono text-muted-foreground"
                     >
                       <Camera className="h-2.5 w-2.5" />
                       {camId.slice(0, 8)}
@@ -1301,7 +1301,7 @@ export default function ForensicsPage() {
                 </div>
 
                 {/* Summary */}
-                <p className="text-xs leading-relaxed text-gray-500">
+                <p className="text-xs leading-relaxed text-muted-foreground">
                   {correlationResult.summary}
                 </p>
 
@@ -1310,13 +1310,13 @@ export default function ForensicsPage() {
                   {correlationResult.correlated_events.map((ce, i) => (
                     <div
                       key={i}
-                      className="flex items-center gap-2 rounded border border-gray-800 bg-gray-950/50 px-3 py-2"
+                      className="flex items-center gap-2 rounded border border-border bg-surface-0/50 px-3 py-2"
                     >
                       <div className="flex-1 min-w-0">
-                        <p className="truncate text-xs text-gray-300">
+                        <p className="truncate text-xs text-foreground">
                           {(ce.event_type as string) || "event"}
                         </p>
-                        <p className="text-[10px] text-gray-600">
+                        <p className="text-[10px] text-muted-foreground">
                           {ce.timestamp ? formatTimestamp(ce.timestamp as string) : "--"}
                         </p>
                       </div>
@@ -1339,25 +1339,25 @@ export default function ForensicsPage() {
                 </div>
 
                 {correlationResult.correlated_events.length === 0 && (
-                  <p className="text-xs text-gray-600 text-center py-2">No correlated events found</p>
+                  <p className="text-xs text-muted-foreground text-center py-2">No correlated events found</p>
                 )}
               </div>
             )}
           </div>
 
           {/* ── Subject Search (AI-powered) ─────────────────── */}
-          <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-5 space-y-4">
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
+          <div className="rounded-lg border border-border bg-surface-2/50 p-5 space-y-4">
+            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
               <Users className="h-4 w-4 text-purple-400" />
               Subject Search
             </div>
-            <p className="text-[10px] text-gray-500">
+            <p className="text-[10px] text-muted-foreground">
               Search across all cameras using natural-language appearance descriptions
             </p>
 
             <div className="space-y-3">
               <div>
-                <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-500">
+                <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   Appearance Description
                 </label>
                 <textarea
@@ -1365,17 +1365,17 @@ export default function ForensicsPage() {
                   onChange={(e) => setSubjectQuery(e.target.value)}
                   placeholder="e.g. man in red jacket carrying backpack..."
                   rows={2}
-                  className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-100 placeholder-gray-600 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 resize-none"
+                  className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 resize-none"
                 />
               </div>
               <div>
-                <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-500">
+                <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   Time Range (hours)
                 </label>
                 <select
                   value={subjectTimeRange}
                   onChange={(e) => setSubjectTimeRange(Number(e.target.value))}
-                  className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-100 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700"
+                  className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700"
                 >
                   <option value={1}>Last 1 hour</option>
                   <option value={6}>Last 6 hours</option>
@@ -1418,15 +1418,15 @@ export default function ForensicsPage() {
               const appearances = Array.isArray(subjectResults.appearances) ? subjectResults.appearances as Record<string, unknown>[] : [];
               return (
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs text-gray-500">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <span>{Number(subjectResults.total_appearances) || 0} appearances</span>
                     <span>{Number(subjectResults.cameras_found) || 0} cameras</span>
                   </div>
                   <div className="max-h-48 space-y-1.5 overflow-y-auto">
                     {appearances.map((app, i) => (
-                      <div key={i} className="rounded border border-gray-800 bg-gray-950/50 px-3 py-2">
+                      <div key={i} className="rounded border border-border bg-surface-0/50 px-3 py-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-mono text-gray-400">
+                          <span className="text-xs font-mono text-muted-foreground">
                             <Camera className="mr-1 inline h-3 w-3" />
                             {String(app.camera_id || "").slice(0, 8)}...
                           </span>
@@ -1434,7 +1434,7 @@ export default function ForensicsPage() {
                             {Number(app.match_count) || 0} matches
                           </span>
                         </div>
-                        <div className="mt-1 text-[10px] text-gray-500">
+                        <div className="mt-1 text-[10px] text-muted-foreground">
                           Best score: {(Number(app.best_score) * 100 || 0).toFixed(1)}%
                         </div>
                       </div>
@@ -1446,17 +1446,17 @@ export default function ForensicsPage() {
           </div>
 
           {/* ── Movement Trail ───────────────────────────────── */}
-          <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-5 space-y-4">
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
+          <div className="rounded-lg border border-border bg-surface-2/50 p-5 space-y-4">
+            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
               <GitBranch className="h-4 w-4 text-green-400" />
               Movement Trail
             </div>
-            <p className="text-[10px] text-gray-500">
+            <p className="text-[10px] text-muted-foreground">
               Reconstruct a subject&apos;s path across cameras with AI narrative
             </p>
 
             <div>
-              <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-500">
+              <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Subject Description
               </label>
               <input
@@ -1464,7 +1464,7 @@ export default function ForensicsPage() {
                 value={trailSubject}
                 onChange={(e) => setTrailSubject(e.target.value)}
                 placeholder="e.g. person in blue uniform..."
-                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-100 placeholder-gray-600 focus:border-green-700 focus:outline-none focus:ring-1 focus:ring-green-700"
+                className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-green-700 focus:outline-none focus:ring-1 focus:ring-green-700"
               />
             </div>
 
@@ -1503,7 +1503,7 @@ export default function ForensicsPage() {
               const trail = Array.isArray(trailResult.trail) ? trailResult.trail as Record<string, unknown>[] : [];
               return (
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs text-gray-500">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <span>
                       {Number(summary?.total_appearances) || 0} appearances
                     </span>
@@ -1516,7 +1516,7 @@ export default function ForensicsPage() {
                     <div className="flex items-center gap-1 flex-wrap">
                       {cameraSeq.map((cam, i) => (
                         <span key={i} className="flex items-center gap-1">
-                          {i > 0 && <span className="text-gray-600 text-[10px]">&rarr;</span>}
+                          {i > 0 && <span className="text-muted-foreground text-[10px]">&rarr;</span>}
                           <span className="inline-flex items-center rounded bg-green-900/30 border border-green-800/50 px-1.5 py-0.5 text-[10px] font-mono text-green-400">
                             {cam.slice(0, 8)}
                           </span>
@@ -1530,7 +1530,7 @@ export default function ForensicsPage() {
                       <p className="text-[10px] font-semibold uppercase tracking-wider text-green-400 mb-1">
                         AI Narrative
                       </p>
-                      <p className="text-xs text-gray-400 leading-relaxed">
+                      <p className="text-xs text-muted-foreground leading-relaxed">
                         {narrative}
                       </p>
                     </div>
@@ -1538,12 +1538,12 @@ export default function ForensicsPage() {
 
                   <div className="max-h-40 space-y-1 overflow-y-auto">
                     {trail.map((point, i) => (
-                      <div key={i} className="flex items-center gap-2 rounded border border-gray-800 bg-gray-950/50 px-2 py-1.5 text-[10px]">
+                      <div key={i} className="flex items-center gap-2 rounded border border-border bg-surface-0/50 px-2 py-1.5 text-[10px]">
                         <span className="h-1.5 w-1.5 rounded-full bg-green-500 shrink-0" />
-                        <span className="font-mono text-gray-500">
+                        <span className="font-mono text-muted-foreground">
                           {point.timestamp ? formatTimestamp(String(point.timestamp)) : "--"}
                         </span>
-                        <span className="text-gray-400 truncate">{String(point.camera_id || "").slice(0, 8)}</span>
+                        <span className="text-muted-foreground truncate">{String(point.camera_id || "").slice(0, 8)}</span>
                       </div>
                     ))}
                   </div>
@@ -1553,24 +1553,24 @@ export default function ForensicsPage() {
           </div>
 
           {/* ── Event Clusters ───────────────────────────────── */}
-          <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-5 space-y-4">
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
+          <div className="rounded-lg border border-border bg-surface-2/50 p-5 space-y-4">
+            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
               <Target className="h-4 w-4 text-amber-400" />
               Event Clusters
             </div>
-            <p className="text-[10px] text-gray-500">
+            <p className="text-[10px] text-muted-foreground">
               Find temporally correlated events across multiple cameras with AI analysis
             </p>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-500">
+                <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   Time Window (s)
                 </label>
                 <select
                   value={clusterTimeWindow}
                   onChange={(e) => setClusterTimeWindow(Number(e.target.value))}
-                  className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-100 focus:border-amber-700 focus:outline-none focus:ring-1 focus:ring-amber-700"
+                  className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground focus:border-amber-700 focus:outline-none focus:ring-1 focus:ring-amber-700"
                 >
                   <option value={60}>60s</option>
                   <option value={300}>5 min</option>
@@ -1580,13 +1580,13 @@ export default function ForensicsPage() {
                 </select>
               </div>
               <div>
-                <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-500">
+                <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   Min Cameras
                 </label>
                 <select
                   value={clusterMinCameras}
                   onChange={(e) => setClusterMinCameras(Number(e.target.value))}
-                  className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-100 focus:border-amber-700 focus:outline-none focus:ring-1 focus:ring-amber-700"
+                  className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground focus:border-amber-700 focus:outline-none focus:ring-1 focus:ring-amber-700"
                 >
                   <option value={1}>1+</option>
                   <option value={2}>2+</option>
@@ -1628,7 +1628,7 @@ export default function ForensicsPage() {
               const clusters = Array.isArray(clusterResults.clusters) ? clusterResults.clusters as Record<string, unknown>[] : [];
               return (
                 <div className="space-y-2">
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-muted-foreground">
                     {Number(clusterResults.total_clusters) || 0} clusters found
                   </div>
                   <div className="max-h-52 space-y-2 overflow-y-auto">
@@ -1637,25 +1637,25 @@ export default function ForensicsPage() {
                       const timeRange = cluster.time_range as Record<string, string> | undefined;
                       const aiCorr = cluster.ai_correlation;
                       return (
-                        <div key={i} className="rounded border border-gray-800 bg-gray-950/50 px-3 py-2 space-y-1.5">
+                        <div key={i} className="rounded border border-border bg-surface-0/50 px-3 py-2 space-y-1.5">
                           <div className="flex items-center justify-between">
                             <span className="text-xs font-semibold text-amber-400">
                               Cluster #{i + 1}
                             </span>
-                            <span className="text-[10px] text-gray-500">
+                            <span className="text-[10px] text-muted-foreground">
                               {Number(cluster.event_count) || 0} events &middot;{" "}
                               {Number(cluster.camera_count) || 0} cameras
                             </span>
                           </div>
                           <div className="flex flex-wrap gap-1">
                             {camIds.map((cam, j) => (
-                              <span key={j} className="rounded bg-gray-800 px-1.5 py-0.5 text-[9px] font-mono text-gray-400">
+                              <span key={j} className="rounded bg-surface-3 px-1.5 py-0.5 text-[9px] font-mono text-muted-foreground">
                                 {cam.slice(0, 8)}
                               </span>
                             ))}
                           </div>
                           {timeRange && (
-                            <div className="text-[10px] text-gray-600">
+                            <div className="text-[10px] text-muted-foreground">
                               {formatTimestamp(timeRange.start || "")} &mdash;{" "}
                               {formatTimestamp(timeRange.end || "")}
                             </div>
@@ -1663,7 +1663,7 @@ export default function ForensicsPage() {
                           {aiCorr != null && (
                             <div className="rounded bg-amber-950/20 border border-amber-800/30 px-2 py-1.5">
                               <p className="text-[10px] font-semibold text-amber-400 mb-0.5">AI Analysis</p>
-                              <p className="text-[10px] text-gray-400 leading-relaxed">
+                              <p className="text-[10px] text-muted-foreground leading-relaxed">
                                 {typeof aiCorr === "object"
                                   ? String((aiCorr as Record<string, unknown>).incident_summary || JSON.stringify(aiCorr))
                                   : String(aiCorr)}

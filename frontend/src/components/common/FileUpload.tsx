@@ -43,7 +43,7 @@ interface FileUploadProps {
 function fileIcon(type: string) {
   if (type.startsWith("image/")) return <Image className="h-4 w-4 text-blue-400" />;
   if (type.startsWith("video/")) return <Film className="h-4 w-4 text-purple-400" />;
-  return <FileText className="h-4 w-4 text-gray-400" />;
+  return <FileText className="h-4 w-4 text-muted-foreground" />;
 }
 
 function formatSize(bytes: number): string {
@@ -187,7 +187,7 @@ export default function FileUpload({
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
-          className="flex items-center gap-1.5 rounded-md border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50 transition-colors"
+          className="flex items-center gap-1.5 rounded-md border border-border-strong bg-surface-3 px-3 py-1.5 text-xs text-foreground hover:bg-surface-3 hover:text-white disabled:opacity-50 transition-colors"
         >
           {uploading ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -213,7 +213,7 @@ export default function FileUpload({
       className={`relative rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
         isDragging
           ? "border-cyan-500 bg-cyan-950/20"
-          : "border-gray-700 bg-gray-900/40 hover:border-gray-600"
+          : "border-border-strong bg-surface-2/40 hover:border-border-strong"
       }`}
     >
       <input
@@ -229,13 +229,13 @@ export default function FileUpload({
         <div className="space-y-3">
           <Loader2 className="mx-auto h-8 w-8 animate-spin text-cyan-400" />
           <div className="mx-auto w-48">
-            <div className="h-1.5 rounded-full bg-gray-700">
+            <div className="h-1.5 rounded-full bg-surface-3">
               <div
                 className="h-1.5 rounded-full bg-cyan-500 transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="mt-1 text-xs text-gray-500">{progress}% uploaded</p>
+            <p className="mt-1 text-xs text-muted-foreground">{progress}% uploaded</p>
           </div>
         </div>
       ) : lastUploaded ? (
@@ -243,8 +243,8 @@ export default function FileUpload({
           <CheckCircle2 className="mx-auto h-8 w-8 text-green-400" />
           <div className="flex items-center justify-center gap-2">
             {fileIcon(lastUploaded.type)}
-            <span className="text-xs text-gray-300">{lastUploaded.name}</span>
-            <span className="text-[10px] text-gray-600">
+            <span className="text-xs text-foreground">{lastUploaded.name}</span>
+            <span className="text-[10px] text-muted-foreground">
               ({formatSize(lastUploaded.size)})
             </span>
           </div>
@@ -254,9 +254,9 @@ export default function FileUpload({
           className="cursor-pointer space-y-2"
           onClick={() => inputRef.current?.click()}
         >
-          <Upload className="mx-auto h-8 w-8 text-gray-600" />
-          <p className="text-sm text-gray-400">{label}</p>
-          <p className="text-[10px] text-gray-600">
+          <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">{label}</p>
+          <p className="text-[10px] text-muted-foreground">
             Drag & drop or click to browse. Max {formatSize(maxSize)}
           </p>
         </div>

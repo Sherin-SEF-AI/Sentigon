@@ -25,7 +25,7 @@ interface ThresholdAdjustmentViewerProps {
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
 
-const CARD = "rounded-lg border border-gray-800 bg-gray-900/60 backdrop-blur p-4";
+const CARD = "rounded-lg border border-border bg-surface-2/60 backdrop-blur p-4";
 
 const MAX_BAR_VALUE = 1.0;
 
@@ -59,8 +59,8 @@ function getBarColor(value: number): {
   }
   return {
     bg: "bg-gray-500/30",
-    text: "text-gray-400",
-    border: "border-gray-700/50",
+    text: "text-muted-foreground",
+    border: "border-border-strong/50",
   };
 }
 
@@ -93,7 +93,7 @@ function AdjustmentBar({
         <DirectionIcon
           className={cn("h-3.5 w-3.5 shrink-0", colors.text)}
         />
-        <span className="truncate text-xs font-medium text-gray-300">
+        <span className="truncate text-xs font-medium text-foreground">
           {name.replace(/_/g, " ")}
         </span>
       </div>
@@ -101,7 +101,7 @@ function AdjustmentBar({
       {/* Bar container -- centered around midpoint */}
       <div className="relative flex h-6 flex-1 items-center">
         {/* Background track */}
-        <div className="absolute inset-0 rounded-md bg-gray-800/50" />
+        <div className="absolute inset-0 rounded-md bg-surface-3/50" />
 
         {/* Center line (baseline = 0) */}
         <div className="absolute left-1/2 top-0 h-full w-px bg-gray-600" />
@@ -157,8 +157,8 @@ function ZoneSection({
       className={cn(
         "rounded-lg border transition-colors duration-200",
         expanded
-          ? "border-gray-700 bg-gray-900/80"
-          : "border-gray-800 bg-gray-900/40 hover:bg-gray-900/60"
+          ? "border-border-strong bg-surface-2/80"
+          : "border-border bg-surface-2/40 hover:bg-surface-2/60"
       )}
     >
       {/* Zone header */}
@@ -167,14 +167,14 @@ function ZoneSection({
         className="flex w-full items-center gap-3 px-4 py-3 text-left"
       >
         {expanded ? (
-          <ChevronDown className="h-4 w-4 shrink-0 text-gray-500" />
+          <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
         ) : (
-          <ChevronRight className="h-4 w-4 shrink-0 text-gray-500" />
+          <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
         )}
 
         <MapPin className="h-4 w-4 shrink-0 text-cyan-400" />
 
-        <span className="flex-1 text-sm font-semibold text-gray-200">
+        <span className="flex-1 text-sm font-semibold text-foreground">
           {zoneId}
         </span>
 
@@ -192,7 +192,7 @@ function ZoneSection({
               {negativeCount}
             </span>
           )}
-          <span className="rounded bg-gray-800 px-2 py-0.5 text-[10px] font-medium text-gray-500">
+          <span className="rounded bg-surface-3 px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
             {entries.length} adjustment{entries.length !== 1 ? "s" : ""}
           </span>
         </div>
@@ -200,22 +200,22 @@ function ZoneSection({
 
       {/* Expanded threshold bars */}
       {expanded && (
-        <div className="border-t border-gray-800 px-4 py-3 space-y-0.5">
+        <div className="border-t border-border px-4 py-3 space-y-0.5">
           {entries.length === 0 ? (
-            <p className="py-2 text-center text-xs text-gray-600">
+            <p className="py-2 text-center text-xs text-muted-foreground">
               No threshold adjustments for this zone.
             </p>
           ) : (
             <>
               {/* Legend */}
-              <div className="mb-2 flex items-center justify-between text-[9px] font-medium uppercase tracking-widest text-gray-600">
+              <div className="mb-2 flex items-center justify-between text-[9px] font-medium uppercase tracking-widest text-muted-foreground">
                 <span>Threshold</span>
                 <div className="flex items-center gap-4">
                   <span className="flex items-center gap-1">
                     <span className="h-2 w-2 rounded-sm bg-red-500/40" />
                     Lowered
                   </span>
-                  <span className="text-gray-700">|</span>
+                  <span className="text-muted-foreground">|</span>
                   <span className="flex items-center gap-1">
                     <span className="h-2 w-2 rounded-sm bg-green-500/40" />
                     Raised
@@ -258,12 +258,12 @@ export default function ThresholdAdjustmentViewer({
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <SlidersHorizontal className="h-4 w-4 text-cyan-400" />
-          <h3 className="text-sm font-bold text-gray-200">
+          <h3 className="text-sm font-bold text-foreground">
             Threshold Adjustments
           </h3>
         </div>
         <div className="flex items-center gap-2">
-          <span className="rounded-full bg-gray-800 px-2.5 py-0.5 text-[10px] font-semibold text-gray-400">
+          <span className="rounded-full bg-surface-3 px-2.5 py-0.5 text-[10px] font-semibold text-muted-foreground">
             {zoneIds.length} zone{zoneIds.length !== 1 ? "s" : ""}
           </span>
           <span className="rounded-full bg-cyan-900/30 border border-cyan-800/50 px-2.5 py-0.5 text-[10px] font-semibold text-cyan-400">
@@ -275,11 +275,11 @@ export default function ThresholdAdjustmentViewer({
       {/* Zone list */}
       {zoneIds.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-10">
-          <SlidersHorizontal className="mb-2 h-8 w-8 text-gray-700" />
-          <p className="text-sm font-medium text-gray-400">
+          <SlidersHorizontal className="mb-2 h-8 w-8 text-muted-foreground" />
+          <p className="text-sm font-medium text-muted-foreground">
             No threshold adjustments
           </p>
-          <p className="mt-1 text-xs text-gray-600">
+          <p className="mt-1 text-xs text-muted-foreground">
             Adjustments will appear here when threat context modifies zone thresholds
           </p>
         </div>

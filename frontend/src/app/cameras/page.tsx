@@ -119,9 +119,9 @@ function ONVIFConnectForm({
   return (
     <form
       onSubmit={handleConnect}
-      className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 space-y-4"
+      className="rounded-lg border border-border bg-surface-2/60 p-4 space-y-4"
     >
-      <h3 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+      <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
         <Settings className="h-4 w-4 text-cyan-400" />
         Connect to ONVIF Camera
       </h3>
@@ -134,53 +134,53 @@ function ONVIFConnectForm({
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400">
+          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
             IP Address
           </label>
           <input
             type="text"
             value={ip}
             onChange={(e) => setIp(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             placeholder="192.168.1.100"
             required
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400">
+          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Port
           </label>
           <input
             type="number"
             value={port}
             onChange={(e) => setPort(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             placeholder="80"
             required
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400">
+          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Username
           </label>
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             placeholder="admin"
             required
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400">
+          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Password
           </label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             placeholder="Password"
             required
           />
@@ -250,15 +250,15 @@ function PTZControlPanel({
   };
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 space-y-4">
-      <h3 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+    <div className="rounded-lg border border-border bg-surface-2/60 p-4 space-y-4">
+      <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
         <Monitor className="h-4 w-4 text-cyan-400" />
         PTZ Control
       </h3>
 
       {/* Speed slider */}
       <div className="flex items-center gap-3">
-        <span className="text-xs text-gray-500 uppercase tracking-wider">
+        <span className="text-xs text-muted-foreground uppercase tracking-wider">
           Speed
         </span>
         <input
@@ -281,7 +281,7 @@ function PTZControlPanel({
         <button
           onClick={() => sendPTZ("move", { direction: "up" })}
           disabled={moving}
-          className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-colors hover:bg-cyan-900/40 hover:border-cyan-700 hover:text-cyan-400 disabled:opacity-50"
+          className="flex h-10 w-10 items-center justify-center rounded-lg border border-border-strong bg-surface-3 text-foreground transition-colors hover:bg-cyan-900/40 hover:border-cyan-700 hover:text-cyan-400 disabled:opacity-50"
           title="Tilt Up"
         >
           <ChevronUp className="h-5 w-5" />
@@ -292,7 +292,7 @@ function PTZControlPanel({
           <button
             onClick={() => sendPTZ("move", { direction: "left" })}
             disabled={moving}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-colors hover:bg-cyan-900/40 hover:border-cyan-700 hover:text-cyan-400 disabled:opacity-50"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-border-strong bg-surface-3 text-foreground transition-colors hover:bg-cyan-900/40 hover:border-cyan-700 hover:text-cyan-400 disabled:opacity-50"
             title="Pan Left"
           >
             <ChevronLeft className="h-5 w-5" />
@@ -308,7 +308,7 @@ function PTZControlPanel({
           <button
             onClick={() => sendPTZ("move", { direction: "right" })}
             disabled={moving}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-colors hover:bg-cyan-900/40 hover:border-cyan-700 hover:text-cyan-400 disabled:opacity-50"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-border-strong bg-surface-3 text-foreground transition-colors hover:bg-cyan-900/40 hover:border-cyan-700 hover:text-cyan-400 disabled:opacity-50"
             title="Pan Right"
           >
             <ChevronRight className="h-5 w-5" />
@@ -319,7 +319,7 @@ function PTZControlPanel({
         <button
           onClick={() => sendPTZ("move", { direction: "down" })}
           disabled={moving}
-          className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-colors hover:bg-cyan-900/40 hover:border-cyan-700 hover:text-cyan-400 disabled:opacity-50"
+          className="flex h-10 w-10 items-center justify-center rounded-lg border border-border-strong bg-surface-3 text-foreground transition-colors hover:bg-cyan-900/40 hover:border-cyan-700 hover:text-cyan-400 disabled:opacity-50"
           title="Tilt Down"
         >
           <ChevronDown className="h-5 w-5" />
@@ -331,7 +331,7 @@ function PTZControlPanel({
         <button
           onClick={() => sendPTZ("zoom", { direction: "out" })}
           disabled={moving}
-          className="flex h-10 w-20 items-center justify-center gap-1 rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-colors hover:bg-cyan-900/40 hover:border-cyan-700 hover:text-cyan-400 disabled:opacity-50"
+          className="flex h-10 w-20 items-center justify-center gap-1 rounded-lg border border-border-strong bg-surface-3 text-foreground transition-colors hover:bg-cyan-900/40 hover:border-cyan-700 hover:text-cyan-400 disabled:opacity-50"
           title="Zoom Out"
         >
           <ZoomOut className="h-4 w-4" />
@@ -340,7 +340,7 @@ function PTZControlPanel({
         <button
           onClick={() => sendPTZ("zoom", { direction: "in" })}
           disabled={moving}
-          className="flex h-10 w-20 items-center justify-center gap-1 rounded-lg border border-gray-700 bg-gray-800 text-gray-300 transition-colors hover:bg-cyan-900/40 hover:border-cyan-700 hover:text-cyan-400 disabled:opacity-50"
+          className="flex h-10 w-20 items-center justify-center gap-1 rounded-lg border border-border-strong bg-surface-3 text-foreground transition-colors hover:bg-cyan-900/40 hover:border-cyan-700 hover:text-cyan-400 disabled:opacity-50"
           title="Zoom In"
         >
           <ZoomIn className="h-4 w-4" />
@@ -354,7 +354,7 @@ function PTZControlPanel({
           <select
             value={selectedPreset}
             onChange={(e) => setSelectedPreset(e.target.value)}
-            className="flex-1 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="flex-1 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
           >
             <option value="">Select Preset...</option>
             {device.presets.map((p) => (
@@ -375,22 +375,22 @@ function PTZControlPanel({
 
       {/* PTZ Status */}
       {ptzStatus && (
-        <div className="flex items-center gap-4 text-[10px] text-gray-500 pt-2 border-t border-gray-800">
+        <div className="flex items-center gap-4 text-[10px] text-muted-foreground pt-2 border-t border-border">
           <span>
             Pan:{" "}
-            <span className="font-mono text-gray-300">
+            <span className="font-mono text-foreground">
               {ptzStatus.pan.toFixed(2)}
             </span>
           </span>
           <span>
             Tilt:{" "}
-            <span className="font-mono text-gray-300">
+            <span className="font-mono text-foreground">
               {ptzStatus.tilt.toFixed(2)}
             </span>
           </span>
           <span>
             Zoom:{" "}
-            <span className="font-mono text-gray-300">
+            <span className="font-mono text-foreground">
               {ptzStatus.zoom.toFixed(2)}
             </span>
           </span>
@@ -462,14 +462,14 @@ function AddCameraModal({ onClose, onAdded }: { onClose: () => void; onAdded: ()
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="w-full max-w-lg rounded-2xl border border-gray-800 bg-gray-950 shadow-2xl">
+      <div className="w-full max-w-lg rounded-2xl border border-border bg-surface-0 shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <div className="flex items-center gap-2">
             <Plus className="h-5 w-5 text-cyan-400" />
-            <h2 className="text-sm font-bold text-gray-100">Add Camera</h2>
+            <h2 className="text-sm font-bold text-foreground">Add Camera</h2>
           </div>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-300 transition-colors">
+          <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -477,7 +477,7 @@ function AddCameraModal({ onClose, onAdded }: { onClose: () => void; onAdded: ()
         <div className="space-y-4 px-6 py-5">
           {/* Stream Type */}
           <div>
-            <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+            <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               Stream Type
             </label>
             <div className="flex gap-2">
@@ -489,7 +489,7 @@ function AddCameraModal({ onClose, onAdded }: { onClose: () => void; onAdded: ()
                     "rounded-lg border px-4 py-2 text-xs font-semibold transition-colors",
                     form.type === t
                       ? "border-cyan-700 bg-cyan-900/30 text-cyan-400"
-                      : "border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700"
+                      : "border-border-strong bg-surface-3 text-muted-foreground hover:bg-surface-3"
                   )}
                 >
                   {t === "rtsp" ? "RTSP" : t === "dvr" ? "DVR/NVR" : "HTTP/HLS"}
@@ -500,7 +500,7 @@ function AddCameraModal({ onClose, onAdded }: { onClose: () => void; onAdded: ()
 
           {/* Camera Name */}
           <div>
-            <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+            <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               Camera Name *
             </label>
             <input
@@ -508,13 +508,13 @@ function AddCameraModal({ onClose, onAdded }: { onClose: () => void; onAdded: ()
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               placeholder="e.g. Front Entrance, Parking Lot A"
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             />
           </div>
 
           {/* Stream URL */}
           <div>
-            <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+            <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               Stream URL *
             </label>
             <input
@@ -528,13 +528,13 @@ function AddCameraModal({ onClose, onAdded }: { onClose: () => void; onAdded: ()
                   ? "rtsp://admin:pass@dvr-ip:554/ch1/main"
                   : "http://192.168.1.100:8080/video"
               }
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 font-mono placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground font-mono placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             />
           </div>
 
           {/* Quick Templates */}
           <div>
-            <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+            <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               Quick Templates
             </label>
             <div className="flex flex-wrap gap-1.5">
@@ -542,7 +542,7 @@ function AddCameraModal({ onClose, onAdded }: { onClose: () => void; onAdded: ()
                 <button
                   key={tpl.label}
                   onClick={() => setForm({ ...form, source: tpl.value })}
-                  className="rounded-md border border-gray-700 bg-gray-800 px-2 py-1 text-[10px] text-gray-400 hover:bg-gray-700 hover:text-cyan-400 transition-colors"
+                  className="rounded-md border border-border-strong bg-surface-3 px-2 py-1 text-[10px] text-muted-foreground hover:bg-surface-3 hover:text-cyan-400 transition-colors"
                 >
                   {tpl.label}
                 </button>
@@ -552,7 +552,7 @@ function AddCameraModal({ onClose, onAdded }: { onClose: () => void; onAdded: ()
 
           {/* Location */}
           <div>
-            <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+            <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               Location (optional)
             </label>
             <input
@@ -560,7 +560,7 @@ function AddCameraModal({ onClose, onAdded }: { onClose: () => void; onAdded: ()
               value={form.location}
               onChange={(e) => setForm({ ...form, location: e.target.value })}
               placeholder="e.g. Building A, Floor 2, North Wing"
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             />
           </div>
 
@@ -575,10 +575,10 @@ function AddCameraModal({ onClose, onAdded }: { onClose: () => void; onAdded: ()
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 border-t border-gray-800 px-6 py-4">
+        <div className="flex items-center justify-end gap-3 border-t border-border px-6 py-4">
           <button
             onClick={onClose}
-            className="rounded-lg border border-gray-700 px-4 py-2 text-xs text-gray-400 hover:bg-gray-800 transition-colors"
+            className="rounded-lg border border-border-strong px-4 py-2 text-xs text-muted-foreground hover:bg-surface-3 transition-colors"
           >
             Cancel
           </button>
@@ -636,7 +636,7 @@ function CamerasTab() {
     <div>
       {/* Add Camera Button */}
       <div className="mb-4 flex items-center justify-between">
-        <p className="text-xs text-gray-500">{cameras.length} camera{cameras.length !== 1 ? "s" : ""} registered</p>
+        <p className="text-xs text-muted-foreground">{cameras.length} camera{cameras.length !== 1 ? "s" : ""} registered</p>
         <button
           onClick={() => setShowAddModal(true)}
           className="flex items-center gap-2 rounded-lg bg-cyan-700 px-4 py-2 text-xs font-semibold text-white hover:bg-cyan-600 transition-colors"
@@ -657,8 +657,8 @@ function CamerasTab() {
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {cameras.length === 0 && (
         <div className="col-span-full flex flex-col items-center justify-center py-20">
-          <Camera className="mb-2 h-10 w-10 text-gray-700" />
-          <p className="text-sm text-gray-500">No cameras registered</p>
+          <Camera className="mb-2 h-10 w-10 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">No cameras registered</p>
           <button
             onClick={() => setShowAddModal(true)}
             className="mt-3 flex items-center gap-2 rounded-lg border border-cyan-700 px-4 py-2 text-xs text-cyan-400 hover:bg-cyan-900/30 transition-colors"
@@ -671,12 +671,12 @@ function CamerasTab() {
       {cameras.map((cam) => (
         <div
           key={cam.id}
-          className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 transition-colors hover:border-cyan-800/50"
+          className="rounded-lg border border-border bg-surface-2/60 p-4 transition-colors hover:border-cyan-800/50"
         >
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Video className="h-4 w-4 text-cyan-400" />
-              <span className="text-sm font-semibold text-gray-200 truncate">
+              <span className="text-sm font-semibold text-foreground truncate">
                 {cam.name}
               </span>
             </div>
@@ -692,19 +692,19 @@ function CamerasTab() {
               title={cam.status}
             />
           </div>
-          <div className="space-y-1 text-xs text-gray-500">
+          <div className="space-y-1 text-xs text-muted-foreground">
             {cam.location && (
               <p>
-                Location: <span className="text-gray-300">{cam.location}</span>
+                Location: <span className="text-foreground">{cam.location}</span>
               </p>
             )}
             <p>
-              FPS: <span className="font-mono text-gray-300">{cam.fps}</span>
+              FPS: <span className="font-mono text-foreground">{cam.fps}</span>
             </p>
             {cam.resolution && (
               <p>
                 Resolution:{" "}
-                <span className="font-mono text-gray-300">
+                <span className="font-mono text-foreground">
                   {cam.resolution}
                 </span>
               </p>
@@ -718,7 +718,7 @@ function CamerasTab() {
                     ? "text-emerald-400"
                     : cam.status === "error"
                     ? "text-red-400"
-                    : "text-gray-400"
+                    : "text-muted-foreground"
                 )}
               >
                 {cam.status}
@@ -789,9 +789,9 @@ function ONVIFTab() {
       )}
 
       {/* Discovery Section */}
-      <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-5 space-y-4">
+      <div className="rounded-lg border border-border bg-surface-2/60 p-5 space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-300">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
             Network Discovery
           </h3>
           <div className="flex items-center gap-2">
@@ -800,7 +800,7 @@ function ONVIFTab() {
                 setShowConnectForm(!showConnectForm);
                 setConnectIp("");
               }}
-              className="flex items-center gap-2 rounded-lg border border-gray-700 px-3 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+              className="flex items-center gap-2 rounded-lg border border-border-strong px-3 py-2 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             >
               <Plus className="h-3.5 w-3.5" />
               Manual Connect
@@ -831,7 +831,7 @@ function ONVIFTab() {
         {/* Discovered devices */}
         {discovered.length > 0 && (
           <div className="space-y-2">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               {discovered.length} device{discovered.length !== 1 && "s"} found
               on network
             </p>
@@ -844,10 +844,10 @@ function ONVIFTab() {
                   <div
                     key={`${device.ip}:${device.port}`}
                     className={cn(
-                      "rounded-lg border bg-gray-950 p-4 space-y-2 transition-colors",
+                      "rounded-lg border bg-surface-0 p-4 space-y-2 transition-colors",
                       isConnected
                         ? "border-emerald-800/50 bg-emerald-950/20"
-                        : "border-gray-800 hover:border-gray-700"
+                        : "border-border hover:border-border-strong"
                     )}
                   >
                     <div className="flex items-center justify-between">
@@ -855,9 +855,9 @@ function ONVIFTab() {
                         {isConnected ? (
                           <Wifi className="h-4 w-4 text-emerald-400" />
                         ) : (
-                          <WifiOff className="h-4 w-4 text-gray-500" />
+                          <WifiOff className="h-4 w-4 text-muted-foreground" />
                         )}
-                        <span className="font-mono text-sm font-semibold text-gray-200">
+                        <span className="font-mono text-sm font-semibold text-foreground">
                           {device.ip}:{device.port}
                         </span>
                       </div>
@@ -868,10 +868,10 @@ function ONVIFTab() {
                       )}
                     </div>
                     {device.name && (
-                      <p className="text-xs text-gray-400">{device.name}</p>
+                      <p className="text-xs text-muted-foreground">{device.name}</p>
                     )}
                     {device.manufacturer && (
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-muted-foreground">
                         {device.manufacturer} {device.model || ""}
                       </p>
                     )}
@@ -896,11 +896,11 @@ function ONVIFTab() {
 
         {!discovering && discovered.length === 0 && (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Search className="mb-3 h-10 w-10 text-gray-700" />
-            <p className="text-sm text-gray-500">
+            <Search className="mb-3 h-10 w-10 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">
               No devices discovered yet
             </p>
-            <p className="mt-1 text-xs text-gray-600">
+            <p className="mt-1 text-xs text-muted-foreground">
               Click &quot;Discover Cameras&quot; to scan your network for ONVIF
               devices
             </p>
@@ -910,8 +910,8 @@ function ONVIFTab() {
 
       {/* Connected Devices */}
       {connectedDevices.length > 0 && (
-        <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-5 space-y-4">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-300">
+        <div className="rounded-lg border border-border bg-surface-2/60 p-5 space-y-4">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
             Connected Devices ({connectedDevices.length})
           </h3>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -930,31 +930,31 @@ function ONVIFTab() {
                     "w-full text-left rounded-lg border p-4 transition-all",
                     isSelected
                       ? "border-cyan-700/60 bg-cyan-950/20"
-                      : "border-gray-800 hover:border-gray-700 bg-gray-950"
+                      : "border-border hover:border-border-strong bg-surface-0"
                   )}
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <Wifi className="h-4 w-4 text-emerald-400" />
-                    <span className="font-mono text-sm font-semibold text-gray-200">
+                    <span className="font-mono text-sm font-semibold text-foreground">
                       {device.ip}:{device.port}
                     </span>
                   </div>
-                  <div className="space-y-1 text-xs text-gray-500">
+                  <div className="space-y-1 text-xs text-muted-foreground">
                     <p>
                       Manufacturer:{" "}
-                      <span className="text-gray-300">
+                      <span className="text-foreground">
                         {device.device_info.manufacturer}
                       </span>
                     </p>
                     <p>
                       Model:{" "}
-                      <span className="text-gray-300">
+                      <span className="text-foreground">
                         {device.device_info.model}
                       </span>
                     </p>
                     <p>
                       Firmware:{" "}
-                      <span className="text-gray-300">
+                      <span className="text-foreground">
                         {device.device_info.firmware_version}
                       </span>
                     </p>
@@ -970,7 +970,7 @@ function ONVIFTab() {
                         className={
                           device.ptz_supported
                             ? "text-emerald-400"
-                            : "text-gray-600"
+                            : "text-muted-foreground"
                         }
                       >
                         {device.ptz_supported ? "Supported" : "Not Supported"}
@@ -990,8 +990,8 @@ function ONVIFTab() {
           {/* Device Details */}
           <div className="space-y-4">
             {/* Profiles */}
-            <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 space-y-3">
-              <h3 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+            <div className="rounded-lg border border-border bg-surface-2/60 p-4 space-y-3">
+              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <Eye className="h-4 w-4 text-cyan-400" />
                 Media Profiles
               </h3>
@@ -1003,19 +1003,19 @@ function ONVIFTab() {
                       "rounded-lg border p-3 cursor-pointer transition-colors",
                       activeProfile === profile.token
                         ? "border-cyan-700/50 bg-cyan-950/20"
-                        : "border-gray-800 bg-gray-950 hover:border-gray-700"
+                        : "border-border bg-surface-0 hover:border-border-strong"
                     )}
                     onClick={() => setActiveProfile(profile.token)}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-semibold text-gray-200">
+                      <span className="text-xs font-semibold text-foreground">
                         {profile.name}
                       </span>
-                      <span className="font-mono text-[10px] text-gray-600">
+                      <span className="font-mono text-[10px] text-muted-foreground">
                         {profile.token}
                       </span>
                     </div>
-                    <div className="flex flex-wrap gap-3 text-[10px] text-gray-500">
+                    <div className="flex flex-wrap gap-3 text-[10px] text-muted-foreground">
                       {profile.encoding && (
                         <span>Encoding: {profile.encoding}</span>
                       )}
@@ -1033,13 +1033,13 @@ function ONVIFTab() {
             </div>
 
             {/* Stream URIs */}
-            <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 space-y-3">
-              <h3 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+            <div className="rounded-lg border border-border bg-surface-2/60 p-4 space-y-3">
+              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <Video className="h-4 w-4 text-cyan-400" />
                 Stream URIs
               </h3>
               {Object.entries(selectedDevice.stream_uris).length === 0 ? (
-                <p className="text-xs text-gray-600">
+                <p className="text-xs text-muted-foreground">
                   No stream URIs available
                 </p>
               ) : (
@@ -1048,12 +1048,12 @@ function ONVIFTab() {
                     ([profile, uri]) => (
                       <div
                         key={profile}
-                        className="rounded-lg border border-gray-800 bg-gray-950 p-3"
+                        className="rounded-lg border border-border bg-surface-0 p-3"
                       >
-                        <span className="text-xs font-medium text-gray-400">
+                        <span className="text-xs font-medium text-muted-foreground">
                           {profile}
                         </span>
-                        <p className="mt-1 font-mono text-[11px] text-gray-300 break-all">
+                        <p className="mt-1 font-mono text-[11px] text-foreground break-all">
                           {uri}
                         </p>
                       </div>
@@ -1064,8 +1064,8 @@ function ONVIFTab() {
             </div>
 
             {/* Device Info */}
-            <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 space-y-3">
-              <h3 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+            <div className="rounded-lg border border-border bg-surface-2/60 p-4 space-y-3">
+              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <Info className="h-4 w-4 text-cyan-400" />
                 Device Information
               </h3>
@@ -1074,12 +1074,12 @@ function ONVIFTab() {
                   ([key, value]) => (
                     <div
                       key={key}
-                      className="flex justify-between border-b border-gray-800/50 pb-1"
+                      className="flex justify-between border-b border-border/50 pb-1"
                     >
-                      <span className="text-gray-500 capitalize">
+                      <span className="text-muted-foreground capitalize">
                         {key.replace(/_/g, " ")}
                       </span>
-                      <span className="text-gray-300 font-mono">
+                      <span className="text-foreground font-mono">
                         {value}
                       </span>
                     </div>
@@ -1097,10 +1097,10 @@ function ONVIFTab() {
                 activeProfile={activeProfile}
               />
             ) : (
-              <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-8 flex flex-col items-center justify-center text-center">
-                <Monitor className="mb-3 h-10 w-10 text-gray-700" />
-                <p className="text-sm text-gray-500">PTZ Not Supported</p>
-                <p className="mt-1 text-xs text-gray-600">
+              <div className="rounded-lg border border-border bg-surface-2/60 p-8 flex flex-col items-center justify-center text-center">
+                <Monitor className="mb-3 h-10 w-10 text-muted-foreground" />
+                <p className="text-sm text-muted-foreground">PTZ Not Supported</p>
+                <p className="mt-1 text-xs text-muted-foreground">
                   This camera does not support Pan-Tilt-Zoom controls
                 </p>
               </div>
@@ -1125,7 +1125,7 @@ export default function CameraManagementPage() {
   const [tab, setTab] = useState<TabKey>("cameras");
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen bg-surface-0 text-foreground">
       <div className="mx-auto max-w-7xl space-y-6 px-6 py-8">
         {/* Header */}
         <div className="flex items-center gap-3">
@@ -1133,17 +1133,17 @@ export default function CameraManagementPage() {
             <Camera className="h-5 w-5 text-cyan-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wider text-gray-100 uppercase">
+            <h1 className="text-lg font-bold tracking-wider text-foreground uppercase">
               Camera Management
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               View cameras, discover ONVIF devices, and control PTZ
             </p>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 border-b border-gray-800">
+        <div className="flex gap-1 border-b border-border">
           {TABS.map((t) => (
             <button
               key={t.key}
@@ -1152,7 +1152,7 @@ export default function CameraManagementPage() {
                 "flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors",
                 tab === t.key
                   ? "border-cyan-400 text-cyan-400"
-                  : "border-transparent text-gray-500 hover:border-gray-700 hover:text-gray-300"
+                  : "border-transparent text-muted-foreground hover:border-border-strong hover:text-foreground"
               )}
             >
               {t.icon}

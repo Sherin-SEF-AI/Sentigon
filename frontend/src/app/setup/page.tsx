@@ -544,7 +544,7 @@ const INDUSTRY_PRESETS: Record<IndustryType, AlertPreset[]> = {
 
 function Label({ children, required }: { children: React.ReactNode; required?: boolean }) {
   return (
-    <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">
+    <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
       {children}
       {required && <span className="ml-1 text-cyan-500">*</span>}
     </label>
@@ -574,7 +574,7 @@ function Input({
       placeholder={placeholder}
       disabled={disabled}
       className={cn(
-        "w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100 placeholder-gray-600",
+        "w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600",
         "focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500",
         "disabled:opacity-40 disabled:cursor-not-allowed",
         "transition-colors",
@@ -601,7 +601,7 @@ function Select({
       onChange={(e) => onChange(e.target.value)}
       disabled={disabled}
       className={cn(
-        "w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100",
+        "w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground",
         "focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500",
         "disabled:opacity-40 disabled:cursor-not-allowed",
         "transition-colors appearance-none cursor-pointer"
@@ -616,7 +616,7 @@ function SectionCard({ children, className }: { children: React.ReactNode; class
   return (
     <div
       className={cn(
-        "rounded-xl border border-gray-800 bg-gray-900/50 p-6",
+        "rounded-xl border border-border bg-surface-2/50 p-6",
         className
       )}
     >
@@ -660,8 +660,8 @@ function StepOrganization({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-gray-100">Organization Details</h2>
-        <p className="mt-1 text-sm text-gray-400">
+        <h2 className="text-xl font-bold text-foreground">Organization Details</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Tell us about your organization so we can tailor Sentinel AI to your security requirements.
         </p>
       </div>
@@ -691,7 +691,7 @@ function StepOrganization({
                   </option>
                 ))}
               </Select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             </div>
             {data.industry && (
               <p className="mt-2 text-xs text-cyan-400/80">
@@ -717,7 +717,7 @@ function StepOrganization({
                     "flex flex-col items-center rounded-lg border px-4 py-4 text-center transition-all",
                     data.size === opt.value
                       ? "border-cyan-500 bg-cyan-900/20 text-cyan-300"
-                      : "border-gray-700 bg-gray-800/40 text-gray-400 hover:border-gray-600 hover:bg-gray-800/70"
+                      : "border-border-strong bg-surface-3/40 text-muted-foreground hover:border-border-strong hover:bg-surface-3/70"
                   )}
                 >
                   <span className="text-sm font-bold">{opt.label}</span>
@@ -751,8 +751,8 @@ function StepSite({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-gray-100">Primary Site Configuration</h2>
-        <p className="mt-1 text-sm text-gray-400">
+        <h2 className="text-xl font-bold text-foreground">Primary Site Configuration</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Configure your primary deployment site. Additional sites can be added later.
         </p>
       </div>
@@ -802,15 +802,15 @@ function StepSite({
                     </option>
                   ))}
                 </Select>
-                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               </div>
             </div>
           </div>
         </div>
       </SectionCard>
 
-      <div className="rounded-lg border border-gray-700/40 bg-gray-800/30 px-4 py-3">
-        <p className="text-xs text-gray-400">
+      <div className="rounded-lg border border-border-strong/40 bg-surface-3/30 px-4 py-3">
+        <p className="text-xs text-muted-foreground">
           Floor count is used to organize your camera layout and zone map. Timezone affects
           alert timestamps, scheduled reports, and after-hours detection rules.
         </p>
@@ -908,8 +908,8 @@ function StepCameras({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-gray-100">Camera Discovery & Setup</h2>
-        <p className="mt-1 text-sm text-gray-400">
+        <h2 className="text-xl font-bold text-foreground">Camera Discovery & Setup</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Auto-discover ONVIF cameras on your network or add cameras manually via RTSP URL.
         </p>
       </div>
@@ -918,11 +918,11 @@ function StepCameras({
       <SectionCard>
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
               <Wifi className="h-4 w-4 text-cyan-400" />
               ONVIF Auto-Discovery
             </h3>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Scans your local network for ONVIF-compatible IP cameras
             </p>
           </div>
@@ -950,10 +950,10 @@ function StepCameras({
         </div>
 
         {scanDone && discovered.length === 0 && (
-          <div className="rounded-lg border border-gray-700/50 bg-gray-800/30 px-4 py-6 text-center">
+          <div className="rounded-lg border border-border-strong/50 bg-surface-3/30 px-4 py-6 text-center">
             <AlertTriangle className="h-8 w-8 text-yellow-500/60 mx-auto mb-2" />
-            <p className="text-sm text-gray-400">No ONVIF cameras found.</p>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-sm text-muted-foreground">No ONVIF cameras found.</p>
+            <p className="text-xs text-muted-foreground mt-1">
               Ensure cameras are on the same network subnet and ONVIF is enabled.
             </p>
           </div>
@@ -970,17 +970,17 @@ function StepCameras({
                     "rounded-lg border p-3 transition-all",
                     isAdded
                       ? "border-emerald-700/50 bg-emerald-900/10"
-                      : "border-gray-700 bg-gray-800/40"
+                      : "border-border-strong bg-surface-3/40"
                   )}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-gray-200 truncate">{cam.name}</p>
-                      <p className="text-xs text-gray-500 mt-0.5">
+                      <p className="text-sm font-semibold text-foreground truncate">{cam.name}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
                         {cam.ip}:{cam.port}
                       </p>
                       {cam.manufacturer && (
-                        <p className="text-xs text-gray-600 mt-0.5">
+                        <p className="text-xs text-muted-foreground mt-0.5">
                           {cam.manufacturer} {cam.model}
                         </p>
                       )}
@@ -1007,7 +1007,7 @@ function StepCameras({
 
       {/* Manual RTSP Entry */}
       <SectionCard>
-        <h3 className="text-sm font-semibold text-gray-200 flex items-center gap-2 mb-4">
+        <h3 className="text-sm font-semibold text-foreground flex items-center gap-2 mb-4">
           <Camera className="h-4 w-4 text-emerald-400" />
           Manual RTSP Entry
         </h3>
@@ -1043,7 +1043,7 @@ function StepCameras({
       {cameras.length > 0 && (
         <SectionCard>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-gray-200">
+            <h3 className="text-sm font-semibold text-foreground">
               Configured Cameras
               <span className="ml-2 text-xs text-cyan-400 font-normal">({cameras.length})</span>
             </h3>
@@ -1052,12 +1052,12 @@ function StepCameras({
             {cameras.map((cam) => (
               <div
                 key={cam.id}
-                className="flex items-center gap-3 rounded-lg border border-gray-700/50 bg-gray-800/30 px-3 py-2"
+                className="flex items-center gap-3 rounded-lg border border-border-strong/50 bg-surface-3/30 px-3 py-2"
               >
-                <Camera className="h-4 w-4 shrink-0 text-gray-500" />
+                <Camera className="h-4 w-4 shrink-0 text-muted-foreground" />
                 <div className="flex-1 min-w-0">
-                  <span className="text-sm text-gray-200 font-medium truncate block">{cam.name}</span>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-sm text-foreground font-medium truncate block">{cam.name}</span>
+                  <span className="text-xs text-muted-foreground">
                     {cam.source === "onvif" ? `ONVIF — ${cam.ip}` : `RTSP — ${cam.rtsp_url}`}
                   </span>
                 </div>
@@ -1073,7 +1073,7 @@ function StepCameras({
                 </span>
                 <button
                   onClick={() => removeCamera(cam.id)}
-                  className="shrink-0 rounded-md p-1 text-gray-600 hover:text-red-400 hover:bg-red-900/20 transition-colors"
+                  className="shrink-0 rounded-md p-1 text-muted-foreground hover:text-red-400 hover:bg-red-900/20 transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -1084,10 +1084,10 @@ function StepCameras({
       )}
 
       {cameras.length === 0 && (
-        <div className="rounded-lg border border-dashed border-gray-700 px-6 py-8 text-center">
-          <Camera className="h-10 w-10 text-gray-700 mx-auto mb-3" />
-          <p className="text-sm text-gray-500">No cameras configured yet.</p>
-          <p className="text-xs text-gray-600 mt-1">
+        <div className="rounded-lg border border-dashed border-border-strong px-6 py-8 text-center">
+          <Camera className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+          <p className="text-sm text-muted-foreground">No cameras configured yet.</p>
+          <p className="text-xs text-muted-foreground mt-1">
             Run an ONVIF scan or add cameras manually above. You can also skip and add cameras
             later from the Cameras page.
           </p>
@@ -1164,7 +1164,7 @@ function StepZones({
     restricted: "text-red-400 bg-red-500/10 border-red-500/30",
     parking: "text-purple-400 bg-purple-500/10 border-purple-500/30",
     lobby: "text-cyan-400 bg-cyan-500/10 border-cyan-500/30",
-    corridor: "text-gray-400 bg-gray-500/10 border-gray-500/30",
+    corridor: "text-muted-foreground bg-gray-500/10 border-gray-500/30",
     office: "text-yellow-400 bg-yellow-500/10 border-yellow-500/30",
     server_room: "text-orange-400 bg-orange-500/10 border-orange-500/30",
     loading_dock: "text-teal-400 bg-teal-500/10 border-teal-500/30",
@@ -1174,8 +1174,8 @@ function StepZones({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-gray-100">Security Zones</h2>
-        <p className="mt-1 text-sm text-gray-400">
+        <h2 className="text-xl font-bold text-foreground">Security Zones</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Define monitored zones within your site. Zones enable occupancy tracking, behavioral
           analysis, and targeted alert rules.
         </p>
@@ -1183,7 +1183,7 @@ function StepZones({
 
       {/* Add zone form */}
       <SectionCard>
-        <h3 className="text-sm font-semibold text-gray-200 flex items-center gap-2 mb-4">
+        <h3 className="text-sm font-semibold text-foreground flex items-center gap-2 mb-4">
           <Plus className="h-4 w-4 text-cyan-400" />
           Add Zone
         </h3>
@@ -1202,7 +1202,7 @@ function StepZones({
                   </option>
                 ))}
               </Select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             </div>
           </div>
           <div>
@@ -1229,7 +1229,7 @@ function StepZones({
       {zones.length > 0 ? (
         <SectionCard>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-gray-200">
+            <h3 className="text-sm font-semibold text-foreground">
               Configured Zones
               <span className="ml-2 text-xs text-cyan-400 font-normal">({zones.length})</span>
             </h3>
@@ -1242,19 +1242,19 @@ function StepZones({
                   "flex items-center gap-3 rounded-lg border px-3 py-2.5 transition-all",
                   zone.saved
                     ? "border-emerald-700/30 bg-emerald-900/10"
-                    : "border-gray-700/50 bg-gray-800/30"
+                    : "border-border-strong/50 bg-surface-3/30"
                 )}
               >
                 <div className="flex-1 min-w-0">
-                  <span className="text-sm text-gray-200 font-medium">{zone.name}</span>
-                  <span className="ml-2 text-xs text-gray-500">
+                  <span className="text-sm text-foreground font-medium">{zone.name}</span>
+                  <span className="ml-2 text-xs text-muted-foreground">
                     Max: {zone.max_occupancy} people
                   </span>
                 </div>
                 <span
                   className={cn(
                     "text-[10px] font-bold uppercase tracking-wider rounded-full px-2 py-0.5 border",
-                    ZONE_TYPE_COLORS[zone.zone_type] ?? "text-gray-400 bg-gray-500/10 border-gray-500/30"
+                    ZONE_TYPE_COLORS[zone.zone_type] ?? "text-muted-foreground bg-gray-500/10 border-gray-500/30"
                   )}
                 >
                   {zone.zone_type.replace(/_/g, " ")}
@@ -1278,7 +1278,7 @@ function StepZones({
                 )}
                 <button
                   onClick={() => removeZone(zone.id)}
-                  className="shrink-0 rounded-md p-1 text-gray-600 hover:text-red-400 hover:bg-red-900/20 transition-colors"
+                  className="shrink-0 rounded-md p-1 text-muted-foreground hover:text-red-400 hover:bg-red-900/20 transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -1287,10 +1287,10 @@ function StepZones({
           </div>
         </SectionCard>
       ) : (
-        <div className="rounded-lg border border-dashed border-gray-700 px-6 py-8 text-center">
-          <Layers className="h-10 w-10 text-gray-700 mx-auto mb-3" />
-          <p className="text-sm text-gray-500">No zones defined yet.</p>
-          <p className="text-xs text-gray-600 mt-1">
+        <div className="rounded-lg border border-dashed border-border-strong px-6 py-8 text-center">
+          <Layers className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+          <p className="text-sm text-muted-foreground">No zones defined yet.</p>
+          <p className="text-xs text-muted-foreground mt-1">
             You can skip and define zones later from the Zones page.
           </p>
         </div>
@@ -1379,20 +1379,20 @@ function StepUsers({
     admin: "text-red-400 bg-red-500/10 border-red-500/30",
     analyst: "text-cyan-400 bg-cyan-500/10 border-cyan-500/30",
     operator: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30",
-    viewer: "text-gray-400 bg-gray-500/10 border-gray-500/30",
+    viewer: "text-muted-foreground bg-gray-500/10 border-gray-500/30",
   };
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-gray-100">Team & Access Control</h2>
-        <p className="mt-1 text-sm text-gray-400">
+        <h2 className="text-xl font-bold text-foreground">Team & Access Control</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Add users to the platform. You can always invite more team members from Settings later.
         </p>
       </div>
 
       <SectionCard>
-        <h3 className="text-sm font-semibold text-gray-200 flex items-center gap-2 mb-4">
+        <h3 className="text-sm font-semibold text-foreground flex items-center gap-2 mb-4">
           <UserPlus className="h-4 w-4 text-cyan-400" />
           Add Team Member
         </h3>
@@ -1420,7 +1420,7 @@ function StepUsers({
                   </option>
                 ))}
               </Select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             </div>
           </div>
           <div>
@@ -1435,7 +1435,7 @@ function StepUsers({
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -1457,7 +1457,7 @@ function StepUsers({
                 "rounded-md border px-2.5 py-1.5 cursor-pointer transition-all",
                 role === r.role
                   ? ROLE_COLORS[r.role]
-                  : "border-gray-700/50 bg-gray-800/20 text-gray-500 hover:border-gray-600"
+                  : "border-border-strong/50 bg-surface-3/20 text-muted-foreground hover:border-border-strong"
               )}
               onClick={() => setRole(r.role)}
             >
@@ -1483,7 +1483,7 @@ function StepUsers({
       {users.length > 0 ? (
         <SectionCard>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-gray-200">
+            <h3 className="text-sm font-semibold text-foreground">
               Team Members
               <span className="ml-2 text-xs text-cyan-400 font-normal">({users.length})</span>
             </h3>
@@ -1492,26 +1492,26 @@ function StepUsers({
             {users.map((user) => (
               <div
                 key={user.id}
-                className="flex items-center gap-3 rounded-lg border border-gray-700/50 bg-gray-800/30 px-3 py-2.5"
+                className="flex items-center gap-3 rounded-lg border border-border-strong/50 bg-surface-3/30 px-3 py-2.5"
               >
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-700 text-xs font-bold text-gray-300 uppercase">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface-3 text-xs font-bold text-foreground uppercase">
                   {user.full_name.slice(0, 2)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <span className="text-sm text-gray-200 font-medium">{user.full_name}</span>
-                  <span className="block text-xs text-gray-500">{user.email}</span>
+                  <span className="text-sm text-foreground font-medium">{user.full_name}</span>
+                  <span className="block text-xs text-muted-foreground">{user.email}</span>
                 </div>
                 <span
                   className={cn(
                     "text-[10px] font-bold uppercase tracking-wider rounded-full px-2 py-0.5 border",
-                    ROLE_COLORS[user.role] ?? "text-gray-400 bg-gray-500/10 border-gray-500/30"
+                    ROLE_COLORS[user.role] ?? "text-muted-foreground bg-gray-500/10 border-gray-500/30"
                   )}
                 >
                   {user.role}
                 </span>
                 <button
                   onClick={() => removeUser(user.id)}
-                  className="shrink-0 rounded-md p-1 text-gray-600 hover:text-red-400 hover:bg-red-900/20 transition-colors"
+                  className="shrink-0 rounded-md p-1 text-muted-foreground hover:text-red-400 hover:bg-red-900/20 transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -1520,10 +1520,10 @@ function StepUsers({
           </div>
         </SectionCard>
       ) : (
-        <div className="rounded-lg border border-dashed border-gray-700 px-6 py-8 text-center">
-          <Users className="h-10 w-10 text-gray-700 mx-auto mb-3" />
-          <p className="text-sm text-gray-500">No team members added yet.</p>
-          <p className="text-xs text-gray-600 mt-1">
+        <div className="rounded-lg border border-dashed border-border-strong px-6 py-8 text-center">
+          <Users className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+          <p className="text-sm text-muted-foreground">No team members added yet.</p>
+          <p className="text-xs text-muted-foreground mt-1">
             You can add users later from the Settings page.
           </p>
         </div>
@@ -1606,8 +1606,8 @@ function StepAlertRules({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-gray-100">Alert Rule Presets</h2>
-        <p className="mt-1 text-sm text-gray-400">
+        <h2 className="text-xl font-bold text-foreground">Alert Rule Presets</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Industry-recommended detection rules for{" "}
           <span className="text-cyan-300 font-semibold">{industryLabel}</span>. Enable or
           disable each preset before applying.
@@ -1617,9 +1617,9 @@ function StepAlertRules({
       {presets.length === 0 ? (
         <SectionCard>
           <div className="py-8 text-center">
-            <Bell className="h-10 w-10 text-gray-700 mx-auto mb-3" />
-            <p className="text-sm text-gray-500">No industry selected.</p>
-            <p className="text-xs text-gray-600 mt-1">
+            <Bell className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+            <p className="text-sm text-muted-foreground">No industry selected.</p>
+            <p className="text-xs text-muted-foreground mt-1">
               Go back to Step 1 and select your industry type to see recommended presets.
             </p>
           </div>
@@ -1634,7 +1634,7 @@ function StepAlertRules({
                 "w-full flex items-start gap-4 rounded-xl border px-4 py-4 text-left transition-all",
                 preset.enabled
                   ? "border-cyan-700/50 bg-cyan-900/10"
-                  : "border-gray-700/50 bg-gray-800/20 opacity-60 hover:opacity-80"
+                  : "border-border-strong/50 bg-surface-3/20 opacity-60 hover:opacity-80"
               )}
             >
               <div
@@ -1642,19 +1642,19 @@ function StepAlertRules({
                   "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-all",
                   preset.enabled
                     ? "bg-cyan-500 border-cyan-500"
-                    : "border-gray-600 bg-transparent"
+                    : "border-border-strong bg-transparent"
                 )}
               >
                 {preset.enabled && <Check className="h-3 w-3 text-white" />}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-sm font-semibold text-gray-200">{preset.name}</span>
+                  <span className="text-sm font-semibold text-foreground">{preset.name}</span>
                   <Badge color={SEVERITY_COLORS[preset.severity] ?? SEVERITY_COLORS.low}>
                     {preset.severity}
                   </Badge>
                 </div>
-                <p className="mt-1 text-xs text-gray-400">{preset.description}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{preset.description}</p>
               </div>
             </button>
           ))}
@@ -1662,9 +1662,9 @@ function StepAlertRules({
       )}
 
       {presets.length > 0 && (
-        <div className="flex items-center justify-between rounded-lg border border-gray-700/50 bg-gray-800/30 px-4 py-3">
+        <div className="flex items-center justify-between rounded-lg border border-border-strong/50 bg-surface-3/30 px-4 py-3">
           <div>
-            <p className="text-sm text-gray-300 font-medium">
+            <p className="text-sm text-foreground font-medium">
               {presets.filter((p) => p.enabled).length} of {presets.length} rules selected
             </p>
             {applied && (
@@ -1786,7 +1786,7 @@ function StepIntegrations({
                 </option>
               ))}
             </Select>
-            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           </div>
         </div>
       ),
@@ -1817,8 +1817,8 @@ function StepIntegrations({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-gray-100">Third-Party Integrations</h2>
-        <p className="mt-1 text-sm text-gray-400">
+        <h2 className="text-xl font-bold text-foreground">Third-Party Integrations</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Connect Sentinel AI to your existing infrastructure. All integrations are optional.
         </p>
       </div>
@@ -1830,7 +1830,7 @@ function StepIntegrations({
             <SectionCard key={item.key} className="p-0 overflow-hidden">
               {/* Header row */}
               <button
-                className="w-full flex items-center gap-4 px-5 py-4 text-left hover:bg-gray-800/30 transition-colors"
+                className="w-full flex items-center gap-4 px-5 py-4 text-left hover:bg-surface-3/30 transition-colors"
                 onClick={() =>
                   updateIntegration(item.key, { expanded: !cfg.expanded } as Partial<typeof cfg>)
                 }
@@ -1839,15 +1839,15 @@ function StepIntegrations({
                   className={cn(
                     "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border",
                     cfg.enabled
-                      ? "border-gray-700 bg-gray-800"
-                      : "border-gray-800 bg-gray-900"
+                      ? "border-border-strong bg-surface-3"
+                      : "border-border bg-surface-2"
                   )}
                 >
                   <item.icon className={cn("h-4 w-4", item.color)} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-gray-200">{item.title}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>
+                  <p className="text-sm font-semibold text-foreground">{item.title}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{item.description}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   {/* Toggle */}
@@ -1860,7 +1860,7 @@ function StepIntegrations({
                       "relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200",
                       cfg.enabled
                         ? "border-cyan-500 bg-cyan-500"
-                        : "border-gray-600 bg-gray-700"
+                        : "border-border-strong bg-surface-3"
                     )}
                   >
                     <span
@@ -1871,16 +1871,16 @@ function StepIntegrations({
                     />
                   </button>
                   {cfg.expanded ? (
-                    <ChevronUp className="h-4 w-4 text-gray-500" />
+                    <ChevronUp className="h-4 w-4 text-muted-foreground" />
                   ) : (
-                    <ChevronDown className="h-4 w-4 text-gray-500" />
+                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
                   )}
                 </div>
               </button>
 
               {/* Expanded config */}
               {cfg.expanded && cfg.enabled && (
-                <div className="border-t border-gray-800 px-5 py-4">
+                <div className="border-t border-border px-5 py-4">
                   <div className="space-y-4">
                     {item.fields}
                     <div className="flex justify-end">
@@ -1904,8 +1904,8 @@ function StepIntegrations({
               )}
 
               {cfg.expanded && !cfg.enabled && (
-                <div className="border-t border-gray-800 px-5 py-3">
-                  <p className="text-xs text-gray-500">
+                <div className="border-t border-border px-5 py-3">
+                  <p className="text-xs text-muted-foreground">
                     Enable the toggle above to configure this integration.
                   </p>
                 </div>
@@ -1915,8 +1915,8 @@ function StepIntegrations({
         })}
       </div>
 
-      <div className="rounded-lg border border-gray-700/40 bg-gray-800/30 px-4 py-3">
-        <p className="text-xs text-gray-400">
+      <div className="rounded-lg border border-border-strong/40 bg-surface-3/30 px-4 py-3">
+        <p className="text-xs text-muted-foreground">
           Additional integrations (Webhooks, SMTP, SMS gateways) can be configured from the
           Integrations and Webhooks pages after setup.
         </p>
@@ -2008,8 +2008,8 @@ function StepActivate({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-gray-100">Review & Activate</h2>
-        <p className="mt-1 text-sm text-gray-400">
+        <h2 className="text-xl font-bold text-foreground">Review & Activate</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Review your configuration below, then activate Sentinel AI to start protecting your
           site.
         </p>
@@ -2019,23 +2019,23 @@ function StepActivate({
         {summaryItems.map((item) => (
           <div
             key={item.label}
-            className="flex items-start gap-3 rounded-xl border border-gray-800 bg-gray-900/50 px-4 py-4"
+            className="flex items-start gap-3 rounded-xl border border-border bg-surface-2/50 px-4 py-4"
           >
             <div
               className={cn(
-                "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-800 border border-gray-700",
+                "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface-3 border border-border-strong",
                 item.color
               )}
             >
               <item.icon className="h-4 w-4" />
             </div>
             <div className="min-w-0">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                 {item.label}
               </p>
-              <p className="text-sm font-semibold text-gray-100 mt-0.5">{item.value}</p>
+              <p className="text-sm font-semibold text-foreground mt-0.5">{item.value}</p>
               {item.sub && (
-                <p className="text-xs text-gray-500 mt-0.5 truncate">{item.sub}</p>
+                <p className="text-xs text-muted-foreground mt-0.5 truncate">{item.sub}</p>
               )}
             </div>
           </div>
@@ -2045,8 +2045,8 @@ function StepActivate({
       {/* Activate CTA */}
       <div className="rounded-xl border border-cyan-800/40 bg-gradient-to-br from-cyan-900/20 to-emerald-900/10 px-6 py-6 text-center">
         <Shield className="h-12 w-12 text-cyan-400 mx-auto mb-3" />
-        <h3 className="text-lg font-bold text-gray-100">Ready to Activate</h3>
-        <p className="mt-1 text-sm text-gray-400 max-w-md mx-auto">
+        <h3 className="text-lg font-bold text-foreground">Ready to Activate</h3>
+        <p className="mt-1 text-sm text-muted-foreground max-w-md mx-auto">
           Activating will start all AI detection agents, enable alert monitoring, and bring
           your security operations online.
         </p>
@@ -2072,7 +2072,7 @@ function StepActivate({
             </>
           )}
         </button>
-        <p className="mt-3 text-xs text-gray-600">
+        <p className="mt-3 text-xs text-muted-foreground">
           You can modify any setting after activation from the respective management pages.
         </p>
       </div>
@@ -2188,27 +2188,27 @@ export default function SetupWizardPage() {
   const progressPct = ((step - 1) / (STEPS.length - 1)) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col">
+    <div className="min-h-screen bg-surface-0 flex flex-col">
       {/* Top header bar */}
-      <header className="shrink-0 border-b border-gray-800/60 bg-gray-950/80 backdrop-blur-sm px-6 py-3 flex items-center justify-between">
+      <header className="shrink-0 border-b border-border/60 bg-surface-0/80 backdrop-blur-sm px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-500/10 border border-cyan-500/30">
             <Shield className="h-4 w-4 text-cyan-400" />
           </div>
           <div>
-            <span className="text-sm font-bold text-gray-100 tracking-wide">Sentinel AI</span>
-            <span className="ml-2 text-xs text-gray-500">Setup Wizard</span>
+            <span className="text-sm font-bold text-foreground tracking-wide">Sentinel AI</span>
+            <span className="ml-2 text-xs text-muted-foreground">Setup Wizard</span>
           </div>
         </div>
-        <div className="flex items-center gap-2 text-xs text-gray-500">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <span className="hidden sm:block">Step {step} of {STEPS.length}</span>
-          <span className="hidden sm:block text-gray-700">·</span>
-          <span className="text-gray-400 font-medium">{STEPS[step - 1]?.label}</span>
+          <span className="hidden sm:block text-muted-foreground">·</span>
+          <span className="text-muted-foreground font-medium">{STEPS[step - 1]?.label}</span>
         </div>
       </header>
 
       {/* Progress bar */}
-      <div className="shrink-0 h-0.5 bg-gray-800">
+      <div className="shrink-0 h-0.5 bg-surface-3">
         <div
           className="h-full bg-gradient-to-r from-cyan-500 to-emerald-500 transition-all duration-500 ease-out"
           style={{ width: `${progressPct}%` }}
@@ -2216,7 +2216,7 @@ export default function SetupWizardPage() {
       </div>
 
       {/* Step indicators */}
-      <div className="shrink-0 border-b border-gray-800/40 bg-gray-900/30">
+      <div className="shrink-0 border-b border-border/40 bg-surface-2/30">
         <div className="mx-auto max-w-4xl px-4 py-3">
           <div className="flex items-center justify-between overflow-x-auto gap-1 scrollbar-none">
             {STEPS.map((s, idx) => {
@@ -2235,7 +2235,7 @@ export default function SetupWizardPage() {
                       ? "text-cyan-400"
                       : isCompleted
                       ? "text-emerald-400 cursor-pointer hover:text-emerald-300"
-                      : "text-gray-600 cursor-not-allowed"
+                      : "text-muted-foreground cursor-not-allowed"
                   )}
                 >
                   <div
@@ -2245,7 +2245,7 @@ export default function SetupWizardPage() {
                         ? "border-cyan-500 bg-cyan-500/20 text-cyan-400"
                         : isCompleted
                         ? "border-emerald-500 bg-emerald-500/20 text-emerald-400"
-                        : "border-gray-700 bg-gray-800 text-gray-600"
+                        : "border-border-strong bg-surface-3 text-muted-foreground"
                     )}
                   >
                     {isCompleted && !isCurrent ? (
@@ -2272,16 +2272,16 @@ export default function SetupWizardPage() {
             {(() => {
               const StepIcon = STEPS[step - 1].icon;
               return (
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-700 bg-gray-800">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border-strong bg-surface-3">
                   <StepIcon className="h-5 w-5 text-cyan-400" />
                 </div>
               );
             })()}
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                 Step {step} of {STEPS.length}
               </p>
-              <p className="text-base font-bold text-gray-100">{STEPS[step - 1].label}</p>
+              <p className="text-base font-bold text-foreground">{STEPS[step - 1].label}</p>
             </div>
           </div>
 
@@ -2325,13 +2325,13 @@ export default function SetupWizardPage() {
           )}
 
           {/* Navigation */}
-          <div className="mt-8 flex items-center justify-between border-t border-gray-800/60 pt-6">
+          <div className="mt-8 flex items-center justify-between border-t border-border/60 pt-6">
             <button
               onClick={handleBack}
               disabled={step === 1}
               className={cn(
                 "flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold transition-all",
-                "border border-gray-700 text-gray-400 hover:border-gray-600 hover:text-gray-200 hover:bg-gray-800/50",
+                "border border-border-strong text-muted-foreground hover:border-border-strong hover:text-foreground hover:bg-surface-3/50",
                 "disabled:opacity-30 disabled:cursor-not-allowed"
               )}
             >
@@ -2347,7 +2347,7 @@ export default function SetupWizardPage() {
                     setCompleted((prev) => new Set([...prev, step]));
                     setStep((s) => s + 1);
                   }}
-                  className="px-4 py-2.5 text-sm text-gray-500 hover:text-gray-400 transition-colors"
+                  className="px-4 py-2.5 text-sm text-muted-foreground hover:text-muted-foreground transition-colors"
                 >
                   Skip
                 </button>

@@ -49,13 +49,13 @@ const ZONE_TYPE_COLORS: Record<ZoneType, { bg: string; text: string; border: str
   },
   general: {
     bg: "bg-gray-500/10",
-    text: "text-gray-400",
+    text: "text-muted-foreground",
     border: "border-gray-500/30",
   },
 };
 
 const CARD =
-  "rounded-lg border border-gray-800 bg-gray-900/60 p-4 flex flex-col gap-3 transition-shadow hover:shadow-lg hover:shadow-cyan-900/10";
+  "rounded-lg border border-border bg-surface-2/60 p-4 flex flex-col gap-3 transition-shadow hover:shadow-lg hover:shadow-cyan-900/10";
 
 /* ---------- form state type ---------- */
 
@@ -136,14 +136,14 @@ function OccupancyBar({
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between text-xs">
-        <span className="text-gray-400">Occupancy</span>
-        <span className={cn("font-mono", isOver ? "text-red-400" : pct >= 70 ? "text-amber-400" : "text-gray-300")}>
+        <span className="text-muted-foreground">Occupancy</span>
+        <span className={cn("font-mono", isOver ? "text-red-400" : pct >= 70 ? "text-amber-400" : "text-foreground")}>
           {current}
           {max != null ? `/${max}` : ""}
         </span>
       </div>
       {max != null && max > 0 && (
-        <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-800">
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-3">
           <div
             className={cn(
               "h-full rounded-full transition-all",
@@ -355,13 +355,13 @@ export default function ZonesPage() {
   /* ---------- render --------------------------------------------------------- */
 
   return (
-    <div className="flex h-full flex-col overflow-auto bg-gray-950 text-gray-100">
+    <div className="flex h-full flex-col overflow-auto bg-surface-0 text-foreground">
       {/* Header */}
-      <header className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <header className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <MapPin className="h-6 w-6 text-cyan-400" />
           <h1 className="text-xl font-bold tracking-tight">Zone Management</h1>
-          <span className="text-xs text-gray-500 ml-2">
+          <span className="text-xs text-muted-foreground ml-2">
             {zones.length} zones · {zones.filter((z) => z.max_occupancy != null && z.current_occupancy >= z.max_occupancy).length > 0 && (
               <span className="text-red-400 font-semibold">
                 {zones.filter((z) => z.max_occupancy != null && z.current_occupancy >= z.max_occupancy).length} over capacity
@@ -373,7 +373,7 @@ export default function ZonesPage() {
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value as ZoneType | "all")}
-            className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-xs text-gray-300 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+            className="rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-xs text-foreground focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
           >
             <option value="all">All Types</option>
             {ZONE_TYPES.map((t) => (
@@ -397,7 +397,7 @@ export default function ZonesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <form
             onSubmit={handleSubmit}
-            className="relative w-full max-w-lg rounded-xl border border-gray-800 bg-gray-900 p-6 shadow-2xl"
+            className="relative w-full max-w-lg rounded-xl border border-border bg-surface-2 p-6 shadow-2xl"
           >
             {/* close */}
             <button
@@ -406,7 +406,7 @@ export default function ZonesPage() {
                 setShowForm(false);
                 setEditingId(null);
               }}
-              className="absolute right-4 top-4 text-gray-500 hover:text-gray-300"
+              className="absolute right-4 top-4 text-muted-foreground hover:text-foreground"
             >
               <X className="h-5 w-5" />
             </button>
@@ -418,35 +418,35 @@ export default function ZonesPage() {
             <div className="space-y-4">
               {/* name */}
               <div>
-                <label className="mb-1 block text-xs font-medium text-gray-400">
+                <label className="mb-1 block text-xs font-medium text-muted-foreground">
                   Name
                 </label>
                 <input
                   required
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                  className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                   placeholder="e.g. Main Entrance"
                 />
               </div>
 
               {/* description */}
               <div>
-                <label className="mb-1 block text-xs font-medium text-gray-400">
+                <label className="mb-1 block text-xs font-medium text-muted-foreground">
                   Description
                 </label>
                 <textarea
                   rows={2}
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                  className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                   placeholder="Optional description"
                 />
               </div>
 
               {/* zone_type */}
               <div>
-                <label className="mb-1 block text-xs font-medium text-gray-400">
+                <label className="mb-1 block text-xs font-medium text-muted-foreground">
                   Zone Type
                 </label>
                 <select
@@ -454,7 +454,7 @@ export default function ZonesPage() {
                   onChange={(e) =>
                     setForm({ ...form, zone_type: e.target.value as ZoneType })
                   }
-                  className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                  className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                 >
                   {ZONE_TYPES.map((t) => (
                     <option key={t} value={t}>
@@ -466,7 +466,7 @@ export default function ZonesPage() {
 
               {/* max_occupancy */}
               <div>
-                <label className="mb-1 block text-xs font-medium text-gray-400">
+                <label className="mb-1 block text-xs font-medium text-muted-foreground">
                   Max Occupancy
                 </label>
                 <input
@@ -479,7 +479,7 @@ export default function ZonesPage() {
                       max_occupancy: e.target.value ? Number(e.target.value) : null,
                     })
                   }
-                  className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                  className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                   placeholder="Leave blank for unlimited"
                 />
               </div>
@@ -492,9 +492,9 @@ export default function ZonesPage() {
                   onChange={(e) =>
                     setForm({ ...form, alert_on_breach: e.target.checked })
                   }
-                  className="h-4 w-4 rounded border-gray-600 bg-gray-800 text-cyan-500 focus:ring-cyan-500 focus:ring-offset-0"
+                  className="h-4 w-4 rounded border-border-strong bg-surface-3 text-cyan-500 focus:ring-cyan-500 focus:ring-offset-0"
                 />
-                <span className="text-sm text-gray-300">
+                <span className="text-sm text-foreground">
                   Alert on occupancy breach
                 </span>
               </label>
@@ -508,7 +508,7 @@ export default function ZonesPage() {
                   setShowForm(false);
                   setEditingId(null);
                 }}
-                className="rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-400 transition-colors hover:text-gray-200"
+                className="rounded-lg border border-border-strong px-4 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
               >
                 Cancel
               </button>
@@ -532,7 +532,7 @@ export default function ZonesPage() {
           {loading ? (
             <Spinner />
           ) : zones.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-24 text-gray-500">
+            <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
               <MapPin className="mb-3 h-10 w-10" />
               <p className="text-sm">No zones configured yet.</p>
               <button
@@ -543,7 +543,7 @@ export default function ZonesPage() {
               </button>
             </div>
           ) : filteredZones.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-24 text-gray-500">
+            <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
               <MapPin className="mb-3 h-8 w-8" />
               <p className="text-sm">No zones match the selected filter.</p>
             </div>
@@ -573,7 +573,7 @@ export default function ZonesPage() {
                     <div className="flex items-start justify-between">
                       <ZoneTypeBadge type={zone.zone_type} />
                       <div className="flex items-center gap-2">
-                        <span className="flex items-center gap-1 text-[10px] text-gray-500">
+                        <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
                           <Camera className="h-3 w-3" />
                           {cameraCounts[zone.id] || 0}
                         </span>
@@ -585,11 +585,11 @@ export default function ZonesPage() {
 
                     {/* name + description */}
                     <div>
-                      <h3 className="text-sm font-semibold text-gray-100">
+                      <h3 className="text-sm font-semibold text-foreground">
                         {zone.name}
                       </h3>
                       {zone.description && (
-                        <p className="mt-0.5 text-xs text-gray-500 line-clamp-2">
+                        <p className="mt-0.5 text-xs text-muted-foreground line-clamp-2">
                           {zone.description}
                         </p>
                       )}
@@ -622,7 +622,7 @@ export default function ZonesPage() {
                     })()}
 
                     {/* alert_on_breach indicator */}
-                    <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                       {zone.alert_on_breach ? (
                         <>
                           <CheckCircle2 className="h-3.5 w-3.5 text-amber-400" />
@@ -634,13 +634,13 @@ export default function ZonesPage() {
                     </div>
 
                     {/* actions */}
-                    <div className="flex justify-end gap-2 border-t border-gray-800 pt-3">
+                    <div className="flex justify-end gap-2 border-t border-border pt-3">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           openEditForm(zone);
                         }}
-                        className="flex items-center gap-1.5 rounded-md border border-gray-700 px-3 py-1.5 text-xs text-gray-400 transition-colors hover:border-gray-600 hover:text-gray-200"
+                        className="flex items-center gap-1.5 rounded-md border border-border-strong px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-border-strong hover:text-foreground"
                       >
                         <Pencil className="h-3.5 w-3.5" />
                         Edit
@@ -650,7 +650,7 @@ export default function ZonesPage() {
                           e.stopPropagation();
                           handleDelete(zone.id);
                         }}
-                        className="flex items-center gap-1.5 rounded-md border border-gray-700 px-3 py-1.5 text-xs text-red-400 transition-colors hover:border-red-500/40 hover:bg-red-500/10"
+                        className="flex items-center gap-1.5 rounded-md border border-border-strong px-3 py-1.5 text-xs text-red-400 transition-colors hover:border-red-500/40 hover:bg-red-500/10"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                         Delete
@@ -665,31 +665,31 @@ export default function ZonesPage() {
 
         {/* Selected zone detail sidebar */}
         {selectedZone && (
-          <aside className="w-80 shrink-0 overflow-auto border-l border-gray-800 bg-gray-900/40 xl:w-96">
+          <aside className="w-80 shrink-0 overflow-auto border-l border-border bg-surface-2/40 xl:w-96">
             <div className="p-5">
               {/* header */}
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-sm font-semibold text-gray-200">
+                <h2 className="text-sm font-semibold text-foreground">
                   Zone Details
                 </h2>
                 <button
                   onClick={() => setSelectedZone(null)}
-                  className="text-gray-500 hover:text-gray-300"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               {/* zone info */}
-              <div className="space-y-3 rounded-lg border border-gray-800 bg-gray-900/60 p-4">
+              <div className="space-y-3 rounded-lg border border-border bg-surface-2/60 p-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-100">
+                  <span className="text-sm font-medium text-foreground">
                     {selectedZone.name}
                   </span>
                   <ZoneTypeBadge type={selectedZone.zone_type} />
                 </div>
                 {selectedZone.description && (
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-muted-foreground">
                     {selectedZone.description}
                   </p>
                 )}
@@ -706,10 +706,10 @@ export default function ZonesPage() {
                         <span className="text-amber-400">Breach alerts on</span>
                       </>
                     ) : (
-                      <span className="text-gray-500">Breach alerts off</span>
+                      <span className="text-muted-foreground">Breach alerts off</span>
                     )}
                   </div>
-                  <div className="flex items-center gap-1 text-gray-400">
+                  <div className="flex items-center gap-1 text-muted-foreground">
                     <Camera className="h-3.5 w-3.5" />
                     <span>{cameraCounts[selectedZone.id] || 0} cameras</span>
                   </div>
@@ -717,7 +717,7 @@ export default function ZonesPage() {
               </div>
 
               {/* occupancy history */}
-              <h3 className="mb-3 mt-6 text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <h3 className="mb-3 mt-6 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Recent Events in Zone
               </h3>
               {loadingEvents ? (
@@ -725,7 +725,7 @@ export default function ZonesPage() {
                   <Loader2 className="h-5 w-5 animate-spin text-cyan-400" />
                 </div>
               ) : zoneEvents.length === 0 ? (
-                <p className="py-6 text-center text-xs text-gray-600">
+                <p className="py-6 text-center text-xs text-muted-foreground">
                   No recent events recorded.
                 </p>
               ) : (
@@ -733,18 +733,18 @@ export default function ZonesPage() {
                   {zoneEvents.map((ev) => (
                     <li
                       key={ev.id}
-                      className="rounded-md border border-gray-800 bg-gray-900/60 px-3 py-2"
+                      className="rounded-md border border-border bg-surface-2/60 px-3 py-2"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-gray-300 capitalize">
+                        <span className="text-xs font-medium text-foreground capitalize">
                           {ev.event_type.replace(/_/g, " ")}
                         </span>
-                        <span className="text-[11px] text-gray-500">
+                        <span className="text-[11px] text-muted-foreground">
                           {formatTimestamp(ev.timestamp)}
                         </span>
                       </div>
                       {ev.description && (
-                        <p className="mt-1 text-[11px] text-gray-500 line-clamp-2">
+                        <p className="mt-1 text-[11px] text-muted-foreground line-clamp-2">
                           {ev.description}
                         </p>
                       )}
@@ -754,7 +754,7 @@ export default function ZonesPage() {
               )}
 
               {/* breach history */}
-              <h3 className="mb-3 mt-6 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <h3 className="mb-3 mt-6 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 <ShieldX className="h-3.5 w-3.5 text-red-400" />
                 Breach History
               </h3>

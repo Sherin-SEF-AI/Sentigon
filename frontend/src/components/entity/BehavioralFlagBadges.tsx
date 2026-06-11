@@ -17,7 +17,7 @@ const SEVERITY_STYLE: Record<Severity, string> = {
   critical: "border-red-500/50 bg-red-500/10 text-red-400",
   high: "border-orange-500/50 bg-orange-500/10 text-orange-400",
   medium: "border-yellow-500/40 bg-yellow-500/10 text-yellow-400",
-  low: "border-gray-600 bg-gray-700/30 text-gray-400",
+  low: "border-border-strong bg-surface-3/30 text-muted-foreground",
 };
 
 /** Keyword → severity. Composite-signature flags are free-form strings, so we
@@ -70,7 +70,7 @@ export function BehavioralFlagBadges({
         );
       })}
       {overflow > 0 && (
-        <span className="rounded-md border border-gray-700 bg-gray-800/40 px-1.5 py-0.5 text-[9px] font-bold text-gray-400">
+        <span className="rounded-md border border-border-strong bg-surface-3/40 px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground">
           +{overflow}
         </span>
       )}

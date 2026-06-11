@@ -78,7 +78,7 @@ interface IncidentReplayPlayerProps {
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
 
-const CARD = "rounded-lg border border-gray-800 bg-gray-900/60 backdrop-blur p-4";
+const CARD = "rounded-lg border border-border bg-surface-2/60 backdrop-blur p-4";
 const SPEED_OPTIONS = [0.25, 0.5, 1, 2, 4];
 const SLICE_DURATION = 30; // seconds per slice fetch
 
@@ -269,14 +269,14 @@ export default function IncidentReplayPlayer({
         <div className="flex items-center gap-3">
           <Play className="h-5 w-5 text-cyan-400" />
           <div>
-            <h2 className="text-sm font-bold text-gray-100">{meta.title}</h2>
-            <p className="mt-0.5 text-[10px] text-gray-500 font-mono">
+            <h2 className="text-sm font-bold text-foreground">{meta.title}</h2>
+            <p className="mt-0.5 text-[10px] text-muted-foreground font-mono">
               {formatTimestamp(meta.start_time)}
               {meta.end_time && <> &mdash; {formatTimestamp(meta.end_time)}</>}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-3 text-xs text-gray-400">
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
             <Camera className="h-3.5 w-3.5" />
             {meta.camera_ids.length} cameras
@@ -301,7 +301,7 @@ export default function IncidentReplayPlayer({
               "shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
               activeCamera === "all"
                 ? "bg-cyan-600 text-white"
-                : "bg-gray-800/60 text-gray-400 hover:bg-gray-800 hover:text-gray-200"
+                : "bg-surface-3/60 text-muted-foreground hover:bg-surface-3 hover:text-foreground"
             )}
           >
             <Maximize2 className="mr-1 inline h-3 w-3" />
@@ -315,7 +315,7 @@ export default function IncidentReplayPlayer({
                 "shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
                 activeCamera === camId
                   ? "bg-cyan-600 text-white"
-                  : "bg-gray-800/60 text-gray-400 hover:bg-gray-800 hover:text-gray-200"
+                  : "bg-surface-3/60 text-muted-foreground hover:bg-surface-3 hover:text-foreground"
               )}
             >
               <Camera className="mr-1 inline h-3 w-3" />
@@ -347,14 +347,14 @@ export default function IncidentReplayPlayer({
 
             {/* Detection info panel */}
             {currentFrame.detections.length > 0 && (
-              <div className="absolute top-2 right-2 rounded-lg bg-gray-950/80 border border-gray-800 p-2 backdrop-blur">
+              <div className="absolute top-2 right-2 rounded-lg bg-surface-0/80 border border-border p-2 backdrop-blur">
                 <div className="flex items-center justify-between mb-1">
                   <p className="text-[10px] font-semibold uppercase tracking-wider text-cyan-400">
                     Detections
                   </p>
                   <button
                     onClick={() => setShowOverlays(!showOverlays)}
-                    className="ml-2 p-0.5 rounded text-gray-500 hover:text-cyan-400 transition-colors"
+                    className="ml-2 p-0.5 rounded text-muted-foreground hover:text-cyan-400 transition-colors"
                     title={showOverlays ? "Hide boxes" : "Show boxes"}
                   >
                     {showOverlays ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
@@ -364,13 +364,13 @@ export default function IncidentReplayPlayer({
                   {currentFrame.detections.map((det, idx) => (
                     <div
                       key={`${det.track_id}-${idx}`}
-                      className="flex items-center gap-2 text-[10px] text-gray-300"
+                      className="flex items-center gap-2 text-[10px] text-foreground"
                     >
                       <span className="rounded bg-cyan-900/30 px-1 py-0.5 text-cyan-400 font-mono">
                         #{det.track_id}
                       </span>
                       <span>{det.class}</span>
-                      <span className="text-gray-500">
+                      <span className="text-muted-foreground">
                         {Math.round(det.confidence * 100)}%
                       </span>
                     </div>
@@ -380,7 +380,7 @@ export default function IncidentReplayPlayer({
             )}
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-2 text-gray-600 py-16">
+          <div className="flex flex-col items-center gap-2 text-muted-foreground py-16">
             <Camera className="h-10 w-10" />
             <p className="text-xs">
               {visibleFrames.length === 0
@@ -392,7 +392,7 @@ export default function IncidentReplayPlayer({
 
         {/* Frame info overlay */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-950/90 to-transparent px-4 py-3">
-          <div className="flex items-center justify-between text-[10px] font-mono text-gray-400">
+          <div className="flex items-center justify-between text-[10px] font-mono text-muted-foreground">
             <span>{formatDuration(currentOffset)} / {formatDuration(duration)}</span>
             <span>
               Frame {currentFrameIndex + 1} of {visibleFrames.length}
@@ -430,7 +430,7 @@ export default function IncidentReplayPlayer({
             step={0.5}
             value={currentOffset}
             onChange={handleScrub}
-            className="mt-3 w-full cursor-pointer appearance-none bg-transparent [&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-gray-700 [&::-webkit-slider-thumb]:mt-[-4px] [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cyan-400 [&::-webkit-slider-thumb]:shadow-[0_0_6px_rgba(34,211,238,0.5)] [&::-moz-range-track]:h-1.5 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-gray-700 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-cyan-400"
+            className="mt-3 w-full cursor-pointer appearance-none bg-transparent [&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-surface-3 [&::-webkit-slider-thumb]:mt-[-4px] [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cyan-400 [&::-webkit-slider-thumb]:shadow-[0_0_6px_rgba(34,211,238,0.5)] [&::-moz-range-track]:h-1.5 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-surface-3 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-cyan-400"
           />
         </div>
       </div>
@@ -446,7 +446,7 @@ export default function IncidentReplayPlayer({
               setCurrentOffset(newOffset);
               fetchSlice(newOffset);
             }}
-            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
+            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
             title="Back 10s"
           >
             <Rewind className="h-4 w-4" />
@@ -455,7 +455,7 @@ export default function IncidentReplayPlayer({
           {/* Step back */}
           <button
             onClick={() => setCurrentFrameIndex((prev) => Math.max(0, prev - 1))}
-            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
+            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
             title="Previous frame"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -487,7 +487,7 @@ export default function IncidentReplayPlayer({
                 Math.min(visibleFrames.length - 1, prev + 1)
               )
             }
-            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
+            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
             title="Next frame"
           >
             <ChevronRight className="h-4 w-4" />
@@ -500,7 +500,7 @@ export default function IncidentReplayPlayer({
               setCurrentOffset(newOffset);
               fetchSlice(newOffset);
             }}
-            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
+            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
             title="Forward 10s"
           >
             <FastForward className="h-4 w-4" />
@@ -509,7 +509,7 @@ export default function IncidentReplayPlayer({
           {/* Stop */}
           <button
             onClick={handleStop}
-            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
+            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
             title="Stop"
           >
             <Square className="h-4 w-4" />
@@ -518,7 +518,7 @@ export default function IncidentReplayPlayer({
 
         {/* Speed controls */}
         <div className="flex items-center gap-1">
-          <span className="mr-1.5 text-[10px] uppercase tracking-wider text-gray-500">
+          <span className="mr-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">
             Speed
           </span>
           {SPEED_OPTIONS.map((s) => (
@@ -529,7 +529,7 @@ export default function IncidentReplayPlayer({
                 "rounded px-2 py-1 text-xs font-mono font-semibold transition-colors",
                 speed === s
                   ? "bg-cyan-600 text-white"
-                  : "bg-gray-800/60 text-gray-500 hover:bg-gray-800 hover:text-gray-300"
+                  : "bg-surface-3/60 text-muted-foreground hover:bg-surface-3 hover:text-foreground"
               )}
             >
               {s}x
@@ -538,9 +538,9 @@ export default function IncidentReplayPlayer({
         </div>
 
         {/* Current time */}
-        <div className="text-right font-mono text-xs text-gray-400">
+        <div className="text-right font-mono text-xs text-muted-foreground">
           <span className="text-cyan-400">{formatDuration(currentOffset)}</span>
-          <span className="text-gray-600"> / </span>
+          <span className="text-muted-foreground"> / </span>
           <span>{formatDuration(duration)}</span>
         </div>
       </div>

@@ -165,9 +165,9 @@ function QuickActionButton({ action, onClick, disabled }: QuickActionButtonProps
       onClick={() => onClick(action)}
       disabled={disabled}
       className={
-        "flex flex-col items-start gap-1.5 rounded-lg border border-gray-800 bg-gray-900/60 px-3 py-2.5 text-left transition-all duration-200 " +
+        "flex flex-col items-start gap-1.5 rounded-lg border border-border bg-surface-2/60 px-3 py-2.5 text-left transition-all duration-200 " +
         "hover:border-cyan-800/60 hover:bg-cyan-950/20 hover:shadow-lg hover:shadow-cyan-950/10 " +
-        "disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-gray-800 disabled:hover:bg-gray-900/60 disabled:hover:shadow-none " +
+        "disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-border disabled:hover:bg-surface-2/60 disabled:hover:shadow-none " +
         "group"
       }
     >
@@ -175,7 +175,7 @@ function QuickActionButton({ action, onClick, disabled }: QuickActionButtonProps
         {icon}
         <span className="text-xs font-semibold tracking-wide">{action.label}</span>
       </div>
-      <p className="text-[10px] leading-tight text-gray-500 group-hover:text-gray-400 transition-colors">
+      <p className="text-[10px] leading-tight text-muted-foreground group-hover:text-muted-foreground transition-colors">
         {action.description}
       </p>
     </button>
@@ -192,11 +192,11 @@ function TypingIndicator() {
       <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-purple-900/30 border border-purple-800/50">
         <Brain className="h-3.5 w-3.5 text-purple-400" />
       </div>
-      <div className="flex items-center gap-1.5 rounded-xl rounded-tl-sm bg-gray-800/80 border border-gray-700/50 px-4 py-3">
+      <div className="flex items-center gap-1.5 rounded-xl rounded-tl-sm bg-surface-3/80 border border-border-strong/50 px-4 py-3">
         <div className="h-2 w-2 rounded-full bg-cyan-400 animate-bounce" style={{ animationDelay: "0ms" }} />
         <div className="h-2 w-2 rounded-full bg-cyan-400 animate-bounce" style={{ animationDelay: "150ms" }} />
         <div className="h-2 w-2 rounded-full bg-cyan-400 animate-bounce" style={{ animationDelay: "300ms" }} />
-        <span className="ml-2 text-xs text-gray-500">Analyzing...</span>
+        <span className="ml-2 text-xs text-muted-foreground">Analyzing...</span>
       </div>
     </div>
   );
@@ -229,7 +229,7 @@ function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
               {message.content}
             </p>
           </div>
-          <p className="text-right text-[10px] text-gray-600 pr-1">{time}</p>
+          <p className="text-right text-[10px] text-muted-foreground pr-1">{time}</p>
         </div>
       </div>
     );
@@ -241,15 +241,15 @@ function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
         <Brain className="h-3.5 w-3.5 text-purple-400" />
       </div>
       <div className="max-w-[75%] space-y-1">
-        <div className="rounded-xl rounded-tl-sm bg-gray-800/80 border border-gray-700/50 px-4 py-3">
-          <p className="text-sm text-gray-200 whitespace-pre-wrap leading-relaxed font-[inherit]"
+        <div className="rounded-xl rounded-tl-sm bg-surface-3/80 border border-border-strong/50 px-4 py-3">
+          <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed font-[inherit]"
              style={{ fontFamily: "inherit" }}>
             {message.content.split(/(`[^`]+`)/g).map((segment, i) => {
               if (segment.startsWith("`") && segment.endsWith("`")) {
                 return (
                   <code
                     key={i}
-                    className="rounded bg-gray-700/60 px-1.5 py-0.5 text-xs font-mono text-cyan-300"
+                    className="rounded bg-surface-3/60 px-1.5 py-0.5 text-xs font-mono text-cyan-300"
                   >
                     {segment.slice(1, -1)}
                   </code>
@@ -260,14 +260,14 @@ function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
           </p>
         </div>
         <div className="flex items-center gap-2 pl-1">
-          <span className="text-[10px] text-gray-600">{time}</span>
+          <span className="text-[10px] text-muted-foreground">{time}</span>
           <button
             onClick={() => {
               navigator.clipboard.writeText(message.content);
               setCopied(true);
               setTimeout(() => setCopied(false), 2000);
             }}
-            className="text-[10px] text-gray-600 hover:text-gray-400 transition-colors flex items-center gap-0.5"
+            className="text-[10px] text-muted-foreground hover:text-muted-foreground transition-colors flex items-center gap-0.5"
           >
             {copied ? <CheckCircle2 className="h-2.5 w-2.5 text-green-400" /> : <Copy className="h-2.5 w-2.5" />}
             {copied ? "Copied" : "Copy"}
@@ -294,15 +294,15 @@ function WelcomeState() {
       <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-900/40 to-purple-900/40 border border-cyan-800/30 mb-6">
         <Brain className="h-8 w-8 text-cyan-400" />
       </div>
-      <h2 className="text-xl font-bold text-gray-200 tracking-wide mb-2">
+      <h2 className="text-xl font-bold text-foreground tracking-wide mb-2">
         SENTINEL SOC Copilot
       </h2>
-      <p className="max-w-md text-sm leading-relaxed text-gray-500">
+      <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
         Your AI-powered security operations partner. Ask questions about alerts,
         threats, camera status, compliance, or use the quick actions on the left
         to get started.
       </p>
-      <div className="mt-6 flex items-center gap-2 text-xs text-gray-600">
+      <div className="mt-6 flex items-center gap-2 text-xs text-muted-foreground">
         <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
         <span>Connected to SENTINEL AI backend</span>
       </div>
@@ -575,32 +575,32 @@ export default function SOCCopilotPage() {
 
   /* --- Render --- */
   return (
-    <div className="flex h-full flex-col bg-gray-950">
+    <div className="flex h-full flex-col bg-surface-0">
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-900/30 border border-cyan-800/50">
             <MessageSquare className="h-5 w-5 text-cyan-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               SOC Copilot
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Your AI Security Partner
             </p>
           </div>
         </div>
 
         {/* Session info */}
-        <div className="flex items-center gap-3 text-xs text-gray-500">
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
           {sessionId && (
-            <span className="hidden sm:inline font-mono text-gray-600">
+            <span className="hidden sm:inline font-mono text-muted-foreground">
               Session: {sessionId.slice(0, 8)}
             </span>
           )}
           <span>
-            <span className="font-semibold text-gray-300">{messageCount}</span>{" "}
+            <span className="font-semibold text-foreground">{messageCount}</span>{" "}
             message{messageCount !== 1 ? "s" : ""}
           </span>
           <div className="flex items-center gap-1.5">
@@ -609,13 +609,13 @@ export default function SOCCopilotPage() {
           </div>
           <button
             onClick={startNewSession}
-            className="rounded-md border border-gray-700 bg-gray-800 px-2.5 py-1 text-[10px] text-gray-400 hover:text-gray-200 transition-colors"
+            className="rounded-md border border-border-strong bg-surface-3 px-2.5 py-1 text-[10px] text-muted-foreground hover:text-foreground transition-colors"
           >
             New Chat
           </button>
           <button
             onClick={() => { setShowHistory(!showHistory); if (!showHistory) fetchSessions(); }}
-            className="rounded-md border border-gray-700 bg-gray-800 px-2.5 py-1 text-[10px] text-gray-400 hover:text-gray-200 transition-colors flex items-center gap-1"
+            className="rounded-md border border-border-strong bg-surface-3 px-2.5 py-1 text-[10px] text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
           >
             <History className="h-3 w-3" />
             History
@@ -626,12 +626,12 @@ export default function SOCCopilotPage() {
       {/* ---- Main content area ---- */}
       <div className="flex flex-1 overflow-hidden">
         {/* ---- Left sidebar: Quick actions ---- */}
-        <div className="hidden md:flex w-64 shrink-0 flex-col border-r border-gray-800 bg-gray-950/50">
-          <div className="px-4 py-3 border-b border-gray-800/50">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+        <div className="hidden md:flex w-64 shrink-0 flex-col border-r border-border bg-surface-0/50">
+          <div className="px-4 py-3 border-b border-border/50">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Quick Actions
             </h2>
-            <p className="mt-0.5 text-[10px] text-gray-600">
+            <p className="mt-0.5 text-[10px] text-muted-foreground">
               Click to execute instantly
             </p>
           </div>
@@ -648,8 +648,8 @@ export default function SOCCopilotPage() {
           </div>
 
           {/* Sidebar footer */}
-          <div className="border-t border-gray-800/50 px-4 py-3">
-            <p className="text-[10px] text-gray-600 leading-relaxed">
+          <div className="border-t border-border/50 px-4 py-3">
+            <p className="text-[10px] text-muted-foreground leading-relaxed">
               Powered by SENTINEL AI multi-agent reasoning engine with access to
               live camera feeds, alerts, and zone data.
             </p>
@@ -658,12 +658,12 @@ export default function SOCCopilotPage() {
 
         {/* ---- Session History Sidebar ---- */}
         {showHistory && (
-          <div className="w-64 shrink-0 flex flex-col border-r border-gray-800 bg-gray-950/50">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800/50">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+          <div className="w-64 shrink-0 flex flex-col border-r border-border bg-surface-0/50">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border/50">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Session History
               </h2>
-              <button onClick={() => setShowHistory(false)} className="text-gray-500 hover:text-gray-300">
+              <button onClick={() => setShowHistory(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="h-3.5 w-3.5" />
               </button>
             </div>
@@ -673,7 +673,7 @@ export default function SOCCopilotPage() {
                   <Loader2 className="h-4 w-4 animate-spin text-cyan-400" />
                 </div>
               ) : sessions.length === 0 ? (
-                <p className="text-[10px] text-gray-600 text-center py-8">No past sessions</p>
+                <p className="text-[10px] text-muted-foreground text-center py-8">No past sessions</p>
               ) : (
                 sessions.map((s) => (
                   <div
@@ -681,24 +681,24 @@ export default function SOCCopilotPage() {
                     className={`group rounded-lg border px-3 py-2 cursor-pointer transition-colors ${
                       sessionId === s.id
                         ? "border-cyan-800/50 bg-cyan-900/20"
-                        : "border-gray-800 bg-gray-900/40 hover:border-gray-700"
+                        : "border-border bg-surface-2/40 hover:border-border-strong"
                     }`}
                     onClick={() => loadSession(s.id)}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-gray-300 truncate">
+                      <span className="text-xs font-medium text-foreground truncate">
                         {s.title || `Session ${s.id.slice(0, 8)}`}
                       </span>
                       <button
                         onClick={(e) => { e.stopPropagation(); deleteSession(s.id); }}
-                        className="hidden group-hover:block text-gray-600 hover:text-red-400 transition-colors"
+                        className="hidden group-hover:block text-muted-foreground hover:text-red-400 transition-colors"
                       >
                         <Trash2 className="h-3 w-3" />
                       </button>
                     </div>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-[10px] text-gray-600">{s.message_count} msgs</span>
-                      <span className="text-[10px] text-gray-600">
+                      <span className="text-[10px] text-muted-foreground">{s.message_count} msgs</span>
+                      <span className="text-[10px] text-muted-foreground">
                         {new Date(s.updated_at || s.created_at).toLocaleDateString()}
                       </span>
                     </div>
@@ -744,7 +744,7 @@ export default function SOCCopilotPage() {
           )}
 
           {/* ---- Input bar ---- */}
-          <div className="border-t border-gray-800 bg-gray-900/50 px-4 py-3">
+          <div className="border-t border-border bg-surface-2/50 px-4 py-3">
             <form onSubmit={handleSubmit} className="flex items-end gap-3">
               <div className="relative flex-1">
                 <textarea
@@ -756,8 +756,8 @@ export default function SOCCopilotPage() {
                   disabled={isProcessing}
                   rows={1}
                   className={
-                    "w-full resize-none rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 pr-12 text-sm text-gray-200 " +
-                    "placeholder:text-gray-600 " +
+                    "w-full resize-none rounded-xl border border-border-strong bg-surface-2 px-4 py-3 pr-12 text-sm text-foreground " +
+                    "placeholder:text-muted-foreground " +
                     "focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700/50 " +
                     "disabled:opacity-50 disabled:cursor-not-allowed " +
                     "scrollbar-thin scrollbar-track-gray-900 scrollbar-thumb-gray-700 " +
@@ -783,7 +783,7 @@ export default function SOCCopilotPage() {
                   "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all duration-200 " +
                   "bg-cyan-600 text-white " +
                   "hover:bg-cyan-500 hover:shadow-lg hover:shadow-cyan-600/20 " +
-                  "disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed disabled:shadow-none " +
+                  "disabled:bg-surface-3 disabled:text-muted-foreground disabled:cursor-not-allowed disabled:shadow-none " +
                   "active:scale-95"
                 }
               >
@@ -796,10 +796,10 @@ export default function SOCCopilotPage() {
             </form>
 
             {/* Input footer info */}
-            <div className="mt-2 flex items-center justify-between text-[10px] text-gray-600">
+            <div className="mt-2 flex items-center justify-between text-[10px] text-muted-foreground">
               <span>
-                Press <kbd className="rounded border border-gray-700 bg-gray-800 px-1 py-0.5 font-mono text-[9px] text-gray-500">Enter</kbd> to
-                send, <kbd className="rounded border border-gray-700 bg-gray-800 px-1 py-0.5 font-mono text-[9px] text-gray-500">Shift+Enter</kbd> for
+                Press <kbd className="rounded border border-border-strong bg-surface-3 px-1 py-0.5 font-mono text-[9px] text-muted-foreground">Enter</kbd> to
+                send, <kbd className="rounded border border-border-strong bg-surface-3 px-1 py-0.5 font-mono text-[9px] text-muted-foreground">Shift+Enter</kbd> for
                 new line
               </span>
               <span>

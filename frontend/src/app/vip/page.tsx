@@ -99,7 +99,7 @@ function ProximityAlertsPanel({ vip }: { vip: VIPProfile }) {
 
   if (noZone) {
     return (
-      <p className="text-xs text-gray-600 py-1">No zone tracking active</p>
+      <p className="text-xs text-muted-foreground py-1">No zone tracking active</p>
     );
   }
 
@@ -107,14 +107,14 @@ function ProximityAlertsPanel({ vip }: { vip: VIPProfile }) {
     return (
       <div className="flex items-center gap-2 py-1">
         <Loader2 className="h-3 w-3 animate-spin text-cyan-400" />
-        <span className="text-xs text-gray-500">Loading zone alerts...</span>
+        <span className="text-xs text-muted-foreground">Loading zone alerts...</span>
       </div>
     );
   }
 
   if (alerts.length === 0) {
     return (
-      <p className="text-xs text-gray-600 py-1">No recent alerts in this zone</p>
+      <p className="text-xs text-muted-foreground py-1">No recent alerts in this zone</p>
     );
   }
 
@@ -125,7 +125,7 @@ function ProximityAlertsPanel({ vip }: { vip: VIPProfile }) {
           key={alert.id}
           className={cn(
             "flex items-start gap-2 rounded-lg border px-3 py-2 text-xs",
-            SEV_STYLES[alert.severity] || "text-gray-400 bg-gray-800 border-gray-700"
+            SEV_STYLES[alert.severity] || "text-muted-foreground bg-surface-3 border-border-strong"
           )}
         >
           <Bell className="mt-0.5 h-3 w-3 shrink-0" />
@@ -189,9 +189,9 @@ function EscortPanel({ vip, addToast }: { vip: VIPProfile; addToast: (type: "suc
               <CheckCircle2 className="h-3 w-3 text-green-400" />
             </span>
             <div>
-              <p className="text-xs font-semibold text-gray-200">{escort.escort_name}</p>
+              <p className="text-xs font-semibold text-foreground">{escort.escort_name}</p>
               {escort.assigned_at && (
-                <p className="text-[10px] text-gray-600">
+                <p className="text-[10px] text-muted-foreground">
                   Assigned {formatTimestamp(escort.assigned_at)}
                 </p>
               )}
@@ -205,7 +205,7 @@ function EscortPanel({ vip, addToast }: { vip: VIPProfile; addToast: (type: "suc
           </button>
         </div>
       ) : (
-        <p className="text-xs text-gray-600">No escort assigned</p>
+        <p className="text-xs text-muted-foreground">No escort assigned</p>
       )}
 
       {assigning ? (
@@ -217,7 +217,7 @@ function EscortPanel({ vip, addToast }: { vip: VIPProfile; addToast: (type: "suc
             onChange={(e) => setInputName(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAssign()}
             placeholder="Escort name..."
-            className="flex-1 rounded-lg border border-gray-700 bg-gray-900 px-3 py-1.5 text-xs text-gray-200 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="flex-1 rounded-lg border border-border-strong bg-surface-2 px-3 py-1.5 text-xs text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
           />
           <button
             onClick={handleAssign}
@@ -229,7 +229,7 @@ function EscortPanel({ vip, addToast }: { vip: VIPProfile; addToast: (type: "suc
           </button>
           <button
             onClick={() => { setAssigning(false); setInputName(""); }}
-            className="rounded-lg border border-gray-700 px-2 py-1.5 text-[11px] text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+            className="rounded-lg border border-border-strong px-2 py-1.5 text-[11px] text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             <X className="h-3 w-3" />
           </button>
@@ -238,7 +238,7 @@ function EscortPanel({ vip, addToast }: { vip: VIPProfile; addToast: (type: "suc
         !escort.escort_name && (
           <button
             onClick={() => setAssigning(true)}
-            className="mt-1.5 flex items-center gap-1 rounded-lg border border-gray-700/50 px-3 py-1 text-[11px] text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+            className="mt-1.5 flex items-center gap-1 rounded-lg border border-border-strong/50 px-3 py-1 text-[11px] text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             <UserCog className="h-3 w-3" />
             Assign Escort
@@ -310,16 +310,16 @@ function AddVIPModal({ open, onClose, onCreated }: AddVIPModalProps) {
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-lg rounded-xl border border-gray-800 bg-gray-950 shadow-2xl shadow-black/50">
+      <div className="relative w-full max-w-lg rounded-xl border border-border bg-surface-0 shadow-2xl shadow-black/50">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
-          <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-100">
+        <div className="flex items-center justify-between border-b border-border px-6 py-4">
+          <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
             <UserPlus className="h-4 w-4 text-cyan-400" />
             Add VIP Profile
           </h3>
           <button
             onClick={onClose}
-            className="rounded-lg p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+            className="rounded-lg p-1 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             <X className="h-4 w-4" />
           </button>
@@ -329,7 +329,7 @@ function AddVIPModal({ open, onClose, onCreated }: AddVIPModalProps) {
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           {/* Name */}
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-gray-400">
+            <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
               Name <span className="text-red-400">*</span>
             </label>
             <input
@@ -338,13 +338,13 @@ function AddVIPModal({ open, onClose, onCreated }: AddVIPModalProps) {
               onChange={(e) => setName(e.target.value)}
               required
               placeholder="Full name of the VIP"
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm text-gray-200 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-gray-400">
+            <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
               Description
             </label>
             <textarea
@@ -352,20 +352,20 @@ function AddVIPModal({ open, onClose, onCreated }: AddVIPModalProps) {
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
               placeholder="Role, organization, or notes..."
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm text-gray-200 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700 resize-none"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700 resize-none"
             />
           </div>
 
           {/* Threat Level + Geofence in row */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-gray-400">
+              <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
                 Threat Level
               </label>
               <select
                 value={threatLevel}
                 onChange={(e) => setThreatLevel(e.target.value)}
-                className="w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm text-gray-200 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                className="w-full appearance-none rounded-lg border border-border-strong bg-surface-2 px-3 py-2.5 text-sm text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
               >
                 <option value="normal">Normal</option>
                 <option value="elevated">Elevated</option>
@@ -375,7 +375,7 @@ function AddVIPModal({ open, onClose, onCreated }: AddVIPModalProps) {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-gray-400">
+              <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
                 Geofence Radius (m)
               </label>
               <input
@@ -384,7 +384,7 @@ function AddVIPModal({ open, onClose, onCreated }: AddVIPModalProps) {
                 onChange={(e) => setGeofenceRadius(e.target.value)}
                 min={5}
                 max={500}
-                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2.5 text-sm text-gray-200 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2.5 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
               />
             </div>
           </div>
@@ -401,7 +401,7 @@ function AddVIPModal({ open, onClose, onCreated }: AddVIPModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-gray-700 px-4 py-2 text-xs font-medium text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+              className="rounded-lg border border-border-strong px-4 py-2 text-xs font-medium text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             >
               Cancel
             </button>
@@ -510,18 +510,18 @@ export default function VIPProtectionPage() {
 
   /* --- Render --- */
   return (
-    <div className="flex h-full flex-col bg-gray-950">
+    <div className="flex h-full flex-col bg-surface-0">
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-900/30 border border-amber-800/50">
             <Crown className="h-5 w-5 text-amber-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               VIP Protection
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Monitor high-value individuals, geofences, and proximity alerts
             </p>
           </div>
@@ -529,14 +529,14 @@ export default function VIPProtectionPage() {
 
         <div className="flex items-center gap-4">
           {/* Quick stats */}
-          <div className="hidden items-center gap-4 text-xs text-gray-500 md:flex">
+          <div className="hidden items-center gap-4 text-xs text-muted-foreground md:flex">
             <span>
               <span className="font-semibold text-amber-400">{activeVIPs}</span>{" "}
               active VIPs
             </span>
             {criticalCount > 0 && (
               <>
-                <span className="text-gray-700">|</span>
+                <span className="text-muted-foreground">|</span>
                 <span>
                   <span className="font-semibold text-red-400">
                     {criticalCount}
@@ -566,7 +566,7 @@ export default function VIPProtectionPage() {
       {loading && (
         <div className="flex flex-1 items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-          <span className="ml-3 text-sm text-gray-500">
+          <span className="ml-3 text-sm text-muted-foreground">
             Loading VIP profiles...
           </span>
         </div>
@@ -579,7 +579,7 @@ export default function VIPProtectionPage() {
           <p className="text-sm text-red-400">{error}</p>
           <button
             onClick={fetchData}
-            className="mt-4 flex items-center gap-2 rounded-lg border border-gray-700 px-4 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="mt-4 flex items-center gap-2 rounded-lg border border-border-strong px-4 py-2 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             Retry
@@ -598,12 +598,12 @@ export default function VIPProtectionPage() {
             </h2>
 
             {profiles.length === 0 ? (
-              <div className="flex flex-col items-center rounded-xl border border-gray-800 bg-gray-900/50 py-12">
-                <Crown className="mb-2 h-10 w-10 text-gray-700" />
-                <p className="text-sm font-medium text-gray-500">
+              <div className="flex flex-col items-center rounded-xl border border-border bg-surface-2/50 py-12">
+                <Crown className="mb-2 h-10 w-10 text-muted-foreground" />
+                <p className="text-sm font-medium text-muted-foreground">
                   No VIP profiles created
                 </p>
-                <p className="mt-1 text-xs text-gray-600">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Click &quot;Add VIP&quot; to create the first profile
                 </p>
               </div>
@@ -613,20 +613,20 @@ export default function VIPProtectionPage() {
                   <div
                     key={vip.id}
                     className={cn(
-                      "rounded-xl border bg-gray-900/50 p-5 transition-all hover:bg-gray-900/80",
+                      "rounded-xl border bg-surface-2/50 p-5 transition-all hover:bg-surface-2/80",
                       vip.active
-                        ? "border-gray-800"
-                        : "border-gray-800/50 opacity-60"
+                        ? "border-border"
+                        : "border-border/50 opacity-60"
                     )}
                   >
                     {/* Top: name + status */}
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
-                        <h3 className="truncate text-sm font-semibold text-gray-200">
+                        <h3 className="truncate text-sm font-semibold text-foreground">
                           {vip.name}
                         </h3>
                         {vip.description && (
-                          <p className="mt-0.5 truncate text-xs text-gray-500">
+                          <p className="mt-0.5 truncate text-xs text-muted-foreground">
                             {vip.description}
                           </p>
                         )}
@@ -637,7 +637,7 @@ export default function VIPProtectionPage() {
                           Active
                         </span>
                       ) : (
-                        <span className="ml-2 rounded-full bg-gray-800 px-2 py-0.5 text-[10px] font-semibold text-gray-500 border border-gray-700/50">
+                        <span className="ml-2 rounded-full bg-surface-3 px-2 py-0.5 text-[10px] font-semibold text-muted-foreground border border-border-strong/50">
                           Inactive
                         </span>
                       )}
@@ -658,7 +658,7 @@ export default function VIPProtectionPage() {
                     </div>
 
                     {/* Geofence + Threat indicator */}
-                    <div className="mt-3 flex items-center gap-4 text-xs text-gray-500">
+                    <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <Radar className="h-3 w-3" />
                         {vip.geofence_radius_meters}m radius
@@ -666,7 +666,7 @@ export default function VIPProtectionPage() {
                     </div>
 
                     {/* Threat level bar */}
-                    <div className="mt-3 h-1 w-full rounded-full bg-gray-800">
+                    <div className="mt-3 h-1 w-full rounded-full bg-surface-3">
                       <div
                         className="h-1 rounded-full transition-all"
                         style={{
@@ -684,10 +684,10 @@ export default function VIPProtectionPage() {
                     </div>
 
                     {/* ---- Proximity Alerts section ---- */}
-                    <div className="mt-4 border-t border-gray-800 pt-3">
+                    <div className="mt-4 border-t border-border pt-3">
                       <button
                         onClick={() => toggleAlerts(vip.id)}
-                        className="flex w-full items-center justify-between text-[10px] font-semibold uppercase tracking-wider text-gray-500 hover:text-gray-300 transition-colors"
+                        className="flex w-full items-center justify-between text-[10px] font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors"
                       >
                         <span className="flex items-center gap-1">
                           <Bell className="h-3 w-3" />
@@ -701,10 +701,10 @@ export default function VIPProtectionPage() {
                     </div>
 
                     {/* ---- Escort section ---- */}
-                    <div className="mt-3 border-t border-gray-800 pt-3">
+                    <div className="mt-3 border-t border-border pt-3">
                       <button
                         onClick={() => toggleEscort(vip.id)}
-                        className="flex w-full items-center justify-between text-[10px] font-semibold uppercase tracking-wider text-gray-500 hover:text-gray-300 transition-colors"
+                        className="flex w-full items-center justify-between text-[10px] font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors"
                       >
                         <span className="flex items-center gap-1">
                           <UserCog className="h-3 w-3" />
@@ -723,13 +723,13 @@ export default function VIPProtectionPage() {
           </div>
 
           {/* Proximity Events Table */}
-          <div className="rounded-xl border border-gray-800 bg-gray-900/50">
-            <div className="flex items-center justify-between border-b border-gray-800 px-5 py-3">
+          <div className="rounded-xl border border-border bg-surface-2/50">
+            <div className="flex items-center justify-between border-b border-border px-5 py-3">
               <h2 className="flex items-center gap-2 text-sm font-semibold text-cyan-400">
                 <Crosshair className="h-4 w-4" />
                 Recent Proximity Events
               </h2>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-muted-foreground">
                 {events.length} events
               </span>
             </div>
@@ -737,7 +737,7 @@ export default function VIPProtectionPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-800 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <tr className="border-b border-border text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                     <th className="px-5 py-3">VIP</th>
                     <th className="px-5 py-3">Threat Type</th>
                     <th className="px-5 py-3">Distance</th>
@@ -751,7 +751,7 @@ export default function VIPProtectionPage() {
                     <tr>
                       <td
                         colSpan={6}
-                        className="px-5 py-10 text-center text-gray-600"
+                        className="px-5 py-10 text-center text-muted-foreground"
                       >
                         No proximity events recorded
                       </td>
@@ -765,11 +765,11 @@ export default function VIPProtectionPage() {
                     return (
                       <tr
                         key={event.id}
-                        className="border-b border-gray-800/50 transition-colors hover:bg-gray-900/80"
+                        className="border-b border-border/50 transition-colors hover:bg-surface-2/80"
                       >
                         {/* VIP */}
                         <td className="px-5 py-3">
-                          <span className="flex items-center gap-1.5 text-xs text-gray-300">
+                          <span className="flex items-center gap-1.5 text-xs text-foreground">
                             <Crown className="h-3 w-3 text-amber-400" />
                             {vipName}
                           </span>
@@ -777,7 +777,7 @@ export default function VIPProtectionPage() {
 
                         {/* Threat Type */}
                         <td className="px-5 py-3">
-                          <span className="rounded bg-gray-800 px-2 py-0.5 text-xs text-gray-300 border border-gray-700/50">
+                          <span className="rounded bg-surface-3 px-2 py-0.5 text-xs text-foreground border border-border-strong/50">
                             {event.threat_type}
                           </span>
                         </td>
@@ -791,7 +791,7 @@ export default function VIPProtectionPage() {
                                 ? "text-red-400"
                                 : event.distance_meters < 25
                                 ? "text-orange-400"
-                                : "text-gray-400"
+                                : "text-muted-foreground"
                             )}
                           >
                             {event.distance_meters.toFixed(1)}m
@@ -800,7 +800,7 @@ export default function VIPProtectionPage() {
 
                         {/* Camera */}
                         <td className="px-5 py-3">
-                          <span className="flex items-center gap-1 text-xs text-gray-500">
+                          <span className="flex items-center gap-1 text-xs text-muted-foreground">
                             <Camera className="h-3 w-3" />
                             {event.camera_id
                               ? event.camera_id.slice(0, 8)
@@ -814,7 +814,7 @@ export default function VIPProtectionPage() {
                             className={cn(
                               "inline-block rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
                               SEVERITY_STYLES[event.severity] ||
-                                "text-gray-400 bg-gray-800"
+                                "text-muted-foreground bg-surface-3"
                             )}
                           >
                             {event.severity}
@@ -823,7 +823,7 @@ export default function VIPProtectionPage() {
 
                         {/* Timestamp */}
                         <td className="px-5 py-3">
-                          <span className="flex items-center gap-1 text-xs text-gray-500">
+                          <span className="flex items-center gap-1 text-xs text-muted-foreground">
                             <Clock className="h-3 w-3" />
                             {formatTimestamp(event.timestamp)}
                           </span>

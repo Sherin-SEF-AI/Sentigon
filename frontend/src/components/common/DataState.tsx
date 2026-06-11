@@ -16,7 +16,7 @@ export function DataState({ loading, empty, error, icon: Icon, message, onRetry 
     return (
       <div className="flex flex-col items-center justify-center py-16 gap-3">
         <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
-        <p className="text-sm text-gray-400">Loading...</p>
+        <p className="text-sm text-muted-foreground">Loading...</p>
       </div>
     );
   }
@@ -29,7 +29,7 @@ export function DataState({ loading, empty, error, icon: Icon, message, onRetry 
         {onRetry && (
           <button
             onClick={onRetry}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-600"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md bg-surface-3 text-foreground hover:bg-surface-3 border border-border-strong"
           >
             <RefreshCw className="w-3.5 h-3.5" /> Retry
           </button>
@@ -42,8 +42,8 @@ export function DataState({ loading, empty, error, icon: Icon, message, onRetry 
     const DisplayIcon = Icon || AlertTriangle;
     return (
       <div className="flex flex-col items-center justify-center py-16 gap-3">
-        <DisplayIcon className="w-10 h-10 text-gray-500" />
-        <p className="text-sm text-gray-400">{message || "No data available"}</p>
+        <DisplayIcon className="w-10 h-10 text-muted-foreground" />
+        <p className="text-sm text-muted-foreground">{message || "No data available"}</p>
       </div>
     );
   }

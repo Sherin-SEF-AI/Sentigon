@@ -62,10 +62,10 @@ function TabLoadingSpinner({ label }: { label: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-24">
       <div className="relative h-10 w-10">
-        <div className="absolute inset-0 rounded-full border-2 border-gray-800" />
+        <div className="absolute inset-0 rounded-full border-2 border-border" />
         <div className="absolute inset-0 animate-spin rounded-full border-2 border-cyan-400 border-t-transparent" />
       </div>
-      <p className="mt-4 text-sm text-gray-500">Loading {label}…</p>
+      <p className="mt-4 text-sm text-muted-foreground">Loading {label}…</p>
     </div>
   );
 }
@@ -89,25 +89,25 @@ function UnifiedSearchInner() {
   }, [tabParam]);
 
   return (
-    <div className="flex h-full flex-col bg-gray-950">
+    <div className="flex h-full flex-col bg-surface-0">
       {/* ── Top header ─────────────────────────────────── */}
-      <div className="border-b border-gray-800 bg-gray-950 px-6 py-3">
+      <div className="border-b border-border bg-surface-0 px-6 py-3">
         <div className="flex items-center gap-3 mb-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-900/30 border border-cyan-800/50">
             <Search className="h-5 w-5 text-cyan-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Unified Search
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Semantic, forensic, and visual search across all security events
             </p>
           </div>
         </div>
 
         {/* ── Tab bar ─────────────────────────────────── */}
-        <div className="flex gap-1 rounded-xl border border-gray-800 bg-gray-900/60 p-1">
+        <div className="flex gap-1 rounded-xl border border-border bg-surface-2/60 p-1">
           {TABS.map(({ key, label, shortLabel, icon: Icon, activeClasses }) => (
             <button
               key={key}
@@ -116,7 +116,7 @@ function UnifiedSearchInner() {
                 "flex flex-1 items-center justify-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold transition-all duration-150",
                 activeTab === key
                   ? activeClasses
-                  : "border-transparent text-gray-500 hover:text-gray-200 hover:bg-gray-800/50"
+                  : "border-transparent text-muted-foreground hover:text-foreground hover:bg-surface-3/50"
               )}
             >
               <Icon className="h-4 w-4 shrink-0" />
@@ -141,7 +141,7 @@ export default function UnifiedSearchPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex h-full flex-col items-center justify-center bg-gray-950">
+        <div className="flex h-full flex-col items-center justify-center bg-surface-0">
           <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
         </div>
       }

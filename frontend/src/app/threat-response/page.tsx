@@ -412,13 +412,13 @@ export default function ThreatResponsePage() {
       )}
 
       {/* Counterfactual Analysis — "What If?" */}
-      <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-4 mt-4">
+      <div className="rounded-lg border border-border bg-surface-2/50 p-4 mt-4">
         <div className="flex items-center gap-2 mb-3">
           <GitBranch className="h-4 w-4 text-purple-400" />
           <h3 className="text-sm font-bold text-white">Counterfactual Analysis</h3>
-          <span className="text-[9px] text-gray-500 bg-gray-800 rounded px-1.5 py-0.5">&quot;What If?&quot;</span>
+          <span className="text-[9px] text-muted-foreground bg-surface-3 rounded px-1.5 py-0.5">&quot;What If?&quot;</span>
         </div>
-        <p className="text-xs text-gray-500 mb-3">
+        <p className="text-xs text-muted-foreground mb-3">
           Analyze how a policy change would have affected a past incident. SENTINEL AI reasons step-by-step through the counterfactual scenario.
         </p>
         <div className="grid grid-cols-2 gap-2 mb-3">
@@ -427,7 +427,7 @@ export default function ThreatResponsePage() {
             value={cfIncidentId}
             onChange={(e) => setCfIncidentId(e.target.value)}
             placeholder="Incident / Alert ID"
-            className="rounded-md border border-gray-700 bg-gray-800/60 px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-purple-500/50 focus:outline-none"
+            className="rounded-md border border-border-strong bg-surface-3/60 px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-purple-500/50 focus:outline-none"
           />
           <input
             type="text"
@@ -435,7 +435,7 @@ export default function ThreatResponsePage() {
             onChange={(e) => setCfPolicyChange(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleCounterfactual()}
             placeholder='e.g. "Auto-lock doors after 18:00"'
-            className="rounded-md border border-gray-700 bg-gray-800/60 px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-purple-500/50 focus:outline-none"
+            className="rounded-md border border-border-strong bg-surface-3/60 px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-purple-500/50 focus:outline-none"
           />
         </div>
         <button
@@ -455,42 +455,42 @@ export default function ThreatResponsePage() {
                 "rounded-full px-3 py-1 text-xs font-bold uppercase",
                 cfResult.outcome === "prevented" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" :
                 cfResult.outcome === "mitigated" ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30" :
-                "bg-gray-800 text-gray-400 border border-gray-700"
+                "bg-surface-3 text-muted-foreground border border-border-strong"
               )}>
                 {cfResult.outcome || "Unknown"}
               </span>
               {cfResult.confidence != null && (
-                <span className="text-xs text-gray-500">Confidence: <span className="font-bold text-white">{Math.round(cfResult.confidence * 100)}%</span></span>
+                <span className="text-xs text-muted-foreground">Confidence: <span className="font-bold text-white">{Math.round(cfResult.confidence * 100)}%</span></span>
               )}
             </div>
 
             {/* Impact Summary */}
             {cfResult.impact_summary && (
-              <div className="rounded-md border border-gray-800/50 bg-gray-900/60 p-3">
-                <p className="text-xs text-gray-300 leading-relaxed">{cfResult.impact_summary}</p>
+              <div className="rounded-md border border-border/50 bg-surface-2/60 p-3">
+                <p className="text-xs text-foreground leading-relaxed">{cfResult.impact_summary}</p>
               </div>
             )}
 
             {/* Reasoning Steps */}
             {cfResult.reasoning?.length > 0 && (
               <div>
-                <p className="text-[9px] font-bold uppercase tracking-wider text-gray-500 mb-2">Step-by-Step Reasoning</p>
+                <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Step-by-Step Reasoning</p>
                 <div className="space-y-2">
                   {cfResult.reasoning.map((step: any, i: number) => (
-                    <div key={i} className="rounded-md border border-gray-800/40 bg-gray-900/40 p-2">
+                    <div key={i} className="rounded-md border border-border/40 bg-surface-2/40 p-2">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-[9px] font-bold text-purple-400">Step {step.step || i + 1}</span>
                         <span className={cn(
                           "text-[8px] font-bold uppercase px-1.5 py-0.5 rounded",
                           step.impact === "prevented" ? "bg-emerald-500/20 text-emerald-400" :
                           step.impact === "mitigated" ? "bg-yellow-500/20 text-yellow-400" :
-                          "bg-gray-800 text-gray-500"
+                          "bg-surface-3 text-muted-foreground"
                         )}>
                           {step.impact}
                         </span>
                       </div>
-                      <p className="text-[10px] text-gray-500 mb-0.5">{step.original_event}</p>
-                      <p className="text-[10px] text-gray-300">{step.counterfactual_event}</p>
+                      <p className="text-[10px] text-muted-foreground mb-0.5">{step.original_event}</p>
+                      <p className="text-[10px] text-foreground">{step.counterfactual_event}</p>
                     </div>
                   ))}
                 </div>
@@ -499,10 +499,10 @@ export default function ThreatResponsePage() {
 
             {/* Cost-Benefit */}
             {cfResult.cost_benefit && (
-              <div className="flex items-center gap-4 pt-2 border-t border-gray-800/30 text-[9px] text-gray-500">
+              <div className="flex items-center gap-4 pt-2 border-t border-border/30 text-[9px] text-muted-foreground">
                 <span>Risk Reduction: <span className="font-bold text-emerald-400">{cfResult.cost_benefit.risk_reduction_pct ?? "?"}%</span></span>
-                <span>Complexity: <span className="font-bold text-gray-300">{cfResult.cost_benefit.implementation_complexity ?? "?"}</span></span>
-                <span>Recommended: <span className={cfResult.cost_benefit.recommended ? "font-bold text-emerald-400" : "font-bold text-gray-400"}>{cfResult.cost_benefit.recommended ? "Yes" : "No"}</span></span>
+                <span>Complexity: <span className="font-bold text-foreground">{cfResult.cost_benefit.implementation_complexity ?? "?"}</span></span>
+                <span>Recommended: <span className={cfResult.cost_benefit.recommended ? "font-bold text-emerald-400" : "font-bold text-muted-foreground"}>{cfResult.cost_benefit.recommended ? "Yes" : "No"}</span></span>
               </div>
             )}
           </div>

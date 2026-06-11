@@ -99,7 +99,7 @@ const DOOR_STATE_STYLES: Record<string, { bg: string; text: string; border: stri
   unlocked: { bg: "bg-yellow-900/30", text: "text-yellow-400", border: "border-yellow-800/50", icon: Unlock },
   held_open: { bg: "bg-orange-900/30", text: "text-orange-400", border: "border-orange-800/50", icon: DoorOpen },
   forced: { bg: "bg-red-900/30", text: "text-red-400", border: "border-red-800/50", icon: ShieldAlert },
-  unknown: { bg: "bg-gray-800", text: "text-gray-500", border: "border-gray-700", icon: DoorOpen },
+  unknown: { bg: "bg-surface-3", text: "text-muted-foreground", border: "border-border-strong", icon: DoorOpen },
 };
 
 const TABS: { key: TabKey; label: string }[] = [
@@ -183,9 +183,9 @@ function BadgeHolderForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 space-y-4"
+      className="rounded-lg border border-border bg-surface-2/60 p-4 space-y-4"
     >
-      <h3 className="text-sm font-semibold text-gray-200">
+      <h3 className="text-sm font-semibold text-foreground">
         {initial ? "Edit Badge Holder" : "New Badge Holder"}
       </h3>
       {error && (
@@ -195,62 +195,62 @@ function BadgeHolderForm({
       )}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <div>
-          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400">
+          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Badge Number
           </label>
           <input
             type="text"
             value={badgeNumber}
             onChange={(e) => setBadgeNumber(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             placeholder="B-001234"
             required
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400">
+          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
             First Name
           </label>
           <input
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             required
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400">
+          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Last Name
           </label>
           <input
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             required
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400">
+          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Department
           </label>
           <input
             type="text"
             value={department}
             onChange={(e) => setDepartment(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             placeholder="Engineering"
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400">
+          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Access Level
           </label>
           <select
             value={accessLevel}
             onChange={(e) => setAccessLevel(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
           >
             <option value="standard">Standard</option>
             <option value="elevated">Elevated</option>
@@ -272,7 +272,7 @@ function BadgeHolderForm({
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-400 hover:bg-gray-800 transition-colors"
+          className="rounded-lg border border-border-strong px-4 py-2 text-sm text-muted-foreground hover:bg-surface-3 transition-colors"
         >
           Cancel
         </button>
@@ -332,8 +332,8 @@ function AnalyticsTab({ events }: { events: PACSEvent[] }) {
   if (events.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <BarChart2 className="mb-2 h-10 w-10 text-gray-700" />
-        <p className="text-sm text-gray-500">No access events to analyse yet.</p>
+        <BarChart2 className="mb-2 h-10 w-10 text-muted-foreground" />
+        <p className="text-sm text-muted-foreground">No access events to analyse yet.</p>
       </div>
     );
   }
@@ -342,20 +342,20 @@ function AnalyticsTab({ events }: { events: PACSEvent[] }) {
     <div className="space-y-8">
       {/* Events by Hour */}
       <section>
-        <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-300">
+        <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
           <Clock className="h-4 w-4 text-cyan-400" />
           Access Events by Hour
         </h3>
-        <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 space-y-1.5">
+        <div className="rounded-lg border border-border bg-surface-2/60 p-4 space-y-1.5">
           {eventsByHour.map(({ hour, count }) => {
             const pct = (count / maxHourCount) * 100;
             const unusual = hour < 6 || hour >= 20;
             return (
               <div key={hour} className="flex items-center gap-3">
-                <span className="w-12 shrink-0 text-right text-[11px] font-mono text-gray-500">
+                <span className="w-12 shrink-0 text-right text-[11px] font-mono text-muted-foreground">
                   {String(hour).padStart(2, "0")}:00
                 </span>
-                <div className="relative flex-1 h-5 rounded overflow-hidden bg-gray-800/60">
+                <div className="relative flex-1 h-5 rounded overflow-hidden bg-surface-3/60">
                   <div
                     className={cn(
                       "h-full rounded transition-all duration-300",
@@ -367,7 +367,7 @@ function AnalyticsTab({ events }: { events: PACSEvent[] }) {
                 <span
                   className={cn(
                     "w-8 shrink-0 text-right text-[11px] font-mono",
-                    unusual ? "text-orange-400" : "text-gray-400"
+                    unusual ? "text-orange-400" : "text-muted-foreground"
                   )}
                 >
                   {count}
@@ -379,38 +379,38 @@ function AnalyticsTab({ events }: { events: PACSEvent[] }) {
             );
           })}
         </div>
-        <p className="mt-2 text-[11px] text-gray-600">
+        <p className="mt-2 text-[11px] text-muted-foreground">
           Orange bars indicate off-hours access (before 06:00 or after 20:00).
         </p>
       </section>
 
       {/* Top 5 Doors */}
       <section>
-        <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-300">
+        <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
           <DoorOpen className="h-4 w-4 text-cyan-400" />
           Top 5 Most Accessed Doors
         </h3>
         {top5Doors.length === 0 ? (
-          <p className="text-xs text-gray-600">No door data.</p>
+          <p className="text-xs text-muted-foreground">No door data.</p>
         ) : (
-          <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 space-y-3">
+          <div className="rounded-lg border border-border bg-surface-2/60 p-4 space-y-3">
             {top5Doors.map(([doorId, count], idx) => {
               const pct = (count / maxDoorCount) * 100;
               return (
                 <div key={doorId} className="flex items-center gap-3">
-                  <span className="w-5 shrink-0 text-center text-[11px] font-bold text-gray-600">
+                  <span className="w-5 shrink-0 text-center text-[11px] font-bold text-muted-foreground">
                     #{idx + 1}
                   </span>
-                  <span className="w-32 shrink-0 truncate font-mono text-xs text-gray-300">
+                  <span className="w-32 shrink-0 truncate font-mono text-xs text-foreground">
                     {doorId}
                   </span>
-                  <div className="relative flex-1 h-5 rounded overflow-hidden bg-gray-800/60">
+                  <div className="relative flex-1 h-5 rounded overflow-hidden bg-surface-3/60">
                     <div
                       className="h-full rounded bg-cyan-700/70 transition-all duration-300"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <span className="w-10 shrink-0 text-right text-[11px] font-mono text-gray-400">
+                  <span className="w-10 shrink-0 text-right text-[11px] font-mono text-muted-foreground">
                     {count}
                   </span>
                 </div>
@@ -422,7 +422,7 @@ function AnalyticsTab({ events }: { events: PACSEvent[] }) {
 
       {/* Unusual Access Time Highlights */}
       <section>
-        <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-300">
+        <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
           <AlertTriangle className="h-4 w-4 text-orange-400" />
           Off-Hours Access Events
           <span className="ml-1 rounded-full bg-orange-900/40 border border-orange-800 px-2 py-0.5 text-[10px] font-bold text-orange-400">
@@ -430,27 +430,27 @@ function AnalyticsTab({ events }: { events: PACSEvent[] }) {
           </span>
         </h3>
         {unusualEvents.length === 0 ? (
-          <div className="rounded-lg border border-gray-800 bg-gray-900/40 px-4 py-6 text-center text-xs text-gray-600">
+          <div className="rounded-lg border border-border bg-surface-2/40 px-4 py-6 text-center text-xs text-muted-foreground">
             No access events outside business hours (06:00–20:00).
           </div>
         ) : (
           <div className="overflow-x-auto rounded-lg border border-orange-900/30 bg-orange-950/10">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-gray-800 bg-gray-900/60">
-                  <th className="px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">User</th>
-                  <th className="px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Door</th>
-                  <th className="px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Event</th>
-                  <th className="px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Time</th>
+                <tr className="border-b border-border bg-surface-2/60">
+                  <th className="px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">User</th>
+                  <th className="px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Door</th>
+                  <th className="px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Event</th>
+                  <th className="px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Time</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-800/50">
+              <tbody className="divide-y divide-border/50">
                 {unusualEvents.slice(0, 50).map((ev) => (
                   <tr key={ev.id} className="hover:bg-orange-900/10 transition-colors">
-                    <td className="px-4 py-2.5 font-mono text-xs text-gray-300">{ev.user_identifier || "---"}</td>
-                    <td className="px-4 py-2.5 font-mono text-xs text-gray-300">{ev.door_id || "---"}</td>
+                    <td className="px-4 py-2.5 font-mono text-xs text-foreground">{ev.user_identifier || "---"}</td>
+                    <td className="px-4 py-2.5 font-mono text-xs text-foreground">{ev.door_id || "---"}</td>
                     <td className="px-4 py-2.5">
-                      <span className={cn("inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border", EVENT_TYPE_COLORS[ev.event_type] || "bg-gray-800 text-gray-400 border-gray-700")}>
+                      <span className={cn("inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border", EVENT_TYPE_COLORS[ev.event_type] || "bg-surface-3 text-muted-foreground border-border-strong")}>
                         {ev.event_type}
                       </span>
                     </td>
@@ -630,7 +630,7 @@ export default function PACSPage() {
 
   /* ---- Render ---- */
   return (
-    <div className="min-h-screen bg-gray-950 p-6">
+    <div className="min-h-screen bg-surface-0 p-6">
       {/* Toast Notification */}
       {toast && (
         <div
@@ -666,7 +666,7 @@ export default function PACSPage() {
             <h1 className="text-xl font-bold text-cyan-400 tracking-wide">
               Physical Access Control
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Monitor door events, anomalies, badge holders, and access patterns
             </p>
           </div>
@@ -687,7 +687,7 @@ export default function PACSPage() {
           </button>
           <button
             onClick={fetchData}
-            className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="flex items-center gap-2 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             Refresh
@@ -697,12 +697,12 @@ export default function PACSPage() {
 
       {/* Stat Cards */}
       <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-        <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+        <div className="rounded-lg border border-border bg-surface-2/60 p-4">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             <Clock className="h-3.5 w-3.5" />
             Total Events
           </div>
-          <p className="mt-2 text-2xl font-bold text-gray-100">
+          <p className="mt-2 text-2xl font-bold text-foreground">
             {loading ? "--" : totalEvents}
           </p>
         </div>
@@ -724,12 +724,12 @@ export default function PACSPage() {
             {loading ? "--" : deniedEvents}
           </p>
         </div>
-        <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+        <div className="rounded-lg border border-border bg-surface-2/60 p-4">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             <DoorOpen className="h-3.5 w-3.5" />
             Unique Doors
           </div>
-          <p className="mt-2 text-2xl font-bold text-gray-100">
+          <p className="mt-2 text-2xl font-bold text-foreground">
             {loading ? "--" : uniqueDoors}
           </p>
         </div>
@@ -738,7 +738,7 @@ export default function PACSPage() {
             <ShieldAlert className="h-3.5 w-3.5" />
             Anomalies
           </div>
-          <p className={cn("mt-2 text-2xl font-bold", anomalyCount > 0 ? "text-red-400" : "text-gray-100")}>
+          <p className={cn("mt-2 text-2xl font-bold", anomalyCount > 0 ? "text-red-400" : "text-foreground")}>
             {loading ? "--" : anomalyCount}
           </p>
         </div>
@@ -747,14 +747,14 @@ export default function PACSPage() {
             <ShieldOff className="h-3.5 w-3.5" />
             APB Violations
           </div>
-          <p className={cn("mt-2 text-2xl font-bold", apbViolations > 0 ? "text-orange-400" : "text-gray-100")}>
+          <p className={cn("mt-2 text-2xl font-bold", apbViolations > 0 ? "text-orange-400" : "text-foreground")}>
             {loading ? "--" : apbViolations}
           </p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="mb-4 flex gap-1 border-b border-gray-800">
+      <div className="mb-4 flex gap-1 border-b border-border">
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -763,7 +763,7 @@ export default function PACSPage() {
               "px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px",
               tab === t.key
                 ? "border-cyan-400 text-cyan-400"
-                : "border-transparent text-gray-500 hover:text-gray-300"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             )}
           >
             {t.label}
@@ -775,7 +775,7 @@ export default function PACSPage() {
       {loading && (
         <div className="flex flex-col items-center justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-          <p className="mt-3 text-sm text-gray-500">Loading PACS data...</p>
+          <p className="mt-3 text-sm text-muted-foreground">Loading PACS data...</p>
         </div>
       )}
 
@@ -786,7 +786,7 @@ export default function PACSPage() {
           <p className="text-sm text-red-400">{error}</p>
           <button
             onClick={fetchData}
-            className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             Retry
           </button>
@@ -802,7 +802,7 @@ export default function PACSPage() {
               <select
                 value={eventFilter}
                 onChange={(e) => setEventFilter(e.target.value)}
-                className="appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none"
+                className="appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none"
               >
                 <option value="all">All Types</option>
                 <option value="granted">Granted</option>
@@ -811,45 +811,45 @@ export default function PACSPage() {
                 <option value="held_open">Held Open</option>
                 <option value="tailgating">Tailgating</option>
               </select>
-              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             </div>
             <input
               type="text"
               value={doorFilter}
               onChange={(e) => setDoorFilter(e.target.value)}
               placeholder="Filter by door ID..."
-              className="rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-300 placeholder-gray-600 focus:border-cyan-700 focus:outline-none w-48"
+              className="rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none w-48"
             />
-            <span className="text-xs text-gray-500 ml-auto">
+            <span className="text-xs text-muted-foreground ml-auto">
               {filteredEvents.length} event{filteredEvents.length !== 1 && "s"}
             </span>
           </div>
 
-          <div className="overflow-x-auto rounded-lg border border-gray-800 max-h-[60vh] overflow-y-auto">
+          <div className="overflow-x-auto rounded-lg border border-border max-h-[60vh] overflow-y-auto">
             <table className="w-full text-left text-sm">
               <thead className="sticky top-0 z-10">
-                <tr className="border-b border-gray-800 bg-gray-900/80">
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                <tr className="border-b border-border bg-surface-2/80">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     <div className="flex items-center gap-1.5"><User className="h-3 w-3" />User</div>
                   </th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     <div className="flex items-center gap-1.5"><DoorOpen className="h-3 w-3" />Door</div>
                   </th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     Event Type
                   </th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     <div className="flex items-center gap-1.5"><Camera className="h-3 w-3" />Camera</div>
                   </th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     <div className="flex items-center gap-1.5"><Clock className="h-3 w-3" />Timestamp</div>
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-800/50">
+              <tbody className="divide-y divide-border/50">
                 {filteredEvents.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="px-4 py-12 text-center text-sm text-gray-600">
+                    <td colSpan={5} className="px-4 py-12 text-center text-sm text-muted-foreground">
                       No events recorded
                     </td>
                   </tr>
@@ -860,31 +860,31 @@ export default function PACSPage() {
                     <tr
                       key={ev.id}
                       className={cn(
-                        "hover:bg-gray-900/60 transition-colors",
+                        "hover:bg-surface-2/60 transition-colors",
                         unusual ? "bg-orange-950/10" : ""
                       )}
                     >
-                      <td className="px-4 py-3 font-mono text-xs text-gray-300">
+                      <td className="px-4 py-3 font-mono text-xs text-foreground">
                         {ev.user_identifier || "---"}
                       </td>
-                      <td className="px-4 py-3 font-mono text-xs text-gray-300">
+                      <td className="px-4 py-3 font-mono text-xs text-foreground">
                         {ev.door_id || "---"}
                       </td>
                       <td className="px-4 py-3">
                         <span
                           className={cn(
                             "inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border",
-                            EVENT_TYPE_COLORS[ev.event_type] || "bg-gray-800 text-gray-400 border-gray-700"
+                            EVENT_TYPE_COLORS[ev.event_type] || "bg-surface-3 text-muted-foreground border-border-strong"
                           )}
                         >
                           {ev.event_type}
                         </span>
                       </td>
-                      <td className="px-4 py-3 font-mono text-xs text-gray-500">
+                      <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
                         {ev.camera_id || "---"}
                       </td>
                       <td className="px-4 py-3 text-xs">
-                        <span className={unusual ? "text-orange-400 font-medium" : "text-gray-500"}>
+                        <span className={unusual ? "text-orange-400 font-medium" : "text-muted-foreground"}>
                           {ev.timestamp ? formatTimestamp(ev.timestamp) : "---"}
                         </span>
                         {unusual && (
@@ -904,46 +904,46 @@ export default function PACSPage() {
 
       {/* ---- Anomalies Tab ---- */}
       {!loading && !error && tab === "anomalies" && (
-        <div className="overflow-x-auto rounded-lg border border-gray-800">
+        <div className="overflow-x-auto rounded-lg border border-border">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-gray-800 bg-gray-900/80">
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">User</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Door</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Event Type</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Severity</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Camera</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Timestamp</th>
+              <tr className="border-b border-border bg-surface-2/80">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">User</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Door</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Event Type</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Severity</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Camera</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Timestamp</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-800/50">
+            <tbody className="divide-y divide-border/50">
               {anomalies.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-12 text-center text-sm text-gray-600">
+                  <td colSpan={6} className="px-4 py-12 text-center text-sm text-muted-foreground">
                     No anomalies detected
                   </td>
                 </tr>
               )}
               {anomalies.map((a) => (
-                <tr key={a.id} className="hover:bg-gray-900/60 transition-colors">
-                  <td className="px-4 py-3 font-mono text-xs text-gray-300">{a.user_identifier || "---"}</td>
-                  <td className="px-4 py-3 font-mono text-xs text-gray-300">{a.door_id || "---"}</td>
+                <tr key={a.id} className="hover:bg-surface-2/60 transition-colors">
+                  <td className="px-4 py-3 font-mono text-xs text-foreground">{a.user_identifier || "---"}</td>
+                  <td className="px-4 py-3 font-mono text-xs text-foreground">{a.door_id || "---"}</td>
                   <td className="px-4 py-3">
-                    <span className={cn("inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border", EVENT_TYPE_COLORS[a.event_type] || "bg-gray-800 text-gray-400 border-gray-700")}>
+                    <span className={cn("inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border", EVENT_TYPE_COLORS[a.event_type] || "bg-surface-3 text-muted-foreground border-border-strong")}>
                       {a.event_type}
                     </span>
                   </td>
                   <td className="px-4 py-3">
                     {a.severity ? (
-                      <span className={cn("inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border", SEVERITY_BADGE[a.severity] || "bg-gray-800 text-gray-400 border-gray-700")}>
+                      <span className={cn("inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border", SEVERITY_BADGE[a.severity] || "bg-surface-3 text-muted-foreground border-border-strong")}>
                         {a.severity}
                       </span>
                     ) : (
-                      <span className="text-xs text-gray-600">---</span>
+                      <span className="text-xs text-muted-foreground">---</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 font-mono text-xs text-gray-500">{a.camera_id || "---"}</td>
-                  <td className="px-4 py-3 text-xs text-gray-500">{a.timestamp ? formatTimestamp(a.timestamp) : "---"}</td>
+                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{a.camera_id || "---"}</td>
+                  <td className="px-4 py-3 text-xs text-muted-foreground">{a.timestamp ? formatTimestamp(a.timestamp) : "---"}</td>
                 </tr>
               ))}
             </tbody>
@@ -966,14 +966,14 @@ export default function PACSPage() {
                   <div
                     key={d.id}
                     className={cn(
-                      "rounded-lg border bg-gray-900/60 p-5 transition-colors hover:border-cyan-800/50",
+                      "rounded-lg border bg-surface-2/60 p-5 transition-colors hover:border-cyan-800/50",
                       doorStyle.border
                     )}
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <DoorIcon className={cn("h-4 w-4", doorStyle.text)} />
-                        <span className="font-mono text-sm font-semibold text-gray-200">
+                        <span className="font-mono text-sm font-semibold text-foreground">
                           {d.name || d.door_id}
                         </span>
                       </div>
@@ -997,7 +997,7 @@ export default function PACSPage() {
                       </div>
                     </div>
                     {d.zone && (
-                      <p className="text-xs text-gray-500 mb-2">Zone: <span className="text-gray-300">{d.zone}</span></p>
+                      <p className="text-xs text-muted-foreground mb-2">Zone: <span className="text-foreground">{d.zone}</span></p>
                     )}
                     {/* Visitor integration indicator */}
                     {visitorCount > 0 && (
@@ -1009,11 +1009,11 @@ export default function PACSPage() {
                       </div>
                     )}
                     {d.last_event_time && (
-                      <p className="text-xs text-gray-500 mb-3">
-                        Last event: <span className="text-gray-300">{formatTimestamp(d.last_event_time)}</span>
+                      <p className="text-xs text-muted-foreground mb-3">
+                        Last event: <span className="text-foreground">{formatTimestamp(d.last_event_time)}</span>
                       </p>
                     )}
-                    <div className="flex gap-2 pt-3 border-t border-gray-800/60">
+                    <div className="flex gap-2 pt-3 border-t border-border/60">
                       <button
                         onClick={() => handleLockUnlock(d.id, "lock")}
                         disabled={isActioning || d.state === "locked"}
@@ -1042,12 +1042,12 @@ export default function PACSPage() {
                 return (
                   <div
                     key={d.door_id}
-                    className="rounded-lg border border-gray-800 bg-gray-900/60 p-5 transition-colors hover:border-cyan-800/50"
+                    className="rounded-lg border border-border bg-surface-2/60 p-5 transition-colors hover:border-cyan-800/50"
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <DoorOpen className="h-4 w-4 text-cyan-400" />
-                        <span className="font-mono text-sm font-semibold text-gray-200">{d.door_id}</span>
+                        <span className="font-mono text-sm font-semibold text-foreground">{d.door_id}</span>
                       </div>
                       {passbackCount > 0 && (
                         <span
@@ -1060,9 +1060,9 @@ export default function PACSPage() {
                       )}
                     </div>
                     <div className="flex items-center gap-2">
-                      <Hash className="h-3.5 w-3.5 text-gray-600" />
-                      <span className="text-xs text-gray-500">Events:</span>
-                      <span className="font-mono text-lg font-bold text-gray-100">{d.event_count}</span>
+                      <Hash className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className="text-xs text-muted-foreground">Events:</span>
+                      <span className="font-mono text-lg font-bold text-foreground">{d.event_count}</span>
                     </div>
                   </div>
                 );
@@ -1070,8 +1070,8 @@ export default function PACSPage() {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-20">
-              <DoorOpen className="mb-2 h-10 w-10 text-gray-700" />
-              <p className="text-sm text-gray-500">No door data available</p>
+              <DoorOpen className="mb-2 h-10 w-10 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">No door data available</p>
             </div>
           )}
         </div>
@@ -1083,16 +1083,16 @@ export default function PACSPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
                 <input
                   type="text"
                   value={badgeSearch}
                   onChange={(e) => setBadgeSearch(e.target.value)}
                   placeholder="Search badge holders..."
-                  className="rounded-lg border border-gray-700 bg-gray-900 pl-9 pr-3 py-2 text-xs text-gray-300 placeholder-gray-600 focus:border-cyan-700 focus:outline-none w-64"
+                  className="rounded-lg border border-border-strong bg-surface-2 pl-9 pr-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none w-64"
                 />
               </div>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-muted-foreground">
                 {filteredBadges.length} holder{filteredBadges.length !== 1 && "s"}
               </span>
             </div>
@@ -1123,33 +1123,33 @@ export default function PACSPage() {
             />
           )}
 
-          <div className="overflow-x-auto rounded-lg border border-gray-800">
+          <div className="overflow-x-auto rounded-lg border border-border">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-gray-800 bg-gray-900/80">
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Badge #</th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Name</th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Department</th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Access Level</th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Status</th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Actions</th>
+                <tr className="border-b border-border bg-surface-2/80">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Badge #</th>
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Name</th>
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Department</th>
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Access Level</th>
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Status</th>
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-800/50">
+              <tbody className="divide-y divide-border/50">
                 {filteredBadges.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="px-4 py-12 text-center text-sm text-gray-600">
+                    <td colSpan={6} className="px-4 py-12 text-center text-sm text-muted-foreground">
                       No badge holders found
                     </td>
                   </tr>
                 )}
                 {filteredBadges.map((badge) => (
-                  <tr key={badge.id} className="hover:bg-gray-900/60 transition-colors">
-                    <td className="px-4 py-3 font-mono text-xs text-gray-300">{badge.badge_number}</td>
-                    <td className="px-4 py-3 text-xs text-gray-200">
+                  <tr key={badge.id} className="hover:bg-surface-2/60 transition-colors">
+                    <td className="px-4 py-3 font-mono text-xs text-foreground">{badge.badge_number}</td>
+                    <td className="px-4 py-3 text-xs text-foreground">
                       {badge.first_name} {badge.last_name}
                     </td>
-                    <td className="px-4 py-3 text-xs text-gray-400">{badge.department || "---"}</td>
+                    <td className="px-4 py-3 text-xs text-muted-foreground">{badge.department || "---"}</td>
                     <td className="px-4 py-3">
                       <span className="rounded bg-cyan-900/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-cyan-400 border border-cyan-800/50">
                         {badge.access_level}
@@ -1161,7 +1161,7 @@ export default function PACSPage() {
                           <CheckCircle2 className="h-3 w-3" /> Active
                         </span>
                       ) : (
-                        <span className="flex items-center gap-1 text-xs text-gray-500">
+                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
                           <XCircle className="h-3 w-3" /> Inactive
                         </span>
                       )}
@@ -1172,7 +1172,7 @@ export default function PACSPage() {
                           setEditingBadge(badge);
                           setShowBadgeForm(true);
                         }}
-                        className="rounded p-1 text-gray-500 transition-colors hover:bg-gray-800 hover:text-cyan-400"
+                        className="rounded p-1 text-muted-foreground transition-colors hover:bg-surface-3 hover:text-cyan-400"
                         title="Edit"
                       >
                         <Edit3 className="h-3.5 w-3.5" />

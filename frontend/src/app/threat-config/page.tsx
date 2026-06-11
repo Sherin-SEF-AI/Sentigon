@@ -218,7 +218,7 @@ const SEVERITY_COLORS: Record<string, string> = {
   high: "text-orange-400 bg-orange-900/30 border-orange-800/50",
   medium: "text-yellow-400 bg-yellow-900/30 border-yellow-800/50",
   low: "text-blue-400 bg-blue-900/30 border-blue-800/50",
-  info: "text-gray-400 bg-gray-800/30 border-gray-700/50",
+  info: "text-muted-foreground bg-surface-3/30 border-border-strong/50",
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -282,12 +282,12 @@ function SensitivitySlider({
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <div>
-          <span className="text-sm font-medium text-gray-200">{label}</span>
-          <p className="text-xs text-gray-500">{description}</p>
+          <span className="text-sm font-medium text-foreground">{label}</span>
+          <p className="text-xs text-muted-foreground">{description}</p>
         </div>
         <span className={`text-sm font-bold tabular-nums ${color}`}>{pct}%</span>
       </div>
-      <div className="relative h-2 rounded-full bg-gray-800">
+      <div className="relative h-2 rounded-full bg-surface-3">
         <div
           className={`absolute left-0 top-0 h-2 rounded-full bg-gradient-to-r ${barColor} transition-all duration-300`}
           style={{ width: `${pct}%` }}
@@ -321,11 +321,11 @@ function StatCard({
   color?: string;
 }) {
   return (
-    <div className="flex items-center gap-2.5 rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2">
+    <div className="flex items-center gap-2.5 rounded-lg border border-border bg-surface-2/50 px-3 py-2">
       <Icon className={`h-4 w-4 ${color} shrink-0`} />
       <div>
         <div className={`text-sm font-bold tabular-nums ${color}`}>{value}</div>
-        <div className="text-[10px] text-gray-500">{label}</div>
+        <div className="text-[10px] text-muted-foreground">{label}</div>
       </div>
     </div>
   );
@@ -776,10 +776,10 @@ export default function ThreatConfigPage() {
 
   if (loading) {
     return (
-      <div className="flex h-full items-center justify-center bg-gray-950">
+      <div className="flex h-full items-center justify-center bg-surface-0">
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-          <span className="text-sm text-gray-500">Loading threat configuration...</span>
+          <span className="text-sm text-muted-foreground">Loading threat configuration...</span>
         </div>
       </div>
     );
@@ -811,19 +811,19 @@ export default function ThreatConfigPage() {
   ];
 
   return (
-    <div className="flex h-full flex-col bg-gray-950">
+    <div className="flex h-full flex-col bg-surface-0">
       {/* ── Header ── */}
-      <div className="border-b border-gray-800 px-6 py-4">
+      <div className="border-b border-border px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-900/30 border border-cyan-800/50">
               <Zap className="h-5 w-5 text-cyan-400" />
             </div>
             <div>
-              <h1 className="text-lg font-bold tracking-wide text-gray-100">
+              <h1 className="text-lg font-bold tracking-wide text-foreground">
                 Adaptive Threat Configuration
               </h1>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 Deploy AI sentinels, tune detection, manage environment profiles & schedules
               </p>
             </div>
@@ -854,18 +854,18 @@ export default function ThreatConfigPage() {
       </div>
 
       {/* ── NLP Command Bar ── */}
-      <div className="border-b border-gray-800 bg-gray-900/50 px-6 py-4">
+      <div className="border-b border-border bg-surface-2/50 px-6 py-4">
         <div className="mx-auto max-w-4xl">
           <div className="mb-3 flex items-center gap-2">
             <Shield className="h-4 w-4 text-cyan-400" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Natural Language Deployment
             </span>
           </div>
 
           {/* Chat History */}
           {nlpHistory.length > 0 && (
-            <div className="mb-3 max-h-64 space-y-2 overflow-y-auto rounded-lg border border-gray-800 bg-gray-950/50 p-3">
+            <div className="mb-3 max-h-64 space-y-2 overflow-y-auto rounded-lg border border-border bg-surface-0/50 p-3">
               {nlpHistory.map((msg, i) => (
                 <div
                   key={i}
@@ -877,7 +877,7 @@ export default function ThreatConfigPage() {
                         ? "bg-cyan-900/30 text-cyan-100 border border-cyan-800/50"
                         : msg.role === "error"
                           ? "bg-red-900/30 text-red-300 border border-red-800/50"
-                          : "bg-gray-800 text-gray-200 border border-gray-700"
+                          : "bg-surface-3 text-foreground border border-border-strong"
                     }`}
                   >
                     {msg.role === "assistant" ? (
@@ -890,7 +890,7 @@ export default function ThreatConfigPage() {
               ))}
               {nlpProcessing && (
                 <div className="flex justify-start">
-                  <div className="flex items-center gap-2 rounded-lg bg-gray-800 px-3 py-2 text-sm text-gray-400 border border-gray-700">
+                  <div className="flex items-center gap-2 rounded-lg bg-surface-3 px-3 py-2 text-sm text-muted-foreground border border-border-strong">
                     <Loader2 className="h-3 w-3 animate-spin" />
                     Sentinel Cortex is processing...
                   </div>
@@ -908,7 +908,7 @@ export default function ThreatConfigPage() {
               onChange={(e) => setNlpCommand(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && sendNlpCommand()}
               placeholder='Try: "Activate perimeter defense with max sensitivity"'
-              className="flex-1 rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-sm text-gray-100 placeholder-gray-500 outline-none focus:border-cyan-600 focus:ring-1 focus:ring-cyan-600/50 transition-colors"
+              className="flex-1 rounded-lg border border-border-strong bg-surface-3 px-4 py-2.5 text-sm text-foreground placeholder-gray-500 outline-none focus:border-cyan-600 focus:ring-1 focus:ring-cyan-600/50 transition-colors"
             />
             <button
               onClick={sendNlpCommand}
@@ -932,7 +932,7 @@ export default function ThreatConfigPage() {
                   onClick={() => {
                     setNlpCommand(suggestion);
                   }}
-                  className="rounded-full border border-gray-700 bg-gray-800/60 px-3 py-1 text-[10px] text-gray-400 transition-colors hover:border-cyan-700/50 hover:text-cyan-400"
+                  className="rounded-full border border-border-strong bg-surface-3/60 px-3 py-1 text-[10px] text-muted-foreground transition-colors hover:border-cyan-700/50 hover:text-cyan-400"
                 >
                   {suggestion}
                 </button>
@@ -959,7 +959,7 @@ export default function ThreatConfigPage() {
       )}
 
       {/* ── Tab Navigation ── */}
-      <div className="border-b border-gray-800 px-6 overflow-x-auto">
+      <div className="border-b border-border px-6 overflow-x-auto">
         <div className="flex gap-1">
           {TABS.map(({ key, label, icon: Icon }) => (
             <button
@@ -968,7 +968,7 @@ export default function ThreatConfigPage() {
               className={`flex items-center gap-2 px-4 py-3 text-xs font-medium border-b-2 transition-colors whitespace-nowrap ${
                 activeTab === key
                   ? "border-cyan-400 text-cyan-400"
-                  : "border-transparent text-gray-500 hover:text-gray-300"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
               }`}
             >
               <Icon className="h-3.5 w-3.5" />
@@ -984,10 +984,10 @@ export default function ThreatConfigPage() {
         {activeTab === "protocols" && (
           <div className="mx-auto max-w-4xl space-y-8">
             {/* ──── Quick Deploy Protocols ──── */}
-            <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6">
+            <div className="rounded-xl border border-border bg-surface-2/50 p-6">
               <div className="mb-5 flex items-center gap-2">
                 <Zap className="h-4 w-4 text-cyan-400" />
-                <span className="text-xs font-bold uppercase tracking-widest text-gray-400">
+                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                   Quick Deploy Protocols
                 </span>
               </div>
@@ -1011,7 +1011,7 @@ export default function ThreatConfigPage() {
                       className={`group flex flex-col items-start gap-2 rounded-lg border p-4 text-left transition-all duration-200 ${
                         isSelected || isDeployed
                           ? "border-cyan-700/60 bg-cyan-950/30 shadow-lg shadow-cyan-950/20"
-                          : "border-gray-700/60 bg-gray-800/40 hover:border-gray-600 hover:bg-gray-800/70"
+                          : "border-border-strong/60 bg-surface-3/40 hover:border-border-strong hover:bg-surface-3/70"
                       } disabled:cursor-wait`}
                     >
                       <div className="flex items-center gap-2.5">
@@ -1019,14 +1019,14 @@ export default function ThreatConfigPage() {
                           className={`flex h-7 w-7 items-center justify-center rounded-full border ${
                             isSelected || isDeployed
                               ? "border-cyan-600/60 bg-cyan-900/40"
-                              : "border-gray-600/60 bg-gray-700/40"
+                              : "border-border-strong/60 bg-surface-3/40"
                           }`}
                         >
                           <Icon
                             className={`h-3.5 w-3.5 ${
                               isSelected || isDeployed
                                 ? "text-cyan-400"
-                                : "text-gray-400 group-hover:text-gray-300"
+                                : "text-muted-foreground group-hover:text-foreground"
                             }`}
                           />
                         </div>
@@ -1034,13 +1034,13 @@ export default function ThreatConfigPage() {
                           className={`text-sm font-semibold ${
                             isSelected || isDeployed
                               ? "text-cyan-100"
-                              : "text-gray-200 group-hover:text-gray-100"
+                              : "text-foreground group-hover:text-foreground"
                           }`}
                         >
                           {scenario.name}
                         </span>
                       </div>
-                      <p className="text-xs leading-relaxed text-gray-500">
+                      <p className="text-xs leading-relaxed text-muted-foreground">
                         {scenario.description}
                       </p>
                     </button>
@@ -1050,10 +1050,10 @@ export default function ThreatConfigPage() {
             </div>
 
             {/* ──── Custom Definition ──── */}
-            <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6">
+            <div className="rounded-xl border border-border bg-surface-2/50 p-6">
               <div className="mb-4 flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-cyan-400" />
-                <span className="text-xs font-bold uppercase tracking-widest text-gray-400">
+                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                   Custom Definition
                 </span>
               </div>
@@ -1070,7 +1070,7 @@ export default function ThreatConfigPage() {
                   }}
                   placeholder="Describe a threat scenario..."
                   rows={3}
-                  className="w-full resize-none rounded-lg border border-gray-700 bg-gray-800/60 px-4 py-3 text-sm text-gray-100 placeholder-gray-600 outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
+                  className="w-full resize-none rounded-lg border border-border-strong bg-surface-3/60 px-4 py-3 text-sm text-foreground placeholder-gray-600 outline-none transition-colors focus:border-cyan-700 focus:ring-1 focus:ring-cyan-700/50"
                 />
                 <div className="flex justify-end">
                   <button
@@ -1092,8 +1092,8 @@ export default function ThreatConfigPage() {
             {/* ──── Full Protocol Presets ──── */}
             <div>
               <div className="mb-4 flex items-center gap-2">
-                <Shield className="h-4 w-4 text-gray-500" />
-                <span className="text-xs font-bold uppercase tracking-widest text-gray-500">
+                <Shield className="h-4 w-4 text-muted-foreground" />
+                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                   Full Protocol Presets
                 </span>
               </div>
@@ -1110,7 +1110,7 @@ export default function ThreatConfigPage() {
                       className={`group relative rounded-xl border p-5 transition-all duration-300 ${
                         isActive
                           ? `${colors.border} ${colors.bg} shadow-lg ${colors.glow}`
-                          : "border-gray-800 bg-gray-900/50 hover:border-gray-700 hover:bg-gray-900"
+                          : "border-border bg-surface-2/50 hover:border-border-strong hover:bg-surface-2"
                       }`}
                     >
                       {isActive && (
@@ -1127,14 +1127,14 @@ export default function ThreatConfigPage() {
                           <Icon className={`h-5 w-5 ${colors.text}`} />
                         </div>
                         <div>
-                          <h3 className="text-sm font-bold text-gray-100">{protocol.name}</h3>
-                          <p className="text-xs text-gray-500">
+                          <h3 className="text-sm font-bold text-foreground">{protocol.name}</h3>
+                          <p className="text-xs text-muted-foreground">
                             {Object.values(protocol.agents).flat().length} agents
                           </p>
                         </div>
                       </div>
 
-                      <p className="mb-4 text-xs leading-relaxed text-gray-400">
+                      <p className="mb-4 text-xs leading-relaxed text-muted-foreground">
                         {protocol.description}
                       </p>
 
@@ -1147,14 +1147,14 @@ export default function ThreatConfigPage() {
                               key={tier}
                               className={`rounded px-1.5 py-1 text-center ${
                                 active
-                                  ? "bg-gray-800 border border-gray-700"
-                                  : "bg-gray-900 border border-gray-800 opacity-40"
+                                  ? "bg-surface-3 border border-border-strong"
+                                  : "bg-surface-2 border border-border opacity-40"
                               }`}
                             >
-                              <div className={`text-[10px] font-bold uppercase ${active ? "text-gray-300" : "text-gray-600"}`}>
+                              <div className={`text-[10px] font-bold uppercase ${active ? "text-foreground" : "text-muted-foreground"}`}>
                                 {tier.slice(0, 4)}
                               </div>
-                              <div className={`text-xs font-semibold ${active ? colors.text : "text-gray-600"}`}>
+                              <div className={`text-xs font-semibold ${active ? colors.text : "text-muted-foreground"}`}>
                                 {tierAgents.length}
                               </div>
                             </div>
@@ -1165,7 +1165,7 @@ export default function ThreatConfigPage() {
                       <div className="mb-4 space-y-1">
                         {Object.entries(protocol.sensitivity).map(([key, val]) => (
                           <div key={key} className="flex items-center gap-2">
-                            <div className="h-1 flex-1 rounded-full bg-gray-800">
+                            <div className="h-1 flex-1 rounded-full bg-surface-3">
                               <div
                                 className={`h-1 rounded-full bg-gradient-to-r ${
                                   val >= 0.8 ? "from-red-600 to-red-400" : val >= 0.6 ? "from-yellow-600 to-yellow-400" : "from-emerald-600 to-emerald-400"
@@ -1173,7 +1173,7 @@ export default function ThreatConfigPage() {
                                 style={{ width: `${val * 100}%` }}
                               />
                             </div>
-                            <span className="w-8 text-right text-[10px] text-gray-500 tabular-nums">
+                            <span className="w-8 text-right text-[10px] text-muted-foreground tabular-nums">
                               {Math.round(val * 100)}%
                             </span>
                           </div>
@@ -1187,8 +1187,8 @@ export default function ThreatConfigPage() {
                           isActive
                             ? `${colors.bg} ${colors.text} border ${colors.border} cursor-default`
                             : isDeploying
-                              ? "bg-gray-800 text-gray-400 border border-gray-700 cursor-wait"
-                              : "bg-gray-800 text-gray-300 border border-gray-700 hover:bg-gray-700 hover:text-gray-100"
+                              ? "bg-surface-3 text-muted-foreground border border-border-strong cursor-wait"
+                              : "bg-surface-3 text-foreground border border-border-strong hover:bg-surface-3 hover:text-foreground"
                         }`}
                       >
                         {isDeploying ? (
@@ -1216,10 +1216,10 @@ export default function ThreatConfigPage() {
 
             {/* ──── Deployment History ──── */}
             {deployedScenarios.length > 0 && (
-              <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6">
+              <div className="rounded-xl border border-border bg-surface-2/50 p-6">
                 <div className="mb-4 flex items-center gap-2">
-                  <History className="h-4 w-4 text-gray-500" />
-                  <span className="text-xs font-bold uppercase tracking-widest text-gray-500">
+                  <History className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                     Deployment History
                   </span>
                 </div>
@@ -1231,7 +1231,7 @@ export default function ThreatConfigPage() {
                         "flex items-center justify-between rounded-lg border px-4 py-2.5",
                         d.status === "active"
                           ? "border-cyan-800/50 bg-cyan-900/10"
-                          : "border-gray-800 bg-gray-900/30 opacity-60"
+                          : "border-border bg-surface-2/30 opacity-60"
                       )}
                     >
                       <div className="flex items-center gap-3">
@@ -1240,8 +1240,8 @@ export default function ThreatConfigPage() {
                           d.status === "active" ? "bg-cyan-400 animate-pulse" : "bg-gray-600"
                         )} />
                         <div>
-                          <span className="text-xs font-medium text-gray-200">{d.scenario_name}</span>
-                          <span className="ml-2 text-[10px] text-gray-500">
+                          <span className="text-xs font-medium text-foreground">{d.scenario_name}</span>
+                          <span className="ml-2 text-[10px] text-muted-foreground">
                             {new Date(d.deployed_at).toLocaleString("en-US", { month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false })}
                           </span>
                         </div>
@@ -1266,15 +1266,15 @@ export default function ThreatConfigPage() {
         {/* ──────── Sensitivity Tab ──────── */}
         {activeTab === "sensitivity" && (
           <div className="mx-auto max-w-2xl space-y-6">
-            <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6">
+            <div className="rounded-xl border border-border bg-surface-2/50 p-6">
               <div className="mb-6 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-900/30 border border-yellow-800/50">
                     <Sliders className="h-5 w-5 text-yellow-400" />
                   </div>
                   <div>
-                    <h2 className="text-sm font-bold text-gray-100">Detection Sensitivity</h2>
-                    <p className="text-xs text-gray-500">Fine-tune how aggressively agents detect threats</p>
+                    <h2 className="text-sm font-bold text-foreground">Detection Sensitivity</h2>
+                    <p className="text-xs text-muted-foreground">Fine-tune how aggressively agents detect threats</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -1285,7 +1285,7 @@ export default function ThreatConfigPage() {
                       "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors",
                       dryRunMode
                         ? "border-amber-700/60 bg-amber-900/30 text-amber-400"
-                        : "border-gray-700 bg-gray-800 text-gray-400 hover:text-gray-200"
+                        : "border-border-strong bg-surface-3 text-muted-foreground hover:text-foreground"
                     )}
                     title="Toggle dry-run mode"
                   >
@@ -1315,7 +1315,7 @@ export default function ThreatConfigPage() {
               {/* Config Impact Preview */}
               <div className={cn(
                 "mb-5 rounded-lg border px-4 py-3 flex items-center gap-3",
-                alertVolumeLoading ? "border-gray-800 bg-gray-900/30" : "border-blue-900/40 bg-blue-950/20"
+                alertVolumeLoading ? "border-border bg-surface-2/30" : "border-blue-900/40 bg-blue-950/20"
               )}>
                 <Activity className="h-4 w-4 text-blue-400 shrink-0" />
                 <span className="text-xs text-blue-300">
@@ -1365,8 +1365,8 @@ export default function ThreatConfigPage() {
             </div>
 
             {/* Sensitivity Radar Visual */}
-            <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6">
-              <h3 className="mb-4 text-sm font-bold text-gray-100">Sensitivity Profile</h3>
+            <div className="rounded-xl border border-border bg-surface-2/50 p-6">
+              <h3 className="mb-4 text-sm font-bold text-foreground">Sensitivity Profile</h3>
               <div className="flex items-center justify-center">
                 <svg width="240" height="200" viewBox="0 0 240 200" className="overflow-visible">
                   {/* Radar background rings */}
@@ -1414,8 +1414,8 @@ export default function ThreatConfigPage() {
             </div>
 
             {/* Presets */}
-            <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6">
-              <h3 className="mb-4 text-sm font-bold text-gray-100">Quick Presets</h3>
+            <div className="rounded-xl border border-border bg-surface-2/50 p-6">
+              <h3 className="mb-4 text-sm font-bold text-foreground">Quick Presets</h3>
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { label: "Conservative", desc: "Low false positives", color: "border-emerald-700/50", vals: { perception_sensitivity: 0.5, anomaly_threshold: 0.8, threat_escalation_threshold: 0.9, crowd_density_threshold: 0.85 } },
@@ -1425,24 +1425,24 @@ export default function ThreatConfigPage() {
                   <button
                     key={preset.label}
                     onClick={() => setSensitivity(preset.vals)}
-                    className={`rounded-lg border ${preset.color} bg-gray-800 p-3 text-left transition-colors hover:bg-gray-800/80`}
+                    className={`rounded-lg border ${preset.color} bg-surface-3 p-3 text-left transition-colors hover:bg-surface-3/80`}
                   >
-                    <div className="text-xs font-semibold text-gray-200">{preset.label}</div>
-                    <div className="text-[10px] text-gray-500">{preset.desc}</div>
+                    <div className="text-xs font-semibold text-foreground">{preset.label}</div>
+                    <div className="text-[10px] text-muted-foreground">{preset.desc}</div>
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Version History */}
-            <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6">
+            <div className="rounded-xl border border-border bg-surface-2/50 p-6">
               <div className="mb-4 flex items-center gap-2">
-                <History className="h-4 w-4 text-gray-500" />
-                <h3 className="text-sm font-bold text-gray-100">Version History</h3>
-                <span className="ml-auto text-[10px] text-gray-600">(local — saved sessions)</span>
+                <History className="h-4 w-4 text-muted-foreground" />
+                <h3 className="text-sm font-bold text-foreground">Version History</h3>
+                <span className="ml-auto text-[10px] text-muted-foreground">(local — saved sessions)</span>
               </div>
               {versionHistory.length === 0 ? (
-                <p className="text-xs text-gray-600 text-center py-4">
+                <p className="text-xs text-muted-foreground text-center py-4">
                   No saved versions yet. Save your sensitivity settings to start tracking changes.
                 </p>
               ) : (
@@ -1454,7 +1454,7 @@ export default function ThreatConfigPage() {
                         "flex items-center justify-between rounded-lg border px-4 py-2.5",
                         i === 0
                           ? "border-cyan-800/50 bg-cyan-900/10"
-                          : "border-gray-800 bg-gray-900/30 opacity-70"
+                          : "border-border bg-surface-2/30 opacity-70"
                       )}
                     >
                       <div className="flex items-center gap-3">
@@ -1463,7 +1463,7 @@ export default function ThreatConfigPage() {
                           i === 0 ? "bg-cyan-400 animate-pulse" : "bg-gray-600"
                         )} />
                         <div>
-                          <span className="text-xs font-medium text-gray-200">{v.label}</span>
+                          <span className="text-xs font-medium text-foreground">{v.label}</span>
                           {i === 0 && (
                             <span className="ml-2 rounded-full border border-cyan-700/50 bg-cyan-900/30 px-2 py-0.5 text-[9px] font-bold text-cyan-400">
                               LATEST
@@ -1471,7 +1471,7 @@ export default function ThreatConfigPage() {
                           )}
                         </div>
                       </div>
-                      <span className="text-[10px] text-gray-500 font-mono">
+                      <span className="text-[10px] text-muted-foreground font-mono">
                         {new Date(v.saved_at).toLocaleString("en-US", {
                           month: "short", day: "2-digit",
                           hour: "2-digit", minute: "2-digit", hour12: false,
@@ -1490,10 +1490,10 @@ export default function ThreatConfigPage() {
           <div className="mx-auto max-w-3xl space-y-4">
             {/* Header */}
             <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-400">
-                <span className="font-semibold text-gray-200">{rules.filter((r) => r.enabled).length}</span>
+              <div className="text-sm text-muted-foreground">
+                <span className="font-semibold text-foreground">{rules.filter((r) => r.enabled).length}</span>
                 {" "}active rules of{" "}
-                <span className="font-semibold text-gray-200">{rules.length}</span> total
+                <span className="font-semibold text-foreground">{rules.length}</span> total
               </div>
               <button
                 onClick={() => setShowNewRule(true)}
@@ -1511,7 +1511,7 @@ export default function ThreatConfigPage() {
                 value={ruleSearch}
                 onChange={(e) => setRuleSearch(e.target.value)}
                 placeholder="Search rules by name..."
-                className="flex-1 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                className="flex-1 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
               />
               {rulesCategoryFilter !== "all" && (
                 <>
@@ -1539,7 +1539,7 @@ export default function ThreatConfigPage() {
                   "rounded-full border px-3 py-1 text-[10px] font-medium transition-colors",
                   rulesCategoryFilter === "all"
                     ? "border-cyan-700/60 bg-cyan-900/30 text-cyan-400"
-                    : "border-gray-700 bg-gray-800/60 text-gray-400 hover:text-gray-300"
+                    : "border-border-strong bg-surface-3/60 text-muted-foreground hover:text-foreground"
                 )}
               >
                 All ({rules.length})
@@ -1552,7 +1552,7 @@ export default function ThreatConfigPage() {
                     "rounded-full border px-3 py-1 text-[10px] font-medium transition-colors",
                     rulesCategoryFilter === cat
                       ? "border-cyan-700/60 bg-cyan-900/30 text-cyan-400"
-                      : "border-gray-700 bg-gray-800/60 text-gray-400 hover:text-gray-300"
+                      : "border-border-strong bg-surface-3/60 text-muted-foreground hover:text-foreground"
                   )}
                 >
                   {CATEGORY_LABELS[cat] || cat} ({rules.filter((r) => r.category === cat).length})
@@ -1569,20 +1569,20 @@ export default function ThreatConfigPage() {
                   placeholder="Rule name"
                   value={newRule.name}
                   onChange={(e) => setNewRule((r) => ({ ...r, name: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 outline-none focus:border-cyan-600"
+                  className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground outline-none focus:border-cyan-600"
                 />
                 <input
                   type="text"
                   placeholder="Description"
                   value={newRule.description}
                   onChange={(e) => setNewRule((r) => ({ ...r, description: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 outline-none focus:border-cyan-600"
+                  className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground outline-none focus:border-cyan-600"
                 />
                 <div className="flex gap-3">
                   <select
                     value={newRule.category}
                     onChange={(e) => setNewRule((r) => ({ ...r, category: e.target.value }))}
-                    className="flex-1 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 outline-none"
+                    className="flex-1 rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground outline-none"
                   >
                     {Object.entries(CATEGORY_LABELS).map(([k, v]) => (
                       <option key={k} value={k}>{v}</option>
@@ -1591,7 +1591,7 @@ export default function ThreatConfigPage() {
                   <select
                     value={newRule.severity}
                     onChange={(e) => setNewRule((r) => ({ ...r, severity: e.target.value }))}
-                    className="flex-1 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 outline-none"
+                    className="flex-1 rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground outline-none"
                   >
                     <option value="critical">Critical</option>
                     <option value="high">High</option>
@@ -1610,7 +1610,7 @@ export default function ThreatConfigPage() {
                   </button>
                   <button
                     onClick={() => setShowNewRule(false)}
-                    className="rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-xs text-gray-400 hover:text-gray-200"
+                    className="rounded-lg border border-border-strong bg-surface-3 px-4 py-2 text-xs text-muted-foreground hover:text-foreground"
                   >
                     Cancel
                   </button>
@@ -1624,27 +1624,27 @@ export default function ThreatConfigPage() {
                 key={rule.id}
                 className={`rounded-xl border p-4 transition-all ${
                   rule.enabled
-                    ? "border-gray-800 bg-gray-900/50"
-                    : "border-gray-800/50 bg-gray-900/20 opacity-60"
+                    ? "border-border bg-surface-2/50"
+                    : "border-border/50 bg-surface-2/20 opacity-60"
                 }`}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="mb-1 flex items-center gap-2">
-                      <h4 className="text-sm font-semibold text-gray-100">{rule.name}</h4>
+                      <h4 className="text-sm font-semibold text-foreground">{rule.name}</h4>
                       <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase ${SEVERITY_COLORS[rule.severity]}`}>
                         {rule.severity}
                       </span>
-                      <span className="rounded-full border border-gray-700 bg-gray-800 px-2 py-0.5 text-[10px] text-gray-400">
+                      <span className="rounded-full border border-border-strong bg-surface-3 px-2 py-0.5 text-[10px] text-muted-foreground">
                         {CATEGORY_LABELS[rule.category] || rule.category}
                       </span>
                     </div>
-                    <p className="mb-2 text-xs text-gray-500">{rule.description}</p>
+                    <p className="mb-2 text-xs text-muted-foreground">{rule.description}</p>
                     <div className="flex flex-wrap gap-1">
                       {rule.actions.map((action) => (
                         <span
                           key={action}
-                          className="rounded bg-gray-800 px-1.5 py-0.5 text-[10px] text-gray-400 border border-gray-700"
+                          className="rounded bg-surface-3 px-1.5 py-0.5 text-[10px] text-muted-foreground border border-border-strong"
                         >
                           {action}
                         </span>
@@ -1654,7 +1654,7 @@ export default function ThreatConfigPage() {
                   <div className="ml-4 flex items-center gap-2">
                     <button
                       onClick={() => toggleRule(rule.id)}
-                      className={`transition-colors ${rule.enabled ? "text-cyan-400 hover:text-cyan-300" : "text-gray-600 hover:text-gray-400"}`}
+                      className={`transition-colors ${rule.enabled ? "text-cyan-400 hover:text-cyan-300" : "text-muted-foreground hover:text-muted-foreground"}`}
                       title={rule.enabled ? "Disable rule" : "Enable rule"}
                     >
                       {rule.enabled ? (
@@ -1665,7 +1665,7 @@ export default function ThreatConfigPage() {
                     </button>
                     <button
                       onClick={() => deleteRule(rule.id)}
-                      className="text-gray-600 transition-colors hover:text-red-400"
+                      className="text-muted-foreground transition-colors hover:text-red-400"
                       title="Delete rule"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -1692,17 +1692,17 @@ export default function ThreatConfigPage() {
               const tc = tierColors[tier] || tierColors.perception;
 
               return (
-                <div key={tier} className="rounded-xl border border-gray-800 bg-gray-900/50 p-5">
+                <div key={tier} className="rounded-xl border border-border bg-surface-2/50 p-5">
                   <div className="mb-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${tc.bg} border ${tc.border}`}>
                         <Power className={`h-4 w-4 ${tc.text}`} />
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold capitalize text-gray-100">
+                        <h3 className="text-sm font-bold capitalize text-foreground">
                           {tier} Tier
                         </h3>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-muted-foreground">
                           {running}/{tierAgents.length} agents running
                         </p>
                       </div>
@@ -1710,21 +1710,21 @@ export default function ThreatConfigPage() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => tierAction(tier, "start")}
-                        className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-emerald-400 transition-colors hover:bg-emerald-900/20"
+                        className="flex items-center gap-1 rounded-lg border border-border-strong bg-surface-3 px-3 py-1.5 text-xs text-emerald-400 transition-colors hover:bg-emerald-900/20"
                       >
                         <Play className="h-3 w-3" />
                         Start All
                       </button>
                       <button
                         onClick={() => tierAction(tier, "stop")}
-                        className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-red-400 transition-colors hover:bg-red-900/20"
+                        className="flex items-center gap-1 rounded-lg border border-border-strong bg-surface-3 px-3 py-1.5 text-xs text-red-400 transition-colors hover:bg-red-900/20"
                       >
                         <Square className="h-3 w-3" />
                         Stop All
                       </button>
                       <button
                         onClick={() => tierAction(tier, "restart")}
-                        className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-yellow-400 transition-colors hover:bg-yellow-900/20"
+                        className="flex items-center gap-1 rounded-lg border border-border-strong bg-surface-3 px-3 py-1.5 text-xs text-yellow-400 transition-colors hover:bg-yellow-900/20"
                       >
                         <RotateCcw className="h-3 w-3" />
                         Restart
@@ -1739,11 +1739,11 @@ export default function ThreatConfigPage() {
                         className={`rounded-lg border p-3 transition-all ${
                           agent.running
                             ? `${tc.border} ${tc.bg}`
-                            : "border-gray-800 bg-gray-900/30 opacity-60"
+                            : "border-border bg-surface-2/30 opacity-60"
                         }`}
                       >
                         <div className="mb-1 flex items-center justify-between">
-                          <span className="text-xs font-semibold text-gray-200 truncate">
+                          <span className="text-xs font-semibold text-foreground truncate">
                             {agent.name.replace(/_/g, " ")}
                           </span>
                           <div
@@ -1752,9 +1752,9 @@ export default function ThreatConfigPage() {
                             }`}
                           />
                         </div>
-                        <p className="text-[10px] text-gray-500 truncate">{agent.role || agent.description}</p>
+                        <p className="text-[10px] text-muted-foreground truncate">{agent.role || agent.description}</p>
                         {agent.cycle_count > 0 && (
-                          <p className="mt-1 text-[10px] text-gray-600">
+                          <p className="mt-1 text-[10px] text-muted-foreground">
                             {agent.cycle_count} cycles
                           </p>
                         )}
@@ -1770,15 +1770,15 @@ export default function ThreatConfigPage() {
         {/* ──────── Environment Profiles Tab ──────── */}
         {activeTab === "environment" && (
           <div className="mx-auto max-w-4xl space-y-6">
-            <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6">
+            <div className="rounded-xl border border-border bg-surface-2/50 p-6">
               <div className="mb-2 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-900/30 border border-violet-800/50">
                     <Globe className="h-5 w-5 text-violet-400" />
                   </div>
                   <div>
-                    <h2 className="text-sm font-bold text-gray-100">Environment Context Profiles</h2>
-                    <p className="text-xs text-gray-500">
+                    <h2 className="text-sm font-bold text-foreground">Environment Context Profiles</h2>
+                    <p className="text-xs text-muted-foreground">
                       Select an environment profile to auto-adjust detection sensitivity and severity weighting
                     </p>
                   </div>
@@ -1787,7 +1787,7 @@ export default function ThreatConfigPage() {
                   <button
                     onClick={() => setEnvProfile(null)}
                     disabled={settingProfile}
-                    className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-400 transition-colors hover:text-red-400 hover:border-red-800/50"
+                    className="flex items-center gap-1 rounded-lg border border-border-strong bg-surface-3 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-red-400 hover:border-red-800/50"
                   >
                     <XCircle className="h-3 w-3" />
                     Clear Profile
@@ -1810,7 +1810,7 @@ export default function ThreatConfigPage() {
                       "group flex flex-col items-start rounded-xl border p-4 text-left transition-all duration-200",
                       isActive
                         ? "border-violet-700/60 bg-violet-950/30 shadow-lg shadow-violet-950/20"
-                        : "border-gray-800 bg-gray-900/50 hover:border-gray-700 hover:bg-gray-900",
+                        : "border-border bg-surface-2/50 hover:border-border-strong hover:bg-surface-2",
                       settingProfile && "cursor-wait opacity-70"
                     )}
                   >
@@ -1819,9 +1819,9 @@ export default function ThreatConfigPage() {
                         "flex h-9 w-9 items-center justify-center rounded-lg border",
                         isActive
                           ? "border-violet-600/60 bg-violet-900/40"
-                          : "border-gray-700 bg-gray-800"
+                          : "border-border-strong bg-surface-3"
                       )}>
-                        <EnvIcon className={cn("h-4 w-4", isActive ? "text-violet-400" : "text-gray-400")} />
+                        <EnvIcon className={cn("h-4 w-4", isActive ? "text-violet-400" : "text-muted-foreground")} />
                       </div>
                       {isActive && (
                         <span className="rounded-full border border-violet-700/50 bg-violet-900/30 px-2 py-0.5 text-[10px] font-bold text-violet-400">
@@ -1830,10 +1830,10 @@ export default function ThreatConfigPage() {
                       )}
                     </div>
 
-                    <h3 className={cn("text-sm font-bold mb-1", isActive ? "text-violet-100" : "text-gray-200")}>
+                    <h3 className={cn("text-sm font-bold mb-1", isActive ? "text-violet-100" : "text-foreground")}>
                       {profile.display_name}
                     </h3>
-                    <p className="mb-3 text-[11px] leading-relaxed text-gray-500">
+                    <p className="mb-3 text-[11px] leading-relaxed text-muted-foreground">
                       {profile.description}
                     </p>
 
@@ -1849,7 +1849,7 @@ export default function ThreatConfigPage() {
                               </span>
                             ))}
                             {profile.boosted_categories.length > 3 && (
-                              <span className="text-[9px] text-gray-500">+{profile.boosted_categories.length - 3}</span>
+                              <span className="text-[9px] text-muted-foreground">+{profile.boosted_categories.length - 3}</span>
                             )}
                           </div>
                         </div>
@@ -1864,7 +1864,7 @@ export default function ThreatConfigPage() {
                               </span>
                             ))}
                             {profile.suppressed_categories.length > 3 && (
-                              <span className="text-[9px] text-gray-500">+{profile.suppressed_categories.length - 3}</span>
+                              <span className="text-[9px] text-muted-foreground">+{profile.suppressed_categories.length - 3}</span>
                             )}
                           </div>
                         </div>
@@ -1876,7 +1876,7 @@ export default function ThreatConfigPage() {
                       <span className={cn(
                         "text-[10px] font-mono",
                         profile.default_severity_boost > 0 ? "text-red-400" :
-                        profile.default_severity_boost < 0 ? "text-emerald-400" : "text-gray-500"
+                        profile.default_severity_boost < 0 ? "text-emerald-400" : "text-muted-foreground"
                       )}>
                         Severity: {profile.default_severity_boost > 0 ? `+${profile.default_severity_boost}` : profile.default_severity_boost === 0 ? "baseline" : profile.default_severity_boost}
                       </span>
@@ -1891,15 +1891,15 @@ export default function ThreatConfigPage() {
         {/* ──────── Schedule Tab ──────── */}
         {activeTab === "schedule" && (
           <div className="mx-auto max-w-3xl space-y-6">
-            <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6">
+            <div className="rounded-xl border border-border bg-surface-2/50 p-6">
               <div className="mb-6 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-900/30 border border-blue-800/50">
                     <Calendar className="h-5 w-5 text-blue-400" />
                   </div>
                   <div>
-                    <h2 className="text-sm font-bold text-gray-100">Adaptive Time Scheduling</h2>
-                    <p className="text-xs text-gray-500">
+                    <h2 className="text-sm font-bold text-foreground">Adaptive Time Scheduling</h2>
+                    <p className="text-xs text-muted-foreground">
                       Auto-switch operation mode, performance, and environment profile by day & time
                     </p>
                   </div>
@@ -1915,7 +1915,7 @@ export default function ThreatConfigPage() {
                   <button
                     onClick={saveSchedule}
                     disabled={savingSchedule}
-                    className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs font-semibold text-gray-200 transition-colors hover:bg-gray-700 disabled:opacity-50"
+                    className="flex items-center gap-2 rounded-lg border border-border-strong bg-surface-3 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-surface-3 disabled:opacity-50"
                   >
                     {savingSchedule ? <Loader2 className="h-3 w-3 animate-spin" /> : <CheckCircle2 className="h-3 w-3" />}
                     Save Schedule
@@ -1932,12 +1932,12 @@ export default function ThreatConfigPage() {
                     placeholder="Entry name (e.g., Night Shift)"
                     value={newSchedule.name}
                     onChange={(e) => setNewSchedule((s) => ({ ...s, name: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 outline-none focus:border-blue-600"
+                    className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground outline-none focus:border-blue-600"
                   />
 
                   {/* Day selector */}
                   <div>
-                    <span className="text-xs text-gray-400 mb-1 block">Days</span>
+                    <span className="text-xs text-muted-foreground mb-1 block">Days</span>
                     <div className="flex gap-1.5">
                       {DAY_LABELS.map((day) => (
                         <button
@@ -1954,7 +1954,7 @@ export default function ThreatConfigPage() {
                             "rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors",
                             newSchedule.days.includes(day)
                               ? "border-blue-600/60 bg-blue-900/30 text-blue-400"
-                              : "border-gray-700 bg-gray-800 text-gray-500 hover:text-gray-300"
+                              : "border-border-strong bg-surface-3 text-muted-foreground hover:text-foreground"
                           )}
                         >
                           {DAY_DISPLAY[day]}
@@ -1966,11 +1966,11 @@ export default function ThreatConfigPage() {
                   {/* Time range */}
                   <div className="flex gap-3">
                     <div className="flex-1">
-                      <span className="text-xs text-gray-400 mb-1 block">Start Hour</span>
+                      <span className="text-xs text-muted-foreground mb-1 block">Start Hour</span>
                       <select
                         value={newSchedule.start_hour}
                         onChange={(e) => setNewSchedule((s) => ({ ...s, start_hour: Number(e.target.value) }))}
-                        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 outline-none"
+                        className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground outline-none"
                       >
                         {Array.from({ length: 24 }, (_, i) => (
                           <option key={i} value={i}>{String(i).padStart(2, "0")}:00</option>
@@ -1978,11 +1978,11 @@ export default function ThreatConfigPage() {
                       </select>
                     </div>
                     <div className="flex-1">
-                      <span className="text-xs text-gray-400 mb-1 block">End Hour</span>
+                      <span className="text-xs text-muted-foreground mb-1 block">End Hour</span>
                       <select
                         value={newSchedule.end_hour}
                         onChange={(e) => setNewSchedule((s) => ({ ...s, end_hour: Number(e.target.value) }))}
-                        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 outline-none"
+                        className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground outline-none"
                       >
                         {Array.from({ length: 24 }, (_, i) => (
                           <option key={i} value={i}>{String(i).padStart(2, "0")}:00</option>
@@ -1994,11 +1994,11 @@ export default function ThreatConfigPage() {
                   {/* Mode / Performance / Profile */}
                   <div className="flex gap-3">
                     <div className="flex-1">
-                      <span className="text-xs text-gray-400 mb-1 block">Operation Mode</span>
+                      <span className="text-xs text-muted-foreground mb-1 block">Operation Mode</span>
                       <select
                         value={newSchedule.mode || ""}
                         onChange={(e) => setNewSchedule((s) => ({ ...s, mode: e.target.value || undefined }))}
-                        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 outline-none"
+                        className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground outline-none"
                       >
                         <option value="">No change</option>
                         <option value="autonomous">Autonomous</option>
@@ -2006,11 +2006,11 @@ export default function ThreatConfigPage() {
                       </select>
                     </div>
                     <div className="flex-1">
-                      <span className="text-xs text-gray-400 mb-1 block">Performance</span>
+                      <span className="text-xs text-muted-foreground mb-1 block">Performance</span>
                       <select
                         value={newSchedule.performance || ""}
                         onChange={(e) => setNewSchedule((s) => ({ ...s, performance: e.target.value || undefined }))}
-                        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 outline-none"
+                        className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground outline-none"
                       >
                         <option value="">No change</option>
                         <option value="ultra_fast">Ultra Fast</option>
@@ -2020,11 +2020,11 @@ export default function ThreatConfigPage() {
                       </select>
                     </div>
                     <div className="flex-1">
-                      <span className="text-xs text-gray-400 mb-1 block">Environment</span>
+                      <span className="text-xs text-muted-foreground mb-1 block">Environment</span>
                       <select
                         value={newSchedule.context_profile || ""}
                         onChange={(e) => setNewSchedule((s) => ({ ...s, context_profile: e.target.value || undefined }))}
-                        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 outline-none"
+                        className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground outline-none"
                       >
                         <option value="">No change</option>
                         {envProfiles.map((p) => (
@@ -2045,7 +2045,7 @@ export default function ThreatConfigPage() {
                     </button>
                     <button
                       onClick={() => setShowAddSchedule(false)}
-                      className="rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-xs text-gray-400 hover:text-gray-200"
+                      className="rounded-lg border border-border-strong bg-surface-3 px-4 py-2 text-xs text-muted-foreground hover:text-foreground"
                     >
                       Cancel
                     </button>
@@ -2056,20 +2056,20 @@ export default function ThreatConfigPage() {
               {/* Schedule Entries */}
               {scheduleEntries.length === 0 ? (
                 <div className="py-12 text-center">
-                  <Calendar className="mx-auto mb-3 h-8 w-8 text-gray-700" />
-                  <p className="text-sm text-gray-500">No schedule entries configured</p>
-                  <p className="text-xs text-gray-600 mt-1">Add entries to auto-switch modes by time of day</p>
+                  <Calendar className="mx-auto mb-3 h-8 w-8 text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">No schedule entries configured</p>
+                  <p className="text-xs text-muted-foreground mt-1">Add entries to auto-switch modes by time of day</p>
                 </div>
               ) : (
                 <div className="space-y-2">
                   {scheduleEntries.map((entry, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between rounded-lg border border-gray-800 bg-gray-900/30 px-4 py-3"
+                      className="flex items-center justify-between rounded-lg border border-border bg-surface-2/30 px-4 py-3"
                     >
                       <div className="flex items-center gap-4">
                         <div>
-                          <span className="text-sm font-medium text-gray-200">{entry.name}</span>
+                          <span className="text-sm font-medium text-foreground">{entry.name}</span>
                           <div className="flex items-center gap-2 mt-1">
                             <div className="flex gap-0.5">
                               {DAY_LABELS.map((d) => (
@@ -2077,14 +2077,14 @@ export default function ThreatConfigPage() {
                                   key={d}
                                   className={cn(
                                     "inline-block w-5 text-center rounded text-[9px] font-bold",
-                                    entry.days.includes(d) ? "bg-blue-900/40 text-blue-400" : "text-gray-700"
+                                    entry.days.includes(d) ? "bg-blue-900/40 text-blue-400" : "text-muted-foreground"
                                   )}
                                 >
                                   {d.charAt(0).toUpperCase()}
                                 </span>
                               ))}
                             </div>
-                            <span className="text-xs text-gray-500 font-mono">
+                            <span className="text-xs text-muted-foreground font-mono">
                               {String(entry.start_hour).padStart(2, "0")}:00 – {String(entry.end_hour).padStart(2, "0")}:00
                             </span>
                           </div>
@@ -2101,7 +2101,7 @@ export default function ThreatConfigPage() {
                             </span>
                           )}
                           {entry.performance && (
-                            <span className="rounded-full border border-gray-700 bg-gray-800 px-2 py-0.5 text-[10px] text-gray-400">
+                            <span className="rounded-full border border-border-strong bg-surface-3 px-2 py-0.5 text-[10px] text-muted-foreground">
                               {entry.performance}
                             </span>
                           )}
@@ -2113,7 +2113,7 @@ export default function ThreatConfigPage() {
                         </div>
                         <button
                           onClick={() => removeScheduleEntry(idx)}
-                          className="text-gray-600 transition-colors hover:text-red-400"
+                          className="text-muted-foreground transition-colors hover:text-red-400"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -2137,43 +2137,43 @@ export default function ThreatConfigPage() {
               <>
                 {/* Overview Stats */}
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                  <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-4">
+                  <div className="rounded-xl border border-border bg-surface-2/50 p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <Fingerprint className="h-4 w-4 text-violet-400" />
-                      <span className="text-xs text-gray-500">Threat Signatures</span>
+                      <span className="text-xs text-muted-foreground">Threat Signatures</span>
                     </div>
                     <div className="text-2xl font-bold tabular-nums text-violet-400">{metrics.total_signatures}</div>
-                    <div className="text-[10px] text-gray-500">{metrics.total_categories} categories</div>
+                    <div className="text-[10px] text-muted-foreground">{metrics.total_categories} categories</div>
                   </div>
-                  <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-4">
+                  <div className="rounded-xl border border-border bg-surface-2/50 p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <Activity className="h-4 w-4 text-emerald-400" />
-                      <span className="text-xs text-gray-500">Agent Fleet</span>
+                      <span className="text-xs text-muted-foreground">Agent Fleet</span>
                     </div>
                     <div className="text-2xl font-bold tabular-nums text-emerald-400">{metrics.agents_running}/{metrics.agents_total}</div>
-                    <div className="text-[10px] text-gray-500">agents online</div>
+                    <div className="text-[10px] text-muted-foreground">agents online</div>
                   </div>
-                  <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-4">
+                  <div className="rounded-xl border border-border bg-surface-2/50 p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <BookOpen className="h-4 w-4 text-yellow-400" />
-                      <span className="text-xs text-gray-500">Detection Rules</span>
+                      <span className="text-xs text-muted-foreground">Detection Rules</span>
                     </div>
                     <div className="text-2xl font-bold tabular-nums text-yellow-400">{metrics.active_rules}/{metrics.total_rules}</div>
-                    <div className="text-[10px] text-gray-500">rules active</div>
+                    <div className="text-[10px] text-muted-foreground">rules active</div>
                   </div>
-                  <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-4">
+                  <div className="rounded-xl border border-border bg-surface-2/50 p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <Shield className="h-4 w-4 text-cyan-400" />
-                      <span className="text-xs text-gray-500">Active Protocol</span>
+                      <span className="text-xs text-muted-foreground">Active Protocol</span>
                     </div>
                     <div className="text-sm font-bold text-cyan-400 truncate">{metrics.active_protocol}</div>
-                    <div className="text-[10px] text-gray-500">{metrics.deployed_scenarios_count} scenarios deployed</div>
+                    <div className="text-[10px] text-muted-foreground">{metrics.deployed_scenarios_count} scenarios deployed</div>
                   </div>
                 </div>
 
                 {/* Rules by Severity Distribution */}
-                <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6">
-                  <h3 className="mb-4 text-sm font-bold text-gray-100">Rules by Severity</h3>
+                <div className="rounded-xl border border-border bg-surface-2/50 p-6">
+                  <h3 className="mb-4 text-sm font-bold text-foreground">Rules by Severity</h3>
                   <div className="flex items-end gap-3 h-32">
                     {(["critical", "high", "medium", "low"] as const).map((sev) => {
                       const count = metrics.rules_by_severity[sev] || 0;
@@ -2184,14 +2184,14 @@ export default function ThreatConfigPage() {
                       };
                       return (
                         <div key={sev} className="flex flex-1 flex-col items-center gap-1">
-                          <span className="text-xs font-bold tabular-nums text-gray-300">{count}</span>
+                          <span className="text-xs font-bold tabular-nums text-foreground">{count}</span>
                           <div className="w-full max-w-[48px] flex items-end" style={{ height: "80px" }}>
                             <div
                               className={`w-full rounded-t ${colors[sev]} transition-all duration-500`}
                               style={{ height: `${Math.max(heightPct, 4)}%` }}
                             />
                           </div>
-                          <span className="text-[10px] text-gray-500 capitalize">{sev}</span>
+                          <span className="text-[10px] text-muted-foreground capitalize">{sev}</span>
                         </div>
                       );
                     })}
@@ -2199,10 +2199,10 @@ export default function ThreatConfigPage() {
                 </div>
 
                 {/* Signature Categories Breakdown */}
-                <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6">
+                <div className="rounded-xl border border-border bg-surface-2/50 p-6">
                   <div className="mb-4 flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-gray-100">Signature Categories</h3>
-                    <span className="text-xs text-gray-500">{metrics.total_signatures} total signatures across {metrics.total_categories} categories</span>
+                    <h3 className="text-sm font-bold text-foreground">Signature Categories</h3>
+                    <span className="text-xs text-muted-foreground">{metrics.total_signatures} total signatures across {metrics.total_categories} categories</span>
                   </div>
                   <div className="space-y-1">
                     {metrics.category_stats.map((cat) => {
@@ -2214,36 +2214,36 @@ export default function ThreatConfigPage() {
                         <div key={cat.category}>
                           <button
                             onClick={() => setExpandedCategory(isExpanded ? null : cat.category)}
-                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors hover:bg-gray-800/50"
+                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors hover:bg-surface-3/50"
                           >
-                            <span className="w-48 text-xs text-gray-300 truncate capitalize">
+                            <span className="w-48 text-xs text-foreground truncate capitalize">
                               {cat.category.replace(/_/g, " ")}
                             </span>
-                            <div className="flex-1 h-2 rounded-full bg-gray-800">
+                            <div className="flex-1 h-2 rounded-full bg-surface-3">
                               <div
                                 className="h-2 rounded-full bg-gradient-to-r from-cyan-600 to-cyan-400 transition-all duration-500"
                                 style={{ width: `${barPct}%` }}
                               />
                             </div>
-                            <span className="w-8 text-right text-xs font-bold tabular-nums text-gray-400">
+                            <span className="w-8 text-right text-xs font-bold tabular-nums text-muted-foreground">
                               {cat.count}
                             </span>
                             {isExpanded ? (
-                              <ChevronUp className="h-3 w-3 text-gray-500" />
+                              <ChevronUp className="h-3 w-3 text-muted-foreground" />
                             ) : (
-                              <ChevronDown className="h-3 w-3 text-gray-500" />
+                              <ChevronDown className="h-3 w-3 text-muted-foreground" />
                             )}
                           </button>
 
                           {isExpanded && (
-                            <div className="ml-6 mt-1 mb-2 space-y-1 pl-3 border-l border-gray-800">
+                            <div className="ml-6 mt-1 mb-2 space-y-1 pl-3 border-l border-border">
                               {cat.signatures.map((sig) => (
                                 <div key={sig.name} className="flex items-center gap-2 py-1">
                                   <span className={`rounded-full border px-1.5 py-0.5 text-[9px] font-bold uppercase ${SEVERITY_COLORS[sig.severity] || SEVERITY_COLORS.low}`}>
                                     {sig.severity}
                                   </span>
-                                  <span className="text-[11px] text-gray-400 flex-1 truncate">{sig.name}</span>
-                                  <span className="text-[10px] text-gray-600 font-mono">{sig.detection_method}</span>
+                                  <span className="text-[11px] text-muted-foreground flex-1 truncate">{sig.name}</span>
+                                  <span className="text-[10px] text-muted-foreground font-mono">{sig.detection_method}</span>
                                 </div>
                               ))}
                             </div>
@@ -2255,19 +2255,19 @@ export default function ThreatConfigPage() {
                 </div>
 
                 {/* Current Sensitivity Profile */}
-                <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6">
-                  <h3 className="mb-4 text-sm font-bold text-gray-100">Current Sensitivity Levels</h3>
+                <div className="rounded-xl border border-border bg-surface-2/50 p-6">
+                  <h3 className="mb-4 text-sm font-bold text-foreground">Current Sensitivity Levels</h3>
                   <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                     {Object.entries(metrics.sensitivity).map(([key, val]) => {
                       const pct = Math.round(val * 100);
                       const color = pct >= 80 ? "text-red-400" : pct >= 60 ? "text-yellow-400" : "text-emerald-400";
                       return (
-                        <div key={key} className="rounded-lg border border-gray-800 bg-gray-900/30 p-3">
-                          <div className="text-[10px] text-gray-500 capitalize truncate mb-1">
+                        <div key={key} className="rounded-lg border border-border bg-surface-2/30 p-3">
+                          <div className="text-[10px] text-muted-foreground capitalize truncate mb-1">
                             {key.replace(/_/g, " ")}
                           </div>
                           <div className={`text-lg font-bold tabular-nums ${color}`}>{pct}%</div>
-                          <div className="mt-1 h-1.5 rounded-full bg-gray-800">
+                          <div className="mt-1 h-1.5 rounded-full bg-surface-3">
                             <div
                               className={cn(
                                 "h-1.5 rounded-full transition-all",
@@ -2284,11 +2284,11 @@ export default function ThreatConfigPage() {
               </>
             ) : (
               <div className="py-20 text-center">
-                <AlertTriangle className="mx-auto mb-3 h-8 w-8 text-gray-700" />
-                <p className="text-sm text-gray-500">Failed to load threat metrics</p>
+                <AlertTriangle className="mx-auto mb-3 h-8 w-8 text-muted-foreground" />
+                <p className="text-sm text-muted-foreground">Failed to load threat metrics</p>
                 <button
                   onClick={fetchMetrics}
-                  className="mt-3 rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-xs text-gray-400 hover:text-gray-200"
+                  className="mt-3 rounded-lg border border-border-strong bg-surface-3 px-4 py-2 text-xs text-muted-foreground hover:text-foreground"
                 >
                   Retry
                 </button>

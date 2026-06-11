@@ -71,7 +71,7 @@ interface VehicleFullProfile {
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
 
-const CARD = "rounded-lg border border-gray-800 bg-gray-900/60 backdrop-blur p-4";
+const CARD = "rounded-lg border border-border bg-surface-2/60 backdrop-blur p-4";
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
@@ -145,25 +145,25 @@ export default function VehicleProfileCard({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="relative flex max-h-[90vh] w-full max-w-2xl flex-col rounded-xl border border-gray-800 bg-gray-950 shadow-2xl">
+      <div className="relative flex max-h-[90vh] w-full max-w-2xl flex-col rounded-xl border border-border bg-surface-0 shadow-2xl">
         {/* ---- Header ---- */}
-        <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-900/30 border border-cyan-800/50">
               <Car className="h-5 w-5 text-cyan-400" />
             </div>
             <div>
-              <h2 className="text-lg font-bold tracking-wide text-gray-100">
+              <h2 className="text-lg font-bold tracking-wide text-foreground">
                 Vehicle Profile
               </h2>
-              <span className="inline-flex items-center rounded-md border border-gray-700 bg-gray-800 px-2.5 py-0.5 font-mono text-sm font-bold tracking-wider text-gray-100">
+              <span className="inline-flex items-center rounded-md border border-border-strong bg-surface-3 px-2.5 py-0.5 font-mono text-sm font-bold tracking-wider text-foreground">
                 {plateNumber}
               </span>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg border border-gray-700 p-2 text-gray-500 transition-colors hover:bg-gray-800 hover:text-gray-300"
+            className="rounded-lg border border-border-strong p-2 text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
           >
             <X className="h-5 w-5" />
           </button>
@@ -175,7 +175,7 @@ export default function VehicleProfileCard({
           {loading && (
             <div className="flex flex-col items-center justify-center py-20">
               <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-              <p className="mt-3 text-sm text-gray-500">Loading vehicle profile...</p>
+              <p className="mt-3 text-sm text-muted-foreground">Loading vehicle profile...</p>
             </div>
           )}
 
@@ -186,7 +186,7 @@ export default function VehicleProfileCard({
               <p className="text-sm text-red-400">{error}</p>
               <button
                 onClick={fetchProfile}
-                className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+                className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
               >
                 Retry
               </button>
@@ -200,38 +200,38 @@ export default function VehicleProfileCard({
               <div className={CARD}>
                 <div className="flex gap-4">
                   {/* Photo placeholder */}
-                  <div className="flex h-28 w-40 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800/50">
-                    <Car className="h-12 w-12 text-gray-600" />
+                  <div className="flex h-28 w-40 shrink-0 items-center justify-center rounded-lg border border-border-strong bg-surface-3/50">
+                    <Car className="h-12 w-12 text-muted-foreground" />
                   </div>
 
                   {/* Details */}
                   <div className="flex-1 space-y-2">
                     <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
                       <div>
-                        <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                           Make
                         </span>
-                        <p className="text-gray-200">{profile.vehicle.make || "Unknown"}</p>
+                        <p className="text-foreground">{profile.vehicle.make || "Unknown"}</p>
                       </div>
                       <div>
-                        <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                           Model
                         </span>
-                        <p className="text-gray-200">{profile.vehicle.model || "Unknown"}</p>
+                        <p className="text-foreground">{profile.vehicle.model || "Unknown"}</p>
                       </div>
                       <div>
-                        <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                           Color
                         </span>
-                        <p className="capitalize text-gray-200">
+                        <p className="capitalize text-foreground">
                           {profile.vehicle.color || "Unknown"}
                         </p>
                       </div>
                       <div>
-                        <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                           Type
                         </span>
-                        <p className="capitalize text-gray-200">
+                        <p className="capitalize text-foreground">
                           {profile.vehicle.vehicle_type || "Unknown"}
                         </p>
                       </div>
@@ -248,7 +248,7 @@ export default function VehicleProfileCard({
                       "h-5 w-5",
                       profile.watchlist.is_watchlisted
                         ? "text-red-400"
-                        : "text-gray-600"
+                        : "text-muted-foreground"
                     )}
                   />
                   {profile.watchlist.is_watchlisted ? (
@@ -269,13 +269,13 @@ export default function VehicleProfileCard({
                         )}
                       </div>
                       {profile.watchlist.reason && (
-                        <p className="mt-1.5 text-xs text-gray-400">
+                        <p className="mt-1.5 text-xs text-muted-foreground">
                           {profile.watchlist.reason}
                         </p>
                       )}
                     </div>
                   ) : (
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-muted-foreground">
                       Not on watchlist
                     </span>
                   )}
@@ -284,16 +284,16 @@ export default function VehicleProfileCard({
 
               {/* Recent Sightings */}
               <div className={CARD}>
-                <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-300">
+                <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
                   <Eye className="h-4 w-4 text-cyan-400" />
                   Recent Sightings
-                  <span className="ml-auto text-xs font-normal text-gray-600">
+                  <span className="ml-auto text-xs font-normal text-muted-foreground">
                     Last {profile.recent_sightings.length}
                   </span>
                 </h3>
 
                 {profile.recent_sightings.length === 0 ? (
-                  <p className="py-4 text-center text-xs text-gray-600">
+                  <p className="py-4 text-center text-xs text-muted-foreground">
                     No recent sightings
                   </p>
                 ) : (
@@ -301,11 +301,11 @@ export default function VehicleProfileCard({
                     {profile.recent_sightings.map((s) => (
                       <div
                         key={s.id}
-                        className="flex items-center gap-3 rounded-md border border-gray-800/50 bg-gray-800/20 px-3 py-2 text-xs"
+                        className="flex items-center gap-3 rounded-md border border-border/50 bg-surface-3/20 px-3 py-2 text-xs"
                       >
-                        <Camera className="h-3.5 w-3.5 shrink-0 text-gray-600" />
-                        <span className="text-gray-300">{s.camera}</span>
-                        <span className="flex items-center gap-1 text-gray-500">
+                        <Camera className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                        <span className="text-foreground">{s.camera}</span>
+                        <span className="flex items-center gap-1 text-muted-foreground">
                           <MapPin className="h-3 w-3" />
                           {s.zone}
                         </span>
@@ -321,7 +321,7 @@ export default function VehicleProfileCard({
                         >
                           {Math.round(s.confidence * 100)}%
                         </span>
-                        <span className="flex items-center gap-1 text-gray-500">
+                        <span className="flex items-center gap-1 text-muted-foreground">
                           <Clock className="h-3 w-3" />
                           {timeAgo(s.timestamp)}
                         </span>
@@ -333,16 +333,16 @@ export default function VehicleProfileCard({
 
               {/* Violations */}
               <div className={CARD}>
-                <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-300">
+                <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
                   <AlertTriangle className="h-4 w-4 text-amber-400" />
                   Violations
-                  <span className="ml-auto text-xs font-normal text-gray-600">
+                  <span className="ml-auto text-xs font-normal text-muted-foreground">
                     {profile.violations.length} total
                   </span>
                 </h3>
 
                 {profile.violations.length === 0 ? (
-                  <p className="py-4 text-center text-xs text-gray-600">
+                  <p className="py-4 text-center text-xs text-muted-foreground">
                     No violations recorded
                   </p>
                 ) : (
@@ -350,7 +350,7 @@ export default function VehicleProfileCard({
                     {profile.violations.map((v) => (
                       <div
                         key={v.id}
-                        className="flex items-center gap-3 rounded-md border border-gray-800/50 bg-gray-800/20 px-3 py-2 text-xs"
+                        className="flex items-center gap-3 rounded-md border border-border/50 bg-surface-3/20 px-3 py-2 text-xs"
                       >
                         <span
                           className={cn(
@@ -360,8 +360,8 @@ export default function VehicleProfileCard({
                         >
                           {v.severity}
                         </span>
-                        <span className="text-gray-300">{v.event_type}</span>
-                        <span className="flex-1 truncate text-gray-500">
+                        <span className="text-foreground">{v.event_type}</span>
+                        <span className="flex-1 truncate text-muted-foreground">
                           {v.details}
                         </span>
                         {v.resolved ? (
@@ -373,7 +373,7 @@ export default function VehicleProfileCard({
                             Open
                           </span>
                         )}
-                        <span className="text-gray-600">
+                        <span className="text-muted-foreground">
                           {timeAgo(v.created_at)}
                         </span>
                       </div>
@@ -384,16 +384,16 @@ export default function VehicleProfileCard({
 
               {/* Trip History */}
               <div className={CARD}>
-                <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-300">
+                <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
                   <Route className="h-4 w-4 text-cyan-400" />
                   Trip History
-                  <span className="ml-auto text-xs font-normal text-gray-600">
+                  <span className="ml-auto text-xs font-normal text-muted-foreground">
                     {profile.trips.length} trips
                   </span>
                 </h3>
 
                 {profile.trips.length === 0 ? (
-                  <p className="py-4 text-center text-xs text-gray-600">
+                  <p className="py-4 text-center text-xs text-muted-foreground">
                     No trip records
                   </p>
                 ) : (
@@ -401,21 +401,21 @@ export default function VehicleProfileCard({
                     {profile.trips.map((t) => (
                       <div
                         key={t.id}
-                        className="flex items-center gap-3 rounded-md border border-gray-800/50 bg-gray-800/20 px-3 py-2 text-xs"
+                        className="flex items-center gap-3 rounded-md border border-border/50 bg-surface-3/20 px-3 py-2 text-xs"
                       >
-                        <span className="flex items-center gap-1 text-gray-400">
-                          <Camera className="h-3 w-3 text-gray-600" />
+                        <span className="flex items-center gap-1 text-muted-foreground">
+                          <Camera className="h-3 w-3 text-muted-foreground" />
                           {t.entry_camera}
                         </span>
-                        <span className="text-gray-600">-&gt;</span>
-                        <span className="flex items-center gap-1 text-gray-400">
-                          <Camera className="h-3 w-3 text-gray-600" />
+                        <span className="text-muted-foreground">-&gt;</span>
+                        <span className="flex items-center gap-1 text-muted-foreground">
+                          <Camera className="h-3 w-3 text-muted-foreground" />
                           {t.exit_camera}
                         </span>
                         <span className="ml-auto font-mono tabular-nums text-cyan-400">
                           {formatDuration(t.duration_seconds)}
                         </span>
-                        <span className="text-gray-600">
+                        <span className="text-muted-foreground">
                           {formatTimestamp(t.entry_time)}
                         </span>
                       </div>

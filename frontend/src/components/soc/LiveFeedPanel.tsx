@@ -45,7 +45,7 @@ const activityLevelConfig: Record<
   { classes: string; label: string; dot: string }
 > = {
   idle: {
-    classes: "bg-gray-800/90 text-gray-400",
+    classes: "bg-surface-3/90 text-muted-foreground",
     label: "IDLE",
     dot: "bg-gray-500",
   },
@@ -193,12 +193,12 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
       }}
       className={cn(
         "group relative cursor-pointer overflow-hidden rounded-lg border transition-all duration-200",
-        "bg-gray-950",
+        "bg-surface-0",
         isSelected
           ? "ring-2 ring-cyan-400 border-cyan-500/60 shadow-lg shadow-cyan-500/10"
           : isHighRisk
             ? "border-red-800/60 shadow-md shadow-red-500/5"
-            : "border-gray-800/60 hover:border-gray-700",
+            : "border-border/60 hover:border-border-strong",
         isFullscreen && "rounded-none border-0 h-full"
       )}
     >
@@ -223,8 +223,8 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
           />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-2">
-            <Camera className="h-8 w-8 text-gray-700" />
-            <span className="text-[10px] font-mono uppercase tracking-wider text-gray-600">
+            <Camera className="h-8 w-8 text-muted-foreground" />
+            <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
               No signal
             </span>
           </div>
@@ -241,7 +241,7 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
                   : "bg-red-500"
               )}
             />
-            <span className="text-[10px] font-medium text-gray-200 tracking-wide uppercase max-w-[100px] truncate">
+            <span className="text-[10px] font-medium text-foreground tracking-wide uppercase max-w-[100px] truncate">
               {displayName}
             </span>
           </div>
@@ -308,7 +308,7 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
             {/* Scene description — one-line truncated */}
             <span className={cn(
               "flex-1 truncate text-[9px] leading-tight",
-              isFreshAnalysis ? "text-gray-200" : "text-gray-400",
+              isFreshAnalysis ? "text-foreground" : "text-muted-foreground",
               "transition-colors duration-1000"
             )}>
               {analysis.scene_description || "Analyzing..."}
@@ -334,12 +334,12 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
 
         {/* No analysis — waiting indicator */}
         {!analysis && isOnline && (
-          <div className="absolute inset-x-0 bottom-[26px] z-10 flex items-center gap-1.5 px-2 py-[3px] bg-black/60 backdrop-blur-sm border-t border-gray-800/30">
-            <Brain className="h-2.5 w-2.5 text-gray-600 animate-pulse" />
-            <span className="text-[8px] font-bold uppercase tracking-widest text-gray-600">
+          <div className="absolute inset-x-0 bottom-[26px] z-10 flex items-center gap-1.5 px-2 py-[3px] bg-black/60 backdrop-blur-sm border-t border-border/30">
+            <Brain className="h-2.5 w-2.5 text-muted-foreground animate-pulse" />
+            <span className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground">
               AI
             </span>
-            <span className="text-[9px] text-gray-600 italic">
+            <span className="text-[9px] text-muted-foreground italic">
               Waiting for analysis...
             </span>
           </div>
@@ -349,31 +349,31 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
           <div className="flex items-end justify-between px-2 pb-1.5 pt-5">
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-0.5 text-[10px] text-gray-300">
+              <div className="flex items-center gap-0.5 text-[10px] text-foreground">
                 <Users className="h-3 w-3 text-cyan-400" />
                 <span className="font-mono tabular-nums">{personCount}</span>
               </div>
               {vehicleCount > 0 && (
-                <div className="flex items-center gap-0.5 text-[10px] text-gray-300">
+                <div className="flex items-center gap-0.5 text-[10px] text-foreground">
                   <Eye className="h-3 w-3 text-purple-400" />
                   <span className="font-mono tabular-nums">
                     {vehicleCount}v
                   </span>
                 </div>
               )}
-              <div className="flex items-center gap-0.5 text-[10px] text-gray-400">
+              <div className="flex items-center gap-0.5 text-[10px] text-muted-foreground">
                 <Activity className="h-3 w-3 text-amber-400" />
                 <span className="font-mono tabular-nums">
                   {detectionCount}
                 </span>
               </div>
               {trackCount > 0 && (
-                <div className="text-[9px] text-gray-500 font-mono">
+                <div className="text-[9px] text-muted-foreground font-mono">
                   {trackCount}t
                 </div>
               )}
             </div>
-            <span className="font-mono text-[9px] text-gray-500 tabular-nums">
+            <span className="font-mono text-[9px] text-muted-foreground tabular-nums">
               {formatLiveTime()}
             </span>
           </div>
@@ -382,7 +382,7 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
         {/* Camera Controls Toolbar (hover) */}
         <div
           className={cn(
-            "absolute bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-0.5 rounded-lg bg-black/90 p-0.5 backdrop-blur-md border border-gray-700/50 shadow-xl transition-all duration-200",
+            "absolute bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-0.5 rounded-lg bg-black/90 p-0.5 backdrop-blur-md border border-border-strong/50 shadow-xl transition-all duration-200",
             showControls
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-2 pointer-events-none"
@@ -393,7 +393,7 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
               e.stopPropagation();
               setIsPaused(!isPaused);
             }}
-            className="rounded p-1 text-gray-400 hover:bg-gray-700/60 hover:text-white transition-colors"
+            className="rounded p-1 text-muted-foreground hover:bg-surface-3/60 hover:text-white transition-colors"
             title={isPaused ? "Resume" : "Pause"}
           >
             {isPaused ? (
@@ -402,10 +402,10 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
               <Pause className="h-3 w-3" />
             )}
           </button>
-          <div className="w-px h-3.5 bg-gray-700" />
+          <div className="w-px h-3.5 bg-surface-3" />
           <button
             onClick={handleSnapshot}
-            className="rounded p-1 text-gray-400 hover:bg-gray-700/60 hover:text-white transition-colors"
+            className="rounded p-1 text-muted-foreground hover:bg-surface-3/60 hover:text-white transition-colors"
             title="Save snapshot"
           >
             <Download className="h-3 w-3" />
@@ -415,7 +415,7 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
               e.stopPropagation();
               setIsMuted(!isMuted);
             }}
-            className="rounded p-1 text-gray-400 hover:bg-gray-700/60 hover:text-white transition-colors"
+            className="rounded p-1 text-muted-foreground hover:bg-surface-3/60 hover:text-white transition-colors"
             title={isMuted ? "Unmute" : "Mute"}
           >
             {isMuted ? (
@@ -424,7 +424,7 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
               <Volume2 className="h-3 w-3" />
             )}
           </button>
-          <div className="w-px h-3.5 bg-gray-700" />
+          <div className="w-px h-3.5 bg-surface-3" />
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -433,15 +433,15 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
             className={cn(
               "rounded p-1 transition-colors",
               zoom <= 1
-                ? "text-gray-600 cursor-not-allowed"
-                : "text-gray-400 hover:bg-gray-700/60 hover:text-white"
+                ? "text-muted-foreground cursor-not-allowed"
+                : "text-muted-foreground hover:bg-surface-3/60 hover:text-white"
             )}
             title="Zoom out"
           >
             <ZoomOut className="h-3 w-3" />
           </button>
           {zoom > 1 && (
-            <span className="text-[8px] font-mono text-gray-400 px-0.5">
+            <span className="text-[8px] font-mono text-muted-foreground px-0.5">
               {zoom}x
             </span>
           )}
@@ -453,21 +453,21 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
             className={cn(
               "rounded p-1 transition-colors",
               zoom >= 4
-                ? "text-gray-600 cursor-not-allowed"
-                : "text-gray-400 hover:bg-gray-700/60 hover:text-white"
+                ? "text-muted-foreground cursor-not-allowed"
+                : "text-muted-foreground hover:bg-surface-3/60 hover:text-white"
             )}
             title="Zoom in"
           >
             <ZoomIn className="h-3 w-3" />
           </button>
-          <div className="w-px h-3.5 bg-gray-700" />
+          <div className="w-px h-3.5 bg-surface-3" />
           {onToggleFullscreen && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 onToggleFullscreen(cameraId);
               }}
-              className="rounded p-1 text-gray-400 hover:bg-gray-700/60 hover:text-white transition-colors"
+              className="rounded p-1 text-muted-foreground hover:bg-surface-3/60 hover:text-white transition-colors"
               title="Fullscreen"
             >
               <Maximize2 className="h-3 w-3" />
@@ -483,7 +483,7 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
                 "rounded p-1 transition-colors",
                 showAnalysis
                   ? "bg-cyan-900/60 text-cyan-400"
-                  : "text-gray-400 hover:bg-gray-700/60 hover:text-white"
+                  : "text-muted-foreground hover:bg-surface-3/60 hover:text-white"
               )}
               title="AI Analysis"
             >
@@ -494,11 +494,11 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
 
         {/* AI Analysis Overlay Panel (detailed — toggled by Info button) */}
         {showAnalysis && analysis && (
-          <div className="absolute inset-x-0 top-7 bottom-14 mx-1.5 overflow-y-auto rounded-lg bg-gray-950/95 border border-gray-700/50 backdrop-blur-md p-2 shadow-2xl z-20">
+          <div className="absolute inset-x-0 top-7 bottom-14 mx-1.5 overflow-y-auto rounded-lg bg-surface-0/95 border border-border-strong/50 backdrop-blur-md p-2 shadow-2xl z-20">
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-1">
                 <Shield className="h-3 w-3 text-cyan-400" />
-                <span className="text-[9px] font-bold uppercase tracking-widest text-gray-300">
+                <span className="text-[9px] font-bold uppercase tracking-widest text-foreground">
                   AI Analysis
                 </span>
               </div>
@@ -507,7 +507,7 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
                   e.stopPropagation();
                   setShowAnalysis(false);
                 }}
-                className="rounded p-0.5 text-gray-500 hover:bg-gray-800 hover:text-gray-300"
+                className="rounded p-0.5 text-muted-foreground hover:bg-surface-3 hover:text-foreground"
               >
                 <X className="h-3 w-3" />
               </button>
@@ -516,10 +516,10 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
             <div className="space-y-1.5 text-[10px]">
               {analysis.scene_description && (
                 <div>
-                  <span className="font-semibold text-gray-500 uppercase tracking-wider text-[9px]">
+                  <span className="font-semibold text-muted-foreground uppercase tracking-wider text-[9px]">
                     Scene
                   </span>
-                  <p className="text-gray-300 leading-relaxed mt-0.5">
+                  <p className="text-foreground leading-relaxed mt-0.5">
                     {analysis.scene_description}
                   </p>
                 </div>
@@ -540,8 +540,8 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
                 >
                   Risk: {analysis.overall_risk}
                 </span>
-                <span className="text-gray-600">|</span>
-                <span className="text-gray-400 text-[9px]">
+                <span className="text-muted-foreground">|</span>
+                <span className="text-muted-foreground text-[9px]">
                   Activity: {analysis.activity_level}
                 </span>
               </div>
@@ -562,11 +562,11 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
                           <span className="font-semibold text-red-300">
                             {t.type}
                           </span>
-                          <span className="text-gray-400 ml-1">
+                          <span className="text-muted-foreground ml-1">
                             ({Math.round(t.confidence * 100)}%)
                           </span>
                           {t.description && (
-                            <p className="text-gray-500">{t.description}</p>
+                            <p className="text-muted-foreground">{t.description}</p>
                           )}
                         </div>
                       </div>
@@ -584,7 +584,7 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
                     {analysis.anomalies!.map((a, i) => (
                       <li
                         key={i}
-                        className="text-gray-400 flex items-start gap-1"
+                        className="text-muted-foreground flex items-start gap-1"
                       >
                         <span className="text-amber-500 mt-px">•</span>
                         {a}
@@ -601,10 +601,10 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
                   </span>
                   <div className="mt-0.5 space-y-0.5">
                     {analysis.persons.map((p, i) => (
-                      <div key={i} className="text-gray-400">
-                        <span className="text-gray-300">{p.description}</span>
+                      <div key={i} className="text-muted-foreground">
+                        <span className="text-foreground">{p.description}</span>
                         {p.behavior && (
-                          <span className="text-gray-500"> — {p.behavior}</span>
+                          <span className="text-muted-foreground"> — {p.behavior}</span>
                         )}
                       </div>
                     ))}
@@ -622,7 +622,7 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
                       {analysis.recommended_actions.map((a, i) => (
                         <li
                           key={i}
-                          className="text-gray-400 flex items-start gap-1"
+                          className="text-muted-foreground flex items-start gap-1"
                         >
                           <span className="text-blue-500 mt-px">→</span>
                           {a}
@@ -650,8 +650,8 @@ export const LiveFeedPanel = memo(function LiveFeedPanel({
         {/* Zoom indicator */}
         {zoom > 1 && (
           <div className="absolute right-1.5 bottom-12 flex items-center gap-0.5 rounded bg-black/70 px-1.5 py-0.5 backdrop-blur-sm">
-            <ZoomIn className="h-2.5 w-2.5 text-gray-400" />
-            <span className="text-[9px] font-mono text-gray-400">{zoom}x</span>
+            <ZoomIn className="h-2.5 w-2.5 text-muted-foreground" />
+            <span className="text-[9px] font-mono text-muted-foreground">{zoom}x</span>
           </div>
         )}
       </div>

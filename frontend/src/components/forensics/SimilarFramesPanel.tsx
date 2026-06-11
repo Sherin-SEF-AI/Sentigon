@@ -42,7 +42,7 @@ interface SimilarFramesPanelProps {
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
 
-const CARD = "rounded-lg border border-gray-800 bg-gray-900/50";
+const CARD = "rounded-lg border border-border bg-surface-2/50";
 
 /* ------------------------------------------------------------------ */
 /*  SimilarFramesPanel                                                 */
@@ -86,23 +86,23 @@ export default function SimilarFramesPanel({
       <div className="flex items-center gap-2">
         <ImageIcon className="h-4 w-4 text-purple-400" />
         <h3 className="text-sm font-bold text-white">Find Similar Frames</h3>
-        <span className="text-[9px] text-gray-500 bg-gray-800 rounded px-1.5 py-0.5">CLIP</span>
+        <span className="text-[9px] text-muted-foreground bg-surface-3 rounded px-1.5 py-0.5">CLIP</span>
       </div>
 
-      <p className="text-[10px] text-gray-500">
+      <p className="text-[10px] text-muted-foreground">
         Find visually similar frames across all cameras using CLIP vector embeddings.
       </p>
 
       {/* Controls */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-gray-500">
+          <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
             Max Results
           </label>
           <select
             value={maxResults}
             onChange={(e) => setMaxResults(Number(e.target.value))}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-1.5 text-xs text-gray-100 focus:border-purple-700 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-1.5 text-xs text-foreground focus:border-purple-700 focus:outline-none"
           >
             <option value={6}>6</option>
             <option value={12}>12</option>
@@ -111,13 +111,13 @@ export default function SimilarFramesPanel({
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-gray-500">
+          <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
             Min Similarity
           </label>
           <select
             value={minScore}
             onChange={(e) => setMinScore(Number(e.target.value))}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-1.5 text-xs text-gray-100 focus:border-purple-700 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-1.5 text-xs text-foreground focus:border-purple-700 focus:outline-none"
           >
             <option value={0.3}>30%+</option>
             <option value={0.5}>50%+</option>
@@ -145,16 +145,16 @@ export default function SimilarFramesPanel({
       {/* Results grid */}
       {results && !loading && (
         <div className="space-y-3">
-          <div className="flex items-center justify-between text-xs text-gray-500">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>{results.total_results} similar frames found</span>
-            <span className="text-[9px] text-gray-600">{results.search_method}</span>
+            <span className="text-[9px] text-muted-foreground">{results.search_method}</span>
           </div>
 
           <div className="grid grid-cols-2 gap-2 max-h-80 overflow-y-auto">
             {results.results.map((frame, i) => (
               <div
                 key={`${frame.event_id}-${i}`}
-                className="rounded-lg border border-gray-800 bg-gray-950/50 overflow-hidden cursor-pointer hover:border-purple-700/50 transition-colors group"
+                className="rounded-lg border border-border bg-surface-0/50 overflow-hidden cursor-pointer hover:border-purple-700/50 transition-colors group"
                 onClick={() => onSelectFrame?.(frame.event_id)}
               >
                 {frame.frame_url ? (
@@ -166,27 +166,27 @@ export default function SimilarFramesPanel({
                       className="h-full w-full object-cover"
                     />
                     {/* Similarity badge */}
-                    <div className="absolute top-1 right-1 rounded bg-gray-950/80 px-1.5 py-0.5 text-[9px] font-bold font-mono border border-gray-700">
+                    <div className="absolute top-1 right-1 rounded bg-surface-0/80 px-1.5 py-0.5 text-[9px] font-bold font-mono border border-border-strong">
                       <span className={cn(
                         frame.similarity_score >= 0.8 ? "text-green-400" :
                         frame.similarity_score >= 0.6 ? "text-yellow-400" :
-                        "text-gray-400"
+                        "text-muted-foreground"
                       )}>
                         {Math.round(frame.similarity_score * 100)}%
                       </span>
                     </div>
                   </div>
                 ) : (
-                  <div className="flex aspect-video items-center justify-center bg-gray-950">
-                    <ImageIcon className="h-5 w-5 text-gray-700" />
+                  <div className="flex aspect-video items-center justify-center bg-surface-0">
+                    <ImageIcon className="h-5 w-5 text-muted-foreground" />
                   </div>
                 )}
                 <div className="px-2 py-1.5">
-                  <div className="flex items-center gap-1 text-[9px] text-gray-500">
+                  <div className="flex items-center gap-1 text-[9px] text-muted-foreground">
                     <Camera className="h-2.5 w-2.5" />
                     {(frame.camera_name || frame.camera_id || "").slice(0, 12)}
                   </div>
-                  <div className="text-[9px] text-gray-600 font-mono">
+                  <div className="text-[9px] text-muted-foreground font-mono">
                     {frame.timestamp ? formatTimestamp(frame.timestamp) : "--"}
                   </div>
                 </div>
@@ -195,7 +195,7 @@ export default function SimilarFramesPanel({
           </div>
 
           {results.results.length === 0 && (
-            <p className="text-xs text-gray-600 text-center py-4">No similar frames found above threshold</p>
+            <p className="text-xs text-muted-foreground text-center py-4">No similar frames found above threshold</p>
           )}
         </div>
       )}

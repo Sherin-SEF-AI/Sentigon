@@ -150,7 +150,7 @@ function statusBadgeClasses(status?: SiteStatus): string {
     degraded: "bg-yellow-500/10 text-yellow-400 border-yellow-500/40",
     offline: "bg-red-500/10 text-red-400 border-red-500/40",
   };
-  return map[status || ""] || "bg-gray-500/10 text-gray-400 border-gray-500/40";
+  return map[status || ""] || "bg-gray-500/10 text-muted-foreground border-gray-500/40";
 }
 
 function nodeTypeIcon(type: NodeType) {
@@ -171,7 +171,7 @@ function severityBadgeClasses(severity: string): string {
     high: "bg-orange-500/15 text-orange-400 border-orange-500/30",
     medium: "bg-yellow-500/15 text-yellow-400 border-yellow-500/30",
     low: "bg-blue-400/15 text-blue-400 border-blue-400/30",
-    info: "bg-gray-400/15 text-gray-400 border-gray-400/30",
+    info: "bg-gray-400/15 text-muted-foreground border-gray-400/30",
   };
   return map[severity] || map.info;
 }
@@ -249,7 +249,7 @@ function TreeNode({
           "flex items-center gap-1 py-1.5 px-2 rounded-md cursor-pointer group transition-colors text-sm",
           isSelected
             ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"
-            : "hover:bg-gray-800/70 text-gray-300 border border-transparent"
+            : "hover:bg-surface-3/70 text-foreground border border-transparent"
         )}
         style={{ paddingLeft: `${depth * 16 + 8}px` }}
         onClick={() => {
@@ -264,12 +264,12 @@ function TreeNode({
               e.stopPropagation();
               toggleExpand(node.id);
             }}
-            className="p-0.5 hover:bg-gray-700/50 rounded shrink-0"
+            className="p-0.5 hover:bg-surface-3/50 rounded shrink-0"
           >
             {isExpanded ? (
-              <ChevronDown className="h-3.5 w-3.5 text-gray-500" />
+              <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
             ) : (
-              <ChevronRight className="h-3.5 w-3.5 text-gray-500" />
+              <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
             )}
           </button>
         ) : (
@@ -277,7 +277,7 @@ function TreeNode({
         )}
 
         {/* Node icon */}
-        <Icon className="h-3.5 w-3.5 text-gray-500 shrink-0" />
+        <Icon className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
 
         {/* Status dot for sites */}
         {isSiteNode && node.status && (
@@ -291,7 +291,7 @@ function TreeNode({
 
         {/* Camera & alert badges */}
         {node.camera_count != null && node.camera_count > 0 && (
-          <span className="text-[10px] text-gray-500 font-mono shrink-0">
+          <span className="text-[10px] text-muted-foreground font-mono shrink-0">
             {node.camera_count}
             <Camera className="inline h-2.5 w-2.5 ml-0.5" />
           </span>
@@ -316,7 +316,7 @@ function TreeNode({
             {isCompareChecked ? (
               <CheckSquare className="h-3.5 w-3.5 text-cyan-400" />
             ) : (
-              <Square className="h-3.5 w-3.5 text-gray-600" />
+              <Square className="h-3.5 w-3.5 text-muted-foreground" />
             )}
           </button>
         )}
@@ -363,16 +363,16 @@ function StatCard({
   subValue?: string;
 }) {
   return (
-    <div className="rounded-lg border border-gray-800 bg-zinc-900/80 p-4">
+    <div className="rounded-lg border border-border bg-zinc-900/80 p-4">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-[11px] uppercase tracking-wider text-gray-500 font-medium">
+        <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
           {label}
         </span>
         <Icon className={cn("h-4 w-4", color)} />
       </div>
       <p className={cn("text-2xl font-bold font-mono", color)}>{value}</p>
       {subValue && (
-        <p className="text-[11px] text-gray-500 mt-1">{subValue}</p>
+        <p className="text-[11px] text-muted-foreground mt-1">{subValue}</p>
       )}
     </div>
   );
@@ -399,7 +399,7 @@ function GlobalOverviewPanel({
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="h-6 w-6 text-cyan-400 animate-spin" />
-        <span className="ml-2 text-sm text-gray-400">Loading global overview...</span>
+        <span className="ml-2 text-sm text-muted-foreground">Loading global overview...</span>
       </div>
     );
   }
@@ -426,25 +426,25 @@ function GlobalOverviewPanel({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-gray-100">
+          <h2 className="text-lg font-semibold text-foreground">
             Global Command Overview
           </h2>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <p className="text-xs text-muted-foreground mt-0.5">
             Cross-site operational status and intelligence
           </p>
         </div>
         <div className="flex items-center gap-3">
           {overview.last_updated && (
-            <span className="text-[10px] text-gray-600 font-mono">
+            <span className="text-[10px] text-muted-foreground font-mono">
               Updated {formatTs(overview.last_updated)}
             </span>
           )}
           <button
             onClick={onRefresh}
-            className="p-1.5 rounded-md hover:bg-gray-800 transition-colors"
+            className="p-1.5 rounded-md hover:bg-surface-3 transition-colors"
             title="Refresh data"
           >
-            <RefreshCw className="h-4 w-4 text-gray-400" />
+            <RefreshCw className="h-4 w-4 text-muted-foreground" />
           </button>
         </div>
       </div>
@@ -472,13 +472,13 @@ function GlobalOverviewPanel({
           label="Sites Offline"
           value={overview.sites_offline || 0}
           icon={WifiOff}
-          color={(overview.sites_offline || 0) > 0 ? "text-red-400" : "text-gray-500"}
+          color={(overview.sites_offline || 0) > 0 ? "text-red-400" : "text-muted-foreground"}
         />
         <StatCard
           label="Active Alerts"
           value={overview.total_alerts || 0}
           icon={AlertTriangle}
-          color={(overview.total_alerts || 0) > 0 ? "text-yellow-400" : "text-gray-500"}
+          color={(overview.total_alerts || 0) > 0 ? "text-yellow-400" : "text-muted-foreground"}
         />
         <StatCard
           label="Total Cameras"
@@ -491,7 +491,7 @@ function GlobalOverviewPanel({
           label="Active Incidents"
           value={overview.active_incidents || 0}
           icon={Shield}
-          color={(overview.active_incidents || 0) > 0 ? "text-orange-400" : "text-gray-500"}
+          color={(overview.active_incidents || 0) > 0 ? "text-orange-400" : "text-muted-foreground"}
         />
         <StatCard
           label="Threat Level"
@@ -511,7 +511,7 @@ function GlobalOverviewPanel({
           label="Sites Degraded"
           value={overview.sites_degraded || 0}
           icon={AlertTriangle}
-          color={(overview.sites_degraded || 0) > 0 ? "text-yellow-400" : "text-gray-500"}
+          color={(overview.sites_degraded || 0) > 0 ? "text-yellow-400" : "text-muted-foreground"}
         />
       </div>
 
@@ -519,7 +519,7 @@ function GlobalOverviewPanel({
       <div>
         <div className="flex items-center gap-2 mb-3">
           <Link2 className="h-4 w-4 text-cyan-400" />
-          <h3 className="text-sm font-semibold text-gray-200">
+          <h3 className="text-sm font-semibold text-foreground">
             Cross-Site Correlations
           </h3>
           <span className="text-[10px] bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded px-1.5 py-0.5 font-mono">
@@ -528,9 +528,9 @@ function GlobalOverviewPanel({
         </div>
 
         {correlations.length === 0 ? (
-          <div className="rounded-lg border border-gray-800 bg-zinc-900/60 p-6 text-center">
-            <Network className="h-8 w-8 text-gray-700 mx-auto mb-2" />
-            <p className="text-xs text-gray-500">
+          <div className="rounded-lg border border-border bg-zinc-900/60 p-6 text-center">
+            <Network className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+            <p className="text-xs text-muted-foreground">
               No cross-site correlations detected
             </p>
           </div>
@@ -539,7 +539,7 @@ function GlobalOverviewPanel({
             {correlations.map((corr) => (
               <div
                 key={corr.id}
-                className="rounded-lg border border-gray-800 bg-zinc-900/60 p-3 hover:border-gray-700 transition-colors"
+                className="rounded-lg border border-border bg-zinc-900/60 p-3 hover:border-border-strong transition-colors"
               >
                 <div className="flex items-start justify-between gap-2 mb-2">
                   <div className="flex-1 min-w-0">
@@ -552,16 +552,16 @@ function GlobalOverviewPanel({
                       >
                         {corr.severity}
                       </span>
-                      <span className="text-[10px] uppercase text-gray-500 font-medium">
+                      <span className="text-[10px] uppercase text-muted-foreground font-medium">
                         {corr.type.replace(/_/g, " ")}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-300 mt-1 leading-relaxed">
+                    <p className="text-xs text-foreground mt-1 leading-relaxed">
                       {corr.description}
                     </p>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="text-[10px] text-gray-600 font-mono">
+                    <span className="text-[10px] text-muted-foreground font-mono">
                       {Math.round(corr.confidence * 100)}% conf
                     </span>
                   </div>
@@ -570,12 +570,12 @@ function GlobalOverviewPanel({
                   {(Array.isArray(corr.site_names) ? corr.site_names : []).map((name, i) => (
                     <span
                       key={i}
-                      className="text-[10px] bg-gray-800 text-gray-400 rounded px-1.5 py-0.5 font-mono"
+                      className="text-[10px] bg-surface-3 text-muted-foreground rounded px-1.5 py-0.5 font-mono"
                     >
                       {name}
                     </span>
                   ))}
-                  <span className="text-[10px] text-gray-600 ml-auto font-mono">
+                  <span className="text-[10px] text-muted-foreground ml-auto font-mono">
                     {formatTs(corr.created_at)}
                   </span>
                 </div>
@@ -643,7 +643,7 @@ function SiteDetailPanel({
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="h-6 w-6 text-cyan-400 animate-spin" />
-        <span className="ml-2 text-sm text-gray-400">Loading site details...</span>
+        <span className="ml-2 text-sm text-muted-foreground">Loading site details...</span>
       </div>
     );
   }
@@ -676,7 +676,7 @@ function SiteDetailPanel({
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-lg font-semibold text-gray-100">{stats.name}</h2>
+            <h2 className="text-lg font-semibold text-foreground">{stats.name}</h2>
             <span
               className={cn(
                 "inline-flex items-center gap-1.5 rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border",
@@ -690,23 +690,23 @@ function SiteDetailPanel({
             </span>
           </div>
           {stats.address && (
-            <p className="text-xs text-gray-500 mt-0.5">{stats.address}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">{stats.address}</p>
           )}
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={fetchStats}
-            className="p-1.5 rounded-md hover:bg-gray-800 transition-colors"
+            className="p-1.5 rounded-md hover:bg-surface-3 transition-colors"
             title="Refresh"
           >
-            <RefreshCw className="h-4 w-4 text-gray-400" />
+            <RefreshCw className="h-4 w-4 text-muted-foreground" />
           </button>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-md hover:bg-gray-800 transition-colors"
+            className="p-1.5 rounded-md hover:bg-surface-3 transition-colors"
             title="Close"
           >
-            <X className="h-4 w-4 text-gray-400" />
+            <X className="h-4 w-4 text-muted-foreground" />
           </button>
         </div>
       </div>
@@ -724,13 +724,13 @@ function SiteDetailPanel({
           label="Active Alerts"
           value={stats.active_alerts || 0}
           icon={Bell}
-          color={(stats.active_alerts || 0) > 0 ? "text-yellow-400" : "text-gray-500"}
+          color={(stats.active_alerts || 0) > 0 ? "text-yellow-400" : "text-muted-foreground"}
         />
         <StatCard
           label="Active Incidents"
           value={stats.active_incidents || 0}
           icon={Shield}
-          color={(stats.active_incidents || 0) > 0 ? "text-orange-400" : "text-gray-500"}
+          color={(stats.active_incidents || 0) > 0 ? "text-orange-400" : "text-muted-foreground"}
         />
         <StatCard
           label="Uptime"
@@ -760,25 +760,25 @@ function SiteDetailPanel({
           label="Cameras Offline"
           value={stats.cameras_offline || 0}
           icon={WifiOff}
-          color={(stats.cameras_offline || 0) > 0 ? "text-red-400" : "text-gray-500"}
+          color={(stats.cameras_offline || 0) > 0 ? "text-red-400" : "text-muted-foreground"}
         />
         <StatCard
           label="Last Activity"
           value={stats.last_activity ? formatTs(stats.last_activity) : "--"}
           icon={Clock}
-          color="text-gray-400"
+          color="text-muted-foreground"
         />
       </div>
 
       {/* Camera health bar */}
-      <div className="rounded-lg border border-gray-800 bg-zinc-900/60 p-4">
+      <div className="rounded-lg border border-border bg-zinc-900/60 p-4">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs text-gray-400 font-medium">Camera Health</span>
-          <span className="text-[10px] text-gray-500 font-mono">
+          <span className="text-xs text-muted-foreground font-medium">Camera Health</span>
+          <span className="text-[10px] text-muted-foreground font-mono">
             {stats.cameras_online || 0} online / {stats.cameras_offline || 0} offline
           </span>
         </div>
-        <div className="h-2.5 w-full rounded-full bg-gray-800 overflow-hidden">
+        <div className="h-2.5 w-full rounded-full bg-surface-3 overflow-hidden">
           <div
             className="h-full rounded-full bg-gradient-to-r from-green-500 to-green-400 transition-all duration-500"
             style={{ width: `${cameraOnlinePercent}%` }}
@@ -790,23 +790,23 @@ function SiteDetailPanel({
       <div>
         <div className="flex items-center gap-2 mb-3">
           <AlertTriangle className="h-4 w-4 text-yellow-400" />
-          <h3 className="text-sm font-semibold text-gray-200">Recent Alerts</h3>
+          <h3 className="text-sm font-semibold text-foreground">Recent Alerts</h3>
           <span className="text-[10px] bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 rounded px-1.5 py-0.5 font-mono">
             {stats.recent_alerts?.length ?? 0}
           </span>
         </div>
 
         {(!stats.recent_alerts || stats.recent_alerts.length === 0) ? (
-          <div className="rounded-lg border border-gray-800 bg-zinc-900/60 p-6 text-center">
-            <Shield className="h-8 w-8 text-gray-700 mx-auto mb-2" />
-            <p className="text-xs text-gray-500">No recent alerts for this site</p>
+          <div className="rounded-lg border border-border bg-zinc-900/60 p-6 text-center">
+            <Shield className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+            <p className="text-xs text-muted-foreground">No recent alerts for this site</p>
           </div>
         ) : (
           <div className="space-y-1.5 max-h-[280px] overflow-y-auto pr-1 custom-scrollbar">
             {stats.recent_alerts.map((alert) => (
               <div
                 key={alert.id}
-                className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/60 px-3 py-2.5 hover:border-gray-700 transition-colors"
+                className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/60 px-3 py-2.5 hover:border-border-strong transition-colors"
               >
                 <span
                   className={cn(
@@ -817,12 +817,12 @@ function SiteDetailPanel({
                   {alert.severity}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-gray-200 truncate">{alert.title}</p>
+                  <p className="text-xs text-foreground truncate">{alert.title}</p>
                   {alert.zone && (
-                    <p className="text-[10px] text-gray-500 mt-0.5">{alert.zone}</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">{alert.zone}</p>
                   )}
                 </div>
-                <span className="text-[10px] text-gray-600 font-mono shrink-0">
+                <span className="text-[10px] text-muted-foreground font-mono shrink-0">
                   {formatTs(alert.created_at)}
                 </span>
               </div>
@@ -835,7 +835,7 @@ function SiteDetailPanel({
       <IncidentDensityMap siteId={siteId} />
 
       {/* Camera selector for PTZ */}
-      <div className="rounded-xl border border-gray-800 bg-zinc-900/50 p-4">
+      <div className="rounded-xl border border-border bg-zinc-900/50 p-4">
         <div className="flex items-center gap-2 mb-2">
           <Camera className="h-4 w-4 text-cyan-400" />
           <h3 className="text-xs font-semibold uppercase tracking-wider text-cyan-400">
@@ -846,7 +846,7 @@ function SiteDetailPanel({
           <input
             type="text"
             placeholder="Camera ID or name..."
-            className="flex-1 rounded-lg border border-gray-700 bg-gray-900 px-3 py-1.5 text-xs text-gray-200 placeholder-gray-600 focus:border-cyan-700 focus:outline-none"
+            className="flex-1 rounded-lg border border-border-strong bg-surface-2 px-3 py-1.5 text-xs text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 const val = (e.target as HTMLInputElement).value.trim();
@@ -860,14 +860,14 @@ function SiteDetailPanel({
               const val = input?.value?.trim();
               if (val) setSelectedCamera({ id: val, name: val });
             }}
-            className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-700 transition-colors"
+            className="rounded-lg border border-border-strong bg-surface-3 px-3 py-1.5 text-xs text-foreground hover:bg-surface-3 transition-colors"
           >
             Select
           </button>
           {selectedCamera && (
             <button
               onClick={() => setSelectedCamera(null)}
-              className="rounded-lg p-1.5 text-gray-600 hover:text-gray-400 hover:bg-gray-800 transition-colors"
+              className="rounded-lg p-1.5 text-muted-foreground hover:text-muted-foreground hover:bg-surface-3 transition-colors"
             >
               <X className="h-3.5 w-3.5" />
             </button>
@@ -936,11 +936,11 @@ function ComparisonPanel({
   if (siteIds.length < 2) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-3">
-        <GitCompareArrows className="h-10 w-10 text-gray-700" />
-        <p className="text-sm text-gray-500">
+        <GitCompareArrows className="h-10 w-10 text-muted-foreground" />
+        <p className="text-sm text-muted-foreground">
           Select at least 2 sites from the tree to compare
         </p>
-        <p className="text-xs text-gray-600">
+        <p className="text-xs text-muted-foreground">
           Use the checkbox on site nodes in the hierarchy
         </p>
       </div>
@@ -951,7 +951,7 @@ function ComparisonPanel({
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="h-6 w-6 text-cyan-400 animate-spin" />
-        <span className="ml-2 text-sm text-gray-400">Comparing sites...</span>
+        <span className="ml-2 text-sm text-muted-foreground">Comparing sites...</span>
       </div>
     );
   }
@@ -988,35 +988,35 @@ function ComparisonPanel({
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-gray-100">Site Comparison</h2>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <h2 className="text-lg font-semibold text-foreground">Site Comparison</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">
             Comparing {result.sites.length} sites across key metrics
           </p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={fetchComparison}
-            className="p-1.5 rounded-md hover:bg-gray-800 transition-colors"
+            className="p-1.5 rounded-md hover:bg-surface-3 transition-colors"
             title="Refresh comparison"
           >
-            <RefreshCw className="h-4 w-4 text-gray-400" />
+            <RefreshCw className="h-4 w-4 text-muted-foreground" />
           </button>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-md hover:bg-gray-800 transition-colors"
+            className="p-1.5 rounded-md hover:bg-surface-3 transition-colors"
             title="Close comparison"
           >
-            <X className="h-4 w-4 text-gray-400" />
+            <X className="h-4 w-4 text-muted-foreground" />
           </button>
         </div>
       </div>
 
       {/* Comparison table */}
-      <div className="rounded-lg border border-gray-800 bg-zinc-900/60 overflow-x-auto">
+      <div className="rounded-lg border border-border bg-zinc-900/60 overflow-x-auto">
         <table className="w-full text-xs">
           <thead>
-            <tr className="border-b border-gray-800">
-              <th className="text-left px-4 py-3 text-gray-500 font-medium uppercase tracking-wider text-[10px]">
+            <tr className="border-b border-border">
+              <th className="text-left px-4 py-3 text-muted-foreground font-medium uppercase tracking-wider text-[10px]">
                 Metric
               </th>
               {result.sites.map((site) => (
@@ -1031,7 +1031,7 @@ function ComparisonPanel({
                         statusDotColor(site.status)
                       )}
                     />
-                    <span className="text-gray-300">{site.name}</span>
+                    <span className="text-foreground">{site.name}</span>
                   </div>
                 </th>
               ))}
@@ -1049,9 +1049,9 @@ function ComparisonPanel({
               return (
                 <tr
                   key={String(metric.key)}
-                  className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors"
+                  className="border-b border-border/50 hover:bg-surface-3/30 transition-colors"
                 >
-                  <td className="px-4 py-2.5 text-gray-400 font-medium">
+                  <td className="px-4 py-2.5 text-muted-foreground font-medium">
                     {metric.label}
                   </td>
                   {result.sites.map((site) => {
@@ -1059,7 +1059,7 @@ function ComparisonPanel({
                     const isMax = !allEqual && val === maxVal;
                     const isMin = !allEqual && val === minVal;
 
-                    let colorClass = "text-gray-300";
+                    let colorClass = "text-foreground";
                     if (isMax) colorClass = metric.invertColor ? "text-red-400" : "text-green-400";
                     if (isMin) colorClass = metric.invertColor ? "text-green-400" : "text-red-400";
 
@@ -1082,8 +1082,8 @@ function ComparisonPanel({
             })}
 
             {/* Status row */}
-            <tr className="border-b border-gray-800/50">
-              <td className="px-4 py-2.5 text-gray-400 font-medium">Status</td>
+            <tr className="border-b border-border/50">
+              <td className="px-4 py-2.5 text-muted-foreground font-medium">Status</td>
               {result.sites.map((site) => (
                 <td key={site.id} className="px-4 py-2.5 text-center">
                   <span
@@ -1109,7 +1109,7 @@ function ComparisonPanel({
 
       {/* Visual metric bars */}
       <div className="space-y-3">
-        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
           Visual Comparison
         </h3>
         {metrics.slice(0, 4).map((metric) => {
@@ -1121,9 +1121,9 @@ function ComparisonPanel({
           return (
             <div
               key={String(metric.key)}
-              className="rounded-lg border border-gray-800 bg-zinc-900/60 p-3"
+              className="rounded-lg border border-border bg-zinc-900/60 p-3"
             >
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2">
                 {metric.label}
               </p>
               <div className="space-y-1.5">
@@ -1133,16 +1133,16 @@ function ComparisonPanel({
 
                   return (
                     <div key={site.id} className="flex items-center gap-2">
-                      <span className="text-[10px] text-gray-400 w-24 truncate shrink-0">
+                      <span className="text-[10px] text-muted-foreground w-24 truncate shrink-0">
                         {site.name}
                       </span>
-                      <div className="flex-1 h-2 rounded-full bg-gray-800 overflow-hidden">
+                      <div className="flex-1 h-2 rounded-full bg-surface-3 overflow-hidden">
                         <div
                           className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-cyan-400 transition-all duration-500"
                           style={{ width: `${pct}%` }}
                         />
                       </div>
-                      <span className="text-[10px] text-gray-400 font-mono w-12 text-right shrink-0">
+                      <span className="text-[10px] text-muted-foreground font-mono w-12 text-right shrink-0">
                         {metric.format ? metric.format(val) : val}
                       </span>
                     </div>
@@ -1194,13 +1194,13 @@ function PTZControlPanel({ cameraId, cameraName }: PTZPanelProps) {
   };
 
   return (
-    <div className="rounded-xl border border-gray-800 bg-zinc-900/50 p-4 mt-4">
+    <div className="rounded-xl border border-border bg-zinc-900/50 p-4 mt-4">
       <div className="flex items-center gap-2 mb-3">
         <Video className="h-4 w-4 text-cyan-400" />
         <h3 className="text-xs font-semibold uppercase tracking-wider text-cyan-400">
           PTZ Control
         </h3>
-        <span className="text-[10px] text-gray-500 truncate">{cameraName}</span>
+        <span className="text-[10px] text-muted-foreground truncate">{cameraName}</span>
       </div>
 
       <div className="flex items-start gap-4">
@@ -1211,52 +1211,52 @@ function PTZControlPanel({ cameraId, cameraName }: PTZPanelProps) {
           <button
             onClick={() => sendPTZ("move_up")}
             disabled={!!sending}
-            className="flex items-center justify-center rounded-lg border border-gray-700 bg-gray-800 p-2 hover:bg-gray-700 hover:border-cyan-600 transition-colors disabled:opacity-50"
+            className="flex items-center justify-center rounded-lg border border-border-strong bg-surface-3 p-2 hover:bg-surface-3 hover:border-cyan-600 transition-colors disabled:opacity-50"
             title="Tilt Up"
           >
-            {sending === "move_up" ? <Loader2 className="h-3.5 w-3.5 animate-spin text-cyan-400" /> : <ArrowUp className="h-3.5 w-3.5 text-gray-300" />}
+            {sending === "move_up" ? <Loader2 className="h-3.5 w-3.5 animate-spin text-cyan-400" /> : <ArrowUp className="h-3.5 w-3.5 text-foreground" />}
           </button>
           <span />
           {/* Row 2: left, center dot, right */}
           <button
             onClick={() => sendPTZ("move_left")}
             disabled={!!sending}
-            className="flex items-center justify-center rounded-lg border border-gray-700 bg-gray-800 p-2 hover:bg-gray-700 hover:border-cyan-600 transition-colors disabled:opacity-50"
+            className="flex items-center justify-center rounded-lg border border-border-strong bg-surface-3 p-2 hover:bg-surface-3 hover:border-cyan-600 transition-colors disabled:opacity-50"
             title="Pan Left"
           >
-            {sending === "move_left" ? <Loader2 className="h-3.5 w-3.5 animate-spin text-cyan-400" /> : <ArrowLeft className="h-3.5 w-3.5 text-gray-300" />}
+            {sending === "move_left" ? <Loader2 className="h-3.5 w-3.5 animate-spin text-cyan-400" /> : <ArrowLeft className="h-3.5 w-3.5 text-foreground" />}
           </button>
           <span className="flex items-center justify-center">
-            <span className="w-2 h-2 rounded-full bg-gray-700" />
+            <span className="w-2 h-2 rounded-full bg-surface-3" />
           </span>
           <button
             onClick={() => sendPTZ("move_right")}
             disabled={!!sending}
-            className="flex items-center justify-center rounded-lg border border-gray-700 bg-gray-800 p-2 hover:bg-gray-700 hover:border-cyan-600 transition-colors disabled:opacity-50"
+            className="flex items-center justify-center rounded-lg border border-border-strong bg-surface-3 p-2 hover:bg-surface-3 hover:border-cyan-600 transition-colors disabled:opacity-50"
             title="Pan Right"
           >
-            {sending === "move_right" ? <Loader2 className="h-3.5 w-3.5 animate-spin text-cyan-400" /> : <ArrowRight className="h-3.5 w-3.5 text-gray-300" />}
+            {sending === "move_right" ? <Loader2 className="h-3.5 w-3.5 animate-spin text-cyan-400" /> : <ArrowRight className="h-3.5 w-3.5 text-foreground" />}
           </button>
           {/* Row 3: empty, down, empty */}
           <span />
           <button
             onClick={() => sendPTZ("move_down")}
             disabled={!!sending}
-            className="flex items-center justify-center rounded-lg border border-gray-700 bg-gray-800 p-2 hover:bg-gray-700 hover:border-cyan-600 transition-colors disabled:opacity-50"
+            className="flex items-center justify-center rounded-lg border border-border-strong bg-surface-3 p-2 hover:bg-surface-3 hover:border-cyan-600 transition-colors disabled:opacity-50"
             title="Tilt Down"
           >
-            {sending === "move_down" ? <Loader2 className="h-3.5 w-3.5 animate-spin text-cyan-400" /> : <ArrowDown className="h-3.5 w-3.5 text-gray-300" />}
+            {sending === "move_down" ? <Loader2 className="h-3.5 w-3.5 animate-spin text-cyan-400" /> : <ArrowDown className="h-3.5 w-3.5 text-foreground" />}
           </button>
           <span />
         </div>
 
         {/* Zoom column */}
         <div className="flex flex-col gap-1.5 shrink-0">
-          <span className="text-[9px] font-bold uppercase tracking-wider text-gray-600 mb-0.5">Zoom</span>
+          <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground mb-0.5">Zoom</span>
           <button
             onClick={() => sendPTZ("zoom_in")}
             disabled={!!sending}
-            className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-800 px-2.5 py-1.5 text-xs text-gray-300 hover:bg-gray-700 hover:border-cyan-600 transition-colors disabled:opacity-50"
+            className="flex items-center gap-1 rounded-lg border border-border-strong bg-surface-3 px-2.5 py-1.5 text-xs text-foreground hover:bg-surface-3 hover:border-cyan-600 transition-colors disabled:opacity-50"
             title="Zoom In"
           >
             {sending === "zoom_in" ? <Loader2 className="h-3 w-3 animate-spin" /> : <ZoomIn className="h-3 w-3" />}
@@ -1265,7 +1265,7 @@ function PTZControlPanel({ cameraId, cameraName }: PTZPanelProps) {
           <button
             onClick={() => sendPTZ("zoom_out")}
             disabled={!!sending}
-            className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-800 px-2.5 py-1.5 text-xs text-gray-300 hover:bg-gray-700 hover:border-cyan-600 transition-colors disabled:opacity-50"
+            className="flex items-center gap-1 rounded-lg border border-border-strong bg-surface-3 px-2.5 py-1.5 text-xs text-foreground hover:bg-surface-3 hover:border-cyan-600 transition-colors disabled:opacity-50"
             title="Zoom Out"
           >
             {sending === "zoom_out" ? <Loader2 className="h-3 w-3 animate-spin" /> : <ZoomOut className="h-3 w-3" />}
@@ -1294,7 +1294,7 @@ function PTZControlPanel({ cameraId, cameraName }: PTZPanelProps) {
 /* ------------------------------------------------------------------ */
 
 function incidentDensityBadge(count: number): string {
-  if (count === 0) return "bg-gray-700 text-gray-400";
+  if (count === 0) return "bg-surface-3 text-muted-foreground";
   if (count <= 3) return "bg-amber-600 text-amber-100";
   return "bg-red-600 text-red-100";
 }
@@ -1333,7 +1333,7 @@ function IncidentDensityMap({ siteId }: { siteId: string }) {
   if (zones.length === 0) return null;
 
   return (
-    <div className="mt-4 rounded-xl border border-gray-800 bg-zinc-900/50 p-4">
+    <div className="mt-4 rounded-xl border border-border bg-zinc-900/50 p-4">
       <div className="flex items-center gap-2 mb-3">
         <LayoutGrid className="h-4 w-4 text-cyan-400" />
         <h3 className="text-xs font-semibold uppercase tracking-wider text-cyan-400">
@@ -1344,9 +1344,9 @@ function IncidentDensityMap({ siteId }: { siteId: string }) {
         {zones.map((z) => (
           <div
             key={z.zone_id}
-            className="flex items-center gap-2 rounded-lg border border-gray-800 bg-zinc-900/60 px-3 py-2"
+            className="flex items-center gap-2 rounded-lg border border-border bg-zinc-900/60 px-3 py-2"
           >
-            <span className="text-xs text-gray-300 font-medium">{z.zone_name}</span>
+            <span className="text-xs text-foreground font-medium">{z.zone_name}</span>
             <span
               className={cn(
                 "rounded-full px-2 py-0.5 text-[10px] font-bold font-mono",
@@ -1358,8 +1358,8 @@ function IncidentDensityMap({ siteId }: { siteId: string }) {
           </div>
         ))}
       </div>
-      <div className="mt-2.5 flex items-center gap-3 text-[10px] text-gray-600">
-        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-gray-700" /> 0</span>
+      <div className="mt-2.5 flex items-center gap-3 text-[10px] text-muted-foreground">
+        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-surface-3" /> 0</span>
         <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-600" /> 1–3</span>
         <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-600" /> 4+</span>
       </div>
@@ -1591,36 +1591,36 @@ export default function CommandCenterPage() {
 
   /* ---- Render ---- */
   return (
-    <div className="flex h-[calc(100vh-64px)] bg-[#030712] text-gray-100 overflow-hidden">
+    <div className="flex h-[calc(100vh-64px)] bg-[#030712] text-foreground overflow-hidden">
       {/* =============== LEFT SIDEBAR =============== */}
       <aside
         className={cn(
-          "flex flex-col border-r border-gray-800 bg-zinc-900/40 transition-all duration-300 shrink-0",
+          "flex flex-col border-r border-border bg-zinc-900/40 transition-all duration-300 shrink-0",
           sidebarCollapsed ? "w-12" : "w-80"
         )}
       >
         {/* Sidebar header */}
-        <div className="flex items-center justify-between px-3 py-3 border-b border-gray-800">
+        <div className="flex items-center justify-between px-3 py-3 border-b border-border">
           {!sidebarCollapsed && (
             <div className="flex items-center gap-2 min-w-0">
               <Network className="h-4 w-4 text-cyan-400 shrink-0" />
-              <span className="text-xs font-semibold text-gray-300 uppercase tracking-wider truncate">
+              <span className="text-xs font-semibold text-foreground uppercase tracking-wider truncate">
                 Site Hierarchy
               </span>
-              <span className="text-[10px] bg-gray-800 text-gray-400 rounded px-1.5 py-0.5 font-mono shrink-0">
+              <span className="text-[10px] bg-surface-3 text-muted-foreground rounded px-1.5 py-0.5 font-mono shrink-0">
                 {siteCount}
               </span>
             </div>
           )}
           <button
             onClick={() => setSidebarCollapsed((p) => !p)}
-            className="p-1 rounded hover:bg-gray-800 transition-colors shrink-0"
+            className="p-1 rounded hover:bg-surface-3 transition-colors shrink-0"
             title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {sidebarCollapsed ? (
-              <ChevronRight className="h-4 w-4 text-gray-500" />
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
             ) : (
-              <ChevronDown className="h-4 w-4 text-gray-500 rotate-90" />
+              <ChevronDown className="h-4 w-4 text-muted-foreground rotate-90" />
             )}
           </button>
         </div>
@@ -1628,39 +1628,39 @@ export default function CommandCenterPage() {
         {!sidebarCollapsed && (
           <>
             {/* Search */}
-            <div className="px-3 py-2 border-b border-gray-800">
+            <div className="px-3 py-2 border-b border-border">
               <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-600" />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
                 <input
                   type="text"
                   placeholder="Search sites..."
                   value={treeSearch}
                   onChange={(e) => setTreeSearch(e.target.value)}
-                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-gray-800/60 border border-gray-700 rounded-md text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-cyan-500/40 focus:border-cyan-500/40"
+                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-surface-3/60 border border-border-strong rounded-md text-foreground placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-cyan-500/40 focus:border-cyan-500/40"
                 />
                 {treeSearch && (
                   <button
                     onClick={() => setTreeSearch("")}
                     className="absolute right-2 top-1/2 -translate-y-1/2"
                   >
-                    <X className="h-3 w-3 text-gray-600 hover:text-gray-400" />
+                    <X className="h-3 w-3 text-muted-foreground hover:text-muted-foreground" />
                   </button>
                 )}
               </div>
             </div>
 
             {/* Toolbar */}
-            <div className="flex items-center gap-1 px-3 py-1.5 border-b border-gray-800">
+            <div className="flex items-center gap-1 px-3 py-1.5 border-b border-border">
               <button
                 onClick={expandAll}
-                className="text-[10px] text-gray-500 hover:text-gray-300 px-1.5 py-0.5 rounded hover:bg-gray-800 transition-colors"
+                className="text-[10px] text-muted-foreground hover:text-foreground px-1.5 py-0.5 rounded hover:bg-surface-3 transition-colors"
               >
                 Expand All
               </button>
               <span className="text-gray-800">|</span>
               <button
                 onClick={collapseAll}
-                className="text-[10px] text-gray-500 hover:text-gray-300 px-1.5 py-0.5 rounded hover:bg-gray-800 transition-colors"
+                className="text-[10px] text-muted-foreground hover:text-foreground px-1.5 py-0.5 rounded hover:bg-surface-3 transition-colors"
               >
                 Collapse All
               </button>
@@ -1677,14 +1677,14 @@ export default function CommandCenterPage() {
                       "text-[10px] px-1.5 py-0.5 rounded transition-colors",
                       compareIds.size >= 2
                         ? "bg-cyan-500/15 text-cyan-400 hover:bg-cyan-500/25 border border-cyan-500/30"
-                        : "bg-gray-800 text-gray-600 cursor-not-allowed"
+                        : "bg-surface-3 text-muted-foreground cursor-not-allowed"
                     )}
                   >
                     Compare
                   </button>
                   <button
                     onClick={handleClearComparison}
-                    className="text-[10px] text-gray-600 hover:text-gray-400 px-1 py-0.5 rounded hover:bg-gray-800 transition-colors"
+                    className="text-[10px] text-muted-foreground hover:text-muted-foreground px-1 py-0.5 rounded hover:bg-surface-3 transition-colors"
                     title="Clear selection"
                   >
                     <X className="h-3 w-3" />
@@ -1698,7 +1698,7 @@ export default function CommandCenterPage() {
               {loadingHierarchy ? (
                 <div className="flex items-center justify-center py-12">
                   <Loader2 className="h-5 w-5 text-cyan-400 animate-spin" />
-                  <span className="ml-2 text-xs text-gray-500">Loading hierarchy...</span>
+                  <span className="ml-2 text-xs text-muted-foreground">Loading hierarchy...</span>
                 </div>
               ) : errorHierarchy ? (
                 <div className="flex flex-col items-center justify-center py-12 gap-2 px-4">
@@ -1713,8 +1713,8 @@ export default function CommandCenterPage() {
                 </div>
               ) : hierarchy.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 gap-2 px-4">
-                  <Building2 className="h-8 w-8 text-gray-700" />
-                  <p className="text-xs text-gray-500 text-center">
+                  <Building2 className="h-8 w-8 text-muted-foreground" />
+                  <p className="text-xs text-muted-foreground text-center">
                     No sites configured
                   </p>
                 </div>
@@ -1742,10 +1742,10 @@ export default function CommandCenterPage() {
       {/* =============== MAIN CONTENT =============== */}
       <main className="flex-1 overflow-y-auto">
         {/* Top bar */}
-        <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-3 border-b border-gray-800 bg-[#030712]/95 backdrop-blur-sm">
+        <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-3 border-b border-border bg-[#030712]/95 backdrop-blur-sm">
           <div className="flex items-center gap-3">
             <Shield className="h-5 w-5 text-cyan-400" />
-            <h1 className="text-base font-semibold text-gray-100">
+            <h1 className="text-base font-semibold text-foreground">
               Multi-Site Command Center
             </h1>
             <div className="flex items-center gap-1 ml-2">
@@ -1755,7 +1755,7 @@ export default function CommandCenterPage() {
                   "text-[11px] px-2.5 py-1 rounded-md transition-colors font-medium",
                   viewMode === "overview"
                     ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/30"
-                    : "text-gray-500 hover:text-gray-300 hover:bg-gray-800"
+                    : "text-muted-foreground hover:text-foreground hover:bg-surface-3"
                 )}
               >
                 Overview
@@ -1767,7 +1767,7 @@ export default function CommandCenterPage() {
                     "text-[11px] px-2.5 py-1 rounded-md transition-colors font-medium",
                     viewMode === "site-detail"
                       ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/30"
-                      : "text-gray-500 hover:text-gray-300 hover:bg-gray-800"
+                      : "text-muted-foreground hover:text-foreground hover:bg-surface-3"
                   )}
                 >
                   Site Detail
@@ -1780,7 +1780,7 @@ export default function CommandCenterPage() {
                     "text-[11px] px-2.5 py-1 rounded-md transition-colors font-medium flex items-center gap-1",
                     viewMode === "comparison"
                       ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/30"
-                      : "text-gray-500 hover:text-gray-300 hover:bg-gray-800"
+                      : "text-muted-foreground hover:text-foreground hover:bg-surface-3"
                   )}
                 >
                   <GitCompareArrows className="h-3 w-3" />
@@ -1792,7 +1792,7 @@ export default function CommandCenterPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={refreshAll}
-              className="flex items-center gap-1.5 text-[11px] text-gray-400 hover:text-gray-200 px-2.5 py-1.5 rounded-md hover:bg-gray-800 transition-colors"
+              className="flex items-center gap-1.5 text-[11px] text-muted-foreground hover:text-foreground px-2.5 py-1.5 rounded-md hover:bg-surface-3 transition-colors"
             >
               <RefreshCw className="h-3.5 w-3.5" />
               Refresh
@@ -1822,8 +1822,8 @@ export default function CommandCenterPage() {
 
           {viewMode === "site-detail" && !selectedSiteId && (
             <div className="flex flex-col items-center justify-center h-64 gap-3">
-              <Building2 className="h-10 w-10 text-gray-700" />
-              <p className="text-sm text-gray-500">
+              <Building2 className="h-10 w-10 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">
                 Select a site from the hierarchy to view details
               </p>
             </div>

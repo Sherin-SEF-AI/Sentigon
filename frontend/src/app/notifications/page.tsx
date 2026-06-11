@@ -103,7 +103,7 @@ const SEV_BADGE: Record<string, string> = {
   high: "text-orange-500 bg-orange-500/10 border-orange-500/50",
   medium: "text-yellow-500 bg-yellow-500/10 border-yellow-500/50",
   low: "text-blue-400 bg-blue-400/10 border-blue-400/50",
-  info: "text-gray-400 bg-gray-400/10 border-gray-600",
+  info: "text-muted-foreground bg-gray-400/10 border-border-strong",
 };
 
 const TEMPLATE_VARIABLES = [
@@ -114,7 +114,7 @@ const TEMPLATE_VARIABLES = [
 ] as const;
 
 const DELIVERY_STATUS_BADGE: Record<string, string> = {
-  sent: "text-gray-400 bg-gray-800 border-gray-700",
+  sent: "text-muted-foreground bg-surface-3 border-border-strong",
   delivered: "text-blue-400 bg-blue-900/30 border-blue-700/50",
   acknowledged: "text-green-400 bg-green-900/30 border-green-700/50",
 };
@@ -208,20 +208,20 @@ function SendTab({ onSent }: { onSent: () => void }) {
     <div className="mx-auto max-w-2xl space-y-5 py-4">
       {/* Title */}
       <div>
-        <label className="mb-1 block text-xs font-semibold text-gray-400">
+        <label className="mb-1 block text-xs font-semibold text-muted-foreground">
           Title *
         </label>
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Alert title..."
-          className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:border-cyan-700 focus:outline-none"
+          className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none"
         />
       </div>
 
       {/* Message Body */}
       <div>
-        <label className="mb-1 block text-xs font-semibold text-gray-400">
+        <label className="mb-1 block text-xs font-semibold text-muted-foreground">
           Message Body *
         </label>
         <textarea
@@ -229,13 +229,13 @@ function SendTab({ onSent }: { onSent: () => void }) {
           onChange={(e) => setMessage(e.target.value)}
           rows={5}
           placeholder="Notification message body..."
-          className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:border-cyan-700 focus:outline-none resize-none"
+          className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none resize-none"
         />
       </div>
 
       {/* Severity */}
       <div>
-        <label className="mb-2 block text-xs font-semibold text-gray-400">
+        <label className="mb-2 block text-xs font-semibold text-muted-foreground">
           Severity
         </label>
         <div className="flex items-center gap-2 flex-wrap">
@@ -247,7 +247,7 @@ function SendTab({ onSent }: { onSent: () => void }) {
                 "rounded-lg px-3 py-1.5 text-xs font-semibold uppercase border transition-colors",
                 severity === s
                   ? SEV_BADGE[s]
-                  : "border-gray-700 bg-gray-900 text-gray-500 hover:text-gray-300"
+                  : "border-border-strong bg-surface-2 text-muted-foreground hover:text-foreground"
               )}
             >
               {s}
@@ -258,7 +258,7 @@ function SendTab({ onSent }: { onSent: () => void }) {
 
       {/* Channels */}
       <div>
-        <label className="mb-2 block text-xs font-semibold text-gray-400">
+        <label className="mb-2 block text-xs font-semibold text-muted-foreground">
           Channels *
         </label>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -270,7 +270,7 @@ function SendTab({ onSent }: { onSent: () => void }) {
                 "flex items-center gap-2 rounded-lg border px-4 py-2.5 text-xs font-semibold transition-colors",
                 channels.includes(ch.key)
                   ? "border-cyan-600 bg-cyan-900/30 text-cyan-400"
-                  : "border-gray-700 bg-gray-900 text-gray-500 hover:text-gray-300"
+                  : "border-border-strong bg-surface-2 text-muted-foreground hover:text-foreground"
               )}
             >
               {ch.icon}
@@ -282,7 +282,7 @@ function SendTab({ onSent }: { onSent: () => void }) {
 
       {/* Recipient Selection */}
       <div>
-        <label className="mb-2 block text-xs font-semibold text-gray-400">
+        <label className="mb-2 block text-xs font-semibold text-muted-foreground">
           Recipients *
         </label>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -294,7 +294,7 @@ function SendTab({ onSent }: { onSent: () => void }) {
                 "flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
                 recipients.includes(group)
                   ? "border-cyan-600 bg-cyan-900/30 text-cyan-400"
-                  : "border-gray-700 bg-gray-900 text-gray-500 hover:text-gray-300"
+                  : "border-border-strong bg-surface-2 text-muted-foreground hover:text-foreground"
               )}
             >
               <Users className="h-3.5 w-3.5" />
@@ -328,35 +328,35 @@ function SendTab({ onSent }: { onSent: () => void }) {
       {/* Confirmation Modal */}
       {showConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-xl border border-gray-800 bg-[#030712] p-6 shadow-2xl">
+          <div className="w-full max-w-md rounded-xl border border-border bg-[#030712] p-6 shadow-2xl">
             <div className="flex items-center gap-3 mb-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-900/30">
                 <AlertTriangle className="h-5 w-5 text-red-500" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-gray-100">
+                <h3 className="text-sm font-bold text-foreground">
                   Confirm Notification
                 </h3>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   This will broadcast to all selected recipients
                 </p>
               </div>
             </div>
 
-            <div className="mb-4 space-y-2 rounded-lg border border-gray-800 bg-zinc-900/50 p-3">
-              <p className="text-xs text-gray-400">
-                <span className="font-semibold text-gray-300">Title:</span> {title}
+            <div className="mb-4 space-y-2 rounded-lg border border-border bg-zinc-900/50 p-3">
+              <p className="text-xs text-muted-foreground">
+                <span className="font-semibold text-foreground">Title:</span> {title}
               </p>
-              <p className="text-xs text-gray-400">
-                <span className="font-semibold text-gray-300">Severity:</span>{" "}
+              <p className="text-xs text-muted-foreground">
+                <span className="font-semibold text-foreground">Severity:</span>{" "}
                 <span className="uppercase">{severity}</span>
               </p>
-              <p className="text-xs text-gray-400">
-                <span className="font-semibold text-gray-300">Channels:</span>{" "}
+              <p className="text-xs text-muted-foreground">
+                <span className="font-semibold text-foreground">Channels:</span>{" "}
                 {channels.join(", ")}
               </p>
-              <p className="text-xs text-gray-400">
-                <span className="font-semibold text-gray-300">Recipients:</span>{" "}
+              <p className="text-xs text-muted-foreground">
+                <span className="font-semibold text-foreground">Recipients:</span>{" "}
                 {recipients.join(", ")}
               </p>
             </div>
@@ -364,7 +364,7 @@ function SendTab({ onSent }: { onSent: () => void }) {
             <div className="flex items-center justify-end gap-3">
               <button
                 onClick={() => setShowConfirm(false)}
-                className="rounded-lg border border-gray-700 px-4 py-2 text-xs text-gray-400 hover:bg-gray-800"
+                className="rounded-lg border border-border-strong px-4 py-2 text-xs text-muted-foreground hover:bg-surface-3"
               >
                 Cancel
               </button>
@@ -425,17 +425,17 @@ function HistoryTab() {
   if (history.length === 0) {
     return (
       <div className="flex flex-col items-center py-20">
-        <Bell className="mb-2 h-10 w-10 text-gray-700" />
-        <p className="text-sm text-gray-500">No notifications sent yet</p>
+        <Bell className="mb-2 h-10 w-10 text-muted-foreground" />
+        <p className="text-sm text-muted-foreground">No notifications sent yet</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-gray-800 bg-zinc-900/50 overflow-hidden">
+    <div className="rounded-xl border border-border bg-zinc-900/50 overflow-hidden">
       <table className="w-full text-left text-sm">
         <thead className="sticky top-0 z-10 bg-zinc-900/90 backdrop-blur">
-          <tr className="border-b border-gray-800 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+          <tr className="border-b border-border text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
             <th className="px-4 py-3">Timestamp</th>
             <th className="px-3 py-3">Title</th>
             <th className="px-3 py-3">Severity</th>
@@ -449,13 +449,13 @@ function HistoryTab() {
           {history.map((n) => (
             <tr
               key={n.id}
-              className="border-b border-gray-800/50 hover:bg-zinc-900/70 transition-colors"
+              className="border-b border-border/50 hover:bg-zinc-900/70 transition-colors"
             >
-              <td className="px-4 py-3 text-[11px] text-gray-500 font-mono whitespace-nowrap">
+              <td className="px-4 py-3 text-[11px] text-muted-foreground font-mono whitespace-nowrap">
                 {fmtTime(n.sent_at)}
               </td>
               <td className="px-3 py-3">
-                <span className="font-medium text-gray-200 truncate max-w-[220px] block">
+                <span className="font-medium text-foreground truncate max-w-[220px] block">
                   {n.title}
                 </span>
               </td>
@@ -463,7 +463,7 @@ function HistoryTab() {
                 <span
                   className={cn(
                     "rounded px-2 py-0.5 text-[10px] font-bold uppercase border",
-                    SEV_BADGE[n.severity] || "text-gray-400 bg-gray-800 border-gray-700"
+                    SEV_BADGE[n.severity] || "text-muted-foreground bg-surface-3 border-border-strong"
                   )}
                 >
                   {n.severity}
@@ -474,14 +474,14 @@ function HistoryTab() {
                   {n.channels.map((ch) => (
                     <span
                       key={ch}
-                      className="rounded bg-gray-800 px-1.5 py-0.5 text-[9px] text-gray-400 uppercase"
+                      className="rounded bg-surface-3 px-1.5 py-0.5 text-[9px] text-muted-foreground uppercase"
                     >
                       {ch}
                     </span>
                   ))}
                 </div>
               </td>
-              <td className="px-3 py-3 text-xs text-gray-400 font-mono">
+              <td className="px-3 py-3 text-xs text-muted-foreground font-mono">
                 {n.recipient_count}
               </td>
               <td className="px-3 py-3">
@@ -494,7 +494,7 @@ function HistoryTab() {
                       ? "text-yellow-400 bg-yellow-900/30"
                       : n.status === "failed"
                       ? "text-red-400 bg-red-900/30"
-                      : "text-gray-400 bg-gray-800"
+                      : "text-muted-foreground bg-surface-3"
                   )}
                 >
                   {n.status}
@@ -505,13 +505,13 @@ function HistoryTab() {
                   <span
                     className={cn(
                       "rounded border px-2 py-0.5 text-[10px] font-semibold uppercase",
-                      DELIVERY_STATUS_BADGE[n.delivery_status] || "text-gray-400 bg-gray-800 border-gray-700"
+                      DELIVERY_STATUS_BADGE[n.delivery_status] || "text-muted-foreground bg-surface-3 border-border-strong"
                     )}
                   >
                     {n.delivery_status}
                   </span>
                 ) : (
-                  <span className="text-[10px] text-gray-700">—</span>
+                  <span className="text-[10px] text-muted-foreground">—</span>
                 )}
               </td>
             </tr>
@@ -613,7 +613,7 @@ function TemplatesTab() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-300">
+        <h3 className="text-sm font-semibold text-foreground">
           Notification Templates
         </h3>
         <button
@@ -627,12 +627,12 @@ function TemplatesTab() {
 
       {/* Create Form */}
       {showForm && (
-        <div className="rounded-lg border border-gray-800 bg-zinc-900/50 p-4 space-y-3">
+        <div className="rounded-lg border border-border bg-zinc-900/50 p-4 space-y-3">
           <input
             value={form.name}
             onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
             placeholder="Template name"
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:border-cyan-700 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none"
           />
           <textarea
             ref={bodyRef}
@@ -640,11 +640,11 @@ function TemplatesTab() {
             onChange={(e) => setForm((p) => ({ ...p, body: e.target.value }))}
             rows={3}
             placeholder="Notification body text..."
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:border-cyan-700 focus:outline-none resize-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none resize-none"
           />
           {/* Variable helper chips */}
-          <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-2.5">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-500 mb-1.5">
+          <div className="rounded-lg border border-border bg-surface-2/60 p-2.5">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
               Variables — click to insert
             </p>
             <div className="flex flex-wrap gap-1.5">
@@ -665,7 +665,7 @@ function TemplatesTab() {
             <select
               value={form.channel}
               onChange={(e) => setForm((p) => ({ ...p, channel: e.target.value }))}
-              className="appearance-none rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none"
+              className="appearance-none rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none"
             >
               {CHANNEL_OPTIONS.map((ch) => (
                 <option key={ch.key} value={ch.key}>{ch.label}</option>
@@ -674,7 +674,7 @@ function TemplatesTab() {
             <select
               value={form.severity}
               onChange={(e) => setForm((p) => ({ ...p, severity: e.target.value }))}
-              className="appearance-none rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none"
+              className="appearance-none rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none"
             >
               {SEVERITY_OPTIONS.map((s) => (
                 <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
@@ -696,40 +696,40 @@ function TemplatesTab() {
       {/* Template List */}
       {templates.length === 0 ? (
         <div className="flex flex-col items-center py-12">
-          <FileText className="mb-2 h-10 w-10 text-gray-700" />
-          <p className="text-sm text-gray-500">No templates yet</p>
+          <FileText className="mb-2 h-10 w-10 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">No templates yet</p>
         </div>
       ) : (
         <div className="space-y-2">
           {templates.map((tpl) => (
             <div
               key={tpl.id}
-              className="flex items-start justify-between rounded-lg border border-gray-800 bg-zinc-900/50 p-4 transition-colors hover:border-gray-700"
+              className="flex items-start justify-between rounded-lg border border-border bg-zinc-900/50 p-4 transition-colors hover:border-border-strong"
             >
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <p className="text-sm font-semibold text-gray-200">{tpl.name}</p>
+                  <p className="text-sm font-semibold text-foreground">{tpl.name}</p>
                   <span
                     className={cn(
                       "rounded px-1.5 py-0.5 text-[9px] font-bold uppercase border",
-                      SEV_BADGE[tpl.severity] || "text-gray-400 bg-gray-800 border-gray-700"
+                      SEV_BADGE[tpl.severity] || "text-muted-foreground bg-surface-3 border-border-strong"
                     )}
                   >
                     {tpl.severity}
                   </span>
-                  <span className="rounded bg-gray-800 px-1.5 py-0.5 text-[9px] text-gray-400 uppercase">
+                  <span className="rounded bg-surface-3 px-1.5 py-0.5 text-[9px] text-muted-foreground uppercase">
                     {tpl.channel}
                   </span>
                 </div>
-                <p className="text-xs text-gray-500 line-clamp-2">{tpl.body}</p>
-                <p className="mt-1 text-[10px] text-gray-600">
+                <p className="text-xs text-muted-foreground line-clamp-2">{tpl.body}</p>
+                <p className="mt-1 text-[10px] text-muted-foreground">
                   Created {fmtTime(tpl.created_at)}
                 </p>
               </div>
               <button
                 onClick={() => handleDelete(tpl.id)}
                 disabled={deleting === tpl.id}
-                className="ml-3 rounded-lg p-2 text-gray-600 hover:bg-red-900/20 hover:text-red-400 transition-colors disabled:opacity-50"
+                className="ml-3 rounded-lg p-2 text-muted-foreground hover:bg-red-900/20 hover:text-red-400 transition-colors disabled:opacity-50"
               >
                 {deleting === tpl.id ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -812,7 +812,7 @@ function LockdownTab() {
       case "failed":
         return <AlertTriangle className="h-4 w-4 text-red-500" />;
       default:
-        return <Clock className="h-4 w-4 text-gray-600" />;
+        return <Clock className="h-4 w-4 text-muted-foreground" />;
     }
   };
 
@@ -821,7 +821,7 @@ function LockdownTab() {
       case "completed": return "border-green-800/50 bg-green-950/20";
       case "in_progress": return "border-yellow-800/50 bg-yellow-950/20";
       case "failed": return "border-red-800/50 bg-red-950/20";
-      default: return "border-gray-800 bg-gray-900/50";
+      default: return "border-border bg-surface-2/50";
     }
   };
 
@@ -865,7 +865,7 @@ function LockdownTab() {
           {lockdown?.active ? "LOCKDOWN ACTIVE" : "NORMAL OPERATIONS"}
         </h2>
         {lockdown?.active && lockdown.activated_at && (
-          <p className="mt-2 text-xs text-gray-400">
+          <p className="mt-2 text-xs text-muted-foreground">
             Activated at {fmtTime(lockdown.activated_at)} by{" "}
             {lockdown.activated_by || "system"}
           </p>
@@ -877,14 +877,14 @@ function LockdownTab() {
 
       {/* Step Status Display */}
       {lockdown?.steps && lockdown.steps.length > 0 && (
-        <div className="rounded-xl border border-gray-800 bg-zinc-900/50 overflow-hidden">
-          <div className="flex items-center gap-2 border-b border-gray-800 px-4 py-3">
+        <div className="rounded-xl border border-border bg-zinc-900/50 overflow-hidden">
+          <div className="flex items-center gap-2 border-b border-border px-4 py-3">
             <Activity className="h-4 w-4 text-cyan-400" />
             <h3 className="text-xs font-semibold uppercase tracking-wider text-cyan-400">
               Lockdown Sequence Steps
             </h3>
           </div>
-          <div className="divide-y divide-gray-800/50">
+          <div className="divide-y divide-border/50">
             {lockdown.steps.map((step, idx) => (
               <div
                 key={idx}
@@ -895,7 +895,7 @@ function LockdownTab() {
               >
                 <div className="flex items-center gap-3">
                   {stepStatusIcon(step.status)}
-                  <span className="text-sm font-medium text-gray-200">
+                  <span className="text-sm font-medium text-foreground">
                     {step.name}
                   </span>
                 </div>
@@ -909,13 +909,13 @@ function LockdownTab() {
                         ? "text-yellow-400 bg-yellow-900/30"
                         : step.status === "failed"
                         ? "text-red-400 bg-red-900/30"
-                        : "text-gray-500 bg-gray-800"
+                        : "text-muted-foreground bg-surface-3"
                     )}
                   >
                     {step.status.replace("_", " ")}
                   </span>
                   {step.completed_at && (
-                    <span className="text-[10px] text-gray-600 font-mono">
+                    <span className="text-[10px] text-muted-foreground font-mono">
                       {fmtTime(step.completed_at)}
                     </span>
                   )}
@@ -934,7 +934,7 @@ function LockdownTab() {
           className={cn(
             "flex flex-col items-center justify-center rounded-xl border-2 p-6 transition-all",
             lockdown?.active
-              ? "border-gray-800 bg-gray-900/50 opacity-40 cursor-not-allowed"
+              ? "border-border bg-surface-2/50 opacity-40 cursor-not-allowed"
               : "border-red-800/50 bg-red-950/20 hover:bg-red-900/30 hover:border-red-700 cursor-pointer"
           )}
         >
@@ -950,7 +950,7 @@ function LockdownTab() {
           className={cn(
             "flex flex-col items-center justify-center rounded-xl border-2 p-6 transition-all",
             !lockdown?.active
-              ? "border-gray-800 bg-gray-900/50 opacity-40 cursor-not-allowed"
+              ? "border-border bg-surface-2/50 opacity-40 cursor-not-allowed"
               : "border-green-800/50 bg-green-950/20 hover:bg-green-900/30 hover:border-green-700 cursor-pointer"
           )}
         >
@@ -964,7 +964,7 @@ function LockdownTab() {
       {/* Confirmation Dialog */}
       {showConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-xl border border-gray-800 bg-[#030712] p-6 shadow-2xl">
+          <div className="w-full max-w-md rounded-xl border border-border bg-[#030712] p-6 shadow-2xl">
             <div className="flex items-center gap-3 mb-4">
               <div
                 className={cn(
@@ -979,12 +979,12 @@ function LockdownTab() {
                 )}
               </div>
               <div>
-                <h3 className="text-sm font-bold text-gray-100">
+                <h3 className="text-sm font-bold text-foreground">
                   {showConfirm === "activate"
                     ? "Confirm Lockdown Activation"
                     : "Confirm Lockdown Deactivation"}
                 </h3>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   {showConfirm === "activate"
                     ? "This will initiate the full lockdown sequence for the facility."
                     : "This will restore normal operations across all zones."}
@@ -994,7 +994,7 @@ function LockdownTab() {
             <div className="flex items-center justify-end gap-3">
               <button
                 onClick={() => setShowConfirm(null)}
-                className="rounded-lg border border-gray-700 px-4 py-2 text-xs text-gray-400 hover:bg-gray-800 transition-colors"
+                className="rounded-lg border border-border-strong px-4 py-2 text-xs text-muted-foreground hover:bg-surface-3 transition-colors"
               >
                 Cancel
               </button>
@@ -1058,16 +1058,16 @@ export default function NotificationsPage() {
   return (
     <div className="flex h-full flex-col bg-[#030712]">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-900/30 border border-orange-800/50">
             <Megaphone className="h-5 w-5 text-orange-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Mass Notification & Emergency Response
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Send multi-channel alerts, manage templates, and control facility lockdowns
             </p>
           </div>
@@ -1076,21 +1076,21 @@ export default function NotificationsPage() {
 
       {/* Stats Bar */}
       {stats && (
-        <div className="grid grid-cols-3 gap-4 border-b border-gray-800 px-6 py-3">
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/60 p-3">
+        <div className="grid grid-cols-3 gap-4 border-b border-border px-6 py-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/60 p-3">
             <Send className="h-5 w-5 text-cyan-400" />
             <div>
-              <p className="text-lg font-bold text-gray-100">{stats.sent_today}</p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+              <p className="text-lg font-bold text-foreground">{stats.sent_today}</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 Sent Today
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/60 p-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/60 p-3">
             <Radio className="h-5 w-5 text-green-400" />
             <div>
-              <p className="text-lg font-bold text-gray-100">{stats.active_channels}</p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+              <p className="text-lg font-bold text-foreground">{stats.active_channels}</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 Active Channels
               </p>
             </div>
@@ -1100,7 +1100,7 @@ export default function NotificationsPage() {
               "flex items-center gap-3 rounded-lg border p-3",
               stats.active_lockdowns > 0
                 ? "border-red-800/60 bg-red-950/30"
-                : "border-gray-800 bg-zinc-900/60"
+                : "border-border bg-zinc-900/60"
             )}
           >
             <Lock
@@ -1108,19 +1108,19 @@ export default function NotificationsPage() {
                 "h-5 w-5",
                 stats.active_lockdowns > 0
                   ? "text-red-500 animate-pulse"
-                  : "text-gray-500"
+                  : "text-muted-foreground"
               )}
             />
             <div>
               <p
                 className={cn(
                   "text-lg font-bold",
-                  stats.active_lockdowns > 0 ? "text-red-400" : "text-gray-100"
+                  stats.active_lockdowns > 0 ? "text-red-400" : "text-foreground"
                 )}
               >
                 {stats.active_lockdowns}
               </p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 Active Lockdowns
               </p>
             </div>
@@ -1129,7 +1129,7 @@ export default function NotificationsPage() {
       )}
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 border-b border-gray-800 px-6">
+      <div className="flex items-center gap-1 border-b border-border px-6">
         {TABS.map((tab) => (
           <button
             key={tab}
@@ -1140,7 +1140,7 @@ export default function NotificationsPage() {
                 ? tab === "lockdown"
                   ? "border-red-500 text-red-400"
                   : "border-cyan-400 text-cyan-400"
-                : "border-transparent text-gray-500 hover:text-gray-300"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             )}
           >
             {TAB_META[tab].icon}

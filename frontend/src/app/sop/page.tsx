@@ -286,7 +286,7 @@ export default function SOPPage() {
   }, [templates]);
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6">
+    <div className="min-h-screen bg-surface-0 p-6">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -297,7 +297,7 @@ export default function SOPPage() {
             <h1 className="text-xl font-bold text-cyan-400 tracking-wide">
               Standard Operating Procedures
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Manage SOP templates and track active instances
             </p>
           </div>
@@ -316,22 +316,22 @@ export default function SOPPage() {
       {/* ---- Compliance Metrics Row ---- */}
       {!loading && !error && (
         <div className="mb-5 grid grid-cols-3 gap-3">
-          <div className="rounded-lg border border-gray-800 bg-gray-900/60 px-4 py-3">
-            <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
+          <div className="rounded-lg border border-border bg-surface-2/60 px-4 py-3">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
               <BarChart3 className="h-3.5 w-3.5 text-cyan-400/70" />
               Total SOPs
             </div>
-            <p className="text-2xl font-bold tabular-nums text-gray-100">{sopMetrics.totalSOPs}</p>
+            <p className="text-2xl font-bold tabular-nums text-foreground">{sopMetrics.totalSOPs}</p>
           </div>
           <div className="rounded-lg border border-blue-900/40 bg-blue-950/20 px-4 py-3">
-            <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
               <Activity className="h-3.5 w-3.5 text-blue-400/70" />
               Active Instances
             </div>
             <p className="text-2xl font-bold tabular-nums text-blue-400">{sopMetrics.activeInstances}</p>
           </div>
           <div className="rounded-lg border border-green-900/40 bg-green-950/20 px-4 py-3">
-            <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
               <Timer className="h-3.5 w-3.5 text-green-400/70" />
               Avg Completion Time
             </div>
@@ -341,7 +341,7 @@ export default function SOPPage() {
       )}
 
       {/* Tabs */}
-      <div className="mb-4 flex gap-1 border-b border-gray-800">
+      <div className="mb-4 flex gap-1 border-b border-border">
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -350,12 +350,12 @@ export default function SOPPage() {
               "px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px",
               tab === t.key
                 ? "border-cyan-400 text-cyan-400"
-                : "border-transparent text-gray-500 hover:text-gray-300"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             )}
           >
             {t.label}
             {t.key === "instances" && instances.length > 0 && (
-              <span className="ml-2 rounded bg-gray-800 px-1.5 py-0.5 text-[10px] font-mono text-gray-500">
+              <span className="ml-2 rounded bg-surface-3 px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground">
                 {activeInstanceCount}
               </span>
             )}
@@ -367,7 +367,7 @@ export default function SOPPage() {
       {loading && (
         <div className="flex flex-col items-center justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-          <p className="mt-3 text-sm text-gray-500">Loading SOP data...</p>
+          <p className="mt-3 text-sm text-muted-foreground">Loading SOP data...</p>
         </div>
       )}
 
@@ -378,7 +378,7 @@ export default function SOPPage() {
           <p className="text-sm text-red-400">{error}</p>
           <button
             onClick={fetchData}
-            className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             Retry
           </button>
@@ -390,8 +390,8 @@ export default function SOPPage() {
         <div className="space-y-4">
           {/* Create Template Form */}
           {showCreateForm && (
-            <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-5">
-              <h3 className="mb-4 text-sm font-semibold text-gray-200">
+            <div className="rounded-lg border border-border bg-surface-2/60 p-5">
+              <h3 className="mb-4 text-sm font-semibold text-foreground">
                 Create New SOP Template
               </h3>
               <div className="space-y-3">
@@ -400,7 +400,7 @@ export default function SOPPage() {
                   placeholder="Template name"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
-                  className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-sm text-gray-100 placeholder-gray-500 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                  className="w-full rounded-lg border border-border-strong bg-surface-3 px-4 py-2.5 text-sm text-foreground placeholder-gray-500 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
                 />
                 <div className="flex gap-3">
                   <input
@@ -408,12 +408,12 @@ export default function SOPPage() {
                     placeholder="Threat type (e.g. intrusion, fire)"
                     value={newThreatType}
                     onChange={(e) => setNewThreatType(e.target.value)}
-                    className="flex-1 rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-sm text-gray-100 placeholder-gray-500 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                    className="flex-1 rounded-lg border border-border-strong bg-surface-3 px-4 py-2.5 text-sm text-foreground placeholder-gray-500 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
                   />
                   <select
                     value={newSeverity}
                     onChange={(e) => setNewSeverity(e.target.value)}
-                    className="rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-sm text-gray-100 focus:border-cyan-700 focus:outline-none"
+                    className="rounded-lg border border-border-strong bg-surface-3 px-4 py-2.5 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
                   >
                     <option value="critical">Critical</option>
                     <option value="high">High</option>
@@ -428,17 +428,17 @@ export default function SOPPage() {
                     <span className="text-xs font-semibold uppercase tracking-wider text-cyan-400">
                       Trigger Condition
                     </span>
-                    <span className="text-[10px] text-gray-600">(optional — enables auto-trigger)</span>
+                    <span className="text-[10px] text-muted-foreground">(optional — enables auto-trigger)</span>
                   </div>
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                     <div>
-                      <label className="mb-1 block text-[11px] font-medium text-gray-500">
+                      <label className="mb-1 block text-[11px] font-medium text-muted-foreground">
                         Alert Severity
                       </label>
                       <select
                         value={triggerAlertSeverity}
                         onChange={(e) => setTriggerAlertSeverity(e.target.value)}
-                        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 focus:border-cyan-700 focus:outline-none"
+                        className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
                       >
                         <option value="any">Any severity</option>
                         <option value="critical">Critical</option>
@@ -448,7 +448,7 @@ export default function SOPPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="mb-1 block text-[11px] font-medium text-gray-500">
+                      <label className="mb-1 block text-[11px] font-medium text-muted-foreground">
                         Threat Type
                       </label>
                       <input
@@ -456,11 +456,11 @@ export default function SOPPage() {
                         placeholder="e.g. intrusion, fire"
                         value={triggerThreatType}
                         onChange={(e) => setTriggerThreatType(e.target.value)}
-                        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                        className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
                       />
                     </div>
                     <div>
-                      <label className="mb-1 block text-[11px] font-medium text-gray-500">
+                      <label className="mb-1 block text-[11px] font-medium text-muted-foreground">
                         Zone
                       </label>
                       <input
@@ -468,14 +468,14 @@ export default function SOPPage() {
                         placeholder="e.g. Zone A, Loading Bay"
                         value={triggerZone}
                         onChange={(e) => setTriggerZone(e.target.value)}
-                        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                        className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
                       />
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <label className="mb-1.5 block text-xs font-medium text-gray-500">
+                  <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
                     Workflow Stages (one per line)
                   </label>
                   <textarea
@@ -483,13 +483,13 @@ export default function SOPPage() {
                     onChange={(e) => setNewStages(e.target.value)}
                     rows={5}
                     placeholder={"Assess situation\nNotify command\nDeploy response team\nSecure perimeter\nPost-incident review"}
-                    className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-sm text-gray-100 placeholder-gray-600 resize-none focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                    className="w-full rounded-lg border border-border-strong bg-surface-3 px-4 py-2.5 text-sm text-foreground placeholder-gray-600 resize-none focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
                   />
                 </div>
                 <div className="flex justify-end gap-2">
                   <button
                     onClick={() => setShowCreateForm(false)}
-                    className="rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-400 hover:bg-gray-800"
+                    className="rounded-lg border border-border-strong px-4 py-2 text-sm text-muted-foreground hover:bg-surface-3"
                   >
                     Cancel
                   </button>
@@ -509,13 +509,13 @@ export default function SOPPage() {
           {/* Template search */}
           {templates.length > 0 && (
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Search templates by name..."
                 value={templateSearch}
                 onChange={(e) => setTemplateSearch(e.target.value)}
-                className="w-full rounded-lg border border-gray-700 bg-gray-800 pl-10 pr-4 py-2.5 text-sm text-gray-100 placeholder-gray-500 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                className="w-full rounded-lg border border-border-strong bg-surface-3 pl-10 pr-4 py-2.5 text-sm text-foreground placeholder-gray-500 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
               />
             </div>
           )}
@@ -523,16 +523,16 @@ export default function SOPPage() {
           {/* Template list */}
           {templates.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20">
-              <ClipboardList className="mb-2 h-10 w-10 text-gray-700" />
-              <p className="text-sm text-gray-500">No SOP templates</p>
-              <p className="mt-1 text-xs text-gray-600">
+              <ClipboardList className="mb-2 h-10 w-10 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">No SOP templates</p>
+              <p className="mt-1 text-xs text-muted-foreground">
                 Create a template to get started
               </p>
             </div>
           ) : filteredTemplates.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16">
-              <Search className="mb-2 h-8 w-8 text-gray-700" />
-              <p className="text-sm text-gray-500">No templates match &quot;{templateSearch}&quot;</p>
+              <Search className="mb-2 h-8 w-8 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">No templates match &quot;{templateSearch}&quot;</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -541,12 +541,12 @@ export default function SOPPage() {
                 return (
                   <div
                     key={tpl.id}
-                    className="rounded-lg border border-gray-800 bg-gray-900/60 transition-colors hover:border-gray-700"
+                    className="rounded-lg border border-border bg-surface-2/60 transition-colors hover:border-border-strong"
                   >
                     {/* Card header */}
                     <div className="p-5">
                       <div className="mb-3 flex items-start justify-between">
-                        <h3 className="text-sm font-semibold text-gray-200">
+                        <h3 className="text-sm font-semibold text-foreground">
                           {tpl.name}
                         </h3>
                         <div className="flex items-center gap-1.5">
@@ -555,7 +555,7 @@ export default function SOPPage() {
                               Active
                             </span>
                           ) : (
-                            <span className="inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-gray-800 text-gray-500 border border-gray-700">
+                            <span className="inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-surface-3 text-muted-foreground border border-border-strong">
                               Inactive
                             </span>
                           )}
@@ -564,7 +564,7 @@ export default function SOPPage() {
 
                       {/* Metadata badges */}
                       <div className="mb-3 flex flex-wrap gap-2">
-                        <span className="inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-gray-800 text-gray-400 border border-gray-700">
+                        <span className="inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-surface-3 text-muted-foreground border border-border-strong">
                           {tpl.threat_type}
                         </span>
                         <span
@@ -578,13 +578,13 @@ export default function SOPPage() {
                       </div>
 
                       {/* Auto trigger toggle display */}
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <Zap className="h-3.5 w-3.5" />
                         <span>Auto Trigger:</span>
                         {tpl.auto_trigger ? (
                           <span className="font-semibold text-cyan-400">ON</span>
                         ) : (
-                          <span className="font-semibold text-gray-600">OFF</span>
+                          <span className="font-semibold text-muted-foreground">OFF</span>
                         )}
                       </div>
 
@@ -621,7 +621,7 @@ export default function SOPPage() {
 
                     {/* Expanded: workflow stages */}
                     {isExpanded && tpl.workflow_stages.length > 0 && (
-                      <div className="border-t border-gray-800 p-5">
+                      <div className="border-t border-border p-5">
                         <ol className="space-y-2">
                           {tpl.workflow_stages.map((stage, i) => {
                             const stageName =
@@ -633,7 +633,7 @@ export default function SOPPage() {
                             return (
                               <li
                                 key={i}
-                                className="flex items-start gap-3 text-sm text-gray-300"
+                                className="flex items-start gap-3 text-sm text-foreground"
                               >
                                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-900/30 border border-cyan-800/50 text-xs font-bold text-cyan-400">
                                   {i + 1}
@@ -658,39 +658,39 @@ export default function SOPPage() {
         <div>
           {instances.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20">
-              <ClipboardList className="mb-2 h-10 w-10 text-gray-700" />
-              <p className="text-sm text-gray-500">No active SOP instances</p>
-              <p className="mt-1 text-xs text-gray-600">
+              <ClipboardList className="mb-2 h-10 w-10 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">No active SOP instances</p>
+              <p className="mt-1 text-xs text-muted-foreground">
                 Instances are created when SOPs are triggered
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto rounded-lg border border-gray-800">
+            <div className="overflow-x-auto rounded-lg border border-border">
               <table className="w-full text-left text-sm">
                 <thead>
-                  <tr className="border-b border-gray-800 bg-gray-900/80">
+                  <tr className="border-b border-border bg-surface-2/80">
                     <th className="w-8 px-2 py-3" />
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       Template
                     </th>
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       Alert ID
                     </th>
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       Progress
                     </th>
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       Status
                     </th>
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       <div className="flex items-center gap-1.5"><Clock className="h-3 w-3" />Created</div>
                     </th>
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-800/50">
+                <tbody className="divide-y divide-border/50">
                   {instances.map((inst) => {
                     const totalStages = templateStageCount(inst.template_id);
                     const currentStage = inst.current_stage;
@@ -702,14 +702,14 @@ export default function SOPPage() {
                         <tr
                           className={cn(
                             "transition-colors cursor-pointer",
-                            isInstanceExpanded ? "bg-gray-900/80" : "hover:bg-gray-900/60"
+                            isInstanceExpanded ? "bg-surface-2/80" : "hover:bg-surface-2/60"
                           )}
                           onClick={() =>
                             setExpandedInstanceId(isInstanceExpanded ? null : inst.id)
                           }
                         >
                           {/* Expand chevron */}
-                          <td className="px-2 py-3 text-gray-500">
+                          <td className="px-2 py-3 text-muted-foreground">
                             {isInstanceExpanded ? (
                               <ChevronDown className="h-4 w-4" />
                             ) : (
@@ -718,12 +718,12 @@ export default function SOPPage() {
                           </td>
 
                           {/* Template name */}
-                          <td className="px-4 py-3 text-sm font-medium text-gray-200">
+                          <td className="px-4 py-3 text-sm font-medium text-foreground">
                             {templateName(inst.template_id)}
                           </td>
 
                           {/* Alert ID */}
-                          <td className="px-4 py-3 font-mono text-xs text-gray-500">
+                          <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
                             {inst.alert_id ? inst.alert_id.slice(0, 8) : "---"}
                           </td>
 
@@ -740,7 +740,7 @@ export default function SOPPage() {
                                         ? "bg-cyan-500 border-cyan-400"
                                         : i === currentStage
                                         ? "bg-cyan-900/50 border-cyan-600 ring-2 ring-cyan-500/30"
-                                        : "bg-gray-800 border-gray-700"
+                                        : "bg-surface-3 border-border-strong"
                                     )}
                                     title={`Stage ${i + 1}${
                                       i < currentStage
@@ -752,11 +752,11 @@ export default function SOPPage() {
                                   />
                                 ))
                               ) : (
-                                <span className="text-xs text-gray-600">
+                                <span className="text-xs text-muted-foreground">
                                   Stage {currentStage + 1}
                                 </span>
                               )}
-                              <span className="ml-2 text-[10px] font-mono text-gray-500">
+                              <span className="ml-2 text-[10px] font-mono text-muted-foreground">
                                 {currentStage + 1}/{totalStages || "?"}
                               </span>
                             </div>
@@ -768,7 +768,7 @@ export default function SOPPage() {
                               className={cn(
                                 "inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border",
                                 INSTANCE_STATUS_BADGE[inst.status] ||
-                                  "bg-gray-800 text-gray-400 border-gray-700"
+                                  "bg-surface-3 text-muted-foreground border-border-strong"
                               )}
                             >
                               {inst.status === "completed" && (
@@ -782,7 +782,7 @@ export default function SOPPage() {
                           </td>
 
                           {/* Created at */}
-                          <td className="px-4 py-3 text-xs text-gray-500">
+                          <td className="px-4 py-3 text-xs text-muted-foreground">
                             {inst.created_at
                               ? formatTimestamp(inst.created_at)
                               : "---"}
@@ -826,15 +826,15 @@ export default function SOPPage() {
                         {/* Expanded: stage history */}
                         {isInstanceExpanded && (
                           <tr>
-                            <td colSpan={7} className="border-t border-gray-800/50 bg-gray-900/40 px-6 py-4">
+                            <td colSpan={7} className="border-t border-border/50 bg-surface-2/40 px-6 py-4">
                               <div className="flex items-center gap-2 mb-3">
-                                <History className="h-4 w-4 text-gray-500" />
-                                <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                                <History className="h-4 w-4 text-muted-foreground" />
+                                <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                                   Stage History
                                 </h4>
                               </div>
                               {inst.stage_history.length === 0 ? (
-                                <p className="text-xs text-gray-600 italic">No stage history recorded yet.</p>
+                                <p className="text-xs text-muted-foreground italic">No stage history recorded yet.</p>
                               ) : (
                                 <ol className="space-y-2">
                                   {inst.stage_history.map((entry, idx) => {
@@ -853,9 +853,9 @@ export default function SOPPage() {
                                         <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-900/30 border border-cyan-800/50 text-xs font-bold text-cyan-400">
                                           {typeof entryStage === "number" ? entryStage + 1 : idx + 1}
                                         </span>
-                                        <span className="text-gray-300">{String(entryName)}</span>
+                                        <span className="text-foreground">{String(entryName)}</span>
                                         {entryTs && (
-                                          <span className="ml-auto text-[10px] text-gray-600 font-mono">
+                                          <span className="ml-auto text-[10px] text-muted-foreground font-mono">
                                             {formatTimestamp(entryTs)}
                                           </span>
                                         )}

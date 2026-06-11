@@ -147,7 +147,7 @@ function complianceStatusBadge(status: string): string {
     case "partially_compliant":
       return "bg-yellow-900/40 text-yellow-400 border-yellow-800/60";
     default:
-      return "bg-gray-800 text-gray-400 border-gray-700";
+      return "bg-surface-3 text-muted-foreground border-border-strong";
   }
 }
 
@@ -230,18 +230,18 @@ function StatCard({
     <div
       className={cn(
         STAT_CARD,
-        borderColor || "border-gray-800",
-        bgColor || "bg-gray-900/60"
+        borderColor || "border-border",
+        bgColor || "bg-surface-2/60"
       )}
     >
-      <div className="flex items-center gap-2 text-xs text-gray-500">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
         <Icon className={cn("h-3.5 w-3.5", iconColor)} />
         {label}
       </div>
       <p
         className={cn(
           "text-2xl font-bold tabular-nums",
-          valueColor || "text-gray-100"
+          valueColor || "text-foreground"
         )}
       >
         {value}
@@ -476,7 +476,7 @@ export default function PPECompliancePage() {
 
   /* --- Render --- */
   return (
-    <div className="flex h-full flex-col overflow-auto bg-gray-950 text-gray-100">
+    <div className="flex h-full flex-col overflow-auto bg-surface-0 text-foreground">
       {/* ---- Non-Compliant Alert Banner ---- */}
       {nonCompliantCount > 0 && (
         <div className="border-b border-red-900/50 bg-gradient-to-r from-red-950/80 via-orange-950/60 to-red-950/80 px-6 py-3">
@@ -498,16 +498,16 @@ export default function PPECompliancePage() {
       )}
 
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-900/30 border border-cyan-800/50">
             <HardHat className="h-5 w-5 text-cyan-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               PPE Compliance Dashboard
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Monitor personal protective equipment compliance across all zones
             </p>
           </div>
@@ -528,7 +528,7 @@ export default function PPECompliancePage() {
           </button>
           <button
             onClick={handleRefresh}
-            className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
+            className="flex items-center gap-2 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             Refresh
@@ -538,16 +538,16 @@ export default function PPECompliancePage() {
 
       {/* ---- Stats Row ---- */}
       {statsLoading && !stats ? (
-        <div className="grid grid-cols-2 gap-3 border-b border-gray-800 px-6 py-4 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 border-b border-border px-6 py-4 md:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
-              className="animate-pulse rounded-lg border border-gray-800 bg-gray-900/60 px-4 py-3 h-[76px]"
+              className="animate-pulse rounded-lg border border-border bg-surface-2/60 px-4 py-3 h-[76px]"
             />
           ))}
         </div>
       ) : stats ? (
-        <div className="grid grid-cols-2 gap-3 border-b border-gray-800 px-6 py-4 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 border-b border-border px-6 py-4 md:grid-cols-4">
           <StatCard
             icon={BarChart3}
             label="Total Checks"
@@ -584,7 +584,7 @@ export default function PPECompliancePage() {
       ) : null}
 
       {/* ---- Tab Navigation ---- */}
-      <div className="flex items-center gap-1 border-b border-gray-800 px-6">
+      <div className="flex items-center gap-1 border-b border-border px-6">
         {TABS.map((tab) => (
           <button
             key={tab.key}
@@ -593,7 +593,7 @@ export default function PPECompliancePage() {
               "relative px-4 py-3 text-sm font-medium transition-colors",
               activeTab === tab.key
                 ? "text-cyan-400"
-                : "text-gray-500 hover:text-gray-300"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             {tab.label}
@@ -608,15 +608,15 @@ export default function PPECompliancePage() {
       {activeTab === "events" && (
         <>
           {/* ---- Filter Bar ---- */}
-          <div className="flex flex-wrap items-center gap-3 border-b border-gray-800 px-6 py-3">
-            <Filter className="h-4 w-4 text-gray-600" />
+          <div className="flex flex-wrap items-center gap-3 border-b border-border px-6 py-3">
+            <Filter className="h-4 w-4 text-muted-foreground" />
 
             {/* Status filter */}
             <div className="relative">
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                className="appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
               >
                 {STATUS_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -624,7 +624,7 @@ export default function PPECompliancePage() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             </div>
 
             {/* Camera filter */}
@@ -632,7 +632,7 @@ export default function PPECompliancePage() {
               <select
                 value={filterCamera}
                 onChange={(e) => setFilterCamera(e.target.value)}
-                className="appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                className="appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
               >
                 <option value="">All Cameras</option>
                 {cameraIds.map((id) => (
@@ -641,7 +641,7 @@ export default function PPECompliancePage() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             </div>
 
             {/* Remediation status filter */}
@@ -649,7 +649,7 @@ export default function PPECompliancePage() {
               <select
                 value={filterRemediation}
                 onChange={(e) => setFilterRemediation(e.target.value)}
-                className="appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                className="appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
               >
                 {REMEDIATION_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -657,7 +657,7 @@ export default function PPECompliancePage() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             </div>
 
             {/* Active filter indicator */}
@@ -675,7 +675,7 @@ export default function PPECompliancePage() {
             )}
 
             {/* Results info */}
-            <div className="ml-auto text-xs text-gray-500">
+            <div className="ml-auto text-xs text-muted-foreground">
               {!loading && (
                 <span>
                   Showing {filteredEvents.length} event
@@ -691,7 +691,7 @@ export default function PPECompliancePage() {
             {loading && (
               <div className="flex flex-col items-center justify-center py-20">
                 <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-                <p className="mt-3 text-sm text-gray-500">
+                <p className="mt-3 text-sm text-muted-foreground">
                   Loading compliance events...
                 </p>
               </div>
@@ -704,7 +704,7 @@ export default function PPECompliancePage() {
                 <p className="text-sm text-red-400">{error}</p>
                 <button
                   onClick={handleRefresh}
-                  className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+                  className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
                 >
                   Retry
                 </button>
@@ -715,10 +715,10 @@ export default function PPECompliancePage() {
             {!loading && !error && filteredEvents.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20">
                 <CheckCircle2 className="mb-2 h-10 w-10 text-emerald-700" />
-                <p className="text-sm font-medium text-gray-400">
+                <p className="text-sm font-medium text-muted-foreground">
                   No compliance events found
                 </p>
-                <p className="mt-1 text-xs text-gray-600">
+                <p className="mt-1 text-xs text-muted-foreground">
                   {filterStatus !== "all" || filterCamera !== "" || filterRemediation !== "all"
                     ? "Try adjusting your filters"
                     : "All PPE checks are up to date"}
@@ -731,32 +731,32 @@ export default function PPECompliancePage() {
               <div className="px-6 py-4">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-gray-800">
-                      <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                    <tr className="border-b border-border">
+                      <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                         Time
                       </th>
-                      <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                      <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                         Camera
                       </th>
-                      <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                      <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                         Zone
                       </th>
-                      <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                      <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                         Status
                       </th>
-                      <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                      <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                         Required PPE
                       </th>
-                      <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                      <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                         Missing PPE
                       </th>
-                      <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                      <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                         Remediation
                       </th>
-                      <th className="pb-3 text-right text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                      <th className="pb-3 text-right text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                         Confidence
                       </th>
-                      <th className="pb-3 text-right text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                      <th className="pb-3 text-right text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                         Actions
                       </th>
                     </tr>
@@ -770,7 +770,7 @@ export default function PPECompliancePage() {
                         <tr
                           key={event.id}
                           className={cn(
-                            "border-b border-gray-800/50 transition-colors hover:bg-gray-800/50",
+                            "border-b border-border/50 transition-colors hover:bg-surface-3/50",
                             !event.acknowledged &&
                               event.status === "non_compliant" &&
                               "bg-red-950/10"
@@ -779,12 +779,12 @@ export default function PPECompliancePage() {
                           {/* Time */}
                           <td className="py-3 pr-4">
                             <div className="flex items-center gap-1.5">
-                              <Clock className="h-3 w-3 text-gray-600" />
-                              <span className="text-xs text-gray-400">
+                              <Clock className="h-3 w-3 text-muted-foreground" />
+                              <span className="text-xs text-muted-foreground">
                                 {formatTimestamp(event.timestamp)}
                               </span>
                             </div>
-                            <span className="text-[10px] text-gray-600">
+                            <span className="text-[10px] text-muted-foreground">
                               {timeAgo(event.timestamp)}
                             </span>
                           </td>
@@ -792,8 +792,8 @@ export default function PPECompliancePage() {
                           {/* Camera */}
                           <td className="py-3 pr-4">
                             <div className="flex items-center gap-1.5">
-                              <Camera className="h-3 w-3 text-gray-600" />
-                              <span className="text-xs font-medium text-gray-300">
+                              <Camera className="h-3 w-3 text-muted-foreground" />
+                              <span className="text-xs font-medium text-foreground">
                                 {event.camera_id}
                               </span>
                             </div>
@@ -802,8 +802,8 @@ export default function PPECompliancePage() {
                           {/* Zone */}
                           <td className="py-3 pr-4">
                             <div className="flex items-center gap-1.5">
-                              <MapPin className="h-3 w-3 text-gray-600" />
-                              <span className="text-xs text-gray-400">
+                              <MapPin className="h-3 w-3 text-muted-foreground" />
+                              <span className="text-xs text-muted-foreground">
                                 {event.zone || "---"}
                               </span>
                             </div>
@@ -829,13 +829,13 @@ export default function PPECompliancePage() {
                                 event.required_ppe.map((ppe) => (
                                   <span
                                     key={ppe}
-                                    className="rounded bg-gray-800 px-1.5 py-0.5 text-[10px] font-medium text-gray-400 border border-gray-700"
+                                    className="rounded bg-surface-3 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground border border-border-strong"
                                   >
                                     {ppe}
                                   </span>
                                 ))
                               ) : (
-                                <span className="text-[10px] text-gray-600">
+                                <span className="text-[10px] text-muted-foreground">
                                   None specified
                                 </span>
                               )}
@@ -877,7 +877,7 @@ export default function PPECompliancePage() {
                                 {remediationLabel(event.remediation_status)}
                               </button>
                             ) : (
-                              <span className="text-[10px] text-gray-600">--</span>
+                              <span className="text-[10px] text-muted-foreground">--</span>
                             )}
                           </td>
 
@@ -915,7 +915,7 @@ export default function PPECompliancePage() {
                                 Acknowledged
                               </span>
                             ) : (
-                              <span className="text-[10px] text-gray-600">
+                              <span className="text-[10px] text-muted-foreground">
                                 --
                               </span>
                             )}
@@ -937,7 +937,7 @@ export default function PPECompliancePage() {
           {loading && (
             <div className="flex flex-col items-center justify-center py-20">
               <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-              <p className="mt-3 text-sm text-gray-500">
+              <p className="mt-3 text-sm text-muted-foreground">
                 Loading zone compliance data...
               </p>
             </div>
@@ -950,7 +950,7 @@ export default function PPECompliancePage() {
               <p className="text-sm text-red-400">{error}</p>
               <button
                 onClick={handleRefresh}
-                className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+                className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
               >
                 Retry
               </button>
@@ -960,11 +960,11 @@ export default function PPECompliancePage() {
           {/* Empty state */}
           {!loading && !error && zoneCompliance.length === 0 && (
             <div className="flex flex-col items-center justify-center py-20">
-              <MapPin className="mb-2 h-10 w-10 text-gray-700" />
-              <p className="text-sm font-medium text-gray-400">
+              <MapPin className="mb-2 h-10 w-10 text-muted-foreground" />
+              <p className="text-sm font-medium text-muted-foreground">
                 No zone data available
               </p>
-              <p className="mt-1 text-xs text-gray-600">
+              <p className="mt-1 text-xs text-muted-foreground">
                 Zone compliance data will appear once PPE checks are recorded
               </p>
             </div>
@@ -974,10 +974,10 @@ export default function PPECompliancePage() {
           {!loading && !error && zoneCompliance.length > 0 && (
             <div className="px-6 py-4">
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Compliance by Zone
                 </h2>
-                <span className="text-xs text-gray-600">
+                <span className="text-xs text-muted-foreground">
                   {zoneCompliance.length} zone
                   {zoneCompliance.length !== 1 ? "s" : ""} monitored
                 </span>
@@ -996,8 +996,8 @@ export default function PPECompliancePage() {
                     {/* Zone header */}
                     <div className="mb-3 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-gray-500" />
-                        <h3 className="text-sm font-semibold text-gray-200">
+                        <MapPin className="h-4 w-4 text-muted-foreground" />
+                        <h3 className="text-sm font-semibold text-foreground">
                           {zone.zone}
                         </h3>
                       </div>
@@ -1012,7 +1012,7 @@ export default function PPECompliancePage() {
                     </div>
 
                     {/* Progress bar */}
-                    <div className="mb-3 h-2.5 w-full overflow-hidden rounded-full bg-gray-800">
+                    <div className="mb-3 h-2.5 w-full overflow-hidden rounded-full bg-surface-3">
                       <div
                         className={cn(
                           "h-full rounded-full transition-all duration-500",
@@ -1028,7 +1028,7 @@ export default function PPECompliancePage() {
                         <p className="text-lg font-bold tabular-nums text-green-400">
                           {zone.compliant}
                         </p>
-                        <p className="text-[10px] uppercase tracking-wider text-gray-600">
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
                           Compliant
                         </p>
                       </div>
@@ -1036,7 +1036,7 @@ export default function PPECompliancePage() {
                         <p className="text-lg font-bold tabular-nums text-red-400">
                           {zone.non_compliant}
                         </p>
-                        <p className="text-[10px] uppercase tracking-wider text-gray-600">
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
                           Non-Compl.
                         </p>
                       </div>
@@ -1044,18 +1044,18 @@ export default function PPECompliancePage() {
                         <p className="text-lg font-bold tabular-nums text-yellow-400">
                           {zone.partially_compliant}
                         </p>
-                        <p className="text-[10px] uppercase tracking-wider text-gray-600">
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
                           Partial
                         </p>
                       </div>
                     </div>
 
                     {/* Total checks info */}
-                    <div className="mt-3 flex items-center justify-between border-t border-gray-800/50 pt-2">
-                      <span className="text-[10px] text-gray-600">
+                    <div className="mt-3 flex items-center justify-between border-t border-border/50 pt-2">
+                      <span className="text-[10px] text-muted-foreground">
                         Total checks
                       </span>
-                      <span className="text-xs font-semibold tabular-nums text-gray-400">
+                      <span className="text-xs font-semibold tabular-nums text-muted-foreground">
                         {zone.total}
                       </span>
                     </div>
@@ -1064,17 +1064,17 @@ export default function PPECompliancePage() {
               </div>
 
               {/* Zone summary bar */}
-              <div className="mt-6 rounded-lg border border-gray-800 bg-gray-900/60 p-4">
-                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <div className="mt-6 rounded-lg border border-border bg-surface-2/60 p-4">
+                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Overall Zone Summary
                 </h3>
                 <div className="space-y-2">
                   {zoneCompliance.map((zone) => (
                     <div key={zone.zone} className="flex items-center gap-3">
-                      <span className="w-32 truncate text-xs font-medium text-gray-400">
+                      <span className="w-32 truncate text-xs font-medium text-muted-foreground">
                         {zone.zone}
                       </span>
-                      <div className="flex-1 h-2 overflow-hidden rounded-full bg-gray-800">
+                      <div className="flex-1 h-2 overflow-hidden rounded-full bg-surface-3">
                         <div
                           className={cn(
                             "h-full rounded-full transition-all duration-500",
