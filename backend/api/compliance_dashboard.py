@@ -53,6 +53,20 @@ async def compliance_history(
         raise HTTPException(400, str(e))
 
 
+@router.get("/forecast")
+async def compliance_forecast(
+    framework: str = "gdpr",
+    target: float = Query(0.8, ge=0.0, le=1.0),
+    db: AsyncSession = Depends(get_db),
+):
+    """Project the compliance score from its recent trend and estimate when it
+    will breach the target — enabling proactive remediation."""
+    try:
+        return await compliance_dashboard_service.forecast_compliance(db, framework=framework, target=target)
+    except Exception as e:
+        raise HTTPException(400, str(e))
+
+
 @router.get("/issues")
 async def compliance_issues(
     severity: str = None,

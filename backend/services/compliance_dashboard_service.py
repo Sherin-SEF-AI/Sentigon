@@ -715,6 +715,53 @@ class ComplianceDashboardService:
             for r in rows
         ]
 
+    async def forecast_compliance(
+        self, db: AsyncSession, framework: str = "gdpr", target: float = 0.8, limit: int = 12,
+    ) -> Dict[str, Any]:
+        """Project the compliance score forward from its recent trend and estimate
+        when (if ever) it will fall below `target` — proactive vs. reactive."""
+        history = await self.get_compliance_history(db, framework=framework, limit=limit)
+        pts = []
+        for h in history:
+            if h.get("assessed_at") and h.get("overall_score") is not None:
+                try:
+                    pts.append((datetime.fromisoformat(h["assessed_at"]), float(h["overall_score"])))
+                except Exception:
+                    continue
+        pts.sort(key=lambda p: p[0])
+        if len(pts) < 3:
+            return {"framework": framework, "status": "insufficient_history", "sample_count": len(pts)}
+
+        t0 = pts[0][0]
+        xs = [(p[0] - t0).total_seconds() / 86400.0 for p in pts]  # days
+        ys = [p[1] for p in pts]
+        n = len(xs)
+        mx, my = sum(xs) / n, sum(ys) / n
+        denom = sum((x - mx) ** 2 for x in xs) or 1e-9
+        slope = sum((xs[i] - mx) * (ys[i] - my) for i in range(n)) / denom  # score/day
+        current = ys[-1]
+
+        breach_in_days = None
+        if slope < -1e-6 and current > target:
+            breach_in_days = round((current - target) / (-slope), 1)
+        projected_30d = round(max(0.0, min(1.0, current + slope * 30)), 3)
+
+        if current < target:
+            status = "below_target"
+        elif breach_in_days is not None and breach_in_days <= 30:
+            status = "at_risk"
+        else:
+            status = "on_track"
+        return {
+            "framework": framework, "target": target,
+            "current_score": round(current, 3),
+            "trend_per_day": round(slope, 5),
+            "projected_breach_in_days": breach_in_days,
+            "projected_30d_score": projected_30d,
+            "status": status,
+            "sample_count": n,
+        }
+
     async def get_issues(
         self, db: AsyncSession, severity: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
