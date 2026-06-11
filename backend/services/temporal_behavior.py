@@ -181,11 +181,16 @@ class TemporalBehaviorAnalyzer:
                     f"person track {tid}: sustained speed {speed_frac:.2f} frame-widths/s", tid))
 
         # --- Loitering: long dwell in a small area ---
+        # The dwell threshold is learned per camera/zone/time-slot when a baseline
+        # exists (cuts false positives in naturally-busy areas); falls back to the
+        # static _LOITER_S otherwise.
+        from backend.services.adaptive_thresholds import adaptive_thresholds
+        loiter_s = adaptive_thresholds.get(cam_id, "dwell_time_threshold", _LOITER_S)
         dwell = st.last_seen - st.first_seen
-        if dwell >= _LOITER_S:
+        if dwell >= loiter_s:
             spread = self._spatial_spread(hist) / diag
             if spread <= _LOITER_RADIUS_FRAC and self._fire(st, "loitering", t):
-                conf = min(0.95, 0.5 + (dwell - _LOITER_S) / max(_LOITER_S, 1) * 0.4)
+                conf = min(0.95, 0.5 + (dwell - loiter_s) / max(loiter_s, 1) * 0.4)
                 out.append(self._mk("loitering", "low", round(conf, 2),
                     f"person track {tid}: dwelling {int(dwell)}s within a small area (spread {spread:.2f})", tid))
         return out

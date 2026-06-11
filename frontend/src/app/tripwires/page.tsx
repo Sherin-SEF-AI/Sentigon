@@ -25,7 +25,7 @@ const SEVERITY_STYLES: Record<string, string> = {
   high: "bg-orange-500/10 text-orange-400 border-orange-500/40",
   medium: "bg-yellow-500/10 text-yellow-400 border-yellow-500/40",
   low: "bg-blue-500/10 text-blue-400 border-blue-500/40",
-  info: "bg-gray-500/10 text-gray-400 border-gray-500/40",
+  info: "bg-gray-500/10 text-muted-foreground border-gray-500/40",
 };
 
 const DIRECTIONS = ["both", "left_to_right", "right_to_left"] as const;
@@ -118,19 +118,19 @@ export default function TripwiresPage() {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-100">Tripwires</h1>
-        <p className="text-sm text-gray-400">
+        <h1 className="text-2xl font-semibold text-foreground">Tripwires</h1>
+        <p className="text-sm text-muted-foreground">
           Directional line-crossing detection. A watched object crossing a line raises an alert.
         </p>
       </div>
 
       {/* Camera selector */}
       <div className="flex items-center gap-3">
-        <label className="text-sm text-gray-400">Camera</label>
+        <label className="text-sm text-muted-foreground">Camera</label>
         <select
           value={cameraId}
           onChange={(e) => setCameraId(e.target.value)}
-          className="bg-gray-800 border border-gray-700 rounded-md px-3 py-1.5 text-sm text-gray-200"
+          className="bg-surface-3 border border-border-strong rounded-md px-3 py-1.5 text-sm text-foreground"
         >
           {cameras.length === 0 && <option value="">No cameras</option>}
           {cameras.map((c) => (
@@ -142,12 +142,12 @@ export default function TripwiresPage() {
       </div>
 
       {/* Create form */}
-      <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-4 space-y-4">
-        <div className="text-sm font-medium text-gray-200">New tripwire</div>
+      <div className="rounded-xl border border-border bg-surface-2/60 p-4 space-y-4">
+        <div className="text-sm font-medium text-foreground">New tripwire</div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {/* Canvas line editor */}
           <div>
-            <span className="mb-1 block text-xs text-gray-500">
+            <span className="mb-1 block text-xs text-muted-foreground">
               Draw line on camera view
             </span>
             <TripwireCanvas
@@ -196,21 +196,21 @@ export default function TripwiresPage() {
       </div>
 
       {/* List */}
-      <div className="rounded-xl border border-gray-800 bg-gray-900/60">
-        <div className="px-4 py-2 border-b border-gray-800 text-sm text-gray-400">
+      <div className="rounded-xl border border-border bg-surface-2/60">
+        <div className="px-4 py-2 border-b border-border text-sm text-muted-foreground">
           {loading ? "Loading…" : `${tripwires.length} tripwire(s)`}
         </div>
-        <ul className="divide-y divide-gray-800">
+        <ul className="divide-y divide-border">
           {tripwires.map((w) => (
             <li key={w.id} className="flex items-center justify-between px-4 py-3">
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-100">{w.name}</span>
+                  <span className="text-sm font-medium text-foreground">{w.name}</span>
                   <span className={`text-[10px] px-1.5 py-0.5 rounded border ${SEVERITY_STYLES[w.severity] ?? SEVERITY_STYLES.info}`}>
                     {w.severity}
                   </span>
                 </div>
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-muted-foreground">
                   ({w.point_a.join(", ")}) → ({w.point_b.join(", ")}) · {w.direction} · {w.classes.join(", ")}
                 </div>
               </div>
@@ -220,7 +220,7 @@ export default function TripwiresPage() {
             </li>
           ))}
           {!loading && tripwires.length === 0 && (
-            <li className="px-4 py-6 text-center text-sm text-gray-500">No tripwires for this camera.</li>
+            <li className="px-4 py-6 text-center text-sm text-muted-foreground">No tripwires for this camera.</li>
           )}
         </ul>
       </div>
@@ -229,12 +229,12 @@ export default function TripwiresPage() {
 }
 
 const inputCls =
-  "w-full bg-gray-800 border border-gray-700 rounded-md px-2 py-1 text-sm text-gray-200";
+  "w-full bg-surface-3 border border-border-strong rounded-md px-2 py-1 text-sm text-foreground";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block space-y-1">
-      <span className="text-xs text-gray-500">{label}</span>
+      <span className="text-xs text-muted-foreground">{label}</span>
       {children}
     </label>
   );

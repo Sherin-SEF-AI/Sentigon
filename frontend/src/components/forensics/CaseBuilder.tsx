@@ -76,8 +76,8 @@ export default function CaseBuilder({
           <CheckCircle2 className="h-5 w-5 text-emerald-400" />
           <h3 className="text-sm font-semibold text-emerald-400">Case Created</h3>
         </div>
-        <p className="text-sm text-gray-300 mb-1">{createdCase.title}</p>
-        <p className="text-xs text-gray-500 font-mono mb-4">
+        <p className="text-sm text-foreground mb-1">{createdCase.title}</p>
+        <p className="text-xs text-muted-foreground font-mono mb-4">
           ID: {createdCase.id.slice(0, 12)}
         </p>
         <div className="flex gap-2">
@@ -95,7 +95,7 @@ export default function CaseBuilder({
               setDescription("");
               setEventIds([]);
             }}
-            className="rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800"
+            className="rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3"
           >
             Create Another
           </button>
@@ -105,11 +105,11 @@ export default function CaseBuilder({
   }
 
   return (
-    <div className={cn("rounded-lg border border-gray-800 bg-gray-900/60 p-5", className)}>
+    <div className={cn("rounded-lg border border-border bg-surface-2/60 p-5", className)}>
       {/* Header */}
       <div className="flex items-center gap-2 mb-4">
         <FolderPlus className="h-5 w-5 text-violet-400" />
-        <h3 className="text-sm font-semibold text-gray-200">
+        <h3 className="text-sm font-semibold text-foreground">
           Create Case from Evidence
         </h3>
       </div>
@@ -127,7 +127,7 @@ export default function CaseBuilder({
           placeholder="Case title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:border-violet-600 focus:outline-none focus:ring-1 focus:ring-violet-600"
+          className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-500 focus:border-violet-600 focus:outline-none focus:ring-1 focus:ring-violet-600"
         />
 
         {/* Description */}
@@ -136,14 +136,14 @@ export default function CaseBuilder({
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={2}
-          className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:border-violet-600 focus:outline-none resize-none"
+          className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-500 focus:border-violet-600 focus:outline-none resize-none"
         />
 
         {/* Priority */}
         <select
           value={priority}
           onChange={(e) => setPriority(e.target.value as Severity)}
-          className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 focus:border-violet-600 focus:outline-none"
+          className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground focus:border-violet-600 focus:outline-none"
         >
           {PRIORITY_OPTIONS.map((p) => (
             <option key={p} value={p}>
@@ -155,19 +155,19 @@ export default function CaseBuilder({
         {/* Selected events */}
         {eventIds.length > 0 && (
           <div>
-            <span className="mb-2 block text-[10px] font-medium uppercase tracking-wider text-gray-500">
+            <span className="mb-2 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
               Linked Events ({eventIds.length})
             </span>
             <div className="flex flex-wrap gap-1.5">
               {eventIds.map((id) => (
                 <span
                   key={id}
-                  className="flex items-center gap-1 rounded bg-gray-800 px-2 py-1 text-[10px] text-gray-400 font-mono"
+                  className="flex items-center gap-1 rounded bg-surface-3 px-2 py-1 text-[10px] text-muted-foreground font-mono"
                 >
                   {id.slice(0, 8)}
                   <button
                     onClick={() => removeEvent(id)}
-                    className="ml-0.5 text-gray-600 hover:text-red-400"
+                    className="ml-0.5 text-muted-foreground hover:text-red-400"
                   >
                     <X className="h-3 w-3" />
                   </button>

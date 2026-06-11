@@ -53,7 +53,7 @@ function tensionColor(level: number): { bar: string; text: string; label: string
 
 const STATUS_BADGE: Record<string, string> = {
   active: "bg-blue-900/40 text-blue-400 border-blue-800",
-  standby: "bg-gray-800 text-gray-400 border-gray-700",
+  standby: "bg-surface-3 text-muted-foreground border-border-strong",
   triggered: "bg-red-900/40 text-red-400 border-red-800",
   resolved: "bg-green-900/40 text-green-400 border-green-800",
 };
@@ -229,7 +229,7 @@ export default function CrowdProtocolsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6">
+    <div className="min-h-screen bg-surface-0 p-6">
       {/* Header */}
       <div className="mb-6 flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-900/30 border border-cyan-800/50">
@@ -239,7 +239,7 @@ export default function CrowdProtocolsPage() {
           <h1 className="text-xl font-bold text-cyan-400 tracking-wide">
             Crowd Management Protocols
           </h1>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted-foreground">
             Real-time tension monitoring and protocol management
           </p>
         </div>
@@ -249,7 +249,7 @@ export default function CrowdProtocolsPage() {
       {loading && (
         <div className="flex flex-col items-center justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-          <p className="mt-3 text-sm text-gray-500">Loading crowd protocols...</p>
+          <p className="mt-3 text-sm text-muted-foreground">Loading crowd protocols...</p>
         </div>
       )}
 
@@ -260,7 +260,7 @@ export default function CrowdProtocolsPage() {
           <p className="text-sm text-red-400">{error}</p>
           <button
             onClick={fetchData}
-            className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             Retry
           </button>
@@ -270,16 +270,16 @@ export default function CrowdProtocolsPage() {
       {!loading && !error && (
         <div className="space-y-6">
           {/* ---- Tension Meter ---- */}
-          <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-6">
+          <div className="rounded-lg border border-border bg-surface-2/60 p-6">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-400">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                 Current Tension Level
               </h2>
               <div className="flex items-center gap-4">
                 {/* Sparkline for tension history */}
                 {tensionHistory.length >= 2 && (
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] uppercase tracking-wider text-gray-600">History</span>
+                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">History</span>
                     <MetricSparkline
                       data={tensionHistory}
                       width={100}
@@ -294,13 +294,13 @@ export default function CrowdProtocolsPage() {
                   <span className={cn("text-3xl font-bold font-mono", tc.text)}>
                     {tension}
                   </span>
-                  <span className="text-sm text-gray-500">/ 100</span>
+                  <span className="text-sm text-muted-foreground">/ 100</span>
                 </div>
               </div>
             </div>
 
             {/* Gauge bar */}
-            <div className="relative h-6 w-full overflow-hidden rounded-full bg-gray-800">
+            <div className="relative h-6 w-full overflow-hidden rounded-full bg-surface-3">
               {/* Gradient background track */}
               <div
                 className="absolute inset-0 opacity-20"
@@ -315,13 +315,13 @@ export default function CrowdProtocolsPage() {
                 style={{ width: `${Math.min(100, Math.max(0, tension))}%` }}
               />
               {/* Marker ticks */}
-              <div className="absolute top-0 left-[30%] h-full w-px bg-gray-700" />
-              <div className="absolute top-0 left-[60%] h-full w-px bg-gray-700" />
-              <div className="absolute top-0 left-[80%] h-full w-px bg-gray-700" />
+              <div className="absolute top-0 left-[30%] h-full w-px bg-surface-3" />
+              <div className="absolute top-0 left-[60%] h-full w-px bg-surface-3" />
+              <div className="absolute top-0 left-[80%] h-full w-px bg-surface-3" />
             </div>
 
             {/* Scale labels */}
-            <div className="mt-2 flex justify-between text-[10px] text-gray-600">
+            <div className="mt-2 flex justify-between text-[10px] text-muted-foreground">
               <span>0 - Normal</span>
               <span>30 - Elevated</span>
               <span>60 - High</span>
@@ -350,11 +350,11 @@ export default function CrowdProtocolsPage() {
           </div>
 
           {/* ---- Auto-Escalation Rule Config ---- */}
-          <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-5">
+          <div className="rounded-lg border border-border bg-surface-2/60 p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Settings2 className="h-4 w-4 text-gray-500" />
-                <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-400">
+                <Settings2 className="h-4 w-4 text-muted-foreground" />
+                <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                   Auto-Escalation Rule
                 </h2>
                 {/* Current rule badge */}
@@ -369,7 +369,7 @@ export default function CrowdProtocolsPage() {
                   setEditDuration(String(escalationRule.durationMinutes));
                   setShowEscalationConfig(!showEscalationConfig);
                 }}
-                className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
                 {showEscalationConfig ? "Cancel" : "Configure"}
               </button>
@@ -378,7 +378,7 @@ export default function CrowdProtocolsPage() {
             {showEscalationConfig && (
               <div className="flex items-end gap-3 flex-wrap">
                 <div>
-                  <label className="mb-1 block text-[11px] text-gray-500">
+                  <label className="mb-1 block text-[11px] text-muted-foreground">
                     Tension Threshold (1–100)
                   </label>
                   <input
@@ -387,11 +387,11 @@ export default function CrowdProtocolsPage() {
                     max={100}
                     value={editThreshold}
                     onChange={(e) => setEditThreshold(e.target.value)}
-                    className="w-24 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 focus:border-orange-700 focus:outline-none focus:ring-1 focus:ring-orange-700"
+                    className="w-24 rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground focus:border-orange-700 focus:outline-none focus:ring-1 focus:ring-orange-700"
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-[11px] text-gray-500">
+                  <label className="mb-1 block text-[11px] text-muted-foreground">
                     Sustained Duration (minutes)
                   </label>
                   <input
@@ -399,7 +399,7 @@ export default function CrowdProtocolsPage() {
                     min={1}
                     value={editDuration}
                     onChange={(e) => setEditDuration(e.target.value)}
-                    className="w-24 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 focus:border-orange-700 focus:outline-none focus:ring-1 focus:ring-orange-700"
+                    className="w-24 rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground focus:border-orange-700 focus:outline-none focus:ring-1 focus:ring-orange-700"
                   />
                 </div>
                 <button
@@ -413,7 +413,7 @@ export default function CrowdProtocolsPage() {
             )}
 
             {!showEscalationConfig && (
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-muted-foreground">
                 An alert will fire if crowd tension exceeds{" "}
                 <span className="text-orange-400 font-semibold">{escalationRule.threshold}</span>{" "}
                 for{" "}
@@ -424,17 +424,17 @@ export default function CrowdProtocolsPage() {
           </div>
 
           {/* ---- Active Protocols Panel ---- */}
-          <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-5">
-            <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-gray-400">
+          <div className="rounded-lg border border-border bg-surface-2/60 p-5">
+            <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
               <ShieldCheck className="h-4 w-4" />
               Protocol Status
-              <span className="ml-1 rounded bg-gray-800 px-2 py-0.5 text-[10px] font-mono text-gray-500">
+              <span className="ml-1 rounded bg-surface-3 px-2 py-0.5 text-[10px] font-mono text-muted-foreground">
                 {activeProtocols.length} active
               </span>
             </h2>
 
             {protocols.length === 0 ? (
-              <p className="py-8 text-center text-sm text-gray-600">
+              <p className="py-8 text-center text-sm text-muted-foreground">
                 No protocols configured
               </p>
             ) : (
@@ -449,7 +449,7 @@ export default function CrowdProtocolsPage() {
                         "flex items-center gap-3 rounded-lg border px-4 py-3 transition-colors",
                         isActive
                           ? "border-blue-800/60 bg-blue-950/20"
-                          : "border-gray-800 bg-gray-950/50 hover:border-gray-700"
+                          : "border-border bg-surface-0/50 hover:border-border-strong"
                       )}
                     >
                       {/* Active pulse indicator */}
@@ -459,17 +459,17 @@ export default function CrowdProtocolsPage() {
                           <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-blue-500" />
                         </span>
                       ) : (
-                        <ChevronRight className="h-4 w-4 shrink-0 text-gray-600" />
+                        <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
                       )}
 
-                      <span className="flex-1 text-sm font-medium text-gray-200">
+                      <span className="flex-1 text-sm font-medium text-foreground">
                         {p.name}
                       </span>
 
                       <span
                         className={cn(
                           "inline-flex shrink-0 rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border",
-                          SEVERITY_BADGE[p.severity] || "bg-gray-800 text-gray-400 border-gray-700"
+                          SEVERITY_BADGE[p.severity] || "bg-surface-3 text-muted-foreground border-border-strong"
                         )}
                       >
                         {p.severity}
@@ -478,7 +478,7 @@ export default function CrowdProtocolsPage() {
                       <span
                         className={cn(
                           "inline-flex shrink-0 items-center gap-1 rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border",
-                          STATUS_BADGE[p.status] || "bg-gray-800 text-gray-400 border-gray-700"
+                          STATUS_BADGE[p.status] || "bg-surface-3 text-muted-foreground border-border-strong"
                         )}
                       >
                         {isActive && <Radio className="h-2.5 w-2.5" />}
@@ -493,8 +493,8 @@ export default function CrowdProtocolsPage() {
                           title="Deactivate Protocol"
                           className={cn(
                             "flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide transition-colors border",
-                            "bg-gray-800 text-gray-400 border-gray-700",
-                            "hover:bg-gray-700 hover:text-gray-200 hover:border-gray-600",
+                            "bg-surface-3 text-muted-foreground border-border-strong",
+                            "hover:bg-surface-3 hover:text-foreground hover:border-border-strong",
                             "disabled:opacity-50 disabled:cursor-not-allowed"
                           )}
                         >
@@ -534,12 +534,12 @@ export default function CrowdProtocolsPage() {
 
           {/* ---- Recommendation Cards ---- */}
           <div>
-            <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-400">
+            <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
               Recommended Actions
             </h2>
 
             {protocols.length === 0 ? (
-              <p className="py-8 text-center text-sm text-gray-600">
+              <p className="py-8 text-center text-sm text-muted-foreground">
                 No recommendations available
               </p>
             ) : (
@@ -551,15 +551,15 @@ export default function CrowdProtocolsPage() {
                     <div
                       key={p.id}
                       className={cn(
-                        "rounded-lg border bg-gray-900/60 p-5 transition-colors",
+                        "rounded-lg border bg-surface-2/60 p-5 transition-colors",
                         isActive
                           ? "border-blue-800/60 ring-1 ring-blue-800/30"
-                          : "border-gray-800 hover:border-gray-700"
+                          : "border-border hover:border-border-strong"
                       )}
                     >
                       {/* Card header */}
                       <div className="mb-3 flex items-start justify-between gap-2">
-                        <h3 className="text-sm font-semibold text-gray-200">
+                        <h3 className="text-sm font-semibold text-foreground">
                           {p.name}
                         </h3>
                         <div className="flex shrink-0 items-center gap-1.5">
@@ -572,7 +572,7 @@ export default function CrowdProtocolsPage() {
                           <span
                             className={cn(
                               "inline-flex shrink-0 rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border",
-                              SEVERITY_BADGE[p.severity] || "bg-gray-800 text-gray-400 border-gray-700"
+                              SEVERITY_BADGE[p.severity] || "bg-surface-3 text-muted-foreground border-border-strong"
                             )}
                           >
                             {p.severity}
@@ -581,21 +581,21 @@ export default function CrowdProtocolsPage() {
                       </div>
 
                       {/* Description */}
-                      <p className="mb-4 text-xs leading-relaxed text-gray-400">
+                      <p className="mb-4 text-xs leading-relaxed text-muted-foreground">
                         {p.description}
                       </p>
 
                       {/* Recommended actions */}
                       {p.recommended_actions && p.recommended_actions.length > 0 && (
                         <div className="mb-4">
-                          <h4 className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+                          <h4 className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                             Actions
                           </h4>
                           <ul className="space-y-1.5">
                             {p.recommended_actions.map((action, i) => (
                               <li
                                 key={i}
-                                className="flex items-start gap-2 text-xs text-gray-300"
+                                className="flex items-start gap-2 text-xs text-foreground"
                               >
                                 <span className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-500" />
                                 {action}
@@ -612,8 +612,8 @@ export default function CrowdProtocolsPage() {
                           disabled={isThisLoading}
                           className={cn(
                             "mt-auto flex w-full items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors border",
-                            "bg-gray-800 text-gray-400 border-gray-700",
-                            "hover:bg-gray-700 hover:text-gray-200",
+                            "bg-surface-3 text-muted-foreground border-border-strong",
+                            "hover:bg-surface-3 hover:text-foreground",
                             "disabled:opacity-50 disabled:cursor-not-allowed"
                           )}
                         >

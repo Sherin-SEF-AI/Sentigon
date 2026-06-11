@@ -74,14 +74,14 @@ function ActivityEntry({
   onToggle: () => void;
 }) {
   const Icon = ACTION_ICONS[entry.action_type] || Zap;
-  const iconColor = ACTION_COLORS[entry.action_type] || "text-gray-400";
-  const tierColor = TIER_COLORS[entry.tier || ""] || "text-gray-400";
+  const iconColor = ACTION_COLORS[entry.action_type] || "text-muted-foreground";
+  const tierColor = TIER_COLORS[entry.tier || ""] || "text-muted-foreground";
 
   return (
     <div
       className={cn(
-        "rounded-md border border-gray-800/60 transition-all duration-150",
-        expanded ? "bg-gray-900/80" : "bg-gray-900/40 hover:bg-gray-900/60"
+        "rounded-md border border-border/60 transition-all duration-150",
+        expanded ? "bg-surface-2/80" : "bg-surface-2/40 hover:bg-surface-2/60"
       )}
     >
       <button
@@ -102,26 +102,26 @@ function ActivityEntry({
         </span>
 
         {/* Description */}
-        <span className="flex-1 truncate text-xs text-gray-300">
+        <span className="flex-1 truncate text-xs text-foreground">
           {entry.description}
         </span>
 
         {/* Latency */}
         {entry.latency_ms != null && (
-          <span className="shrink-0 font-mono text-[10px] text-gray-600">
+          <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
             {entry.latency_ms}ms
           </span>
         )}
 
         {/* Timestamp */}
-        <span className="flex shrink-0 items-center gap-1 text-[10px] text-gray-600">
+        <span className="flex shrink-0 items-center gap-1 text-[10px] text-muted-foreground">
           <Clock className="h-2.5 w-2.5" />
           {formatTimestamp(entry.timestamp)}
         </span>
 
         <ChevronDown
           className={cn(
-            "h-3 w-3 shrink-0 text-gray-700 transition-transform duration-150",
+            "h-3 w-3 shrink-0 text-muted-foreground transition-transform duration-150",
             expanded && "rotate-180"
           )}
         />
@@ -129,37 +129,37 @@ function ActivityEntry({
 
       {/* Expanded detail */}
       {expanded && (
-        <div className="border-t border-gray-800/60 px-3 py-2.5 space-y-2">
+        <div className="border-t border-border/60 px-3 py-2.5 space-y-2">
           {entry.tool_name && (
             <div className="text-xs">
-              <span className="text-gray-500">Tool: </span>
+              <span className="text-muted-foreground">Tool: </span>
               <span className="font-mono text-blue-300">{entry.tool_name}</span>
             </div>
           )}
           {entry.tool_params && (
             <div className="text-xs">
-              <span className="text-gray-500">Params: </span>
-              <pre className="mt-1 overflow-x-auto rounded border border-gray-800 bg-gray-950 p-2 text-[11px] text-gray-400">
+              <span className="text-muted-foreground">Params: </span>
+              <pre className="mt-1 overflow-x-auto rounded border border-border bg-surface-0 p-2 text-[11px] text-muted-foreground">
                 {JSON.stringify(entry.tool_params, null, 2)}
               </pre>
             </div>
           )}
           {entry.prompt_summary && (
             <div className="text-xs">
-              <span className="text-gray-500">Prompt: </span>
-              <span className="text-gray-300">{entry.prompt_summary}</span>
+              <span className="text-muted-foreground">Prompt: </span>
+              <span className="text-foreground">{entry.prompt_summary}</span>
             </div>
           )}
           {entry.response_summary && (
             <div className="text-xs">
-              <span className="text-gray-500">Response: </span>
-              <span className="text-gray-300">{entry.response_summary}</span>
+              <span className="text-muted-foreground">Response: </span>
+              <span className="text-foreground">{entry.response_summary}</span>
             </div>
           )}
           {entry.latency_ms != null && (
             <div className="text-xs">
-              <span className="text-gray-500">Latency: </span>
-              <span className="font-mono text-gray-300">{entry.latency_ms}ms</span>
+              <span className="text-muted-foreground">Latency: </span>
+              <span className="font-mono text-foreground">{entry.latency_ms}ms</span>
             </div>
           )}
         </div>
@@ -255,30 +255,30 @@ export default function AgentActivityPanel({
   return (
     <div
       className={cn(
-        "flex flex-col rounded-lg border border-gray-800 bg-gray-950",
+        "flex flex-col rounded-lg border border-border bg-surface-0",
         className
       )}
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-4 py-3">
+      <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-2">
           <Zap className="h-4 w-4 text-cyan-400" />
-          <h3 className="text-sm font-semibold text-gray-200">
+          <h3 className="text-sm font-semibold text-foreground">
             Agent Activity
           </h3>
-          <span className="rounded-full bg-gray-800 px-2 py-0.5 text-[10px] font-mono text-gray-400">
+          <span className="rounded-full bg-surface-3 px-2 py-0.5 text-[10px] font-mono text-muted-foreground">
             {filtered.length}
           </span>
         </div>
 
         {/* Filters */}
         <div className="flex items-center gap-2">
-          <Filter className="h-3 w-3 text-gray-600" />
+          <Filter className="h-3 w-3 text-muted-foreground" />
           <div className="relative">
             <select
               value={agentFilter}
               onChange={(e) => setAgentFilter(e.target.value)}
-              className="appearance-none rounded border border-gray-700 bg-gray-900 py-1 pl-2 pr-6 text-[11px] text-gray-400 focus:border-cyan-700 focus:outline-none"
+              className="appearance-none rounded border border-border-strong bg-surface-2 py-1 pl-2 pr-6 text-[11px] text-muted-foreground focus:border-cyan-700 focus:outline-none"
             >
               <option value="all">All Agents</option>
               {agentNames.map((name) => (
@@ -287,13 +287,13 @@ export default function AgentActivityPanel({
                 </option>
               ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-1.5 top-1/2 h-2.5 w-2.5 -translate-y-1/2 text-gray-600" />
+            <ChevronDown className="pointer-events-none absolute right-1.5 top-1/2 h-2.5 w-2.5 -translate-y-1/2 text-muted-foreground" />
           </div>
           <div className="relative">
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="appearance-none rounded border border-gray-700 bg-gray-900 py-1 pl-2 pr-6 text-[11px] text-gray-400 focus:border-cyan-700 focus:outline-none"
+              className="appearance-none rounded border border-border-strong bg-surface-2 py-1 pl-2 pr-6 text-[11px] text-muted-foreground focus:border-cyan-700 focus:outline-none"
             >
               <option value="all">All Types</option>
               {actionTypes.map((type) => (
@@ -302,7 +302,7 @@ export default function AgentActivityPanel({
                 </option>
               ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-1.5 top-1/2 h-2.5 w-2.5 -translate-y-1/2 text-gray-600" />
+            <ChevronDown className="pointer-events-none absolute right-1.5 top-1/2 h-2.5 w-2.5 -translate-y-1/2 text-muted-foreground" />
           </div>
         </div>
       </div>
@@ -320,8 +320,8 @@ export default function AgentActivityPanel({
 
         {!loading && filtered.length === 0 && (
           <div className="flex flex-col items-center justify-center py-10">
-            <Zap className="mb-2 h-6 w-6 text-gray-700" />
-            <p className="text-xs text-gray-600">No activity recorded</p>
+            <Zap className="mb-2 h-6 w-6 text-muted-foreground" />
+            <p className="text-xs text-muted-foreground">No activity recorded</p>
           </div>
         )}
 

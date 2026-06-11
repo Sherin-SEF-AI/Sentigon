@@ -104,7 +104,7 @@ function AgentCard({
   return (
     <div
       className={cn(
-        "rounded-lg border border-gray-800 bg-gray-900/60 transition-all duration-200",
+        "rounded-lg border border-border bg-surface-2/60 transition-all duration-200",
         expanded && "ring-1 ring-gray-700"
       )}
     >
@@ -131,7 +131,7 @@ function AgentCard({
 
         {/* Agent name */}
         <div className="flex-1 min-w-0">
-          <p className="truncate text-sm font-semibold text-gray-200">
+          <p className="truncate text-sm font-semibold text-foreground">
             {agent.display_name || agent.name}
           </p>
           <p className={cn("text-[10px] font-medium uppercase tracking-wider", tier.color)}>
@@ -140,7 +140,7 @@ function AgentCard({
         </div>
 
         {/* Cycle count */}
-        <div className="flex items-center gap-1 text-xs text-gray-500">
+        <div className="flex items-center gap-1 text-xs text-muted-foreground">
           <Zap className="h-3 w-3" />
           <span className="font-mono">{agent.cycle_count}</span>
         </div>
@@ -155,7 +155,7 @@ function AgentCard({
 
         <ChevronDown
           className={cn(
-            "h-4 w-4 shrink-0 text-gray-600 transition-transform duration-200",
+            "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
             expanded && "rotate-180"
           )}
         />
@@ -163,11 +163,11 @@ function AgentCard({
 
       {/* Expanded details */}
       {expanded && (
-        <div className="border-t border-gray-800 px-4 py-3 space-y-3">
+        <div className="border-t border-border px-4 py-3 space-y-3">
           {/* Meta info */}
           <div className="grid grid-cols-2 gap-2 text-xs">
             <div>
-              <span className="text-gray-500">Status</span>
+              <span className="text-muted-foreground">Status</span>
               <p
                 className={cn(
                   "font-semibold capitalize",
@@ -179,34 +179,34 @@ function AgentCard({
                     ? "text-orange-400"
                     : (agent.status_text || agent.status) === "error"
                     ? "text-red-400"
-                    : "text-gray-400"
+                    : "text-muted-foreground"
                 )}
               >
                 {(agent.status_text || agent.status).replace("_", " ")}
               </p>
             </div>
             <div>
-              <span className="text-gray-500">Cycles</span>
-              <p className="font-mono text-gray-300">{agent.cycle_count}</p>
+              <span className="text-muted-foreground">Cycles</span>
+              <p className="font-mono text-foreground">{agent.cycle_count}</p>
             </div>
             {agent.last_action_time && (
               <div>
-                <span className="text-gray-500">Last Action</span>
-                <p className="text-gray-300">
+                <span className="text-muted-foreground">Last Action</span>
+                <p className="text-foreground">
                   {formatTimestamp(agent.last_action_time)}
                 </p>
               </div>
             )}
             {agent.model && (
               <div>
-                <span className="text-gray-500">Model</span>
-                <p className="truncate text-gray-300">{agent.model}</p>
+                <span className="text-muted-foreground">Model</span>
+                <p className="truncate text-foreground">{agent.model}</p>
               </div>
             )}
             {agent.uptime_seconds != null && (
               <div>
-                <span className="text-gray-500">Uptime</span>
-                <p className="text-gray-300">
+                <span className="text-muted-foreground">Uptime</span>
+                <p className="text-foreground">
                   {Math.floor(agent.uptime_seconds / 3600)}h{" "}
                   {Math.floor((agent.uptime_seconds % 3600) / 60)}m
                 </p>
@@ -214,7 +214,7 @@ function AgentCard({
             )}
             {agent.error_count > 0 && (
               <div>
-                <span className="text-gray-500">Errors</span>
+                <span className="text-muted-foreground">Errors</span>
                 <p className="font-semibold text-red-400">
                   {agent.error_count}
                   {agent.consecutive_errors ? ` (${agent.consecutive_errors} consecutive)` : ""}
@@ -248,7 +248,7 @@ function AgentCard({
 
           {/* Description */}
           {agent.description && (
-            <p className="text-xs text-gray-400 leading-relaxed">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               {agent.description}
             </p>
           )}
@@ -311,8 +311,8 @@ function AgentCard({
               disabled={isActioning}
               className={cn(
                 "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors",
-                "bg-gray-800 text-gray-400 border border-gray-700",
-                "hover:bg-gray-700 hover:text-gray-300",
+                "bg-surface-3 text-muted-foreground border border-border-strong",
+                "hover:bg-surface-3 hover:text-foreground",
                 "disabled:opacity-50 disabled:cursor-not-allowed"
               )}
             >
@@ -409,7 +409,7 @@ export default function AgentStatusGrid() {
     return (
       <div className="flex items-center justify-center py-16">
         <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-        <span className="ml-3 text-sm text-gray-500">Loading agent fleet...</span>
+        <span className="ml-3 text-sm text-muted-foreground">Loading agent fleet...</span>
       </div>
     );
   }
@@ -421,7 +421,7 @@ export default function AgentStatusGrid() {
         <p className="text-sm text-red-400">{error}</p>
         <button
           onClick={fetchAgents}
-          className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+          className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
         >
           Retry
         </button>
@@ -432,10 +432,10 @@ export default function AgentStatusGrid() {
   return (
     <div className="space-y-6">
       {/* Fleet summary bar */}
-      <div className="flex items-center gap-4 text-xs text-gray-500">
+      <div className="flex items-center gap-4 text-xs text-muted-foreground">
         <div className="flex items-center gap-1.5">
           <Cpu className="h-3.5 w-3.5 text-cyan-400" />
-          <span className="font-semibold text-gray-300">{agents.length}</span> agents
+          <span className="font-semibold text-foreground">{agents.length}</span> agents
         </div>
         <div className="flex items-center gap-1.5">
           <Activity className="h-3.5 w-3.5 text-green-400" />
@@ -471,7 +471,7 @@ export default function AgentStatusGrid() {
         )}
         <button
           onClick={fetchAgents}
-          className="ml-auto flex items-center gap-1 text-gray-500 hover:text-gray-300 transition-colors"
+          className="ml-auto flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
         >
           <RefreshCw className="h-3 w-3" />
           <span>Refresh</span>
@@ -496,7 +496,7 @@ export default function AgentStatusGrid() {
                 className={cn("h-1.5 w-1.5 rounded-full", config.border.replace("border-", "bg-"))}
               />
               {config.label}
-              <span className="text-gray-600">({tierAgents.length})</span>
+              <span className="text-muted-foreground">({tierAgents.length})</span>
             </h3>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {tierAgents.map((agent) => (

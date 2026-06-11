@@ -185,10 +185,10 @@ function CodeCard({
   return (
     <div
       className={cn(
-        "relative flex flex-col rounded-xl border-l-4 bg-gray-900 p-4 transition-all duration-200",
+        "relative flex flex-col rounded-xl border-l-4 bg-surface-2 p-4 transition-all duration-200",
         isActive
           ? "border-red-500 shadow-lg shadow-red-900/30 ring-1 ring-red-500/40"
-          : "border-gray-700 hover:border-gray-500 hover:bg-gray-800/60"
+          : "border-border-strong hover:border-gray-500 hover:bg-surface-3/60"
       )}
       style={{ borderLeftColor: isActive ? undefined : code.color }}
     >
@@ -199,7 +199,7 @@ function CodeCard({
             className="h-4 w-4 rounded-full shrink-0 border border-white/20"
             style={{ backgroundColor: code.color }}
           />
-          <h3 className="text-sm font-bold text-gray-100">{code.code}</h3>
+          <h3 className="text-sm font-bold text-foreground">{code.code}</h3>
         </div>
 
         {isActive && (
@@ -210,9 +210,9 @@ function CodeCard({
         )}
       </div>
 
-      <p className="mb-2 text-xs text-gray-400 line-clamp-2">{code.description}</p>
+      <p className="mb-2 text-xs text-muted-foreground line-clamp-2">{code.description}</p>
 
-      <div className="mb-3 text-[10px] text-gray-600">
+      <div className="mb-3 text-[10px] text-muted-foreground">
         {code.actions.length} automated action{code.actions.length !== 1 ? "s" : ""}
       </div>
 
@@ -244,7 +244,7 @@ function CodeCard({
           <button
             onClick={() => onActivate(code)}
             disabled={isActivating}
-            className="w-full flex items-center justify-center gap-2 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm font-semibold text-gray-200 transition hover:border-red-600 hover:bg-red-900/20 hover:text-red-300 disabled:opacity-50 active:scale-95"
+            className="w-full flex items-center justify-center gap-2 rounded-lg border border-border-strong bg-surface-3 px-3 py-2.5 text-sm font-semibold text-foreground transition hover:border-red-600 hover:bg-red-900/20 hover:text-red-300 disabled:opacity-50 active:scale-95"
           >
             {isActivating ? (
               <RefreshCw className="h-4 w-4 animate-spin" />
@@ -273,7 +273,7 @@ function ResponseChecklist({
     setChecked((prev) => ({ ...prev, [key]: !prev[key] }));
 
   return (
-    <div className="rounded-xl border border-red-900/40 bg-gray-900/60 p-5">
+    <div className="rounded-xl border border-red-900/40 bg-surface-2/60 p-5">
       <div className="mb-4 flex items-center gap-2">
         <ShieldAlert className="h-5 w-5 text-red-400" />
         <h2 className="text-sm font-bold uppercase tracking-wider text-red-300">
@@ -289,7 +289,7 @@ function ResponseChecklist({
                 className="h-3 w-3 rounded-full shrink-0"
                 style={{ backgroundColor: rec.color }}
               />
-              <p className="text-sm font-semibold text-gray-200">{rec.code}</p>
+              <p className="text-sm font-semibold text-foreground">{rec.code}</p>
             </div>
             <div className="ml-5 space-y-2">
               {rec.actions.map((action, idx) => {
@@ -303,13 +303,13 @@ function ResponseChecklist({
                       "flex w-full items-center gap-3 rounded-lg border px-4 py-2.5 text-left text-sm transition-all active:scale-[0.99]",
                       done
                         ? "border-green-800/50 bg-green-900/20 text-green-400 line-through decoration-green-600/60"
-                        : "border-gray-700/60 bg-gray-800/50 text-gray-300 hover:border-red-700/40 hover:bg-gray-800"
+                        : "border-border-strong/60 bg-surface-3/50 text-foreground hover:border-red-700/40 hover:bg-surface-3"
                     )}
                   >
                     {done ? (
                       <CheckSquare className="h-4 w-4 text-green-500 shrink-0" />
                     ) : (
-                      <Square className="h-4 w-4 text-gray-500 shrink-0" />
+                      <Square className="h-4 w-4 text-muted-foreground shrink-0" />
                     )}
                     <span className="font-mono text-xs uppercase tracking-wide">
                       {action.replace(/_/g, " ")}
@@ -331,31 +331,31 @@ function HistoryTimeline({ history }: { history: EmergencyRecord[] }) {
   if (history.length === 0) return null;
 
   return (
-    <div className="rounded-xl border border-gray-800/60 bg-gray-900/60 p-5">
+    <div className="rounded-xl border border-border/60 bg-surface-2/60 p-5">
       <button
         onClick={() => setExpanded((v) => !v)}
         className="mb-4 flex w-full items-center justify-between gap-2"
       >
         <div className="flex items-center gap-2">
-          <History className="h-5 w-5 text-gray-400" />
-          <h2 className="text-sm font-bold uppercase tracking-wider text-gray-300">
+          <History className="h-5 w-5 text-muted-foreground" />
+          <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">
             Emergency History
           </h2>
-          <span className="rounded-full bg-gray-800 px-2 py-0.5 text-[10px] text-gray-500">
+          <span className="rounded-full bg-surface-3 px-2 py-0.5 text-[10px] text-muted-foreground">
             {history.length}
           </span>
         </div>
         {expanded ? (
-          <ChevronUp className="h-4 w-4 text-gray-500" />
+          <ChevronUp className="h-4 w-4 text-muted-foreground" />
         ) : (
-          <ChevronDown className="h-4 w-4 text-gray-500" />
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
         )}
       </button>
 
       {expanded && (
         <div className="relative space-y-0">
           {/* Timeline spine */}
-          <div className="absolute left-[19px] top-0 bottom-0 w-px bg-gray-800" />
+          <div className="absolute left-[19px] top-0 bottom-0 w-px bg-surface-3" />
 
           {history.slice(0, 20).map((rec, idx) => (
             <div key={rec.id + idx} className="relative flex gap-4 pb-4 last:pb-0">
@@ -365,25 +365,25 @@ function HistoryTimeline({ history }: { history: EmergencyRecord[] }) {
                   "relative z-10 mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border",
                   rec.status === "active"
                     ? "border-red-500 bg-red-900/60"
-                    : "border-gray-700 bg-gray-800"
+                    : "border-border-strong bg-surface-3"
                 )}
               >
                 {rec.status === "active" ? (
                   <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
                 ) : (
-                  <CheckCircle2 className="h-3 w-3 text-gray-500" />
+                  <CheckCircle2 className="h-3 w-3 text-muted-foreground" />
                 )}
               </div>
 
               {/* Content */}
-              <div className="flex-1 min-w-0 rounded-lg border border-gray-800/60 bg-gray-900 px-3 py-2">
+              <div className="flex-1 min-w-0 rounded-lg border border-border/60 bg-surface-2 px-3 py-2">
                 <div className="flex items-start justify-between gap-2 flex-wrap">
                   <div className="flex items-center gap-2">
                     <span
                       className="h-2.5 w-2.5 rounded-full shrink-0"
                       style={{ backgroundColor: rec.color }}
                     />
-                    <span className="text-sm font-semibold text-gray-200">
+                    <span className="text-sm font-semibold text-foreground">
                       {rec.code}
                     </span>
                     <span
@@ -391,18 +391,18 @@ function HistoryTimeline({ history }: { history: EmergencyRecord[] }) {
                         "rounded px-1.5 py-0.5 text-[9px] font-bold uppercase",
                         rec.status === "active"
                           ? "bg-red-900/40 text-red-400"
-                          : "bg-gray-800 text-gray-500"
+                          : "bg-surface-3 text-muted-foreground"
                       )}
                     >
                       {rec.status}
                     </span>
                   </div>
-                  <span className="text-[10px] text-gray-600 font-mono">
+                  <span className="text-[10px] text-muted-foreground font-mono">
                     {formatDateTime(rec.activated_at)}
                   </span>
                 </div>
 
-                <div className="mt-1 flex flex-wrap gap-x-4 gap-y-0.5 text-[10px] text-gray-500">
+                <div className="mt-1 flex flex-wrap gap-x-4 gap-y-0.5 text-[10px] text-muted-foreground">
                   {rec.activated_by && (
                     <span>by {rec.activated_by}</span>
                   )}
@@ -410,7 +410,7 @@ function HistoryTimeline({ history }: { history: EmergencyRecord[] }) {
                     duration: {durationBetween(rec.activated_at, rec.deactivated_at)}
                   </span>
                   {rec.notes && (
-                    <span className="text-gray-600 italic truncate max-w-[200px]">{rec.notes}</span>
+                    <span className="text-muted-foreground italic truncate max-w-[200px]">{rec.notes}</span>
                   )}
                 </div>
               </div>
@@ -439,9 +439,9 @@ function ConfirmDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-      <div className="w-full max-w-md rounded-2xl border border-red-800/60 bg-gray-950 shadow-2xl shadow-red-900/30">
+      <div className="w-full max-w-md rounded-2xl border border-red-800/60 bg-surface-0 shadow-2xl shadow-red-900/30">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <div className="flex items-center gap-3">
             <span
               className="flex h-9 w-9 items-center justify-center rounded-full border-2"
@@ -451,12 +451,12 @@ function ConfirmDialog({
             </span>
             <div>
               <h3 className="text-base font-bold text-white">Activate {code.code}?</h3>
-              <p className="text-xs text-gray-500">{code.description}</p>
+              <p className="text-xs text-muted-foreground">{code.description}</p>
             </div>
           </div>
           <button
             onClick={onCancel}
-            className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-800 hover:text-gray-300"
+            className="rounded-lg p-1.5 text-muted-foreground hover:bg-surface-3 hover:text-foreground"
           >
             <X className="h-4 w-4" />
           </button>
@@ -467,12 +467,12 @@ function ConfirmDialog({
           {/* Actions that will trigger */}
           {code.actions.length > 0 && (
             <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 This will trigger {code.actions.length} automated action{code.actions.length !== 1 ? "s" : ""}:
               </p>
               <ul className="space-y-1">
                 {code.actions.map((action, i) => (
-                  <li key={i} className="flex items-center gap-2 text-xs text-gray-400">
+                  <li key={i} className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Zap className="h-3 w-3 text-amber-500 shrink-0" />
                     <span className="font-mono uppercase tracking-wide">
                       {action.replace(/_/g, " ")}
@@ -485,7 +485,7 @@ function ConfirmDialog({
 
           {/* Notes */}
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-gray-400">
+            <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
               Notes (optional)
             </label>
             <textarea
@@ -493,7 +493,7 @@ function ConfirmDialog({
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add context for the log..."
               rows={3}
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 resize-none"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600 resize-none"
             />
           </div>
 
@@ -508,11 +508,11 @@ function ConfirmDialog({
         </div>
 
         {/* Footer */}
-        <div className="flex gap-3 border-t border-gray-800 px-6 py-4">
+        <div className="flex gap-3 border-t border-border px-6 py-4">
           <button
             onClick={onCancel}
             disabled={loading}
-            className="flex-1 rounded-lg border border-gray-700 bg-gray-800 py-2.5 text-sm font-medium text-gray-300 transition hover:bg-gray-700 disabled:opacity-50"
+            className="flex-1 rounded-lg border border-border-strong bg-surface-3 py-2.5 text-sm font-medium text-foreground transition hover:bg-surface-3 disabled:opacity-50"
           >
             Cancel
           </button>
@@ -655,17 +655,17 @@ export default function EmergencyPage() {
 
   if (loading) {
     return (
-      <div className="flex h-full items-center justify-center bg-gray-950">
+      <div className="flex h-full items-center justify-center bg-surface-0">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-red-500 border-t-transparent" />
-          <p className="text-sm text-gray-500">Loading emergency systems...</p>
+          <p className="text-sm text-muted-foreground">Loading emergency systems...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-full bg-gray-950 text-gray-100">
+    <div className="min-h-full bg-surface-0 text-foreground">
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <div className="sticky top-0 z-30 border-b border-red-900/40 bg-gradient-to-r from-red-950/80 via-gray-950/90 to-amber-950/60 backdrop-blur-md">
         <div className="flex items-center justify-between px-6 py-3">
@@ -677,7 +677,7 @@ export default function EmergencyPage() {
               <h1 className="text-sm font-bold uppercase tracking-[0.2em] text-red-300">
                 Emergency Control Center
               </h1>
-              <p className="text-[10px] text-gray-500">
+              <p className="text-[10px] text-muted-foreground">
                 Hospital · Mall · Public Safety Protocols
               </p>
             </div>
@@ -692,7 +692,7 @@ export default function EmergencyPage() {
             )}
             <button
               onClick={loadData}
-              className="flex items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-400 transition hover:bg-gray-700 hover:text-gray-200"
+              className="flex items-center gap-1.5 rounded-lg border border-border-strong bg-surface-3 px-3 py-1.5 text-xs text-muted-foreground transition hover:bg-surface-3 hover:text-foreground"
             >
               <RefreshCw className="h-3.5 w-3.5" />
               Refresh
@@ -720,16 +720,16 @@ export default function EmergencyPage() {
         {/* ── Emergency Code Grid ─────────────────────────────────────── */}
         <div>
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-gray-500">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Emergency Codes — {codes.length} available
             </h2>
           </div>
 
           {codes.length === 0 ? (
-            <div className="flex flex-col items-center gap-3 rounded-xl border border-gray-800 bg-gray-900/50 py-12 text-center">
-              <ShieldAlert className="h-10 w-10 text-gray-600" />
-              <p className="text-sm text-gray-500">No emergency codes configured.</p>
-              <p className="text-xs text-gray-600">Set up an industry template to load emergency codes.</p>
+            <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-surface-2/50 py-12 text-center">
+              <ShieldAlert className="h-10 w-10 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">No emergency codes configured.</p>
+              <p className="text-xs text-muted-foreground">Set up an industry template to load emergency codes.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

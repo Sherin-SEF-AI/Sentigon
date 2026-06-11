@@ -99,7 +99,7 @@ const STATUS_COLORS: Record<string, string> = {
   open: "bg-blue-900/40 text-blue-400 border-blue-800",
   investigating: "bg-amber-900/40 text-amber-400 border-amber-800",
   closed: "bg-emerald-900/40 text-emerald-400 border-emerald-800",
-  archived: "bg-gray-800 text-gray-500 border-gray-700",
+  archived: "bg-surface-3 text-muted-foreground border-border-strong",
   new: "bg-red-900/40 text-red-400 border-red-800",
   active: "bg-cyan-900/40 text-cyan-400 border-cyan-800",
 };
@@ -132,10 +132,10 @@ function StatCard({
   accent?: string;
 }) {
   return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-4">
+    <div className="rounded-xl border border-border bg-surface-2/50 p-4">
       <div className="flex items-center gap-2 mb-2">
         <Icon className={cn("h-4 w-4", accent)} />
-        <span className="text-xs font-medium uppercase tracking-wider text-gray-500">
+        <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           {label}
         </span>
       </div>
@@ -147,7 +147,7 @@ function StatCard({
 function Skeleton({ className }: { className?: string }) {
   return (
     <div
-      className={cn("animate-pulse rounded bg-gray-800/60", className)}
+      className={cn("animate-pulse rounded bg-surface-3/60", className)}
     />
   );
 }
@@ -169,7 +169,7 @@ function TruncatedHash({ hash, className }: { hash: string; className?: string }
 
   return (
     <span className={cn("group relative inline-flex items-center gap-1.5", className)}>
-      <code className="font-mono text-[11px] text-gray-400">{truncated}</code>
+      <code className="font-mono text-[11px] text-muted-foreground">{truncated}</code>
       <button
         onClick={handleCopy}
         className="opacity-0 group-hover:opacity-100 transition-opacity"
@@ -178,11 +178,11 @@ function TruncatedHash({ hash, className }: { hash: string; className?: string }
         {copied ? (
           <CheckCircle2 className="h-3 w-3 text-emerald-400" />
         ) : (
-          <Copy className="h-3 w-3 text-gray-600 hover:text-gray-400" />
+          <Copy className="h-3 w-3 text-muted-foreground hover:text-muted-foreground" />
         )}
       </button>
       {/* Tooltip with full hash on hover */}
-      <span className="pointer-events-none absolute bottom-full left-0 z-50 mb-2 hidden rounded-md border border-gray-700 bg-gray-900 px-3 py-1.5 text-[10px] font-mono text-gray-300 shadow-xl group-hover:block whitespace-nowrap">
+      <span className="pointer-events-none absolute bottom-full left-0 z-50 mb-2 hidden rounded-md border border-border-strong bg-surface-2 px-3 py-1.5 text-[10px] font-mono text-foreground shadow-xl group-hover:block whitespace-nowrap">
         {hash}
       </span>
     </span>
@@ -255,25 +255,25 @@ function ExportModal({
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      <div className="relative mx-4 w-full max-w-2xl rounded-2xl border border-gray-700 bg-gray-900 shadow-2xl">
+      <div className="relative mx-4 w-full max-w-2xl rounded-2xl border border-border-strong bg-surface-2 shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-900/30 border border-emerald-800/50">
               <Package className="h-5 w-5 text-emerald-400" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-gray-100">
+              <h2 className="text-sm font-semibold text-foreground">
                 Export Complete
               </h2>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 Evidence package generated successfully
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-2 text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+            className="rounded-lg p-2 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             <X className="h-4 w-4" />
           </button>
@@ -283,34 +283,34 @@ function ExportModal({
         <div className="max-h-[60vh] overflow-y-auto px-6 py-5 space-y-5">
           {/* Manifest metadata */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-lg border border-gray-800 bg-gray-950/50 p-3">
-              <span className="text-[10px] font-medium uppercase tracking-wider text-gray-500">
+            <div className="rounded-lg border border-border bg-surface-0/50 p-3">
+              <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                 Case
               </span>
-              <p className="mt-1 text-sm font-medium text-gray-200 truncate">
+              <p className="mt-1 text-sm font-medium text-foreground truncate">
                 {manifest.case_title}
               </p>
             </div>
-            <div className="rounded-lg border border-gray-800 bg-gray-950/50 p-3">
-              <span className="text-[10px] font-medium uppercase tracking-wider text-gray-500">
+            <div className="rounded-lg border border-border bg-surface-0/50 p-3">
+              <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                 Case ID
               </span>
               <ClickToCopy value={manifest.case_id} className="mt-1">
-                <span className="font-mono text-sm text-gray-400 hover:text-gray-300 cursor-pointer transition-colors">
+                <span className="font-mono text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors">
                   {(manifest.case_id ?? "").slice(0, 12)}...
                 </span>
               </ClickToCopy>
             </div>
-            <div className="rounded-lg border border-gray-800 bg-gray-950/50 p-3">
-              <span className="text-[10px] font-medium uppercase tracking-wider text-gray-500">
+            <div className="rounded-lg border border-border bg-surface-0/50 p-3">
+              <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                 Export Timestamp
               </span>
-              <p className="mt-1 text-sm text-gray-300">
+              <p className="mt-1 text-sm text-foreground">
                 {formatDate(manifest.export_timestamp)}
               </p>
             </div>
-            <div className="rounded-lg border border-gray-800 bg-gray-950/50 p-3">
-              <span className="text-[10px] font-medium uppercase tracking-wider text-gray-500">
+            <div className="rounded-lg border border-border bg-surface-0/50 p-3">
+              <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                 Evidence Items
               </span>
               <p className="mt-1 text-lg font-bold text-cyan-400">
@@ -322,31 +322,31 @@ function ExportModal({
           {/* Evidence items list */}
           {manifest.items.length > 0 && (
             <div>
-              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Package Contents
               </h3>
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {manifest.items.map((item, i) => (
                   <div
                     key={i}
-                    className="rounded-lg border border-gray-800 bg-gray-950/50 p-3 space-y-2"
+                    className="rounded-lg border border-border bg-surface-0/50 p-3 space-y-2"
                   >
                     <div className="flex items-center gap-2">
-                      <FileText className="h-3.5 w-3.5 text-gray-500" />
-                      <span className="rounded bg-gray-800 px-1.5 py-0.5 text-[10px] font-bold uppercase text-gray-400">
+                      <FileText className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className="rounded bg-surface-3 px-1.5 py-0.5 text-[10px] font-bold uppercase text-muted-foreground">
                         {item.evidence_type}
                       </span>
-                      <span className="flex-1 truncate text-xs text-gray-300 font-mono">
+                      <span className="flex-1 truncate text-xs text-foreground font-mono">
                         {item.file_path}
                       </span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Hash className="h-3 w-3 text-gray-600" />
-                      <code className="text-[10px] font-mono text-gray-500 truncate">
+                      <Hash className="h-3 w-3 text-muted-foreground" />
+                      <code className="text-[10px] font-mono text-muted-foreground truncate">
                         SHA-256: {item.sha256_hash}
                       </code>
                     </div>
-                    <div className="flex items-center gap-2 text-[10px] text-gray-600">
+                    <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
                       <Clock className="h-3 w-3" />
                       Collected: {formatDate(item.collected_at)}
                     </div>
@@ -358,10 +358,10 @@ function ExportModal({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 border-t border-gray-800 px-6 py-4">
+        <div className="flex items-center justify-end gap-3 border-t border-border px-6 py-4">
           <button
             onClick={onClose}
-            className="rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-400 hover:bg-gray-800 transition-colors"
+            className="rounded-lg border border-border-strong px-4 py-2 text-sm text-muted-foreground hover:bg-surface-3 transition-colors"
           >
             Close
           </button>
@@ -406,25 +406,25 @@ function UploadEvidenceModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      <div className="relative mx-4 w-full max-w-lg rounded-2xl border border-gray-700 bg-gray-900 shadow-2xl">
+      <div className="relative mx-4 w-full max-w-lg rounded-2xl border border-border-strong bg-surface-2 shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-900/30 border border-cyan-800/50">
               <Upload className="h-5 w-5 text-cyan-400" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-gray-100">
+              <h2 className="text-sm font-semibold text-foreground">
                 Upload Evidence
               </h2>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 Images, video, PDFs, documents &amp; text files up to 50 MB
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-2 text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+            className="rounded-lg p-2 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             <X className="h-4 w-4" />
           </button>
@@ -434,13 +434,13 @@ function UploadEvidenceModal({
         <div className="px-6 py-5 space-y-5">
           {/* Optional case selector */}
           <div className="space-y-1.5">
-            <label className="block text-xs font-medium uppercase tracking-wider text-gray-500">
-              Attach to Case <span className="normal-case text-gray-600">(optional)</span>
+            <label className="block text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              Attach to Case <span className="normal-case text-muted-foreground">(optional)</span>
             </label>
             <select
               value={selectedCaseId}
               onChange={(e) => setSelectedCaseId(e.target.value)}
-              className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2 text-sm text-gray-200 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-800"
+              className="w-full rounded-lg border border-border-strong bg-surface-0 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-800"
             >
               <option value="">— No case —</option>
               {cases.map((c) => (
@@ -474,10 +474,10 @@ function UploadEvidenceModal({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end border-t border-gray-800 px-6 py-4">
+        <div className="flex items-center justify-end border-t border-border px-6 py-4">
           <button
             onClick={onClose}
-            className="rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-400 hover:bg-gray-800 transition-colors"
+            className="rounded-lg border border-border-strong px-4 py-2 text-sm text-muted-foreground hover:bg-surface-3 transition-colors"
           >
             Close
           </button>
@@ -530,7 +530,7 @@ function IntegrityBadge({
     return (
       <button
         onClick={handleVerify}
-        className="flex items-center gap-1 rounded border border-gray-700 px-2 py-0.5 text-[10px] font-medium text-gray-400 hover:border-cyan-700 hover:text-cyan-400 transition-colors"
+        className="flex items-center gap-1 rounded border border-border-strong px-2 py-0.5 text-[10px] font-medium text-muted-foreground hover:border-cyan-700 hover:text-cyan-400 transition-colors"
         title="Verify file integrity via SHA-256"
       >
         <Shield className="h-3 w-3" />
@@ -541,7 +541,7 @@ function IntegrityBadge({
 
   if (status === "loading") {
     return (
-      <span className="flex items-center gap-1 rounded border border-gray-700 px-2 py-0.5 text-[10px] text-gray-500">
+      <span className="flex items-center gap-1 rounded border border-border-strong px-2 py-0.5 text-[10px] text-muted-foreground">
         <Loader2 className="h-3 w-3 animate-spin" />
         Verifying...
       </span>
@@ -559,7 +559,7 @@ function IntegrityBadge({
 
   if (status === "unverified") {
     return (
-      <span className="flex items-center gap-1 rounded border border-gray-700 bg-gray-800/40 px-2 py-0.5 text-[10px] font-medium text-gray-400">
+      <span className="flex items-center gap-1 rounded border border-border-strong bg-surface-3/40 px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
         <XCircle className="h-3 w-3" />
         Unverified
       </span>
@@ -568,7 +568,7 @@ function IntegrityBadge({
 
   // unavailable
   return (
-    <span className="flex items-center gap-1 rounded border border-gray-800 px-2 py-0.5 text-[10px] text-gray-600">
+    <span className="flex items-center gap-1 rounded border border-border px-2 py-0.5 text-[10px] text-muted-foreground">
       <Shield className="h-3 w-3" />
       Verification N/A
     </span>
@@ -940,17 +940,17 @@ export default function EvidencePage() {
   /* ---------------------------------------------------------------- */
 
   return (
-    <div className="flex h-full flex-col overflow-hidden bg-gray-950">
+    <div className="flex h-full flex-col overflow-hidden bg-surface-0">
       {/* ── Header ─────────────────────────────────────────────── */}
-      <header className="flex items-center gap-3 border-b border-gray-800 bg-gray-950 px-6 py-4">
+      <header className="flex items-center gap-3 border-b border-border bg-surface-0 px-6 py-4">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-900/30 border border-cyan-800/50">
           <FileCheck className="h-5 w-5 text-cyan-400" />
         </div>
         <div className="flex-1">
-          <h1 className="text-xl font-bold text-gray-100">
+          <h1 className="text-xl font-bold text-foreground">
             Evidence Management
           </h1>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted-foreground">
             Forensic-grade evidence packages with chain of custody
           </p>
         </div>
@@ -964,7 +964,7 @@ export default function EvidencePage() {
         <button
           onClick={fetchCases}
           disabled={loading}
-          className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors disabled:opacity-50"
+          className="flex items-center gap-2 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors disabled:opacity-50"
         >
           {loading ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -976,7 +976,7 @@ export default function EvidencePage() {
       </header>
 
       {/* ── Stats Bar ──────────────────────────────────────────── */}
-      <div className="grid grid-cols-4 gap-4 border-b border-gray-800 bg-gray-950 px-6 py-4">
+      <div className="grid grid-cols-4 gap-4 border-b border-border bg-surface-0 px-6 py-4">
         <StatCard
           label="Total Cases"
           value={stats.totalCases}
@@ -1006,9 +1006,9 @@ export default function EvidencePage() {
       {/* ── Main content ───────────────────────────────────────── */}
       <div className="flex flex-1 overflow-hidden">
         {/* ============ LEFT PANEL (2/3): Case list ============= */}
-        <div className="flex w-2/3 flex-col overflow-y-auto border-r border-gray-800 p-6">
+        <div className="flex w-2/3 flex-col overflow-y-auto border-r border-border p-6">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-400">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
               Cases ({cases.length})
             </h2>
           </div>
@@ -1031,9 +1031,9 @@ export default function EvidencePage() {
           {/* Empty state */}
           {!loading && !error && cases.length === 0 && (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <FolderOpen className="mb-3 h-12 w-12 text-gray-700" />
-              <p className="text-sm text-gray-500">No cases found</p>
-              <p className="mt-1 text-xs text-gray-600">
+              <FolderOpen className="mb-3 h-12 w-12 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">No cases found</p>
+              <p className="mt-1 text-xs text-muted-foreground">
                 Cases will appear here when they are created
               </p>
             </div>
@@ -1049,20 +1049,20 @@ export default function EvidencePage() {
                 <div
                   key={c.id}
                   className={cn(
-                    "rounded-lg border bg-gray-900/60 p-4 transition-all",
+                    "rounded-lg border bg-surface-2/60 p-4 transition-all",
                     isSelected
                       ? "border-cyan-800/60 bg-cyan-950/20"
-                      : "border-gray-800 hover:border-gray-700"
+                      : "border-border hover:border-border-strong"
                   )}
                 >
                   {/* Top row: title + status */}
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-semibold text-gray-200 truncate">
+                      <h3 className="text-sm font-semibold text-foreground truncate">
                         {c.title}
                       </h3>
                       <ClickToCopy value={c.id} className="mt-0.5">
-                        <span className="font-mono text-[10px] text-gray-600 hover:text-gray-400 cursor-pointer transition-colors">
+                        <span className="font-mono text-[10px] text-muted-foreground hover:text-muted-foreground cursor-pointer transition-colors">
                           ID: {c.id.slice(0, 12)}...
                         </span>
                       </ClickToCopy>
@@ -1091,7 +1091,7 @@ export default function EvidencePage() {
 
                     {/* Assigned to */}
                     {c.assigned_to && (
-                      <span className="flex items-center gap-1 text-[11px] text-gray-500">
+                      <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
                         <Eye className="h-3 w-3" />
                         {c.assigned_to}
                       </span>
@@ -1099,28 +1099,28 @@ export default function EvidencePage() {
 
                     {/* Evidence count */}
                     {evidenceCounts[c.id] !== undefined && (
-                      <span className="flex items-center gap-1 text-[11px] text-gray-500">
+                      <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
                         <FileText className="h-3 w-3" />
                         {evidenceCounts[c.id]} evidence
                       </span>
                     )}
 
                     {/* Created date */}
-                    <span className="flex items-center gap-1 text-[11px] text-gray-600">
+                    <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
                       <Clock className="h-3 w-3" />
                       {formatDate(c.created_at)}
                     </span>
                   </div>
 
                   {/* Action buttons */}
-                  <div className="flex items-center gap-2 pt-2 border-t border-gray-800/60">
+                  <div className="flex items-center gap-2 pt-2 border-t border-border/60">
                     <button
                       onClick={() => fetchChainOfCustody(c.id)}
                       className={cn(
                         "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
                         isSelected
                           ? "bg-cyan-900/40 text-cyan-400 border border-cyan-800/50"
-                          : "bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700 hover:text-gray-200"
+                          : "bg-surface-3 text-muted-foreground border border-border-strong hover:bg-surface-3 hover:text-foreground"
                       )}
                     >
                       <ShieldCheck className="h-3.5 w-3.5" />
@@ -1143,15 +1143,15 @@ export default function EvidencePage() {
 
                   {/* ---- Evidence items with bulk selection (when expanded) ---- */}
                   {isSelected && (
-                    <div className="mt-4 border-t border-gray-800/60 pt-4">
+                    <div className="mt-4 border-t border-border/60 pt-4">
                       <div className="mb-2 flex items-center justify-between">
-                        <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+                        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                           Evidence Items
                         </span>
                         {evidenceItems.length > 0 && (
                           <button
                             onClick={toggleSelectAll}
-                            className="flex items-center gap-1 text-[10px] text-gray-500 hover:text-gray-300 transition-colors"
+                            className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground transition-colors"
                           >
                             {selectedEvidenceIds.size === evidenceItems.length ? (
                               <CheckSquare className="h-3 w-3" />
@@ -1202,7 +1202,7 @@ export default function EvidencePage() {
                           ))}
                         </div>
                       ) : evidenceItems.length === 0 ? (
-                        <p className="text-[11px] text-gray-600 text-center py-3">
+                        <p className="text-[11px] text-muted-foreground text-center py-3">
                           No evidence items found
                         </p>
                       ) : (
@@ -1214,13 +1214,13 @@ export default function EvidencePage() {
                                 "flex items-center gap-2 rounded-lg border px-3 py-2 transition-colors",
                                 selectedEvidenceIds.has(item.id)
                                   ? "border-cyan-800/60 bg-cyan-950/10"
-                                  : "border-gray-800 bg-gray-900/40 hover:border-gray-700"
+                                  : "border-border bg-surface-2/40 hover:border-border-strong"
                               )}
                             >
                               {/* Checkbox */}
                               <button
                                 onClick={() => toggleEvidenceSelection(item.id)}
-                                className="shrink-0 text-gray-500 hover:text-cyan-400 transition-colors"
+                                className="shrink-0 text-muted-foreground hover:text-cyan-400 transition-colors"
                               >
                                 {selectedEvidenceIds.has(item.id) ? (
                                   <CheckSquare className="h-4 w-4 text-cyan-400" />
@@ -1231,15 +1231,15 @@ export default function EvidencePage() {
 
                               {/* Info */}
                               <div className="min-w-0 flex-1">
-                                <span className="text-xs font-medium text-gray-300 truncate block">
+                                <span className="text-xs font-medium text-foreground truncate block">
                                   {item.title}
                                 </span>
                                 <div className="flex items-center gap-2 mt-0.5">
-                                  <span className="rounded bg-gray-800 px-1.5 py-0.5 text-[9px] font-bold uppercase text-gray-500">
+                                  <span className="rounded bg-surface-3 px-1.5 py-0.5 text-[9px] font-bold uppercase text-muted-foreground">
                                     {item.evidence_type}
                                   </span>
                                   {item.sha256_hash && (
-                                    <Hash className="h-2.5 w-2.5 text-gray-600" />
+                                    <Hash className="h-2.5 w-2.5 text-muted-foreground" />
                                   )}
                                 </div>
                               </div>
@@ -1256,7 +1256,7 @@ export default function EvidencePage() {
                                     "flex items-center gap-1 rounded border px-2 py-0.5 text-[10px] font-medium transition-colors",
                                     selectedEvidenceId === item.id
                                       ? "border-purple-700 bg-purple-900/30 text-purple-400"
-                                      : "border-gray-700 text-gray-500 hover:border-gray-600 hover:text-gray-300"
+                                      : "border-border-strong text-muted-foreground hover:border-border-strong hover:text-foreground"
                                   )}
                                 >
                                   <Clock className="h-3 w-3" />
@@ -1270,9 +1270,9 @@ export default function EvidencePage() {
 
                       {/* Chain-of-Custody Timeline for selected evidence item */}
                       {selectedEvidenceId && (
-                        <div className="mt-4 rounded-lg border border-gray-800 bg-gray-950/50 p-4">
+                        <div className="mt-4 rounded-lg border border-border bg-surface-0/50 p-4">
                           <div className="mb-3 flex items-center justify-between">
-                            <h4 className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">
+                            <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                               Chain of Custody
                             </h4>
                             <button
@@ -1281,7 +1281,7 @@ export default function EvidencePage() {
                                 setCustodyTimeline([]);
                                 setCustodyTimelineError(null);
                               }}
-                              className="text-gray-600 hover:text-gray-400 transition-colors"
+                              className="text-muted-foreground hover:text-muted-foreground transition-colors"
                             >
                               <X className="h-3 w-3" />
                             </button>
@@ -1293,7 +1293,7 @@ export default function EvidencePage() {
                               ))}
                             </div>
                           ) : custodyTimelineError ? (
-                            <p className="text-xs text-gray-500 text-center py-3">
+                            <p className="text-xs text-muted-foreground text-center py-3">
                               {custodyTimelineError}
                             </p>
                           ) : (
@@ -1314,13 +1314,13 @@ export default function EvidencePage() {
         </div>
 
         {/* ============ RIGHT PANEL (1/3): Chain of Custody ====== */}
-        <div className="flex w-1/3 flex-col overflow-y-auto bg-gray-950 p-6">
+        <div className="flex w-1/3 flex-col overflow-y-auto bg-surface-0 p-6">
           <div className="mb-4">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-400">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
               Chain of Custody Log
             </h2>
             {selectedCase && (
-              <p className="mt-1 text-xs text-gray-600 truncate">
+              <p className="mt-1 text-xs text-muted-foreground truncate">
                 Case: {selectedCase.title}
               </p>
             )}
@@ -1328,10 +1328,10 @@ export default function EvidencePage() {
 
           {/* Add Note form (visible when a case is selected) */}
           {selectedCaseId && (
-            <div className="mb-4 rounded-lg border border-gray-800 bg-gray-900/50 p-4 space-y-3">
+            <div className="mb-4 rounded-lg border border-border bg-surface-2/50 p-4 space-y-3">
               <div className="flex items-center gap-2 mb-1">
                 <StickyNote className="h-3.5 w-3.5 text-amber-400" />
-                <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Add Note
                 </span>
               </div>
@@ -1340,14 +1340,14 @@ export default function EvidencePage() {
                 placeholder="Note title"
                 value={noteTitle}
                 onChange={(e) => setNoteTitle(e.target.value)}
-                className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2 text-sm text-gray-100 placeholder:text-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-800"
+                className="w-full rounded-lg border border-border-strong bg-surface-0 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-800"
               />
               <textarea
                 placeholder="Note content (optional)"
                 value={noteContent}
                 onChange={(e) => setNoteContent(e.target.value)}
                 rows={3}
-                className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2 text-sm text-gray-100 placeholder:text-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-800 resize-none"
+                className="w-full rounded-lg border border-border-strong bg-surface-0 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-800 resize-none"
               />
               {noteError && (
                 <p className="flex items-center gap-1.5 text-xs text-red-400">
@@ -1379,13 +1379,13 @@ export default function EvidencePage() {
           {/* No case selected */}
           {!selectedCaseId && (
             <div className="flex flex-1 flex-col items-center justify-center py-20 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-800/50 border border-gray-700 mb-4">
-                <ShieldCheck className="h-6 w-6 text-gray-600" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-3/50 border border-border-strong mb-4">
+                <ShieldCheck className="h-6 w-6 text-muted-foreground" />
               </div>
-              <p className="text-sm font-medium text-gray-400">
+              <p className="text-sm font-medium text-muted-foreground">
                 Select a case to view custody log
               </p>
-              <p className="mt-1 text-xs text-gray-600">
+              <p className="mt-1 text-xs text-muted-foreground">
                 Click &quot;Chain of Custody&quot; on any case
               </p>
             </div>
@@ -1397,7 +1397,7 @@ export default function EvidencePage() {
               {Array.from({ length: 4 }).map((_, i) => (
                 <div
                   key={i}
-                  className="rounded-lg border border-gray-800 bg-gray-900/50 p-4 space-y-3"
+                  className="rounded-lg border border-border bg-surface-2/50 p-4 space-y-3"
                 >
                   <Skeleton className="h-4 w-1/3" />
                   <Skeleton className="h-3 w-full" />
@@ -1411,11 +1411,11 @@ export default function EvidencePage() {
           {/* Custody empty */}
           {selectedCaseId && !custodyLoading && custodyEntries.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <FileText className="mb-3 h-8 w-8 text-gray-700" />
-              <p className="text-xs text-gray-500">
+              <FileText className="mb-3 h-8 w-8 text-muted-foreground" />
+              <p className="text-xs text-muted-foreground">
                 No chain of custody entries
               </p>
-              <p className="mt-1 text-[10px] text-gray-600">
+              <p className="mt-1 text-[10px] text-muted-foreground">
                 Export the case to generate custody records
               </p>
             </div>
@@ -1425,19 +1425,19 @@ export default function EvidencePage() {
           {!custodyLoading && custodyEntries.length > 0 && (
             <div className="space-y-3">
               {/* Summary bar */}
-              <div className="flex items-center gap-2 rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2">
-                <span className="text-[10px] text-gray-500">
+              <div className="flex items-center gap-2 rounded-lg border border-border bg-surface-2/50 px-3 py-2">
+                <span className="text-[10px] text-muted-foreground">
                   {custodyEntries.length} entries
                 </span>
-                <span className="text-[10px] text-gray-700">|</span>
+                <span className="text-[10px] text-muted-foreground">|</span>
                 <span className="text-[10px] text-emerald-500">
                   {custodyEntries.filter((e) => e.verification_status === "verified").length} verified
                 </span>
-                <span className="text-[10px] text-gray-700">|</span>
+                <span className="text-[10px] text-muted-foreground">|</span>
                 <span className="text-[10px] text-yellow-500">
                   {custodyEntries.filter((e) => e.verification_status === "pending").length} pending
                 </span>
-                <span className="text-[10px] text-gray-700">|</span>
+                <span className="text-[10px] text-muted-foreground">|</span>
                 <span className="text-[10px] text-red-500">
                   {custodyEntries.filter((e) => e.verification_status === "failed").length} failed
                 </span>
@@ -1450,11 +1450,11 @@ export default function EvidencePage() {
                 return (
                   <div
                     key={entry.id}
-                    className="rounded-lg border border-gray-800 bg-gray-900/50 p-4 space-y-3"
+                    className="rounded-lg border border-border bg-surface-2/50 p-4 space-y-3"
                   >
                     {/* Type + verification status */}
                     <div className="flex items-center justify-between gap-2">
-                      <span className="rounded bg-gray-800 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                      <span className="rounded bg-surface-3 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                         {entry.evidence_type}
                       </span>
                       <span
@@ -1471,20 +1471,20 @@ export default function EvidencePage() {
 
                     {/* File path */}
                     <div className="flex items-start gap-2">
-                      <FileText className="mt-0.5 h-3 w-3 shrink-0 text-gray-600" />
-                      <span className="text-xs text-gray-400 font-mono break-all leading-relaxed">
+                      <FileText className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
+                      <span className="text-xs text-muted-foreground font-mono break-all leading-relaxed">
                         {entry.file_path}
                       </span>
                     </div>
 
                     {/* SHA-256 hash */}
                     <div className="flex items-center gap-2">
-                      <Hash className="h-3 w-3 shrink-0 text-gray-600" />
+                      <Hash className="h-3 w-3 shrink-0 text-muted-foreground" />
                       <TruncatedHash hash={entry.sha256_hash} />
                     </div>
 
                     {/* Timestamps */}
-                    <div className="flex flex-wrap gap-3 text-[10px] text-gray-600 pt-2 border-t border-gray-800/60">
+                    <div className="flex flex-wrap gap-3 text-[10px] text-muted-foreground pt-2 border-t border-border/60">
                       <span className="flex items-center gap-1">
                         <Clock className="h-2.5 w-2.5" />
                         Created: {formatDate(entry.created_at)}

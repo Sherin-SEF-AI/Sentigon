@@ -40,7 +40,7 @@ interface AgentDecisionTimelineProps {
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
 
-const CARD = "rounded-lg border border-gray-800 bg-gray-900/60 backdrop-blur p-4";
+const CARD = "rounded-lg border border-border bg-surface-2/60 backdrop-blur p-4";
 
 const ACTION_ICONS: Record<string, typeof Wrench> = {
   tool_call: Wrench,
@@ -67,9 +67,9 @@ const ACTION_COLORS: Record<string, { icon: string; dot: string; border: string 
 };
 
 const DEFAULT_ACTION_COLOR = {
-  icon: "text-gray-400",
+  icon: "text-muted-foreground",
   dot: "bg-gray-400 shadow-gray-400/50",
-  border: "border-gray-700/40",
+  border: "border-border-strong/40",
 };
 
 /* ------------------------------------------------------------------ */
@@ -122,11 +122,11 @@ function ActionEntry({
             colors.dot,
             isActive
               ? "scale-125 ring-2 ring-cyan-400/40 border-cyan-400"
-              : "border-gray-900"
+              : "border-border"
           )}
         />
         {/* Connecting line */}
-        <div className="flex-1 w-0.5 bg-gray-800" />
+        <div className="flex-1 w-0.5 bg-surface-3" />
       </div>
 
       {/* Content */}
@@ -135,7 +135,7 @@ function ActionEntry({
           "mb-3 flex-1 rounded-lg border transition-all duration-200 cursor-pointer",
           isActive
             ? "border-cyan-700/60 bg-cyan-950/20 ring-1 ring-cyan-800/30"
-            : cn("bg-gray-900/40 hover:bg-gray-900/60", colors.border)
+            : cn("bg-surface-2/40 hover:bg-surface-2/60", colors.border)
         )}
       >
         <button onClick={onToggle} className="w-full px-3 py-2.5 text-left">
@@ -144,7 +144,7 @@ function ActionEntry({
             <Icon className={cn("h-3.5 w-3.5 shrink-0", colors.icon)} />
 
             {/* Agent badge */}
-            <span className="shrink-0 rounded bg-gray-800/80 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-cyan-400">
+            <span className="shrink-0 rounded bg-surface-3/80 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-cyan-400">
               {action.agent_name}
             </span>
 
@@ -153,7 +153,7 @@ function ActionEntry({
               className={cn(
                 "shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider",
                 colors.icon,
-                "bg-gray-800/40"
+                "bg-surface-3/40"
               )}
             >
               {action.action_type.replace("_", " ")}
@@ -169,14 +169,14 @@ function ActionEntry({
             <span className="flex-1" />
 
             {/* Offset timestamp */}
-            <span className="flex items-center gap-1 shrink-0 text-[10px] font-mono text-gray-500">
+            <span className="flex items-center gap-1 shrink-0 text-[10px] font-mono text-muted-foreground">
               <Clock className="h-2.5 w-2.5" />
               +{formatOffsetTime(action.offset_seconds)}
             </span>
 
             <ChevronDown
               className={cn(
-                "h-3 w-3 shrink-0 text-gray-700 transition-transform duration-150",
+                "h-3 w-3 shrink-0 text-muted-foreground transition-transform duration-150",
                 expanded && "rotate-180"
               )}
             />
@@ -186,7 +186,7 @@ function ActionEntry({
           <p
             className={cn(
               "mt-1.5 text-xs leading-relaxed",
-              isActive ? "text-gray-200" : "text-gray-400",
+              isActive ? "text-foreground" : "text-muted-foreground",
               !expanded && "line-clamp-2"
             )}
           >
@@ -196,38 +196,38 @@ function ActionEntry({
 
         {/* Expanded details */}
         {expanded && (
-          <div className="border-t border-gray-800/60 px-3 py-2.5 space-y-2">
+          <div className="border-t border-border/60 px-3 py-2.5 space-y-2">
             <div className="grid grid-cols-2 gap-3 text-[10px]">
               <div>
-                <span className="text-gray-600 uppercase">Timestamp</span>
-                <p className="text-gray-400 font-mono">
+                <span className="text-muted-foreground uppercase">Timestamp</span>
+                <p className="text-muted-foreground font-mono">
                   {formatTimestamp(action.timestamp)}
                 </p>
               </div>
               <div>
-                <span className="text-gray-600 uppercase">Offset</span>
-                <p className="text-gray-400 font-mono">
+                <span className="text-muted-foreground uppercase">Offset</span>
+                <p className="text-muted-foreground font-mono">
                   +{(action.offset_seconds ?? 0).toFixed(1)}s
                 </p>
               </div>
               {action.tool_name && (
                 <div>
-                  <span className="text-gray-600 uppercase">Tool</span>
+                  <span className="text-muted-foreground uppercase">Tool</span>
                   <p className="text-blue-300 font-mono">{action.tool_name}</p>
                 </div>
               )}
               {action.latency_ms != null && (
                 <div>
-                  <span className="text-gray-600 uppercase">Latency</span>
-                  <p className="text-gray-400 font-mono">{action.latency_ms}ms</p>
+                  <span className="text-muted-foreground uppercase">Latency</span>
+                  <p className="text-muted-foreground font-mono">{action.latency_ms}ms</p>
                 </div>
               )}
             </div>
 
             {action.tool_params && (
               <div>
-                <span className="text-[10px] text-gray-600 uppercase">Parameters</span>
-                <pre className="mt-1 overflow-x-auto rounded border border-gray-800 bg-gray-950 p-2 text-[10px] text-gray-400 font-mono">
+                <span className="text-[10px] text-muted-foreground uppercase">Parameters</span>
+                <pre className="mt-1 overflow-x-auto rounded border border-border bg-surface-0 p-2 text-[10px] text-muted-foreground font-mono">
                   {JSON.stringify(action.tool_params, null, 2)}
                 </pre>
               </div>
@@ -235,8 +235,8 @@ function ActionEntry({
 
             {action.response_summary && (
               <div>
-                <span className="text-[10px] text-gray-600 uppercase">Response</span>
-                <p className="mt-0.5 text-xs text-gray-300 leading-relaxed">
+                <span className="text-[10px] text-muted-foreground uppercase">Response</span>
+                <p className="mt-0.5 text-xs text-foreground leading-relaxed">
                   {action.response_summary}
                 </p>
               </div>
@@ -322,10 +322,10 @@ export default function AgentDecisionTimeline({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Brain className="h-5 w-5 text-purple-400" />
-            <h3 className="text-sm font-bold text-gray-100">
+            <h3 className="text-sm font-bold text-foreground">
               Agent Decision Timeline
             </h3>
-            <span className="rounded-full bg-gray-800 px-2 py-0.5 text-[10px] font-mono text-gray-400">
+            <span className="rounded-full bg-surface-3 px-2 py-0.5 text-[10px] font-mono text-muted-foreground">
               {actions.length}
             </span>
           </div>
@@ -338,7 +338,7 @@ export default function AgentDecisionTimeline({
               return (
                 <span
                   key={type}
-                  className="flex items-center gap-1 text-[10px] text-gray-500"
+                  className="flex items-center gap-1 text-[10px] text-muted-foreground"
                 >
                   <Icon className={cn("h-3 w-3", colors.icon)} />
                   {count}
@@ -350,13 +350,13 @@ export default function AgentDecisionTimeline({
 
         {/* Current position indicator */}
         {currentOffset != null && (
-          <div className="mt-2 flex items-center gap-2 text-[10px] text-gray-500">
-            <div className="h-px flex-1 bg-gray-800" />
+          <div className="mt-2 flex items-center gap-2 text-[10px] text-muted-foreground">
+            <div className="h-px flex-1 bg-surface-3" />
             <span className="flex items-center gap-1 font-mono">
               <Clock className="h-3 w-3 text-cyan-400" />
               Playback at +{formatOffsetTime(currentOffset)}
             </span>
-            <div className="h-px flex-1 bg-gray-800" />
+            <div className="h-px flex-1 bg-surface-3" />
           </div>
         )}
       </div>
@@ -378,9 +378,9 @@ export default function AgentDecisionTimeline({
       {/* Empty state */}
       {!loading && sorted.length === 0 && (
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <Brain className="mb-3 h-10 w-10 text-gray-700" />
-          <p className="text-sm text-gray-500">No agent decisions recorded</p>
-          <p className="mt-1 text-xs text-gray-600">
+          <Brain className="mb-3 h-10 w-10 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">No agent decisions recorded</p>
+          <p className="mt-1 text-xs text-muted-foreground">
             Agent actions will appear here during incident replay
           </p>
         </div>
@@ -393,7 +393,7 @@ export default function AgentDecisionTimeline({
           className="relative flex-1 overflow-y-auto pl-2 pr-1"
         >
           {/* Vertical line */}
-          <div className="absolute left-[8.5px] top-0 bottom-0 w-0.5 bg-gray-800" />
+          <div className="absolute left-[8.5px] top-0 bottom-0 w-0.5 bg-surface-3" />
 
           {sorted.map((action) => (
             <ActionEntry

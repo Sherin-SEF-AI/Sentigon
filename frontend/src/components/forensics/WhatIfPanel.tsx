@@ -48,7 +48,7 @@ interface WhatIfPanelProps {
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
 
-const CARD = "rounded-lg border border-gray-800 bg-gray-900/60 backdrop-blur p-4";
+const CARD = "rounded-lg border border-border bg-surface-2/60 backdrop-blur p-4";
 
 const DEFAULT_THRESHOLDS = {
   anomaly_threshold: 0.5,
@@ -80,10 +80,10 @@ function ThresholdSlider({
   return (
     <div>
       <div className="mb-1.5 flex items-center justify-between">
-        <label className="text-[10px] font-medium uppercase tracking-wider text-gray-500">
+        <label className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
           {label}
         </label>
-        <span className="rounded bg-gray-800 px-1.5 py-0.5 text-xs font-mono font-semibold text-cyan-400">
+        <span className="rounded bg-surface-3 px-1.5 py-0.5 text-xs font-mono font-semibold text-cyan-400">
           {value}
           {unit}
         </span>
@@ -95,9 +95,9 @@ function ThresholdSlider({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full cursor-pointer appearance-none bg-transparent [&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-gray-700 [&::-webkit-slider-thumb]:mt-[-4px] [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cyan-400 [&::-webkit-slider-thumb]:shadow-[0_0_6px_rgba(34,211,238,0.5)] [&::-moz-range-track]:h-1.5 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-gray-700 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-cyan-400"
+        className="w-full cursor-pointer appearance-none bg-transparent [&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-surface-3 [&::-webkit-slider-thumb]:mt-[-4px] [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cyan-400 [&::-webkit-slider-thumb]:shadow-[0_0_6px_rgba(34,211,238,0.5)] [&::-moz-range-track]:h-1.5 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-surface-3 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-cyan-400"
       />
-      <div className="mt-0.5 flex justify-between text-[9px] text-gray-600">
+      <div className="mt-0.5 flex justify-between text-[9px] text-muted-foreground">
         <span>
           {min}
           {unit}
@@ -118,7 +118,7 @@ function ThresholdSlider({
 function DiffIndicator({ diff }: { diff: number }) {
   if (diff === 0) {
     return (
-      <div className="flex items-center gap-1.5 rounded-lg bg-gray-800/60 px-3 py-2 text-sm font-semibold text-gray-400">
+      <div className="flex items-center gap-1.5 rounded-lg bg-surface-3/60 px-3 py-2 text-sm font-semibold text-muted-foreground">
         <Equal className="h-4 w-4" />
         No change
       </div>
@@ -226,14 +226,14 @@ export default function WhatIfPanel({ incidentId, className }: WhatIfPanelProps)
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Beaker className="h-5 w-5 text-amber-400" />
-            <h3 className="text-sm font-bold text-gray-100">
+            <h3 className="text-sm font-bold text-foreground">
               What-If Simulation
             </h3>
           </div>
           {hasChangedThresholds && (
             <button
               onClick={handleReset}
-              className="flex items-center gap-1 rounded-lg border border-gray-700 px-2.5 py-1 text-[10px] font-medium text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
+              className="flex items-center gap-1 rounded-lg border border-border-strong px-2.5 py-1 text-[10px] font-medium text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
             >
               <RotateCcw className="h-3 w-3" />
               Reset
@@ -307,17 +307,17 @@ export default function WhatIfPanel({ incidentId, className }: WhatIfPanelProps)
         <>
           {/* Summary card */}
           <div className={cn(CARD)}>
-            <h4 className="mb-3 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+            <h4 className="mb-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               Simulation Results
             </h4>
 
             <div className="grid grid-cols-3 gap-3 mb-3">
               {/* Actual alerts */}
-              <div className="rounded-lg border border-gray-800 bg-gray-950/50 p-3 text-center">
-                <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">
+              <div className="rounded-lg border border-border bg-surface-0/50 p-3 text-center">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
                   Actual
                 </p>
-                <p className="text-2xl font-bold font-mono text-gray-200">
+                <p className="text-2xl font-bold font-mono text-foreground">
                   {result.actual_alert_count}
                 </p>
               </div>
@@ -330,10 +330,10 @@ export default function WhatIfPanel({ incidentId, className }: WhatIfPanelProps)
                     ? "border-red-800/40 bg-red-950/20"
                     : result.diff < 0
                     ? "border-green-800/40 bg-green-950/20"
-                    : "border-gray-800 bg-gray-950/50"
+                    : "border-border bg-surface-0/50"
                 )}
               >
-                <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
                   Simulated
                 </p>
                 <p
@@ -343,7 +343,7 @@ export default function WhatIfPanel({ incidentId, className }: WhatIfPanelProps)
                       ? "text-red-400"
                       : result.diff < 0
                       ? "text-green-400"
-                      : "text-gray-200"
+                      : "text-foreground"
                   )}
                 >
                   {result.simulated_alert_count}
@@ -359,7 +359,7 @@ export default function WhatIfPanel({ incidentId, className }: WhatIfPanelProps)
             {/* Severity breakdown */}
             {Object.keys(severityCounts).length > 0 && (
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[10px] text-gray-500 uppercase tracking-wider">
+                <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
                   Breakdown:
                 </span>
                 {Object.entries(severityCounts).map(([severity, count]) => (
@@ -377,13 +377,13 @@ export default function WhatIfPanel({ incidentId, className }: WhatIfPanelProps)
             )}
 
             {/* Thresholds used */}
-            <div className="mt-3 rounded border border-gray-800 bg-gray-950/40 p-2">
-              <p className="text-[9px] uppercase tracking-wider text-gray-600 mb-1">
+            <div className="mt-3 rounded border border-border bg-surface-0/40 p-2">
+              <p className="text-[9px] uppercase tracking-wider text-muted-foreground mb-1">
                 Thresholds Used
               </p>
-              <div className="flex items-center gap-3 text-[10px] font-mono text-gray-400">
+              <div className="flex items-center gap-3 text-[10px] font-mono text-muted-foreground">
                 <span>
-                  <SlidersHorizontal className="mr-0.5 inline h-3 w-3 text-gray-600" />
+                  <SlidersHorizontal className="mr-0.5 inline h-3 w-3 text-muted-foreground" />
                   anomaly: {result.thresholds_used.anomaly_threshold}
                 </span>
                 <span>crowd: {result.thresholds_used.crowd_threshold}</span>
@@ -395,7 +395,7 @@ export default function WhatIfPanel({ incidentId, className }: WhatIfPanelProps)
           {/* Simulated alerts list */}
           {result.simulated_alerts.length > 0 && (
             <div className={cn(CARD)}>
-              <h4 className="mb-3 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+              <h4 className="mb-3 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                 Simulated Alerts ({result.simulated_alerts.length})
               </h4>
 
@@ -409,7 +409,7 @@ export default function WhatIfPanel({ incidentId, className }: WhatIfPanelProps)
                         ? "border-red-900/30 bg-red-950/10"
                         : result.diff < 0
                         ? "border-green-900/30 bg-green-950/10"
-                        : "border-gray-800 bg-gray-900/40"
+                        : "border-border bg-surface-2/40"
                     )}
                   >
                     <div className="flex items-start justify-between gap-2">
@@ -425,26 +425,26 @@ export default function WhatIfPanel({ incidentId, className }: WhatIfPanelProps)
                         </span>
 
                         {/* Alert type */}
-                        <span className="rounded bg-gray-800/60 px-1.5 py-0.5 text-[10px] font-medium text-gray-300">
+                        <span className="rounded bg-surface-3/60 px-1.5 py-0.5 text-[10px] font-medium text-foreground">
                           {alert.type}
                         </span>
                       </div>
 
                       {/* Timestamp */}
-                      <span className="flex items-center gap-1 shrink-0 text-[10px] font-mono text-gray-500">
+                      <span className="flex items-center gap-1 shrink-0 text-[10px] font-mono text-muted-foreground">
                         <Clock className="h-2.5 w-2.5" />
                         {formatTimestamp(alert.timestamp)}
                       </span>
                     </div>
 
                     {/* Details */}
-                    <p className="mt-1.5 text-xs leading-relaxed text-gray-400">
+                    <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
                       {alert.details}
                     </p>
 
                     {/* Camera */}
                     {alert.camera_id && (
-                      <div className="mt-1.5 flex items-center gap-1 text-[10px] text-gray-600">
+                      <div className="mt-1.5 flex items-center gap-1 text-[10px] text-muted-foreground">
                         <SlidersHorizontal className="h-2.5 w-2.5" />
                         Camera: {alert.camera_id}
                       </div>
@@ -462,7 +462,7 @@ export default function WhatIfPanel({ incidentId, className }: WhatIfPanelProps)
                 <ArrowDown className="h-4 w-4" />
                 No alerts would have been generated
               </div>
-              <p className="mt-2 text-xs text-gray-500">
+              <p className="mt-2 text-xs text-muted-foreground">
                 These thresholds would have suppressed all alerts during this incident
               </p>
             </div>

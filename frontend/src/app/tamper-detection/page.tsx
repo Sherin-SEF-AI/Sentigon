@@ -97,7 +97,7 @@ function severityBadge(severity: string): string {
     case "low":
       return "bg-blue-900/40 text-blue-400 border-blue-800/60";
     default:
-      return "bg-gray-800 text-gray-400 border-gray-700";
+      return "bg-surface-3 text-muted-foreground border-border-strong";
   }
 }
 
@@ -170,18 +170,18 @@ function StatCard({
     <div
       className={cn(
         STAT_CARD,
-        borderColor || "border-gray-800",
-        bgColor || "bg-gray-900/60"
+        borderColor || "border-border",
+        bgColor || "bg-surface-2/60"
       )}
     >
-      <div className="flex items-center gap-2 text-xs text-gray-500">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
         <Icon className={cn("h-3.5 w-3.5", iconColor)} />
         {label}
       </div>
       <p
         className={cn(
           "text-2xl font-bold tabular-nums",
-          valueColor || "text-gray-100"
+          valueColor || "text-foreground"
         )}
       >
         {value}
@@ -328,18 +328,18 @@ export default function TamperDetectionPage() {
 
   /* --- Render --- */
   return (
-    <div className="flex h-full flex-col overflow-auto bg-gray-950 text-gray-100">
+    <div className="flex h-full flex-col overflow-auto bg-surface-0 text-foreground">
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-900/30 border border-orange-800/50">
             <ScanEye className="h-5 w-5 text-orange-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Tamper Detection
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Monitor camera integrity and scene modifications via SSIM + AI classification
             </p>
           </div>
@@ -347,7 +347,7 @@ export default function TamperDetectionPage() {
 
         <button
           onClick={handleRefresh}
-          className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
+          className="flex items-center gap-2 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
         >
           <RefreshCw className="h-3.5 w-3.5" />
           Refresh
@@ -356,16 +356,16 @@ export default function TamperDetectionPage() {
 
       {/* ---- Stats Row ---- */}
       {statusLoading && !systemStatus ? (
-        <div className="grid grid-cols-2 gap-3 border-b border-gray-800 px-6 py-4 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 border-b border-border px-6 py-4 md:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
-              className="animate-pulse rounded-lg border border-gray-800 bg-gray-900/60 px-4 py-3 h-[76px]"
+              className="animate-pulse rounded-lg border border-border bg-surface-2/60 px-4 py-3 h-[76px]"
             />
           ))}
         </div>
       ) : systemStatus ? (
-        <div className="grid grid-cols-2 gap-3 border-b border-gray-800 px-6 py-4 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 border-b border-border px-6 py-4 md:grid-cols-4">
           <StatCard
             icon={Camera}
             label="Total Cameras"
@@ -384,18 +384,18 @@ export default function TamperDetectionPage() {
             icon={ShieldX}
             label="Tamper Events"
             value={tamperCount}
-            valueColor={tamperCount > 0 ? "text-red-400" : "text-gray-400"}
-            borderColor={tamperCount > 0 ? "border-red-900/40" : "border-gray-800"}
-            bgColor={tamperCount > 0 ? "bg-red-950/20" : "bg-gray-900/60"}
+            valueColor={tamperCount > 0 ? "text-red-400" : "text-muted-foreground"}
+            borderColor={tamperCount > 0 ? "border-red-900/40" : "border-border"}
+            bgColor={tamperCount > 0 ? "bg-red-950/20" : "bg-surface-2/60"}
             iconColor={tamperCount > 0 ? "text-red-400/80" : undefined}
           />
           <StatCard
             icon={ShieldAlert}
             label="Scene Modifications"
             value={sceneModCount}
-            valueColor={sceneModCount > 0 ? "text-yellow-400" : "text-gray-400"}
-            borderColor={sceneModCount > 0 ? "border-yellow-900/40" : "border-gray-800"}
-            bgColor={sceneModCount > 0 ? "bg-yellow-950/20" : "bg-gray-900/60"}
+            valueColor={sceneModCount > 0 ? "text-yellow-400" : "text-muted-foreground"}
+            borderColor={sceneModCount > 0 ? "border-yellow-900/40" : "border-border"}
+            bgColor={sceneModCount > 0 ? "bg-yellow-950/20" : "bg-surface-2/60"}
             iconColor={sceneModCount > 0 ? "text-yellow-400/80" : undefined}
           />
         </div>
@@ -429,7 +429,7 @@ export default function TamperDetectionPage() {
                     ? `Tamper Detected: ${tamperTypeLabel(checkResult.tamper_type)}`
                     : "No Tamper Detected"}
                 </p>
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-muted-foreground">
                   SSIM: {checkResult.ssim.toFixed(4)} | Confidence:{" "}
                   {Math.round(checkResult.confidence * 100)}% |{" "}
                   {checkResult.description}
@@ -438,7 +438,7 @@ export default function TamperDetectionPage() {
             </div>
             <button
               onClick={() => setCheckResult(null)}
-              className="text-xs text-gray-500 hover:text-gray-300"
+              className="text-xs text-muted-foreground hover:text-foreground"
             >
               Dismiss
             </button>
@@ -447,8 +447,8 @@ export default function TamperDetectionPage() {
       )}
 
       {/* ---- Camera Grid ---- */}
-      <div className="border-b border-gray-800 px-6 py-4">
-        <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+      <div className="border-b border-border px-6 py-4">
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Camera Baselines & Quick Actions
         </h2>
         {systemStatus && systemStatus.cameras.length > 0 ? (
@@ -462,15 +462,15 @@ export default function TamperDetectionPage() {
                 className={cn(
                   "rounded-lg border p-3 transition-shadow hover:shadow-lg hover:shadow-orange-900/10",
                   cam.has_baseline
-                    ? "border-gray-800 bg-gray-900/60"
+                    ? "border-border bg-surface-2/60"
                     : "border-yellow-900/40 bg-yellow-950/10"
                 )}
               >
                 {/* Camera header */}
                 <div className="mb-2 flex items-center justify-between flex-wrap gap-1">
                   <div className="flex items-center gap-2">
-                    <Camera className="h-4 w-4 text-gray-500" />
-                    <span className="text-xs font-medium text-gray-300 truncate max-w-[120px]">
+                    <Camera className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-xs font-medium text-foreground truncate max-w-[120px]">
                       {cam.camera_id.substring(0, 8)}...
                     </span>
                   </div>
@@ -562,8 +562,8 @@ export default function TamperDetectionPage() {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-8">
-            <Camera className="mb-2 h-8 w-8 text-gray-700" />
-            <p className="text-sm text-gray-500">No cameras available</p>
+            <Camera className="mb-2 h-8 w-8 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">No cameras available</p>
           </div>
         )}
       </div>
@@ -572,10 +572,10 @@ export default function TamperDetectionPage() {
       <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-track-gray-950 scrollbar-thumb-gray-800">
         <div className="px-6 py-4">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Recent Tamper Events
             </h2>
-            <span className="text-xs text-gray-600">
+            <span className="text-xs text-muted-foreground">
               {events.length} event{events.length !== 1 ? "s" : ""}
             </span>
           </div>
@@ -584,7 +584,7 @@ export default function TamperDetectionPage() {
           {loading && (
             <div className="flex flex-col items-center justify-center py-16">
               <Loader2 className="h-8 w-8 animate-spin text-orange-400" />
-              <p className="mt-3 text-sm text-gray-500">
+              <p className="mt-3 text-sm text-muted-foreground">
                 Loading tamper events...
               </p>
             </div>
@@ -597,7 +597,7 @@ export default function TamperDetectionPage() {
               <p className="text-sm text-red-400">{error}</p>
               <button
                 onClick={handleRefresh}
-                className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+                className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
               >
                 Retry
               </button>
@@ -608,10 +608,10 @@ export default function TamperDetectionPage() {
           {!loading && !error && events.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16">
               <ShieldCheck className="mb-2 h-10 w-10 text-emerald-700" />
-              <p className="text-sm font-medium text-gray-400">
+              <p className="text-sm font-medium text-muted-foreground">
                 No tamper events detected
               </p>
-              <p className="mt-1 text-xs text-gray-600">
+              <p className="mt-1 text-xs text-muted-foreground">
                 All cameras appear to be operating normally
               </p>
             </div>
@@ -621,26 +621,26 @@ export default function TamperDetectionPage() {
           {!loading && !error && events.length > 0 && (
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-800">
-                  <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                <tr className="border-b border-border">
+                  <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     Time
                   </th>
-                  <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     Camera
                   </th>
-                  <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     Type
                   </th>
-                  <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     Severity
                   </th>
-                  <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     Description
                   </th>
-                  <th className="pb-3 text-right text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="pb-3 text-right text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     Confidence
                   </th>
-                  <th className="pb-3 text-right text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                  <th className="pb-3 text-right text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     Status
                   </th>
                 </tr>
@@ -651,20 +651,20 @@ export default function TamperDetectionPage() {
                   return (
                     <tr
                       key={event.id}
-                      className="border-b border-gray-800/50 transition-colors hover:bg-gray-800/50"
+                      className="border-b border-border/50 transition-colors hover:bg-surface-3/50"
                     >
                       {/* Time */}
                       <td className="py-3 pr-4">
                         <div className="flex items-center gap-1.5">
-                          <Clock className="h-3 w-3 text-gray-600" />
-                          <span className="text-xs text-gray-400">
+                          <Clock className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-xs text-muted-foreground">
                             {event.created_at
                               ? formatTimestamp(event.created_at)
                               : "--"}
                           </span>
                         </div>
                         {event.created_at && (
-                          <span className="text-[10px] text-gray-600">
+                          <span className="text-[10px] text-muted-foreground">
                             {timeAgo(event.created_at)}
                           </span>
                         )}
@@ -673,8 +673,8 @@ export default function TamperDetectionPage() {
                       {/* Camera */}
                       <td className="py-3 pr-4">
                         <div className="flex items-center gap-1.5">
-                          <Camera className="h-3 w-3 text-gray-600" />
-                          <span className="text-xs font-medium text-gray-300">
+                          <Camera className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-xs font-medium text-foreground">
                             {event.camera_id
                               ? event.camera_id.substring(0, 8) + "..."
                               : "--"}
@@ -686,7 +686,7 @@ export default function TamperDetectionPage() {
                       <td className="py-3 pr-4">
                         <div className="flex items-center gap-1.5">
                           <TypeIcon className="h-3 w-3 text-orange-400" />
-                          <span className="text-xs text-gray-300">
+                          <span className="text-xs text-foreground">
                             {tamperTypeLabel(event.threat_type)}
                           </span>
                         </div>
@@ -706,7 +706,7 @@ export default function TamperDetectionPage() {
 
                       {/* Description */}
                       <td className="py-3 pr-4">
-                        <span className="text-xs text-gray-400 line-clamp-2 max-w-[300px]">
+                        <span className="text-xs text-muted-foreground line-clamp-2 max-w-[300px]">
                           {event.description || event.title}
                         </span>
                       </td>

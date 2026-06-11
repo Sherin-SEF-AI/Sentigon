@@ -101,7 +101,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   retail_commercial: "bg-violet-500/15 text-violet-400 border-violet-500/30",
   parking: "bg-sky-500/15 text-sky-400 border-sky-500/30",
   active_shooter: "bg-red-700/20 text-red-300 border-red-700/40",
-  escape_evasion: "bg-gray-500/15 text-gray-400 border-gray-500/30",
+  escape_evasion: "bg-gray-500/15 text-muted-foreground border-gray-500/30",
   social_unrest: "bg-amber-600/15 text-amber-300 border-amber-600/30",
 };
 
@@ -110,7 +110,7 @@ const SEVERITY_BADGES: Record<string, string> = {
   high: "bg-orange-500/20 text-orange-400 border border-orange-500/40",
   medium: "bg-yellow-500/20 text-yellow-400 border border-yellow-500/40",
   low: "bg-blue-400/20 text-blue-400 border border-blue-400/40",
-  info: "bg-gray-500/20 text-gray-400 border border-gray-500/40",
+  info: "bg-gray-500/20 text-muted-foreground border border-gray-500/40",
 };
 
 const SOURCE_BADGES: Record<string, string> = {
@@ -386,12 +386,12 @@ export default function ThreatSignaturesPage() {
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-800/60 bg-gray-950/50 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border/60 bg-surface-0/50 px-6 py-4">
         <div className="flex items-center gap-3">
           <Fingerprint className="h-6 w-6 text-cyan-400" />
           <div>
-            <h1 className="text-lg font-bold text-gray-100">Threat Signature Library</h1>
-            <p className="text-xs text-gray-500">
+            <h1 className="text-lg font-bold text-foreground">Threat Signature Library</h1>
+            <p className="text-xs text-muted-foreground">
               {stats?.total_signatures || 0} signatures across {stats?.categories || 0} categories
               {stats && stats.auto_learned_count > 0 && (
                 <span className="ml-2 text-emerald-400">
@@ -433,7 +433,7 @@ export default function ThreatSignaturesPage() {
       )}
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 px-6 border-b border-gray-800/60">
+      <div className="flex items-center gap-1 px-6 border-b border-border/60">
         {(["all", "learned", "stats"] as const).map(tab => (
           <button
             key={tab}
@@ -442,7 +442,7 @@ export default function ThreatSignaturesPage() {
               "px-4 py-2 text-xs font-medium border-b-2 transition-colors capitalize",
               activeTab === tab
                 ? "border-cyan-400 text-cyan-400"
-                : "border-transparent text-gray-500 hover:text-gray-300"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             )}
           >
             {tab === "all" ? "All Signatures" : tab === "learned" ? "Auto-Learned" : "Statistics"}
@@ -457,19 +457,19 @@ export default function ThreatSignaturesPage() {
             {/* Filters */}
             <div className="flex flex-wrap items-center gap-3 mb-4">
               <div className="relative flex-1 min-w-[200px] max-w-md">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
                 <input
                   type="text"
                   placeholder="Search signatures..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full rounded-lg border border-gray-800 bg-gray-900/50 pl-9 pr-3 py-2 text-xs text-gray-200 placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
+                  className="w-full rounded-lg border border-border bg-surface-2/50 pl-9 pr-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
                 />
               </div>
               <select
                 value={filterCategory}
                 onChange={e => setFilterCategory(e.target.value)}
-                className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-300 focus:border-cyan-600 focus:outline-none"
+                className="rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
               >
                 <option value="">All Categories</option>
                 {categories.map(c => (
@@ -481,7 +481,7 @@ export default function ThreatSignaturesPage() {
               <select
                 value={filterSeverity}
                 onChange={e => setFilterSeverity(e.target.value)}
-                className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-300 focus:border-cyan-600 focus:outline-none"
+                className="rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
               >
                 <option value="">All Severities</option>
                 {["critical", "high", "medium", "low", "info"].map(s => (
@@ -491,7 +491,7 @@ export default function ThreatSignaturesPage() {
               <select
                 value={filterSource}
                 onChange={e => setFilterSource(e.target.value)}
-                className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-300 focus:border-cyan-600 focus:outline-none"
+                className="rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
               >
                 <option value="">All Sources</option>
                 <option value="built_in">Built-in</option>
@@ -501,29 +501,29 @@ export default function ThreatSignaturesPage() {
               <select
                 value={filterMethod}
                 onChange={e => setFilterMethod(e.target.value)}
-                className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-300 focus:border-cyan-600 focus:outline-none"
+                className="rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
               >
                 <option value="">All Methods</option>
                 <option value="yolo">YOLO</option>
                 <option value="gemini">Gemini</option>
                 <option value="hybrid">Hybrid</option>
               </select>
-              <label className="flex items-center gap-1.5 text-xs text-gray-500 cursor-pointer">
+              <label className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer">
                 <input
                   type="checkbox"
                   checked={showInactive}
                   onChange={e => setShowInactive(e.target.checked)}
-                  className="rounded border-gray-700"
+                  className="rounded border-border-strong"
                 />
                 Show disabled
               </label>
               <div className="flex items-center gap-1 ml-auto">
-                <button onClick={expandAll} className="text-[10px] text-gray-500 hover:text-gray-300 px-2 py-1">Expand All</button>
-                <button onClick={collapseAll} className="text-[10px] text-gray-500 hover:text-gray-300 px-2 py-1">Collapse All</button>
+                <button onClick={expandAll} className="text-[10px] text-muted-foreground hover:text-foreground px-2 py-1">Expand All</button>
+                <button onClick={collapseAll} className="text-[10px] text-muted-foreground hover:text-foreground px-2 py-1">Collapse All</button>
               </div>
             </div>
 
-            <p className="text-[10px] text-gray-600 mb-3">
+            <p className="text-[10px] text-muted-foreground mb-3">
               Showing {filtered.length} of {signatures.length} signatures
             </p>
 
@@ -532,23 +532,23 @@ export default function ThreatSignaturesPage() {
               {sortedCategories.map(cat => {
                 const sigs = grouped[cat];
                 const isExpanded = expandedCategories.has(cat);
-                const catColor = CATEGORY_COLORS[cat] || "bg-gray-500/15 text-gray-400 border-gray-500/30";
+                const catColor = CATEGORY_COLORS[cat] || "bg-gray-500/15 text-muted-foreground border-gray-500/30";
 
                 return (
-                  <div key={cat} className="rounded-xl border border-gray-800/60 bg-gray-900/30 overflow-hidden">
+                  <div key={cat} className="rounded-xl border border-border/60 bg-surface-2/30 overflow-hidden">
                     <button
                       onClick={() => toggleCategory(cat)}
-                      className="flex items-center justify-between w-full px-4 py-3 hover:bg-gray-800/30 transition-colors"
+                      className="flex items-center justify-between w-full px-4 py-3 hover:bg-surface-3/30 transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         {isExpanded
-                          ? <ChevronDown className="h-3.5 w-3.5 text-gray-500" />
-                          : <ChevronRight className="h-3.5 w-3.5 text-gray-500" />
+                          ? <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+                          : <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
                         }
                         <span className={cn("inline-flex items-center rounded-md border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider", catColor)}>
                           {cat.replace(/_/g, " ")}
                         </span>
-                        <span className="text-xs text-gray-500">{sigs.length} signature{sigs.length !== 1 ? "s" : ""}</span>
+                        <span className="text-xs text-muted-foreground">{sigs.length} signature{sigs.length !== 1 ? "s" : ""}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         {["critical", "high", "medium", "low", "info"].map(sev => {
@@ -564,7 +564,7 @@ export default function ThreatSignaturesPage() {
                     </button>
 
                     {isExpanded && (
-                      <div className="border-t border-gray-800/40">
+                      <div className="border-t border-border/40">
                         {/* Signature rows */}
                         {sigs.map(sig => {
                           const key = sig.id || sig.name;
@@ -574,21 +574,21 @@ export default function ThreatSignaturesPage() {
                           const rate = fpRate(sig);
 
                           return (
-                            <div key={sig.name} className={cn("border-t border-gray-800/30", !sig.is_active && "opacity-40")}>
+                            <div key={sig.name} className={cn("border-t border-border/30", !sig.is_active && "opacity-40")}>
                               {/* Main row */}
-                              <div className="grid grid-cols-[1fr_auto_auto_auto_auto_auto] items-center gap-2 px-4 py-2.5 text-xs hover:bg-gray-800/20 transition-colors">
+                              <div className="grid grid-cols-[1fr_auto_auto_auto_auto_auto] items-center gap-2 px-4 py-2.5 text-xs hover:bg-surface-3/20 transition-colors">
                                 {/* Signature info */}
                                 <div>
-                                  <div className="font-medium text-gray-200">{sig.name}</div>
-                                  <div className="text-[10px] text-gray-600 mt-0.5 line-clamp-1">{sig.description}</div>
+                                  <div className="font-medium text-foreground">{sig.name}</div>
+                                  <div className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">{sig.description}</div>
                                   <div className="flex flex-wrap items-center gap-1 mt-1">
                                     {sig.gemini_keywords.slice(0, 5).map(kw => (
-                                      <span key={kw} className="inline-block rounded bg-gray-800/60 px-1.5 py-0.5 text-[9px] text-gray-500">
+                                      <span key={kw} className="inline-block rounded bg-surface-3/60 px-1.5 py-0.5 text-[9px] text-muted-foreground">
                                         {kw}
                                       </span>
                                     ))}
                                     {sig.gemini_keywords.length > 5 && (
-                                      <span className="text-[9px] text-gray-600">+{sig.gemini_keywords.length - 5}</span>
+                                      <span className="text-[9px] text-muted-foreground">+{sig.gemini_keywords.length - 5}</span>
                                     )}
                                     {/* False positive rate badge */}
                                     {rate !== null && (
@@ -598,7 +598,7 @@ export default function ThreatSignaturesPage() {
                                           ? "bg-red-500/10 text-red-400 border-red-500/30"
                                           : parseFloat(rate) > 10
                                           ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/30"
-                                          : "bg-gray-500/10 text-gray-500 border-gray-700/40"
+                                          : "bg-gray-500/10 text-muted-foreground border-border-strong/40"
                                       )}>
                                         <Flag className="h-2.5 w-2.5" />
                                         FP: {rate}
@@ -620,7 +620,7 @@ export default function ThreatSignaturesPage() {
                                 </span>
 
                                 {/* Method */}
-                                <span className="text-[10px] text-gray-500 whitespace-nowrap">
+                                <span className="text-[10px] text-muted-foreground whitespace-nowrap">
                                   {METHOD_LABELS[sig.detection_method] || sig.detection_method}
                                 </span>
 
@@ -630,7 +630,7 @@ export default function ThreatSignaturesPage() {
                                 </span>
 
                                 {/* Detections */}
-                                <span className="text-gray-400 text-right min-w-[40px]">{sig.detection_count}</span>
+                                <span className="text-muted-foreground text-right min-w-[40px]">{sig.detection_count}</span>
 
                                 {/* Actions */}
                                 <div className="flex items-center gap-1">
@@ -639,7 +639,7 @@ export default function ThreatSignaturesPage() {
                                     onClick={() => handleTest(sig)}
                                     disabled={testState?.loading}
                                     title="Test signature (last 24h)"
-                                    className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-cyan-400 transition-colors disabled:opacity-50"
+                                    className="rounded p-1 text-muted-foreground hover:bg-surface-3 hover:text-cyan-400 transition-colors disabled:opacity-50"
                                   >
                                     {testState?.loading
                                       ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -654,8 +654,8 @@ export default function ThreatSignaturesPage() {
                                       className={cn(
                                         "rounded p-1 transition-colors",
                                         isDetailOpen
-                                          ? "bg-gray-800 text-cyan-400"
-                                          : "text-gray-500 hover:bg-gray-800 hover:text-gray-300"
+                                          ? "bg-surface-3 text-cyan-400"
+                                          : "text-muted-foreground hover:bg-surface-3 hover:text-foreground"
                                       )}
                                     >
                                       <Camera className="h-3.5 w-3.5" />
@@ -665,11 +665,11 @@ export default function ThreatSignaturesPage() {
                                   <button
                                     onClick={() => handleToggle(sig)}
                                     title={sig.is_active ? "Disable" : "Enable"}
-                                    className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+                                    className="rounded p-1 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
                                   >
                                     {sig.is_active
                                       ? <ToggleRight className="h-3.5 w-3.5 text-emerald-400" />
-                                      : <ToggleLeft className="h-3.5 w-3.5 text-gray-600" />
+                                      : <ToggleLeft className="h-3.5 w-3.5 text-muted-foreground" />
                                     }
                                   </button>
                                   {/* Delete */}
@@ -677,7 +677,7 @@ export default function ThreatSignaturesPage() {
                                     <button
                                       onClick={() => handleDelete(sig)}
                                       title="Delete"
-                                      className="rounded p-1 text-gray-500 hover:bg-red-900/30 hover:text-red-400 transition-colors"
+                                      className="rounded p-1 text-muted-foreground hover:bg-red-900/30 hover:text-red-400 transition-colors"
                                     >
                                       <Trash2 className="h-3.5 w-3.5" />
                                     </button>
@@ -687,36 +687,36 @@ export default function ThreatSignaturesPage() {
 
                               {/* Detection examples panel */}
                               {isDetailOpen && (
-                                <div className="px-4 pb-3 bg-gray-900/40 border-t border-gray-800/30">
-                                  <p className="text-[10px] uppercase tracking-wider text-gray-600 pt-2 pb-1.5">
+                                <div className="px-4 pb-3 bg-surface-2/40 border-t border-border/30">
+                                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground pt-2 pb-1.5">
                                     Recent Detections
                                   </p>
                                   {detState?.loading ? (
-                                    <div className="flex items-center gap-1.5 text-[10px] text-gray-600 py-2">
+                                    <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground py-2">
                                       <Loader2 className="h-3 w-3 animate-spin" /> Loading examples...
                                     </div>
                                   ) : detState?.notAvailable ? (
-                                    <p className="text-[10px] text-gray-600 py-1">No detection examples available</p>
+                                    <p className="text-[10px] text-muted-foreground py-1">No detection examples available</p>
                                   ) : detState && detState.items.length === 0 ? (
-                                    <p className="text-[10px] text-gray-600 py-1">No detection examples available</p>
+                                    <p className="text-[10px] text-muted-foreground py-1">No detection examples available</p>
                                   ) : detState ? (
                                     <div className="flex flex-wrap gap-2">
                                       {detState.items.map((det, i) => (
                                         <div
                                           key={det.id || i}
-                                          className="flex-1 min-w-[180px] rounded-lg border border-gray-800/60 bg-gray-900/50 px-3 py-2"
+                                          className="flex-1 min-w-[180px] rounded-lg border border-border/60 bg-surface-2/50 px-3 py-2"
                                         >
                                           <div className="flex items-center gap-1.5 mb-0.5">
-                                            <Camera className="h-3 w-3 text-gray-500 shrink-0" />
-                                            <span className="text-[10px] text-gray-400 truncate">
+                                            <Camera className="h-3 w-3 text-muted-foreground shrink-0" />
+                                            <span className="text-[10px] text-muted-foreground truncate">
                                               {det.camera_name || det.camera_source || "Unknown camera"}
                                             </span>
                                           </div>
-                                          <p className="text-[9px] text-gray-600">
+                                          <p className="text-[9px] text-muted-foreground">
                                             {new Date(det.timestamp).toLocaleString()}
                                           </p>
                                           {det.description && (
-                                            <p className="text-[9px] text-gray-500 mt-0.5 line-clamp-1">{det.description}</p>
+                                            <p className="text-[9px] text-muted-foreground mt-0.5 line-clamp-1">{det.description}</p>
                                           )}
                                           <button
                                             onClick={() => handleMarkFP(sig, det.id)}
@@ -744,11 +744,11 @@ export default function ThreatSignaturesPage() {
 
         {activeTab === "learned" && (
           <div className="space-y-4">
-            <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-emerald-400" />
               Auto-Learned Signatures
             </h2>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Signatures automatically created when Gemini identifies novel threats not matching existing patterns.
             </p>
             {stats && stats.recently_learned.length > 0 ? (
@@ -757,9 +757,9 @@ export default function ThreatSignaturesPage() {
                   <div key={i} className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="text-sm font-medium text-gray-200">{sig.name}</span>
+                        <span className="text-sm font-medium text-foreground">{sig.name}</span>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className={cn("inline-flex rounded px-1.5 py-0.5 text-[10px] font-medium", CATEGORY_COLORS[sig.category] || "bg-gray-500/15 text-gray-400")}>
+                          <span className={cn("inline-flex rounded px-1.5 py-0.5 text-[10px] font-medium", CATEGORY_COLORS[sig.category] || "bg-gray-500/15 text-muted-foreground")}>
                             {sig.category.replace(/_/g, " ")}
                           </span>
                           <span className={cn("inline-flex rounded px-1.5 py-0.5 text-[10px] font-medium", SEVERITY_BADGES[sig.severity])}>
@@ -768,7 +768,7 @@ export default function ThreatSignaturesPage() {
                         </div>
                       </div>
                       {sig.created_at && (
-                        <span className="text-[10px] text-gray-600">
+                        <span className="text-[10px] text-muted-foreground">
                           {new Date(sig.created_at).toLocaleString()}
                         </span>
                       )}
@@ -777,7 +777,7 @@ export default function ThreatSignaturesPage() {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-16 text-gray-600">
+              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <Sparkles className="h-10 w-10 mb-3 opacity-30" />
                 <p className="text-sm">No auto-learned signatures yet</p>
                 <p className="text-xs mt-1">Novel threats will be automatically captured here</p>
@@ -788,45 +788,45 @@ export default function ThreatSignaturesPage() {
 
         {activeTab === "stats" && stats && (
           <div className="space-y-6">
-            <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
               <TrendingUp className="h-4 w-4 text-amber-400" />
               Detection Statistics
             </h2>
 
             {/* Top triggered */}
             <div>
-              <h3 className="text-xs font-medium text-gray-400 mb-3">Top Triggered Signatures</h3>
+              <h3 className="text-xs font-medium text-muted-foreground mb-3">Top Triggered Signatures</h3>
               {stats.top_triggered.length > 0 ? (
                 <div className="space-y-2">
                   {stats.top_triggered.map((sig, i) => (
-                    <div key={i} className="flex items-center gap-3 rounded-lg border border-gray-800/60 bg-gray-900/30 px-4 py-3">
-                      <span className="text-lg font-bold text-gray-600 w-6 text-right">#{i + 1}</span>
+                    <div key={i} className="flex items-center gap-3 rounded-lg border border-border/60 bg-surface-2/30 px-4 py-3">
+                      <span className="text-lg font-bold text-muted-foreground w-6 text-right">#{i + 1}</span>
                       <div className="flex-1">
-                        <span className="text-xs font-medium text-gray-200">{sig.name}</span>
-                        <span className="ml-2 text-[10px] text-gray-600">{sig.category}</span>
+                        <span className="text-xs font-medium text-foreground">{sig.name}</span>
+                        <span className="ml-2 text-[10px] text-muted-foreground">{sig.category}</span>
                       </div>
                       <div className="text-right">
                         <span className="text-sm font-bold text-cyan-400">{sig.detection_count}</span>
-                        <span className="text-[10px] text-gray-600 ml-1">detections</span>
+                        <span className="text-[10px] text-muted-foreground ml-1">detections</span>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-xs text-gray-600 py-8 text-center">No detections recorded yet</p>
+                <p className="text-xs text-muted-foreground py-8 text-center">No detections recorded yet</p>
               )}
             </div>
 
             {/* Category breakdown */}
             <div>
-              <h3 className="text-xs font-medium text-gray-400 mb-3">Signatures by Category</h3>
+              <h3 className="text-xs font-medium text-muted-foreground mb-3">Signatures by Category</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                 {categories.map(cat => (
-                  <div key={cat.category} className="rounded-lg border border-gray-800/60 bg-gray-900/30 p-3">
-                    <div className={cn("inline-flex rounded-md border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider mb-2", CATEGORY_COLORS[cat.category] || "bg-gray-500/15 text-gray-400 border-gray-500/30")}>
+                  <div key={cat.category} className="rounded-lg border border-border/60 bg-surface-2/30 p-3">
+                    <div className={cn("inline-flex rounded-md border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider mb-2", CATEGORY_COLORS[cat.category] || "bg-gray-500/15 text-muted-foreground border-gray-500/30")}>
                       {cat.category.replace(/_/g, " ")}
                     </div>
-                    <div className="text-xl font-bold text-gray-200">{cat.count}</div>
+                    <div className="text-xl font-bold text-foreground">{cat.count}</div>
                     <div className="flex gap-1 mt-1 flex-wrap">
                       {Object.entries(cat.severities).map(([sev, cnt]) => (
                         <span key={sev} className={cn("text-[8px] rounded px-1 py-0.5", SEVERITY_BADGES[sev])}>
@@ -845,10 +845,10 @@ export default function ThreatSignaturesPage() {
       {/* Create signature modal */}
       {showCreateForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="w-full max-w-lg rounded-2xl border border-gray-800 bg-gray-950 p-6 shadow-2xl">
+          <div className="w-full max-w-lg rounded-2xl border border-border bg-surface-0 p-6 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-bold text-gray-200">Create Custom Signature</h2>
-              <button onClick={() => setShowCreateForm(false)} className="text-gray-500 hover:text-gray-300">
+              <h2 className="text-sm font-bold text-foreground">Create Custom Signature</h2>
+              <button onClick={() => setShowCreateForm(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -857,26 +857,26 @@ export default function ThreatSignaturesPage() {
                 placeholder="Signature name"
                 value={newSig.name}
                 onChange={e => setNewSig({ ...newSig, name: e.target.value })}
-                className="w-full rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-200 placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
+                className="w-full rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
               />
               <input
                 placeholder="Category (e.g. intrusion, custom)"
                 value={newSig.category}
                 onChange={e => setNewSig({ ...newSig, category: e.target.value })}
-                className="w-full rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-200 placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
+                className="w-full rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
               />
               <textarea
                 placeholder="Description"
                 value={newSig.description}
                 onChange={e => setNewSig({ ...newSig, description: e.target.value })}
                 rows={2}
-                className="w-full rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-200 placeholder-gray-600 focus:border-cyan-600 focus:outline-none resize-none"
+                className="w-full rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none resize-none"
               />
               <div className="grid grid-cols-2 gap-3">
                 <select
                   value={newSig.severity}
                   onChange={e => setNewSig({ ...newSig, severity: e.target.value })}
-                  className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-300 focus:border-cyan-600 focus:outline-none"
+                  className="rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
                 >
                   {["critical", "high", "medium", "low", "info"].map(s => (
                     <option key={s} value={s}>{s}</option>
@@ -885,7 +885,7 @@ export default function ThreatSignaturesPage() {
                 <select
                   value={newSig.detection_method}
                   onChange={e => setNewSig({ ...newSig, detection_method: e.target.value })}
-                  className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-300 focus:border-cyan-600 focus:outline-none"
+                  className="rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
                 >
                   <option value="gemini">Gemini</option>
                   <option value="yolo">YOLO</option>
@@ -896,12 +896,12 @@ export default function ThreatSignaturesPage() {
                 placeholder="Gemini keywords (comma separated)"
                 value={newSig.gemini_keywords}
                 onChange={e => setNewSig({ ...newSig, gemini_keywords: e.target.value })}
-                className="w-full rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-200 placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
+                className="w-full rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
               />
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   onClick={() => setShowCreateForm(false)}
-                  className="rounded-lg border border-gray-700 px-4 py-2 text-xs text-gray-400 hover:bg-gray-800 transition-colors"
+                  className="rounded-lg border border-border-strong px-4 py-2 text-xs text-muted-foreground hover:bg-surface-3 transition-colors"
                 >
                   Cancel
                 </button>
@@ -928,12 +928,12 @@ export default function ThreatSignaturesPage() {
 
 function StatCard({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) {
   return (
-    <div className="rounded-xl border border-gray-800/60 bg-gray-900/30 p-3">
+    <div className="rounded-xl border border-border/60 bg-surface-2/30 p-3">
       <div className="flex items-center gap-2 mb-1">
         {icon}
-        <span className="text-[10px] uppercase tracking-wider text-gray-500">{label}</span>
+        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</span>
       </div>
-      <span className="text-xl font-bold text-gray-100">{value}</span>
+      <span className="text-xl font-bold text-foreground">{value}</span>
     </div>
   );
 }

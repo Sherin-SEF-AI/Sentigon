@@ -124,7 +124,7 @@ type Tab = (typeof TABS)[number];
 
 const CLASSIFICATION_BADGE: Record<string, string> = {
   real_threat: "text-red-400 bg-red-500/10 border-red-500/30",
-  false_alarm: "text-gray-400 bg-gray-500/10 border-gray-500/30",
+  false_alarm: "text-muted-foreground bg-gray-500/10 border-gray-500/30",
   auto_cleared: "text-green-400 bg-green-500/10 border-green-500/30",
   pending: "text-yellow-400 bg-yellow-500/10 border-yellow-500/30",
 };
@@ -187,7 +187,7 @@ function fatigueBarColor(score: number): string {
 function trendIcon(trend: string) {
   if (trend === "degrading") return <TrendingUp className="h-3 w-3 text-red-400 rotate-0" />;
   if (trend === "improving") return <TrendingUp className="h-3 w-3 text-green-400 rotate-180" />;
-  return <Activity className="h-3 w-3 text-gray-400" />;
+  return <Activity className="h-3 w-3 text-muted-foreground" />;
 }
 
 /** Group alarm events by hour-of-day bucket (0..23) and return counts as an array of 24 values */
@@ -484,7 +484,7 @@ export default function AlarmManagementPage() {
       <div className="flex h-full items-center justify-center bg-[#030712]">
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="h-10 w-10 animate-spin text-cyan-400" />
-          <p className="text-sm text-gray-500">Loading alarm management...</p>
+          <p className="text-sm text-muted-foreground">Loading alarm management...</p>
         </div>
       </div>
     );
@@ -493,23 +493,23 @@ export default function AlarmManagementPage() {
   return (
     <div className="flex h-full flex-col bg-[#030712]">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-900/30 border border-amber-800/50">
             <Bell className="h-5 w-5 text-amber-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Alarm Management
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Intelligent alarm correlation, false positive reduction, and operator fatigue monitoring
             </p>
           </div>
         </div>
         <button
           onClick={() => { setLoading(true); fetchInitial(); }}
-          className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800 transition-colors"
+          className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 transition-colors"
         >
           <RefreshCw className="h-3.5 w-3.5" /> Refresh
         </button>
@@ -526,13 +526,13 @@ export default function AlarmManagementPage() {
 
       {/* Stat Cards — with sparkline */}
       {stats && (
-        <div className="grid grid-cols-5 gap-4 border-b border-gray-800 px-6 py-3">
+        <div className="grid grid-cols-5 gap-4 border-b border-border px-6 py-3">
           {/* Total alarms with sparkline */}
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/60 p-3 col-span-2">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/60 p-3 col-span-2">
             <Bell className="h-5 w-5 text-cyan-400 shrink-0" />
             <div className="flex-1 min-w-0">
-              <p className="text-lg font-bold text-gray-100">{stats.total_alarms_24h}</p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">Total Alarms (24h)</p>
+              <p className="text-lg font-bold text-foreground">{stats.total_alarms_24h}</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Total Alarms (24h)</p>
             </div>
             <div className="flex flex-col items-end gap-0.5">
               <MetricSparkline
@@ -543,35 +543,35 @@ export default function AlarmManagementPage() {
                 fill={true}
                 showValue={false}
               />
-              <span className="text-[9px] text-gray-600">last 24h by hour</span>
+              <span className="text-[9px] text-muted-foreground">last 24h by hour</span>
             </div>
           </div>
           <div className="flex items-center gap-3 rounded-lg border border-green-900/50 bg-green-950/20 p-3">
             <CheckCircle2 className="h-5 w-5 text-green-400" />
             <div>
               <p className="text-lg font-bold text-green-400">{stats.auto_cleared}</p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">Auto-Cleared</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Auto-Cleared</p>
             </div>
           </div>
           <div className="flex items-center gap-3 rounded-lg border border-red-900/50 bg-red-950/20 p-3">
             <AlertTriangle className="h-5 w-5 text-red-400" />
             <div>
               <p className="text-lg font-bold text-red-400">{stats.real_threats}</p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">Real Threats</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Real Threats</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/60 p-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/60 p-3">
             <XCircle className="h-5 w-5 text-yellow-400" />
             <div>
               <p className="text-lg font-bold text-yellow-400">{(stats.false_alarm_rate * 100).toFixed(1)}%</p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">False Alarm Rate</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">False Alarm Rate</p>
             </div>
           </div>
         </div>
       )}
 
       {/* Tab navigation */}
-      <div className="flex items-center gap-1 border-b border-gray-800 px-6 overflow-x-auto">
+      <div className="flex items-center gap-1 border-b border-border px-6 overflow-x-auto">
         {TABS.map((tab) => (
           <button
             key={tab}
@@ -580,7 +580,7 @@ export default function AlarmManagementPage() {
               "px-4 py-2.5 text-xs font-medium border-b-2 transition-colors whitespace-nowrap",
               activeTab === tab
                 ? "border-cyan-400 text-cyan-400"
-                : "border-transparent text-gray-500 hover:text-gray-300"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             )}
           >
             {tab}
@@ -595,7 +595,7 @@ export default function AlarmManagementPage() {
         {activeTab === "Correlations" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <Zap className="h-4 w-4 text-amber-400" />
                 Alarm Correlation Events
               </h2>
@@ -603,7 +603,7 @@ export default function AlarmManagementPage() {
                 <select
                   value={corrFilter}
                   onChange={(e) => setCorrFilter(e.target.value)}
-                  className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-1.5 text-xs text-gray-300 focus:border-cyan-600 focus:outline-none"
+                  className="rounded-lg border border-border bg-surface-2/50 px-3 py-1.5 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
                 >
                   <option value="">All Classifications</option>
                   <option value="real_threat">Real Threat</option>
@@ -614,7 +614,7 @@ export default function AlarmManagementPage() {
                 <button
                   onClick={fetchCorrelations}
                   disabled={corrLoading}
-                  className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800 transition-colors disabled:opacity-50"
+                  className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 transition-colors disabled:opacity-50"
                 >
                   {corrLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
                 </button>
@@ -622,15 +622,15 @@ export default function AlarmManagementPage() {
             </div>
 
             {filteredCorrelations.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-gray-600">
+              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <Bell className="h-10 w-10 mb-3 opacity-30" />
                 <p className="text-sm">No correlation events found</p>
               </div>
             ) : (
-              <div className="overflow-x-auto rounded-xl border border-gray-800 bg-zinc-900/30">
+              <div className="overflow-x-auto rounded-xl border border-border bg-zinc-900/30">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="border-b border-gray-800 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+                    <tr className="border-b border-border text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                       <th className="px-4 py-3">Source</th>
                       <th className="px-4 py-3">Camera / Zone</th>
                       <th className="px-4 py-3">Description</th>
@@ -643,17 +643,17 @@ export default function AlarmManagementPage() {
                   </thead>
                   <tbody>
                     {filteredCorrelations.map((event) => (
-                      <tr key={event.id} className="border-b border-gray-800/30 hover:bg-gray-800/20 transition-colors">
+                      <tr key={event.id} className="border-b border-border/30 hover:bg-surface-3/20 transition-colors">
                         <td className="px-4 py-2.5">
-                          <span className="rounded bg-gray-800/60 px-1.5 py-0.5 text-[10px] text-gray-400 font-mono">
+                          <span className="rounded bg-surface-3/60 px-1.5 py-0.5 text-[10px] text-muted-foreground font-mono">
                             {event.source_type}
                           </span>
                         </td>
                         <td className="px-4 py-2.5">
-                          <div className="text-xs text-gray-300">{event.camera_name}</div>
-                          <div className="text-[10px] text-gray-600">{event.zone}</div>
+                          <div className="text-xs text-foreground">{event.camera_name}</div>
+                          <div className="text-[10px] text-muted-foreground">{event.zone}</div>
                         </td>
-                        <td className="px-4 py-2.5 text-[11px] text-gray-400 max-w-[250px] truncate">
+                        <td className="px-4 py-2.5 text-[11px] text-muted-foreground max-w-[250px] truncate">
                           {event.description}
                         </td>
                         <td className="px-4 py-2.5">
@@ -677,17 +677,17 @@ export default function AlarmManagementPage() {
                           {event.cascade_match ? (
                             <CheckCircle2 className="h-4 w-4 text-amber-400" />
                           ) : (
-                            <span className="text-[10px] text-gray-600">-</span>
+                            <span className="text-[10px] text-muted-foreground">-</span>
                           )}
                         </td>
                         <td className="px-4 py-2.5">
                           <div className="flex flex-wrap gap-1">
                             {event.sources.slice(0, 3).map((s, i) => (
-                              <span key={i} className="rounded bg-gray-800/60 px-1.5 py-0.5 text-[9px] text-gray-500">{s}</span>
+                              <span key={i} className="rounded bg-surface-3/60 px-1.5 py-0.5 text-[9px] text-muted-foreground">{s}</span>
                             ))}
                           </div>
                         </td>
-                        <td className="px-4 py-2.5 text-[11px] text-gray-500">{timeAgo(event.timestamp)}</td>
+                        <td className="px-4 py-2.5 text-[11px] text-muted-foreground">{timeAgo(event.timestamp)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -700,11 +700,11 @@ export default function AlarmManagementPage() {
         {/* ============ FEEDBACK TAB ============ */}
         {activeTab === "Feedback" && (
           <div className="max-w-2xl space-y-6">
-            <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
               <ThumbsUp className="h-4 w-4 text-green-400" />
               Submit Alert Feedback
             </h2>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Provide feedback on alarm accuracy to improve the AI classification model and reduce false positives.
             </p>
 
@@ -715,14 +715,14 @@ export default function AlarmManagementPage() {
               </div>
             )}
 
-            <div className="rounded-xl border border-gray-800 bg-zinc-900/30 p-6 space-y-4">
+            <div className="rounded-xl border border-border bg-zinc-900/30 p-6 space-y-4">
               {/* Select Alert */}
               <div>
-                <label className="text-[10px] text-gray-500 uppercase tracking-wider block mb-1.5">Select Alert</label>
+                <label className="text-[10px] text-muted-foreground uppercase tracking-wider block mb-1.5">Select Alert</label>
                 <select
                   value={feedback.alert_id}
                   onChange={(e) => setFeedback({ ...feedback, alert_id: e.target.value })}
-                  className="w-full rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-300 focus:border-cyan-600 focus:outline-none"
+                  className="w-full rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
                 >
                   <option value="">Choose an alert...</option>
                   {alerts.map((a) => (
@@ -733,7 +733,7 @@ export default function AlarmManagementPage() {
 
               {/* Correct / Incorrect */}
               <div>
-                <label className="text-[10px] text-gray-500 uppercase tracking-wider block mb-2">Was this alert accurate?</label>
+                <label className="text-[10px] text-muted-foreground uppercase tracking-wider block mb-2">Was this alert accurate?</label>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setFeedback({ ...feedback, is_correct: true, fp_reason: "" })}
@@ -741,7 +741,7 @@ export default function AlarmManagementPage() {
                       "flex items-center gap-2 rounded-lg border px-4 py-2.5 text-xs font-medium transition-colors",
                       feedback.is_correct
                         ? "border-green-500/50 bg-green-500/10 text-green-400"
-                        : "border-gray-800 bg-gray-900/50 text-gray-500 hover:text-gray-300"
+                        : "border-border bg-surface-2/50 text-muted-foreground hover:text-foreground"
                     )}
                   >
                     <ThumbsUp className="h-4 w-4" /> Correct (True Positive)
@@ -752,7 +752,7 @@ export default function AlarmManagementPage() {
                       "flex items-center gap-2 rounded-lg border px-4 py-2.5 text-xs font-medium transition-colors",
                       !feedback.is_correct
                         ? "border-red-500/50 bg-red-500/10 text-red-400"
-                        : "border-gray-800 bg-gray-900/50 text-gray-500 hover:text-gray-300"
+                        : "border-border bg-surface-2/50 text-muted-foreground hover:text-foreground"
                     )}
                   >
                     <ThumbsDown className="h-4 w-4" /> False Positive
@@ -763,11 +763,11 @@ export default function AlarmManagementPage() {
               {/* FP Reason */}
               {!feedback.is_correct && (
                 <div>
-                  <label className="text-[10px] text-gray-500 uppercase tracking-wider block mb-1.5">False Positive Reason</label>
+                  <label className="text-[10px] text-muted-foreground uppercase tracking-wider block mb-1.5">False Positive Reason</label>
                   <select
                     value={feedback.fp_reason}
                     onChange={(e) => setFeedback({ ...feedback, fp_reason: e.target.value })}
-                    className="w-full rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-300 focus:border-cyan-600 focus:outline-none"
+                    className="w-full rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
                   >
                     <option value="">Select reason...</option>
                     {FP_REASONS.map((r) => (
@@ -779,13 +779,13 @@ export default function AlarmManagementPage() {
 
               {/* Notes */}
               <div>
-                <label className="text-[10px] text-gray-500 uppercase tracking-wider block mb-1.5">Additional Notes</label>
+                <label className="text-[10px] text-muted-foreground uppercase tracking-wider block mb-1.5">Additional Notes</label>
                 <textarea
                   value={feedback.notes}
                   onChange={(e) => setFeedback({ ...feedback, notes: e.target.value })}
                   rows={3}
                   placeholder="Any additional context or notes..."
-                  className="w-full rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-200 placeholder-gray-600 focus:border-cyan-600 focus:outline-none resize-none"
+                  className="w-full rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none resize-none"
                 />
               </div>
 
@@ -807,7 +807,7 @@ export default function AlarmManagementPage() {
         {/* ============ FP REPORT TAB ============ */}
         {activeTab === "FP Report" && (
           <div className="space-y-6">
-            <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
               <BarChart3 className="h-4 w-4 text-orange-400" />
               False Positive Analysis Report
             </h2>
@@ -821,16 +821,16 @@ export default function AlarmManagementPage() {
                 {/* Summary cards */}
                 {fpSummary && (
                   <div className="grid grid-cols-3 gap-4">
-                    <div className="rounded-lg border border-gray-800 bg-zinc-900/50 p-4">
-                      <p className="text-[10px] text-gray-500 uppercase tracking-wider">Total Feedback</p>
-                      <p className="text-xl font-bold text-gray-100">{fpSummary.total_feedback}</p>
+                    <div className="rounded-lg border border-border bg-zinc-900/50 p-4">
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Total Feedback</p>
+                      <p className="text-xl font-bold text-foreground">{fpSummary.total_feedback}</p>
                     </div>
-                    <div className="rounded-lg border border-gray-800 bg-zinc-900/50 p-4">
-                      <p className="text-[10px] text-gray-500 uppercase tracking-wider">Overall FP Rate</p>
+                    <div className="rounded-lg border border-border bg-zinc-900/50 p-4">
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Overall FP Rate</p>
                       <p className="text-xl font-bold text-yellow-400">{(fpSummary.fp_rate * 100).toFixed(1)}%</p>
                     </div>
-                    <div className="rounded-lg border border-gray-800 bg-zinc-900/50 p-4">
-                      <p className="text-[10px] text-gray-500 uppercase tracking-wider">Top FP Sources</p>
+                    <div className="rounded-lg border border-border bg-zinc-900/50 p-4">
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Top FP Sources</p>
                       <div className="flex flex-wrap gap-1 mt-1">
                         {fpSummary.top_sources.slice(0, 5).map((s) => (
                           <span key={s.source} className="rounded bg-orange-500/10 border border-orange-500/30 px-1.5 py-0.5 text-[9px] text-orange-400">
@@ -844,8 +844,8 @@ export default function AlarmManagementPage() {
 
                 {/* Bar chart visualization */}
                 {fpSummary && fpSummary.top_sources.length > 0 && (
-                  <div className="rounded-xl border border-gray-800 bg-zinc-900/30 p-4">
-                    <h3 className="mb-3 text-xs font-bold text-gray-300 uppercase tracking-wider">
+                  <div className="rounded-xl border border-border bg-zinc-900/30 p-4">
+                    <h3 className="mb-3 text-xs font-bold text-foreground uppercase tracking-wider">
                       Top 10 FP Sources
                     </h3>
                     <div className="space-y-2">
@@ -854,11 +854,11 @@ export default function AlarmManagementPage() {
                         const pct = (s.count / maxCount) * 100;
                         return (
                           <div key={s.source} className="flex items-center gap-3">
-                            <span className="text-[10px] text-gray-400 w-32 truncate shrink-0">{s.source}</span>
-                            <div className="flex-1 h-4 rounded bg-gray-800 overflow-hidden">
+                            <span className="text-[10px] text-muted-foreground w-32 truncate shrink-0">{s.source}</span>
+                            <div className="flex-1 h-4 rounded bg-surface-3 overflow-hidden">
                               <div className="h-full rounded bg-orange-500/60 transition-all" style={{ width: `${pct}%` }} />
                             </div>
-                            <span className="text-[10px] text-gray-400 font-mono w-8 text-right">{s.count}</span>
+                            <span className="text-[10px] text-muted-foreground font-mono w-8 text-right">{s.count}</span>
                           </div>
                         );
                       })}
@@ -868,10 +868,10 @@ export default function AlarmManagementPage() {
 
                 {/* Detail table */}
                 {fpReport.length > 0 && (
-                  <div className="overflow-x-auto rounded-xl border border-gray-800 bg-zinc-900/30">
+                  <div className="overflow-x-auto rounded-xl border border-border bg-zinc-900/30">
                     <table className="w-full text-left">
                       <thead>
-                        <tr className="border-b border-gray-800 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+                        <tr className="border-b border-border text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                           <th className="px-4 py-3">Camera</th>
                           <th className="px-4 py-3">Signature</th>
                           <th className="px-4 py-3">TP Rate</th>
@@ -883,9 +883,9 @@ export default function AlarmManagementPage() {
                       </thead>
                       <tbody>
                         {fpReport.map((entry, i) => (
-                          <tr key={i} className="border-b border-gray-800/30 hover:bg-gray-800/20 transition-colors">
-                            <td className="px-4 py-2.5 text-xs text-gray-300">{entry.camera_name}</td>
-                            <td className="px-4 py-2.5 text-xs text-gray-400">{entry.signature}</td>
+                          <tr key={i} className="border-b border-border/30 hover:bg-surface-3/20 transition-colors">
+                            <td className="px-4 py-2.5 text-xs text-foreground">{entry.camera_name}</td>
+                            <td className="px-4 py-2.5 text-xs text-muted-foreground">{entry.signature}</td>
                             <td className="px-4 py-2.5">
                               <span className={cn(
                                 "text-xs font-bold font-mono",
@@ -896,12 +896,12 @@ export default function AlarmManagementPage() {
                               </span>
                             </td>
                             <td className="px-4 py-2.5 text-xs text-red-400 font-mono">{entry.fp_count}</td>
-                            <td className="px-4 py-2.5 text-xs text-gray-400 font-mono">{entry.total_count}</td>
+                            <td className="px-4 py-2.5 text-xs text-muted-foreground font-mono">{entry.total_count}</td>
                             <td className="px-4 py-2.5">
                               <span className={cn(
                                 "text-xs font-mono",
                                 entry.threshold_adjustment > 0 ? "text-green-400" :
-                                entry.threshold_adjustment < 0 ? "text-red-400" : "text-gray-500"
+                                entry.threshold_adjustment < 0 ? "text-red-400" : "text-muted-foreground"
                               )}>
                                 {entry.threshold_adjustment > 0 ? "+" : ""}{entry.threshold_adjustment.toFixed(2)}
                               </span>
@@ -909,7 +909,7 @@ export default function AlarmManagementPage() {
                             <td className="px-4 py-2.5">
                               <div className="flex flex-wrap gap-1">
                                 {entry.top_reasons.slice(0, 3).map((r, j) => (
-                                  <span key={j} className="rounded bg-gray-800/60 px-1.5 py-0.5 text-[9px] text-gray-500">
+                                  <span key={j} className="rounded bg-surface-3/60 px-1.5 py-0.5 text-[9px] text-muted-foreground">
                                     {r.replace(/_/g, " ")}
                                   </span>
                                 ))}
@@ -923,7 +923,7 @@ export default function AlarmManagementPage() {
                 )}
 
                 {fpReport.length === 0 && !fpLoading && (
-                  <div className="flex flex-col items-center justify-center py-16 text-gray-600">
+                  <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                     <BarChart3 className="h-10 w-10 mb-3 opacity-30" />
                     <p className="text-sm">No false positive data available yet</p>
                     <p className="text-xs mt-1">Submit feedback to start building FP analysis</p>
@@ -938,14 +938,14 @@ export default function AlarmManagementPage() {
         {activeTab === "Fatigue Monitor" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <Gauge className="h-4 w-4 text-purple-400" />
                 Operator Fatigue Monitor
               </h2>
               <button
                 onClick={fetchFatigue}
                 disabled={fatigueLoading}
-                className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800 transition-colors disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 transition-colors disabled:opacity-50"
               >
                 {fatigueLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
                 Refresh
@@ -957,7 +957,7 @@ export default function AlarmManagementPage() {
                 <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
               </div>
             ) : fatigue.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-gray-600">
+              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <Users className="h-10 w-10 mb-3 opacity-30" />
                 <p className="text-sm">No operator data available</p>
               </div>
@@ -972,20 +972,20 @@ export default function AlarmManagementPage() {
                         ? "border-red-800/60 bg-red-950/20"
                         : op.fatigue_score >= 0.4
                         ? "border-yellow-800/50 bg-yellow-950/10"
-                        : "border-gray-800 bg-zinc-900/50"
+                        : "border-border bg-zinc-900/50"
                     )}
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm font-semibold text-gray-200">{op.operator_name}</span>
+                        <Users className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm font-semibold text-foreground">{op.operator_name}</span>
                       </div>
                       <span className={cn("text-xl font-bold font-mono", fatigueColor(op.fatigue_score))}>
                         {(op.fatigue_score * 100).toFixed(0)}
                       </span>
                     </div>
 
-                    <div className="h-2.5 w-full rounded-full bg-gray-800 overflow-hidden mb-3">
+                    <div className="h-2.5 w-full rounded-full bg-surface-3 overflow-hidden mb-3">
                       <div
                         className={cn("h-full rounded-full transition-all duration-500", fatigueBarColor(op.fatigue_score))}
                         style={{ width: `${Math.min(op.fatigue_score * 100, 100)}%` }}
@@ -993,29 +993,29 @@ export default function AlarmManagementPage() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-2">
-                      <div className="rounded-lg bg-gray-900/50 p-2">
-                        <p className="text-[8px] text-gray-600 uppercase tracking-wider">Alerts Handled</p>
-                        <p className="text-xs font-bold text-gray-300">{op.alerts_handled}</p>
+                      <div className="rounded-lg bg-surface-2/50 p-2">
+                        <p className="text-[8px] text-muted-foreground uppercase tracking-wider">Alerts Handled</p>
+                        <p className="text-xs font-bold text-foreground">{op.alerts_handled}</p>
                       </div>
-                      <div className="rounded-lg bg-gray-900/50 p-2">
-                        <p className="text-[8px] text-gray-600 uppercase tracking-wider">Avg Response</p>
-                        <p className="text-xs font-bold text-gray-300">{op.avg_response_time.toFixed(0)}s</p>
+                      <div className="rounded-lg bg-surface-2/50 p-2">
+                        <p className="text-[8px] text-muted-foreground uppercase tracking-wider">Avg Response</p>
+                        <p className="text-xs font-bold text-foreground">{op.avg_response_time.toFixed(0)}s</p>
                       </div>
-                      <div className="rounded-lg bg-gray-900/50 p-2">
-                        <p className="text-[8px] text-gray-600 uppercase tracking-wider">Hours On</p>
+                      <div className="rounded-lg bg-surface-2/50 p-2">
+                        <p className="text-[8px] text-muted-foreground uppercase tracking-wider">Hours On</p>
                         <p className={cn(
                           "text-xs font-bold",
                           op.consecutive_hours >= 10 ? "text-red-400" :
-                          op.consecutive_hours >= 6 ? "text-yellow-400" : "text-gray-300"
+                          op.consecutive_hours >= 6 ? "text-yellow-400" : "text-foreground"
                         )}>
                           {op.consecutive_hours.toFixed(1)}h
                         </p>
                       </div>
-                      <div className="rounded-lg bg-gray-900/50 p-2">
-                        <p className="text-[8px] text-gray-600 uppercase tracking-wider">Trend</p>
+                      <div className="rounded-lg bg-surface-2/50 p-2">
+                        <p className="text-[8px] text-muted-foreground uppercase tracking-wider">Trend</p>
                         <div className="flex items-center gap-1">
                           {trendIcon(op.response_time_trend)}
-                          <span className="text-[10px] text-gray-400 capitalize">{op.response_time_trend}</span>
+                          <span className="text-[10px] text-muted-foreground capitalize">{op.response_time_trend}</span>
                         </div>
                       </div>
                     </div>
@@ -1037,25 +1037,25 @@ export default function AlarmManagementPage() {
         {activeTab === "Suppression" && (
           <div className="space-y-6 max-w-3xl">
             <div>
-              <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2 mb-1">
+              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2 mb-1">
                 <Ban className="h-4 w-4 text-orange-400" />
                 Intelligent Suppression Rules
               </h2>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 Define time windows during which specific alarm types are suppressed to reduce noise (e.g., scheduled maintenance periods, night-mode cameras).
               </p>
             </div>
 
             {/* Create new rule form */}
-            <div className="rounded-xl border border-gray-800 bg-zinc-900/30 p-5 space-y-4">
-              <h3 className="text-xs font-bold text-gray-300 uppercase tracking-wider">New Suppression Rule</h3>
+            <div className="rounded-xl border border-border bg-zinc-900/30 p-5 space-y-4">
+              <h3 className="text-xs font-bold text-foreground uppercase tracking-wider">New Suppression Rule</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-[10px] text-gray-500 uppercase tracking-wider block mb-1.5">Alarm Type</label>
+                  <label className="text-[10px] text-muted-foreground uppercase tracking-wider block mb-1.5">Alarm Type</label>
                   <select
                     value={newSupRule.alarm_type}
                     onChange={e => setNewSupRule({ ...newSupRule, alarm_type: e.target.value })}
-                    className="w-full rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-300 focus:border-cyan-600 focus:outline-none"
+                    className="w-full rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
                   >
                     <option value="">Select alarm type...</option>
                     {ALARM_TYPES.map(t => (
@@ -1064,17 +1064,17 @@ export default function AlarmManagementPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-[10px] text-gray-500 uppercase tracking-wider block mb-1.5">Zone (optional)</label>
+                  <label className="text-[10px] text-muted-foreground uppercase tracking-wider block mb-1.5">Zone (optional)</label>
                   <input
                     type="text"
                     placeholder="e.g. Parking Lot A, all zones"
                     value={newSupRule.zone}
                     onChange={e => setNewSupRule({ ...newSupRule, zone: e.target.value })}
-                    className="w-full rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-200 placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
+                    className="w-full rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] text-gray-500 uppercase tracking-wider block mb-1.5">
+                  <label className="text-[10px] text-muted-foreground uppercase tracking-wider block mb-1.5">
                     Start Hour (0–23)
                   </label>
                   <input
@@ -1083,11 +1083,11 @@ export default function AlarmManagementPage() {
                     max={23}
                     value={newSupRule.start_hour}
                     onChange={e => setNewSupRule({ ...newSupRule, start_hour: parseInt(e.target.value) || 0 })}
-                    className="w-full rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-200 focus:border-cyan-600 focus:outline-none"
+                    className="w-full rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] text-gray-500 uppercase tracking-wider block mb-1.5">
+                  <label className="text-[10px] text-muted-foreground uppercase tracking-wider block mb-1.5">
                     End Hour (0–23)
                   </label>
                   <input
@@ -1096,7 +1096,7 @@ export default function AlarmManagementPage() {
                     max={23}
                     value={newSupRule.end_hour}
                     onChange={e => setNewSupRule({ ...newSupRule, end_hour: parseInt(e.target.value) || 0 })}
-                    className="w-full rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-200 focus:border-cyan-600 focus:outline-none"
+                    className="w-full rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
                   />
                 </div>
               </div>
@@ -1114,11 +1114,11 @@ export default function AlarmManagementPage() {
 
             {/* Existing rules */}
             <div>
-              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">
                 Active Suppression Rules ({suppressionRules.length})
               </h3>
               {suppressionRules.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10 text-gray-600 rounded-xl border border-dashed border-gray-800">
+                <div className="flex flex-col items-center justify-center py-10 text-muted-foreground rounded-xl border border-dashed border-border">
                   <Ban className="h-8 w-8 mb-2 opacity-30" />
                   <p className="text-sm">No suppression rules configured</p>
                   <p className="text-xs mt-1">Create a rule above to suppress noise during scheduled windows</p>
@@ -1128,16 +1128,16 @@ export default function AlarmManagementPage() {
                   {suppressionRules.map((rule, idx) => (
                     <div
                       key={rule.id || idx}
-                      className="flex items-center gap-4 rounded-lg border border-gray-800 bg-zinc-900/40 px-4 py-3"
+                      className="flex items-center gap-4 rounded-lg border border-border bg-zinc-900/40 px-4 py-3"
                     >
                       <Ban className="h-4 w-4 text-orange-400 shrink-0" />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-xs font-medium text-gray-200">
+                          <span className="text-xs font-medium text-foreground">
                             {rule.alarm_type.replace(/_/g, " ")}
                           </span>
                           {rule.zone && (
-                            <span className="rounded bg-gray-800/60 px-1.5 py-0.5 text-[9px] text-gray-400">
+                            <span className="rounded bg-surface-3/60 px-1.5 py-0.5 text-[9px] text-muted-foreground">
                               Zone: {rule.zone}
                             </span>
                           )}
@@ -1146,7 +1146,7 @@ export default function AlarmManagementPage() {
                           </span>
                         </div>
                         {rule.created_at && (
-                          <p className="text-[9px] text-gray-600 mt-0.5">
+                          <p className="text-[9px] text-muted-foreground mt-0.5">
                             Created {new Date(rule.created_at).toLocaleString()}
                             {rule.id?.startsWith("local-") && " (local)"}
                           </p>
@@ -1154,7 +1154,7 @@ export default function AlarmManagementPage() {
                       </div>
                       <button
                         onClick={() => handleDeleteSuppressionRule(rule.id, idx)}
-                        className="rounded p-1.5 text-gray-600 hover:bg-red-900/30 hover:text-red-400 transition-colors"
+                        className="rounded p-1.5 text-muted-foreground hover:bg-red-900/30 hover:text-red-400 transition-colors"
                         title="Delete rule"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -1171,32 +1171,32 @@ export default function AlarmManagementPage() {
         {activeTab === "Auto-Escalation" && (
           <div className="space-y-6 max-w-3xl">
             <div>
-              <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2 mb-1">
+              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2 mb-1">
                 <ChevronsUp className="h-4 w-4 text-red-400" />
                 Auto-Escalation Configuration
               </h2>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 Automatically escalate alarms that remain unacknowledged beyond a time threshold. Rules are evaluated in order.
               </p>
             </div>
 
             {/* Create new rule */}
-            <div className="rounded-xl border border-gray-800 bg-zinc-900/30 p-5 space-y-4">
-              <h3 className="text-xs font-bold text-gray-300 uppercase tracking-wider">New Escalation Rule</h3>
+            <div className="rounded-xl border border-border bg-zinc-900/30 p-5 space-y-4">
+              <h3 className="text-xs font-bold text-foreground uppercase tracking-wider">New Escalation Rule</h3>
               <div className="flex items-center gap-3 flex-wrap">
-                <span className="text-xs text-gray-400">If alarm not acknowledged within</span>
+                <span className="text-xs text-muted-foreground">If alarm not acknowledged within</span>
                 <input
                   type="number"
                   min={1}
                   value={newEscRule.unacknowledged_minutes}
                   onChange={e => setNewEscRule({ ...newEscRule, unacknowledged_minutes: parseInt(e.target.value) || 1 })}
-                  className="w-20 rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-200 focus:border-cyan-600 focus:outline-none text-center"
+                  className="w-20 rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none text-center"
                 />
-                <span className="text-xs text-gray-400">minutes, escalate to severity</span>
+                <span className="text-xs text-muted-foreground">minutes, escalate to severity</span>
                 <select
                   value={newEscRule.escalate_to_severity}
                   onChange={e => setNewEscRule({ ...newEscRule, escalate_to_severity: e.target.value })}
-                  className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-300 focus:border-cyan-600 focus:outline-none"
+                  className="rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
                 >
                   {SEVERITY_LEVELS.map(s => (
                     <option key={s} value={s}>{s}</option>
@@ -1217,11 +1217,11 @@ export default function AlarmManagementPage() {
 
             {/* Existing escalation rules */}
             <div>
-              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">
                 Active Escalation Rules ({escalationRules.length})
               </h3>
               {escalationRules.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10 text-gray-600 rounded-xl border border-dashed border-gray-800">
+                <div className="flex flex-col items-center justify-center py-10 text-muted-foreground rounded-xl border border-dashed border-border">
                   <ChevronsUp className="h-8 w-8 mb-2 opacity-30" />
                   <p className="text-sm">No escalation rules configured</p>
                   <p className="text-xs mt-1">Define a rule above to automatically escalate unacknowledged alarms</p>
@@ -1231,18 +1231,18 @@ export default function AlarmManagementPage() {
                   {escalationRules.map((rule, idx) => (
                     <div
                       key={rule.id || idx}
-                      className="flex items-center gap-4 rounded-lg border border-gray-800 bg-zinc-900/40 px-4 py-3"
+                      className="flex items-center gap-4 rounded-lg border border-border bg-zinc-900/40 px-4 py-3"
                     >
                       <ChevronsUp className="h-4 w-4 text-red-400 shrink-0" />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-xs text-gray-300">
+                          <span className="text-xs text-foreground">
                             Unacknowledged for
                           </span>
                           <span className="rounded bg-red-500/10 border border-red-500/30 px-2 py-0.5 text-xs font-bold text-red-400">
                             {rule.unacknowledged_minutes} min
                           </span>
-                          <span className="text-xs text-gray-300">escalates to</span>
+                          <span className="text-xs text-foreground">escalates to</span>
                           <span className={cn(
                             "rounded border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
                             rule.escalate_to_severity === "critical"
@@ -1257,7 +1257,7 @@ export default function AlarmManagementPage() {
                           </span>
                         </div>
                         {rule.created_at && (
-                          <p className="text-[9px] text-gray-600 mt-0.5">
+                          <p className="text-[9px] text-muted-foreground mt-0.5">
                             Created {new Date(rule.created_at).toLocaleString()}
                             {rule.id?.startsWith("local-") && " (local)"}
                           </p>
@@ -1265,7 +1265,7 @@ export default function AlarmManagementPage() {
                       </div>
                       <button
                         onClick={() => handleDeleteEscalationRule(idx)}
-                        className="rounded p-1.5 text-gray-600 hover:bg-red-900/30 hover:text-red-400 transition-colors"
+                        className="rounded p-1.5 text-muted-foreground hover:bg-red-900/30 hover:text-red-400 transition-colors"
                         title="Delete rule"
                       >
                         <Trash2 className="h-3.5 w-3.5" />

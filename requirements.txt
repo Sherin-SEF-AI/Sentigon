@@ -34,6 +34,10 @@ opencv-python-headless>=4.9.0
 # YOLO-World additionally pulls `clip` on first use (ultralytics auto-installs it).
 ultralytics>=8.3.0
 numpy>=1.26.0
+# Local ALPR (license-plate OCR); reuses the installed torch, no TensorFlow.
+easyocr>=1.7.0
+# Audio event detection (DSP). librosa pulls soundfile + numba.
+librosa>=0.10.0
 
 # Config / Logging
 pydantic-settings>=2.1.0

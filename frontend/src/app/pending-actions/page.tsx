@@ -30,7 +30,7 @@ const severityColor: Record<string, string> = {
   high: "bg-orange-500/10 text-orange-400 border-orange-500/30",
   medium: "bg-amber-500/10 text-amber-400 border-amber-500/30",
   low: "bg-blue-500/10 text-blue-400 border-blue-500/30",
-  info: "bg-gray-500/10 text-gray-400 border-gray-500/30",
+  info: "bg-gray-500/10 text-muted-foreground border-gray-500/30",
 };
 
 const statusColor: Record<string, string> = {
@@ -108,8 +108,8 @@ function ActionCard({ action, onApprove, onReject, isPending, selected, onSelect
   return (
     <div
       className={cn(
-        "rounded-lg border bg-gray-900/60 transition-colors",
-        isPending ? "border-gray-800 hover:border-gray-700" : "border-gray-800/50 opacity-75"
+        "rounded-lg border bg-surface-2/60 transition-colors",
+        isPending ? "border-border hover:border-border-strong" : "border-border/50 opacity-75"
       )}
     >
       {/* Header */}
@@ -133,10 +133,10 @@ function ActionCard({ action, onApprove, onReject, isPending, selected, onSelect
         )}
         <div className="min-w-0 flex-1 space-y-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-mono text-sm font-semibold text-gray-200">
+            <span className="font-mono text-sm font-semibold text-foreground">
               {action.tool_name}
             </span>
-            <span className="text-xs text-gray-600">by</span>
+            <span className="text-xs text-muted-foreground">by</span>
             <span className="text-xs text-cyan-400">{action.agent_name}</span>
             <span
               className={cn(
@@ -155,13 +155,13 @@ function ActionCard({ action, onApprove, onReject, isPending, selected, onSelect
               {action.status}
             </span>
           </div>
-          <p className="text-xs text-gray-400 line-clamp-2">{action.context_summary}</p>
+          <p className="text-xs text-muted-foreground line-clamp-2">{action.context_summary}</p>
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
           {isPending && (
             <div className="text-right">
-              <p className="text-[10px] text-gray-500">{timeAgo(action.created_at)}</p>
+              <p className="text-[10px] text-muted-foreground">{timeAgo(action.created_at)}</p>
               <p className="flex items-center gap-1 text-[10px] text-amber-500">
                 <Clock className="h-3 w-3" />
                 {countdown(action.expires_at)}
@@ -169,22 +169,22 @@ function ActionCard({ action, onApprove, onReject, isPending, selected, onSelect
             </div>
           )}
           {expanded ? (
-            <ChevronUp className="h-4 w-4 text-gray-500" />
+            <ChevronUp className="h-4 w-4 text-muted-foreground" />
           ) : (
-            <ChevronDown className="h-4 w-4 text-gray-500" />
+            <ChevronDown className="h-4 w-4 text-muted-foreground" />
           )}
         </div>
       </div>
 
       {/* Expanded Details */}
       {expanded && (
-        <div className="border-t border-gray-800 px-4 py-3 space-y-3">
+        <div className="border-t border-border px-4 py-3 space-y-3">
           {/* Tool Arguments */}
           <div>
-            <p className="mb-1 text-[10px] font-medium uppercase tracking-wider text-gray-500">
+            <p className="mb-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
               Tool Arguments
             </p>
-            <pre className="overflow-x-auto rounded-lg border border-gray-800 bg-gray-950 p-3 text-xs text-gray-300 font-mono max-h-48">
+            <pre className="overflow-x-auto rounded-lg border border-border bg-surface-0 p-3 text-xs text-foreground font-mono max-h-48">
               {JSON.stringify(action.tool_args, null, 2)}
             </pre>
           </div>
@@ -192,10 +192,10 @@ function ActionCard({ action, onApprove, onReject, isPending, selected, onSelect
           {/* Execution Result (for resolved actions) */}
           {action.execution_result && (
             <div>
-              <p className="mb-1 text-[10px] font-medium uppercase tracking-wider text-gray-500">
+              <p className="mb-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                 Execution Result
               </p>
-              <pre className="overflow-x-auto rounded-lg border border-gray-800 bg-gray-950 p-3 text-xs text-emerald-300 font-mono max-h-48">
+              <pre className="overflow-x-auto rounded-lg border border-border bg-surface-0 p-3 text-xs text-emerald-300 font-mono max-h-48">
                 {JSON.stringify(action.execution_result, null, 2)}
               </pre>
             </div>
@@ -203,7 +203,7 @@ function ActionCard({ action, onApprove, onReject, isPending, selected, onSelect
 
           {/* Resolution Info (for resolved actions) */}
           {action.resolved_at && (
-            <div className="flex items-center gap-4 text-xs text-gray-500">
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
               {action.resolution_notes && (
                 <span>Notes: {action.resolution_notes}</span>
               )}
@@ -214,14 +214,14 @@ function ActionCard({ action, onApprove, onReject, isPending, selected, onSelect
           {/* Modify Args Section */}
           {isPending && showModify && (
             <div>
-              <p className="mb-1 text-[10px] font-medium uppercase tracking-wider text-gray-500">
+              <p className="mb-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                 Modified Arguments
               </p>
               <textarea
                 value={modifiedArgs}
                 onChange={(e) => setModifiedArgs(e.target.value)}
                 rows={6}
-                className="w-full rounded-lg border border-gray-700 bg-gray-950 p-3 text-xs text-gray-300 font-mono focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                className="w-full rounded-lg border border-border-strong bg-surface-0 p-3 text-xs text-foreground font-mono focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
               />
             </div>
           )}
@@ -234,7 +234,7 @@ function ActionCard({ action, onApprove, onReject, isPending, selected, onSelect
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Optional notes..."
-                className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2 text-xs text-gray-300 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                className="w-full rounded-lg border border-border-strong bg-surface-0 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
               />
             </div>
           )}
@@ -261,7 +261,7 @@ function ActionCard({ action, onApprove, onReject, isPending, selected, onSelect
                   "flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors",
                   showModify
                     ? "border-cyan-700 text-cyan-400 bg-cyan-900/20"
-                    : "border-gray-700 text-gray-400 hover:bg-gray-800 hover:text-gray-200"
+                    : "border-border-strong text-muted-foreground hover:bg-surface-3 hover:text-foreground"
                 )}
               >
                 <Edit3 className="h-4 w-4" />
@@ -460,7 +460,7 @@ export default function PendingActionsPage() {
   const someSelected = selectedIds.size > 0 && selectedIds.size < pendingActions.length;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen bg-surface-0 text-foreground">
       <div className="mx-auto max-w-5xl space-y-6 px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -469,10 +469,10 @@ export default function PendingActionsPage() {
               <ClipboardCheck className="h-5 w-5 text-cyan-400" />
             </div>
             <div>
-              <h1 className="text-lg font-bold tracking-wider text-gray-100 uppercase">
+              <h1 className="text-lg font-bold tracking-wider text-foreground uppercase">
                 Pending Actions
               </h1>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 Review and approve agent actions in HITL mode
               </p>
             </div>
@@ -518,7 +518,7 @@ export default function PendingActionsPage() {
         )}
 
         {/* Tabs + Controls */}
-        <div className="flex items-center justify-between border-b border-gray-800 pb-0">
+        <div className="flex items-center justify-between border-b border-border pb-0">
           <div className="flex gap-1">
             <button
               onClick={() => setTab("pending")}
@@ -526,7 +526,7 @@ export default function PendingActionsPage() {
                 "flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors",
                 tab === "pending"
                   ? "border-cyan-400 text-cyan-400"
-                  : "border-transparent text-gray-500 hover:border-gray-700 hover:text-gray-300"
+                  : "border-transparent text-muted-foreground hover:border-border-strong hover:text-foreground"
               )}
             >
               <ClipboardCheck className="h-4 w-4" />
@@ -543,7 +543,7 @@ export default function PendingActionsPage() {
                 "flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors",
                 tab === "history"
                   ? "border-cyan-400 text-cyan-400"
-                  : "border-transparent text-gray-500 hover:border-gray-700 hover:text-gray-300"
+                  : "border-transparent text-muted-foreground hover:border-border-strong hover:text-foreground"
               )}
             >
               <History className="h-4 w-4" />
@@ -556,11 +556,11 @@ export default function PendingActionsPage() {
               <>
                 {/* Severity Filter */}
                 <div className="flex items-center gap-1">
-                  <Filter className="h-3.5 w-3.5 text-gray-500" />
+                  <Filter className="h-3.5 w-3.5 text-muted-foreground" />
                   <select
                     value={severityFilter}
                     onChange={(e) => setSeverityFilter(e.target.value)}
-                    className="rounded-lg border border-gray-700 bg-gray-900 px-2 py-1.5 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none"
+                    className="rounded-lg border border-border-strong bg-surface-2 px-2 py-1.5 text-xs text-foreground focus:border-cyan-700 focus:outline-none"
                   >
                     <option value="">All severities</option>
                     <option value="critical">Critical</option>
@@ -589,7 +589,7 @@ export default function PendingActionsPage() {
                 {/* Refresh */}
                 <button
                   onClick={() => fetchData()}
-                  className="rounded-lg border border-gray-700 p-1.5 text-gray-500 transition-colors hover:bg-gray-800 hover:text-gray-300"
+                  className="rounded-lg border border-border-strong p-1.5 text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
                 >
                   <RefreshCw className="h-3.5 w-3.5" />
                 </button>
@@ -607,7 +607,7 @@ export default function PendingActionsPage() {
           <div className="space-y-3">
             {/* Bulk action toolbar */}
             {pendingActions.length > 0 && (
-              <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-gray-900/40 px-4 py-2.5">
+              <div className="flex items-center gap-3 rounded-lg border border-border bg-surface-2/40 px-4 py-2.5">
                 <input
                   type="checkbox"
                   checked={allSelected}
@@ -616,7 +616,7 @@ export default function PendingActionsPage() {
                   className="h-3.5 w-3.5 cursor-pointer accent-cyan-500 rounded"
                   aria-label="Select all"
                 />
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                   {selectedIds.size > 0 ? `${selectedIds.size} selected` : "Select All"}
                 </span>
                 {selectedIds.size > 0 && (
@@ -640,7 +640,7 @@ export default function PendingActionsPage() {
                     <button
                       onClick={() => setSelectedIds(new Set())}
                       disabled={bulkLoading}
-                      className="ml-auto text-xs text-gray-500 hover:text-gray-300 transition-colors disabled:opacity-50"
+                      className="ml-auto text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
                     >
                       Clear
                     </button>
@@ -650,10 +650,10 @@ export default function PendingActionsPage() {
             )}
 
             {pendingActions.length === 0 ? (
-              <div className="flex flex-col items-center justify-center rounded-lg border border-gray-800 bg-gray-900/60 py-16 text-center">
+              <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-surface-2/60 py-16 text-center">
                 <CheckCircle2 className="mb-3 h-10 w-10 text-emerald-600" />
-                <p className="text-sm font-medium text-gray-300">No pending actions</p>
-                <p className="mt-1 text-xs text-gray-600">
+                <p className="text-sm font-medium text-foreground">No pending actions</p>
+                <p className="mt-1 text-xs text-muted-foreground">
                   {modeStatus?.mode === "hitl"
                     ? "All actions have been reviewed. New actions will appear here when agents request them."
                     : "Switch to HITL mode in Settings to enable action approval."}
@@ -676,10 +676,10 @@ export default function PendingActionsPage() {
         ) : (
           <div className="space-y-3">
             {historyActions.length === 0 ? (
-              <div className="flex flex-col items-center justify-center rounded-lg border border-gray-800 bg-gray-900/60 py-16 text-center">
-                <History className="mb-3 h-10 w-10 text-gray-700" />
-                <p className="text-sm font-medium text-gray-300">No action history</p>
-                <p className="mt-1 text-xs text-gray-600">
+              <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-surface-2/60 py-16 text-center">
+                <History className="mb-3 h-10 w-10 text-muted-foreground" />
+                <p className="text-sm font-medium text-foreground">No action history</p>
+                <p className="mt-1 text-xs text-muted-foreground">
                   Approved, rejected, and expired actions will appear here.
                 </p>
               </div>

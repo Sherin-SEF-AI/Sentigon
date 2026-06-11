@@ -48,7 +48,7 @@ const STATUS_COLORS: Record<string, string> = {
   open: "bg-blue-900/40 text-blue-400 border-blue-800",
   investigating: "bg-amber-900/40 text-amber-400 border-amber-800",
   closed: "bg-emerald-900/40 text-emerald-400 border-emerald-800",
-  archived: "bg-gray-800 text-gray-500 border-gray-700",
+  archived: "bg-surface-3 text-muted-foreground border-border-strong",
 };
 
 const STATUS_TABS = ["all", "open", "investigating", "closed", "archived"] as const;
@@ -423,25 +423,25 @@ export default function CasesPage() {
   /* ─── Render ──────────────────────────────────────────────── */
 
   return (
-    <div className="flex h-screen bg-gray-950 overflow-hidden">
+    <div className="flex h-screen bg-surface-0 overflow-hidden">
       {/* ─── LEFT PANEL: Case List ──────────────────────────── */}
       <div
         className={cn(
-          "flex flex-col border-r border-gray-800 bg-gray-950 transition-all",
+          "flex flex-col border-r border-border bg-surface-0 transition-all",
           selectedId ? "w-80 shrink-0" : "w-full"
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-800 p-4">
+        <div className="flex items-center justify-between border-b border-border p-4">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-900/30 border border-violet-800/50">
               <FolderOpen className="h-4 w-4 text-violet-400" />
             </div>
             <div>
-              <h1 className="text-sm font-bold text-gray-100">
+              <h1 className="text-sm font-bold text-foreground">
                 Case Management
               </h1>
-              <p className="text-[10px] text-gray-500">
+              <p className="text-[10px] text-muted-foreground">
                 {cases.length} case{cases.length !== 1 ? "s" : ""}
               </p>
             </div>
@@ -457,22 +457,22 @@ export default function CasesPage() {
 
         {/* Case Metrics Summary */}
         {!loading && cases.length > 0 && (
-          <div className="grid grid-cols-3 gap-px border-b border-gray-800 bg-gray-800">
-            <div className="flex flex-col items-center justify-center bg-gray-950 py-2 px-1 gap-0.5">
+          <div className="grid grid-cols-3 gap-px border-b border-border bg-surface-3">
+            <div className="flex flex-col items-center justify-center bg-surface-0 py-2 px-1 gap-0.5">
               <span className="text-base font-bold text-white tabular-nums">{caseMetrics.total}</span>
-              <span className="text-[9px] uppercase tracking-wider text-gray-500 flex items-center gap-0.5">
+              <span className="text-[9px] uppercase tracking-wider text-muted-foreground flex items-center gap-0.5">
                 <Hash className="w-2.5 h-2.5" /> Total
               </span>
             </div>
-            <div className="flex flex-col items-center justify-center bg-gray-950 py-2 px-1 gap-0.5">
+            <div className="flex flex-col items-center justify-center bg-surface-0 py-2 px-1 gap-0.5">
               <span className="text-base font-bold text-blue-400 tabular-nums">{caseMetrics.openCount}</span>
-              <span className="text-[9px] uppercase tracking-wider text-gray-500 flex items-center gap-0.5">
+              <span className="text-[9px] uppercase tracking-wider text-muted-foreground flex items-center gap-0.5">
                 <TrendingUp className="w-2.5 h-2.5" /> Open
               </span>
             </div>
-            <div className="flex flex-col items-center justify-center bg-gray-950 py-2 px-1 gap-0.5">
+            <div className="flex flex-col items-center justify-center bg-surface-0 py-2 px-1 gap-0.5">
               <span className="text-base font-bold text-emerald-400 tabular-nums">{caseMetrics.recentlyClosed}</span>
-              <span className="text-[9px] uppercase tracking-wider text-gray-500 flex items-center gap-0.5">
+              <span className="text-[9px] uppercase tracking-wider text-muted-foreground flex items-center gap-0.5">
                 <TrendingDown className="w-2.5 h-2.5" /> Closed 7d
               </span>
             </div>
@@ -480,18 +480,18 @@ export default function CasesPage() {
         )}
 
         {/* Full-text search */}
-        <div className="border-b border-gray-800 px-3 py-2">
+        <div className="border-b border-border px-3 py-2">
           <div className="relative">
-            <SearchIcon className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-gray-600 pointer-events-none" />
+            <SearchIcon className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground pointer-events-none" />
             <input
               type="text"
               placeholder="Search cases…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded border border-gray-800 bg-gray-900 pl-6 pr-3 py-1.5 text-xs text-gray-200 placeholder-gray-600 focus:border-violet-600 focus:outline-none"
+              className="w-full rounded border border-border bg-surface-2 pl-6 pr-3 py-1.5 text-xs text-foreground placeholder-gray-600 focus:border-violet-600 focus:outline-none"
             />
             {searchQuery && (
-              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] text-gray-500 tabular-nums">
+              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] text-muted-foreground tabular-nums">
                 {filteredCases.length} match{filteredCases.length !== 1 ? "es" : ""}
               </span>
             )}
@@ -499,7 +499,7 @@ export default function CasesPage() {
         </div>
 
         {/* Status Tabs */}
-        <div className="flex gap-1 border-b border-gray-800 px-3 py-2">
+        <div className="flex gap-1 border-b border-border px-3 py-2">
           {STATUS_TABS.map((tab) => (
             <button
               key={tab}
@@ -508,7 +508,7 @@ export default function CasesPage() {
                 "rounded px-2 py-1 text-[10px] font-semibold uppercase tracking-wider transition-colors",
                 statusFilter === tab
                   ? "bg-violet-900/40 text-violet-400"
-                  : "text-gray-500 hover:text-gray-300 hover:bg-gray-800"
+                  : "text-muted-foreground hover:text-foreground hover:bg-surface-3"
               )}
             >
               {tab}
@@ -518,26 +518,26 @@ export default function CasesPage() {
 
         {/* New Case Form */}
         {showNewForm && (
-          <div className="border-b border-gray-800 p-3 space-y-2">
+          <div className="border-b border-border p-3 space-y-2">
             <input
               type="text"
               placeholder="Case title"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
-              className="w-full rounded border border-gray-700 bg-gray-800 px-3 py-2 text-xs text-gray-100 placeholder-gray-500 focus:border-violet-600 focus:outline-none"
+              className="w-full rounded border border-border-strong bg-surface-3 px-3 py-2 text-xs text-foreground placeholder-gray-500 focus:border-violet-600 focus:outline-none"
             />
             <textarea
               placeholder="Description (optional)"
               value={newDescription}
               onChange={(e) => setNewDescription(e.target.value)}
               rows={2}
-              className="w-full rounded border border-gray-700 bg-gray-800 px-3 py-2 text-xs text-gray-100 placeholder-gray-500 focus:border-violet-600 focus:outline-none resize-none"
+              className="w-full rounded border border-border-strong bg-surface-3 px-3 py-2 text-xs text-foreground placeholder-gray-500 focus:border-violet-600 focus:outline-none resize-none"
             />
             <div className="flex gap-2">
               <select
                 value={newPriority}
                 onChange={(e) => setNewPriority(e.target.value as Severity)}
-                className="rounded border border-gray-700 bg-gray-800 px-2 py-1.5 text-xs text-gray-100 focus:border-violet-600 focus:outline-none"
+                className="rounded border border-border-strong bg-surface-3 px-2 py-1.5 text-xs text-foreground focus:border-violet-600 focus:outline-none"
               >
                 {PRIORITY_OPTIONS.map((p) => (
                   <option key={p} value={p}>
@@ -550,13 +550,13 @@ export default function CasesPage() {
                 placeholder="Tags (comma-separated)"
                 value={newTags}
                 onChange={(e) => setNewTags(e.target.value)}
-                className="flex-1 rounded border border-gray-700 bg-gray-800 px-2 py-1.5 text-xs text-gray-100 placeholder-gray-500 focus:border-violet-600 focus:outline-none"
+                className="flex-1 rounded border border-border-strong bg-surface-3 px-2 py-1.5 text-xs text-foreground placeholder-gray-500 focus:border-violet-600 focus:outline-none"
               />
             </div>
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setShowNewForm(false)}
-                className="rounded px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800"
+                className="rounded px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3"
               >
                 Cancel
               </button>
@@ -582,8 +582,8 @@ export default function CasesPage() {
 
           {!loading && filteredCases.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16 text-center px-4">
-              <FolderOpen className="mb-2 h-8 w-8 text-gray-700" />
-              <p className="text-xs text-gray-500">
+              <FolderOpen className="mb-2 h-8 w-8 text-muted-foreground" />
+              <p className="text-xs text-muted-foreground">
                 {searchQuery ? `No cases match "${searchQuery}"` : "No cases found"}
               </p>
             </div>
@@ -594,10 +594,10 @@ export default function CasesPage() {
               key={c.id}
               onClick={() => selectCase(c.id)}
               className={cn(
-                "w-full border-b border-gray-800/50 p-3 text-left transition-colors",
+                "w-full border-b border-border/50 p-3 text-left transition-colors",
                 selectedId === c.id
                   ? "bg-violet-900/20 border-l-2 border-l-violet-500"
-                  : "hover:bg-gray-900/60"
+                  : "hover:bg-surface-2/60"
               )}
             >
               <div className="flex items-center gap-2 mb-1">
@@ -618,7 +618,7 @@ export default function CasesPage() {
                   {c.priority}
                 </span>
               </div>
-              <p className="text-xs font-medium text-gray-200 truncate">
+              <p className="text-xs font-medium text-foreground truncate">
                 {c.title}
               </p>
               <div className="flex items-center gap-2 mt-1">
@@ -626,12 +626,12 @@ export default function CasesPage() {
                   c.tags.slice(0, 2).map((tag) => (
                     <span
                       key={tag}
-                      className="rounded bg-gray-800 px-1.5 py-0.5 text-[9px] text-gray-500"
+                      className="rounded bg-surface-3 px-1.5 py-0.5 text-[9px] text-muted-foreground"
                     >
                       {tag}
                     </span>
                   ))}
-                <span className="ml-auto text-[9px] text-gray-600 font-mono">
+                <span className="ml-auto text-[9px] text-muted-foreground font-mono">
                   {formatTimestamp(c.created_at)}
                 </span>
               </div>
@@ -654,11 +654,11 @@ export default function CasesPage() {
               {/* Header */}
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
-                  <h2 className="text-lg font-bold text-gray-100">
+                  <h2 className="text-lg font-bold text-foreground">
                     {detail.title}
                   </h2>
                   {detail.description && (
-                    <p className="mt-1 text-sm text-gray-400 leading-relaxed">
+                    <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
                       {detail.description}
                     </p>
                   )}
@@ -709,7 +709,7 @@ export default function CasesPage() {
                 {detail.status === "closed" && (
                   <button
                     onClick={() => updateStatus(detail.id, "archived")}
-                    className="flex items-center gap-1 rounded px-3 py-1.5 text-xs font-medium bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700"
+                    className="flex items-center gap-1 rounded px-3 py-1.5 text-xs font-medium bg-surface-3 text-muted-foreground border border-border-strong hover:bg-surface-3"
                   >
                     <Archive className="h-3 w-3" />
                     Archive
@@ -720,7 +720,7 @@ export default function CasesPage() {
                     setSelectedId(null);
                     setDetail(null);
                   }}
-                  className="ml-auto flex items-center gap-1 rounded px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-800"
+                  className="ml-auto flex items-center gap-1 rounded px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3"
                 >
                   <X className="h-3 w-3" />
                   Close
@@ -736,17 +736,17 @@ export default function CasesPage() {
                       AI Case Summary
                     </h3>
                   </div>
-                  <p className="text-sm leading-relaxed text-gray-300">
+                  <p className="text-sm leading-relaxed text-foreground">
                     {detail.summary}
                   </p>
                 </div>
               )}
 
               {/* ─── Investigation Launcher ─────────────────────── */}
-              <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-5">
+              <div className="rounded-lg border border-border bg-surface-2/60 p-5">
                 <div className="flex items-center gap-2 mb-4">
                   <Brain className="h-5 w-5 text-violet-400" />
-                  <h3 className="text-sm font-bold text-gray-100">
+                  <h3 className="text-sm font-bold text-foreground">
                     AI Investigation
                   </h3>
                   {hasRunning && (
@@ -763,7 +763,7 @@ export default function CasesPage() {
                   value={investigationQuery}
                   onChange={(e) => setInvestigationQuery(e.target.value)}
                   rows={2}
-                  className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-sm text-gray-100 placeholder-gray-500 focus:border-violet-600 focus:outline-none focus:ring-1 focus:ring-violet-600 resize-none mb-3"
+                  className="w-full rounded-lg border border-border-strong bg-surface-3 px-4 py-2.5 text-sm text-foreground placeholder-gray-500 focus:border-violet-600 focus:outline-none focus:ring-1 focus:ring-violet-600 resize-none mb-3"
                 />
 
                 {/* Agent Type Selector */}
@@ -778,7 +778,7 @@ export default function CasesPage() {
                           "flex flex-col items-center gap-1.5 rounded-lg border p-3 transition-all text-center",
                           selectedAgent === agent.id
                             ? "border-violet-600 bg-violet-900/30 text-violet-400"
-                            : "border-gray-700 bg-gray-800/50 text-gray-500 hover:border-gray-600 hover:text-gray-300"
+                            : "border-border-strong bg-surface-3/50 text-muted-foreground hover:border-border-strong hover:text-foreground"
                         )}
                       >
                         <Icon className="h-4 w-4" />
@@ -791,7 +791,7 @@ export default function CasesPage() {
                 </div>
 
                 {selectedAgentInfo && (
-                  <p className="text-[11px] text-gray-500 mb-3">
+                  <p className="text-[11px] text-muted-foreground mb-3">
                     {selectedAgentInfo.desc}
                   </p>
                 )}
@@ -822,7 +822,7 @@ export default function CasesPage() {
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
                     <BarChart3 className="h-5 w-5 text-violet-400" />
-                    <h3 className="text-sm font-bold text-gray-100">
+                    <h3 className="text-sm font-bold text-foreground">
                       Investigation Results
                     </h3>
                   </div>
@@ -834,7 +834,7 @@ export default function CasesPage() {
                         <Target className="h-3.5 w-3.5" />
                         Incident Summary
                       </h4>
-                      <p className="text-sm leading-relaxed text-gray-300">
+                      <p className="text-sm leading-relaxed text-foreground">
                         {activeFindings.incident_summary}
                       </p>
                     </div>
@@ -845,7 +845,7 @@ export default function CasesPage() {
                     {/* Key Findings */}
                     {activeFindings.key_findings &&
                       (activeFindings.key_findings as string[]).length > 0 && (
-                        <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
+                        <div className="rounded-lg border border-border bg-surface-2/60 p-4">
                           <h4 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-amber-400">
                             <ListChecks className="h-3.5 w-3.5" />
                             Key Findings
@@ -855,7 +855,7 @@ export default function CasesPage() {
                               (finding: string, i: number) => (
                                 <li
                                   key={i}
-                                  className="flex items-start gap-2 text-sm text-gray-300"
+                                  className="flex items-start gap-2 text-sm text-foreground"
                                 >
                                   <span className="shrink-0 flex h-5 w-5 items-center justify-center rounded-full bg-amber-900/30 text-[10px] font-bold text-amber-400 mt-0.5">
                                     {i + 1}
@@ -870,20 +870,20 @@ export default function CasesPage() {
 
                     {/* Risk Assessment */}
                     {activeFindings.risk_assessment && (
-                      <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
+                      <div className="rounded-lg border border-border bg-surface-2/60 p-4">
                         <h4 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-red-400">
                           <AlertTriangle className="h-3.5 w-3.5" />
                           Risk Assessment
                         </h4>
                         {typeof activeFindings.risk_assessment === "string" ? (
-                          <p className="text-sm leading-relaxed text-gray-300">
+                          <p className="text-sm leading-relaxed text-foreground">
                             {activeFindings.risk_assessment}
                           </p>
                         ) : (
                           <div className="space-y-2">
                             {activeFindings.risk_assessment.level && (
                               <div className="flex items-center gap-2">
-                                <span className="text-xs text-gray-500">
+                                <span className="text-xs text-muted-foreground">
                                   Level:
                                 </span>
                                 <span
@@ -918,10 +918,10 @@ export default function CasesPage() {
                             )}
                             {activeFindings.risk_assessment.score != null && (
                               <div className="flex items-center gap-2">
-                                <span className="text-xs text-gray-500">
+                                <span className="text-xs text-muted-foreground">
                                   Score:
                                 </span>
-                                <div className="flex-1 h-2 rounded-full bg-gray-700 overflow-hidden">
+                                <div className="flex-1 h-2 rounded-full bg-surface-3 overflow-hidden">
                                   <div
                                     className={cn(
                                       "h-full rounded-full",
@@ -940,13 +940,13 @@ export default function CasesPage() {
                                     }}
                                   />
                                 </div>
-                                <span className="text-xs font-mono text-gray-400">
+                                <span className="text-xs font-mono text-muted-foreground">
                                   {activeFindings.risk_assessment.score}/100
                                 </span>
                               </div>
                             )}
                             {activeFindings.risk_assessment.summary && (
-                              <p className="text-xs leading-relaxed text-gray-400 mt-2">
+                              <p className="text-xs leading-relaxed text-muted-foreground mt-2">
                                 {activeFindings.risk_assessment.summary}
                               </p>
                             )}
@@ -958,12 +958,12 @@ export default function CasesPage() {
 
                   {/* Timeline Narrative */}
                   {activeFindings.timeline_narrative && (
-                    <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
+                    <div className="rounded-lg border border-border bg-surface-2/60 p-4">
                       <h4 className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-blue-400">
                         <Activity className="h-3.5 w-3.5" />
                         Timeline Narrative
                       </h4>
-                      <p className="text-sm leading-relaxed text-gray-300 whitespace-pre-line">
+                      <p className="text-sm leading-relaxed text-foreground whitespace-pre-line">
                         {activeFindings.timeline_narrative}
                       </p>
                     </div>
@@ -973,7 +973,7 @@ export default function CasesPage() {
                   {activeFindings.subjects_involved &&
                     (activeFindings.subjects_involved as string[]).length >
                       0 && (
-                      <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
+                      <div className="rounded-lg border border-border bg-surface-2/60 p-4">
                         <h4 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-purple-400">
                           <Users className="h-3.5 w-3.5" />
                           Subjects Involved
@@ -983,10 +983,10 @@ export default function CasesPage() {
                             (subject: string, i: number) => (
                               <div
                                 key={i}
-                                className="flex items-start gap-2 rounded-lg border border-gray-700 bg-gray-800/50 p-3"
+                                className="flex items-start gap-2 rounded-lg border border-border-strong bg-surface-3/50 p-3"
                               >
                                 <Users className="h-4 w-4 shrink-0 text-purple-400 mt-0.5" />
-                                <span className="text-xs text-gray-300 leading-relaxed">
+                                <span className="text-xs text-foreground leading-relaxed">
                                   {subject}
                                 </span>
                               </div>
@@ -1008,7 +1008,7 @@ export default function CasesPage() {
                         event_b: string;
                       }>
                     )?.length > 0 && (
-                      <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
+                      <div className="rounded-lg border border-border bg-surface-2/60 p-4">
                         <h4 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-teal-400">
                           <MapPin className="h-3.5 w-3.5" />
                           Cross-Camera Correlations
@@ -1016,7 +1016,7 @@ export default function CasesPage() {
                         <div className="overflow-x-auto">
                           <table className="w-full text-xs">
                             <thead>
-                              <tr className="text-gray-500 border-b border-gray-700">
+                              <tr className="text-muted-foreground border-b border-border-strong">
                                 <th className="text-left py-2 pr-3">Camera A</th>
                                 <th className="text-left py-2 pr-3">Camera B</th>
                                 <th className="text-left py-2 pr-3">
@@ -1048,12 +1048,12 @@ export default function CasesPage() {
                                 ) => (
                                   <tr
                                     key={i}
-                                    className="border-b border-gray-800"
+                                    className="border-b border-border"
                                   >
-                                    <td className="py-2 pr-3 font-mono text-gray-400">
+                                    <td className="py-2 pr-3 font-mono text-muted-foreground">
                                       {(match.camera_a || "").slice(0, 8)}...
                                     </td>
-                                    <td className="py-2 pr-3 font-mono text-gray-400">
+                                    <td className="py-2 pr-3 font-mono text-muted-foreground">
                                       {(match.camera_b || "").slice(0, 8)}...
                                     </td>
                                     <td className="py-2 pr-3">
@@ -1064,13 +1064,13 @@ export default function CasesPage() {
                                             ? "bg-emerald-900/40 text-emerald-400"
                                             : match.similarity > 0.5
                                             ? "bg-amber-900/40 text-amber-400"
-                                            : "bg-gray-800 text-gray-500"
+                                            : "bg-surface-3 text-muted-foreground"
                                         )}
                                       >
                                         {(match.similarity * 100).toFixed(0)}%
                                       </span>
                                     </td>
-                                    <td className="py-2 font-mono text-gray-500">
+                                    <td className="py-2 font-mono text-muted-foreground">
                                       {(match.event_a || "").slice(0, 8)}
                                       {" ↔ "}
                                       {(match.event_b || "").slice(0, 8)}
@@ -1088,7 +1088,7 @@ export default function CasesPage() {
                   {activeFindings.recommended_actions &&
                     (activeFindings.recommended_actions as string[]).length >
                       0 && (
-                      <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
+                      <div className="rounded-lg border border-border bg-surface-2/60 p-4">
                         <h4 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-400">
                           <ListChecks className="h-3.5 w-3.5" />
                           Recommended Actions
@@ -1098,7 +1098,7 @@ export default function CasesPage() {
                             (action: string, i: number) => (
                               <li
                                 key={i}
-                                className="flex items-start gap-2 text-xs text-gray-300"
+                                className="flex items-start gap-2 text-xs text-foreground"
                               >
                                 <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-500 mt-0.5" />
                                 <span>{action}</span>
@@ -1111,41 +1111,41 @@ export default function CasesPage() {
 
                   {/* Pipeline Steps (collapsible) */}
                   {activeSteps && activeSteps.length > 0 && (
-                    <div className="rounded-lg border border-gray-800 bg-gray-900/60">
+                    <div className="rounded-lg border border-border bg-surface-2/60">
                       <button
                         onClick={() => setStepsExpanded(!stepsExpanded)}
                         className="flex w-full items-center gap-2 p-4 text-left"
                       >
                         {stepsExpanded ? (
-                          <ChevronDown className="h-4 w-4 text-gray-500" />
+                          <ChevronDown className="h-4 w-4 text-muted-foreground" />
                         ) : (
-                          <ChevronRight className="h-4 w-4 text-gray-500" />
+                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
                         )}
-                        <Layers className="h-3.5 w-3.5 text-gray-500" />
-                        <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                        <Layers className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                           Investigation Pipeline ({activeSteps.length} steps)
                         </span>
                       </button>
                       {stepsExpanded && (
-                        <div className="border-t border-gray-800 p-4 space-y-3">
+                        <div className="border-t border-border p-4 space-y-3">
                           {activeSteps.map((step, i) => (
                             <div
                               key={i}
                               className="flex items-start gap-3 text-xs"
                             >
-                              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-800 text-[10px] font-bold text-gray-500">
+                              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-surface-3 text-[10px] font-bold text-muted-foreground">
                                 {i + 1}
                               </span>
                               <div className="flex-1">
-                                <p className="font-semibold text-gray-300 capitalize">
+                                <p className="font-semibold text-foreground capitalize">
                                   {step.action.replace(/_/g, " ")}
                                 </p>
-                                <pre className="mt-1 text-[10px] text-gray-500 overflow-x-auto whitespace-pre-wrap">
+                                <pre className="mt-1 text-[10px] text-muted-foreground overflow-x-auto whitespace-pre-wrap">
                                   {typeof step.result === "string"
                                     ? step.result
                                     : JSON.stringify(step.result, null, 2)}
                                 </pre>
-                                <span className="text-[9px] text-gray-600 font-mono">
+                                <span className="text-[9px] text-muted-foreground font-mono">
                                   {formatTimestamp(step.timestamp)}
                                 </span>
                               </div>
@@ -1161,7 +1161,7 @@ export default function CasesPage() {
               {/* ─── Investigation History ──────────────────────── */}
               {detail.investigations && detail.investigations.length > 0 && (
                 <div>
-                  <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     Investigation History ({detail.investigations.length})
                   </h3>
                   <div className="space-y-2">
@@ -1177,12 +1177,12 @@ export default function CasesPage() {
                           "w-full rounded-lg border p-3 text-left transition-colors",
                           activeRunId === run.id
                             ? "border-violet-700 bg-violet-900/20"
-                            : "border-gray-800 bg-gray-900 hover:border-gray-700"
+                            : "border-border bg-surface-2 hover:border-border-strong"
                         )}
                       >
                         <div className="flex items-center justify-between mb-1">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs font-medium text-gray-300 capitalize">
+                            <span className="text-xs font-medium text-foreground capitalize">
                               {run.agent_type.replace(/_/g, " ")}
                             </span>
                             <span
@@ -1201,12 +1201,12 @@ export default function CasesPage() {
                               {run.status}
                             </span>
                           </div>
-                          <span className="text-[9px] text-gray-600 font-mono">
+                          <span className="text-[9px] text-muted-foreground font-mono">
                             {formatTimestamp(run.started_at)}
                           </span>
                         </div>
                         {run.summary && (
-                          <p className="text-[11px] text-gray-500 line-clamp-2 leading-relaxed">
+                          <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">
                             {run.summary}
                           </p>
                         )}
@@ -1219,7 +1219,7 @@ export default function CasesPage() {
               {/* ─── Evidence ───────────────────────────────────── */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     Evidence ({detail.evidence?.length || 0})
                   </h3>
                   <button
@@ -1233,25 +1233,25 @@ export default function CasesPage() {
 
                 {/* Add Note Form */}
                 {showNoteForm && (
-                  <div className="mb-3 rounded-lg border border-gray-800 bg-gray-900/60 p-3 space-y-2">
+                  <div className="mb-3 rounded-lg border border-border bg-surface-2/60 p-3 space-y-2">
                     <input
                       type="text"
                       placeholder="Note title"
                       value={noteTitle}
                       onChange={(e) => setNoteTitle(e.target.value)}
-                      className="w-full rounded border border-gray-700 bg-gray-800 px-3 py-2 text-xs text-gray-100 placeholder-gray-500 focus:border-violet-600 focus:outline-none"
+                      className="w-full rounded border border-border-strong bg-surface-3 px-3 py-2 text-xs text-foreground placeholder-gray-500 focus:border-violet-600 focus:outline-none"
                     />
                     <textarea
                       placeholder="Details (optional)"
                       value={noteContent}
                       onChange={(e) => setNoteContent(e.target.value)}
                       rows={2}
-                      className="w-full rounded border border-gray-700 bg-gray-800 px-3 py-2 text-xs text-gray-100 placeholder-gray-500 focus:border-violet-600 focus:outline-none resize-none"
+                      className="w-full rounded border border-border-strong bg-surface-3 px-3 py-2 text-xs text-foreground placeholder-gray-500 focus:border-violet-600 focus:outline-none resize-none"
                     />
                     <div className="flex justify-end gap-2">
                       <button
                         onClick={() => setShowNoteForm(false)}
-                        className="rounded px-2 py-1 text-xs text-gray-500 hover:bg-gray-800"
+                        className="rounded px-2 py-1 text-xs text-muted-foreground hover:bg-surface-3"
                       >
                         Cancel
                       </button>
@@ -1275,15 +1275,15 @@ export default function CasesPage() {
                     {detail.evidence.map((ev) => (
                       <div
                         key={ev.id}
-                        className="flex items-center gap-3 rounded-lg border border-gray-800 bg-gray-900 p-3"
+                        className="flex items-center gap-3 rounded-lg border border-border bg-surface-2 p-3"
                       >
-                        <FileText className="h-4 w-4 shrink-0 text-gray-500" />
+                        <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-medium text-gray-300 truncate">
+                          <p className="text-xs font-medium text-foreground truncate">
                             {ev.title}
                           </p>
                           {ev.content && (
-                            <p className="text-[10px] text-gray-500 truncate mt-0.5">
+                            <p className="text-[10px] text-muted-foreground truncate mt-0.5">
                               {ev.content}
                             </p>
                           )}
@@ -1299,12 +1299,12 @@ export default function CasesPage() {
                                   ? "bg-blue-900/40 text-blue-400"
                                   : ev.evidence_type === "recording"
                                   ? "bg-amber-900/40 text-amber-400"
-                                  : "bg-gray-800 text-gray-500"
+                                  : "bg-surface-3 text-muted-foreground"
                               )}
                             >
                               {ev.evidence_type}
                             </span>
-                            <span className="text-[9px] text-gray-600">
+                            <span className="text-[9px] text-muted-foreground">
                               {formatTimestamp(ev.added_at)}
                             </span>
                           </div>
@@ -1313,7 +1313,7 @@ export default function CasesPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-gray-600">
+                  <p className="text-xs text-muted-foreground">
                     No evidence attached yet
                   </p>
                 )}
@@ -1322,7 +1322,7 @@ export default function CasesPage() {
               {/* ─── Related Cases ───────────────────────────────── */}
               {relatedCases.length > 0 && (
                 <div>
-                  <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
+                  <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                     <Link2 className="h-3.5 w-3.5" />
                     Related Cases ({relatedCases.length})
                   </h3>
@@ -1331,7 +1331,7 @@ export default function CasesPage() {
                       <button
                         key={rc.id}
                         onClick={() => selectCase(rc.id)}
-                        className="w-full flex items-center gap-2 rounded-lg border border-gray-800 bg-gray-900/60 p-2.5 text-left hover:border-gray-700 hover:bg-gray-900 transition-colors group"
+                        className="w-full flex items-center gap-2 rounded-lg border border-border bg-surface-2/60 p-2.5 text-left hover:border-border-strong hover:bg-surface-2 transition-colors group"
                       >
                         <span
                           className={cn(
@@ -1341,10 +1341,10 @@ export default function CasesPage() {
                         >
                           {rc.status}
                         </span>
-                        <span className="text-xs text-gray-300 truncate group-hover:text-white transition-colors">
+                        <span className="text-xs text-foreground truncate group-hover:text-white transition-colors">
                           {rc.title}
                         </span>
-                        <span className="ml-auto shrink-0 text-[9px] text-gray-600 font-mono">
+                        <span className="ml-auto shrink-0 text-[9px] text-muted-foreground font-mono">
                           {rc.id.slice(0, 6)}
                         </span>
                       </button>
@@ -1354,7 +1354,7 @@ export default function CasesPage() {
               )}
 
               {/* ─── Metadata Footer ───────────────────────────── */}
-              <div className="flex flex-wrap gap-4 text-[10px] text-gray-600 pt-4 border-t border-gray-800">
+              <div className="flex flex-wrap gap-4 text-[10px] text-muted-foreground pt-4 border-t border-border">
                 <span>ID: {detail.id.slice(0, 8)}</span>
                 <span>Created: {formatTimestamp(detail.created_at)}</span>
                 <span>Updated: {formatTimestamp(detail.updated_at)}</span>
@@ -1368,7 +1368,7 @@ export default function CasesPage() {
           {/* Empty State */}
           {!detailLoading && !detail && selectedId && (
             <div className="flex items-center justify-center py-20">
-              <p className="text-sm text-gray-500">Case not found</p>
+              <p className="text-sm text-muted-foreground">Case not found</p>
             </div>
           )}
         </div>
@@ -1379,10 +1379,10 @@ export default function CasesPage() {
         <div className="hidden md:flex flex-1 items-center justify-center">
           <div className="text-center">
             <FolderOpen className="mx-auto mb-3 h-12 w-12 text-gray-800" />
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-foreground">
               Select a case to view details
             </p>
-            <p className="mt-1 text-xs text-gray-700">
+            <p className="mt-1 text-xs text-muted-foreground">
               or create a new investigation
             </p>
           </div>
@@ -1413,7 +1413,7 @@ function InvestigationMilestones({ status }: { status: string }) {
   const activeIdx = MILESTONE_STATUS_INDEX[status] ?? 1;
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-900/60 px-4 py-3">
+    <div className="rounded-lg border border-border bg-surface-2/60 px-4 py-3">
       <div className="flex items-center justify-between relative">
         {/* Connector lines drawn behind dots */}
         <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 flex px-[10px]">
@@ -1422,7 +1422,7 @@ function InvestigationMilestones({ status }: { status: string }) {
               key={i}
               className={cn(
                 "flex-1 h-0.5 transition-colors",
-                i < activeIdx ? "bg-violet-500" : "bg-gray-700"
+                i < activeIdx ? "bg-violet-500" : "bg-surface-3"
               )}
             />
           ))}
@@ -1441,7 +1441,7 @@ function InvestigationMilestones({ status }: { status: string }) {
                     ? "bg-violet-600 border-violet-400 shadow-[0_0_6px_rgba(139,92,246,0.6)]"
                     : isPast
                     ? "bg-violet-900/60 border-violet-600"
-                    : "bg-gray-800 border-gray-600"
+                    : "bg-surface-3 border-border-strong"
                 )}
               >
                 {isPast && (
@@ -1454,7 +1454,7 @@ function InvestigationMilestones({ status }: { status: string }) {
               <span
                 className={cn(
                   "text-[9px] font-semibold uppercase tracking-wider whitespace-nowrap",
-                  isActive ? "text-violet-400" : isPast ? "text-gray-500" : "text-gray-700"
+                  isActive ? "text-violet-400" : isPast ? "text-muted-foreground" : "text-muted-foreground"
                 )}
               >
                 {m.label}

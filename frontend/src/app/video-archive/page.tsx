@@ -96,11 +96,11 @@ const BM_FILTER_TABS: { key: string; label: string }[] = [
 
 function StatCard({ label, value, icon: Icon }: { label: string; value: string | number; icon: React.ElementType }) {
   return (
-    <div className="flex items-center gap-2 rounded-lg border border-gray-800 bg-gray-900/60 px-3 py-2">
+    <div className="flex items-center gap-2 rounded-lg border border-border bg-surface-2/60 px-3 py-2">
       <Icon className="h-3.5 w-3.5 text-amber-400 shrink-0" />
       <div className="min-w-0">
-        <p className="text-xs text-gray-500 truncate">{label}</p>
-        <p className="text-sm font-bold text-gray-100 truncate">{value}</p>
+        <p className="text-xs text-muted-foreground truncate">{label}</p>
+        <p className="text-sm font-bold text-foreground truncate">{value}</p>
       </div>
     </div>
   );
@@ -122,11 +122,11 @@ function RecordingCard({
         "w-full text-left rounded-lg border p-3 transition-all hover:border-amber-700/60",
         isSelected
           ? "border-amber-600/70 bg-amber-900/20"
-          : "border-gray-800 bg-gray-900/40 hover:bg-gray-900/70"
+          : "border-border bg-surface-2/40 hover:bg-surface-2/70"
       )}
     >
       {/* Thumbnail */}
-      <div className="relative mb-2 aspect-video w-full overflow-hidden rounded-md bg-gray-800">
+      <div className="relative mb-2 aspect-video w-full overflow-hidden rounded-md bg-surface-3">
         <img
           src={`${API_BASE}/api/video-archive/thumbnail/${rec.id}?offset=1`}
           alt=""
@@ -135,22 +135,22 @@ function RecordingCard({
           onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
         />
         {/* Duration badge */}
-        <span className="absolute bottom-1 right-1 rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-mono text-gray-200">
+        <span className="absolute bottom-1 right-1 rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-mono text-foreground">
           {formatDuration(rec.duration_seconds)}
         </span>
         {/* Type badge */}
         <span className={cn(
           "absolute top-1 left-1 rounded border px-1.5 py-0.5 text-[10px] font-semibold",
-          TYPE_COLORS[rec.recording_type] || "text-gray-400 bg-gray-800 border-gray-700"
+          TYPE_COLORS[rec.recording_type] || "text-muted-foreground bg-surface-3 border-border-strong"
         )}>
           {TYPE_LABELS[rec.recording_type] || rec.recording_type}
         </span>
       </div>
       {/* Info */}
-      <p className="text-xs font-semibold text-gray-200 truncate">
+      <p className="text-xs font-semibold text-foreground truncate">
         {rec.camera_name || "Unknown Camera"}
       </p>
-      <div className="mt-1 flex items-center gap-2 text-[10px] text-gray-500">
+      <div className="mt-1 flex items-center gap-2 text-[10px] text-muted-foreground">
         <Clock className="h-3 w-3" />
         <span>{formatTimestamp(rec.start_time)}</span>
         {rec.bookmark_count > 0 && (
@@ -160,7 +160,7 @@ function RecordingCard({
           </>
         )}
       </div>
-      <p className="mt-0.5 text-[10px] text-gray-600">{formatBytes(rec.file_size)}</p>
+      <p className="mt-0.5 text-[10px] text-muted-foreground">{formatBytes(rec.file_size)}</p>
     </button>
   );
 }
@@ -492,23 +492,23 @@ export default function VideoArchivePage() {
   /* ── Render ─────────────────────────────────────────────── */
 
   return (
-    <div className="flex h-full flex-col bg-gray-950">
+    <div className="flex h-full flex-col bg-surface-0">
       {/* ── Header ─────────────────────────────────────────── */}
-      <header className="flex items-center justify-between border-b border-gray-800 px-6 py-3">
+      <header className="flex items-center justify-between border-b border-border px-6 py-3">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-900/40 border border-amber-700/50">
             <Clapperboard className="h-5 w-5 text-amber-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-gray-100">Video Archive</h1>
-            <p className="text-xs text-gray-500">
+            <h1 className="text-lg font-bold text-foreground">Video Archive</h1>
+            <p className="text-xs text-muted-foreground">
               Browse, replay &amp; analyze recorded footage
             </p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           {stats && (
-            <div className="hidden md:flex items-center gap-4 text-xs text-gray-500">
+            <div className="hidden md:flex items-center gap-4 text-xs text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Film className="h-3 w-3" />
                 {stats.total_recordings} recordings
@@ -530,16 +530,16 @@ export default function VideoArchivePage() {
         {/* ── Left: Archive Browser ──────────────────────── */}
         <div
           className={cn(
-            "flex flex-col overflow-hidden border-r border-gray-800 transition-all duration-200",
+            "flex flex-col overflow-hidden border-r border-border transition-all duration-200",
             selected ? "w-72 shrink-0" : "flex-1"
           )}
         >
           {/* Filters */}
-          <div className="flex flex-wrap items-center gap-2 border-b border-gray-800 px-4 py-2.5">
+          <div className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-2.5">
             <select
               value={filterCamera}
               onChange={(e) => { setFilterCamera(e.target.value); setPage(1); }}
-              className="rounded-md border border-gray-700 bg-gray-900 px-2 py-1.5 text-xs text-gray-300 focus:border-amber-600 focus:outline-none"
+              className="rounded-md border border-border-strong bg-surface-2 px-2 py-1.5 text-xs text-foreground focus:border-amber-600 focus:outline-none"
             >
               <option value="">All Cameras</option>
               {cameras.map((c) => (
@@ -549,7 +549,7 @@ export default function VideoArchivePage() {
             <select
               value={filterType}
               onChange={(e) => { setFilterType(e.target.value); setPage(1); }}
-              className="rounded-md border border-gray-700 bg-gray-900 px-2 py-1.5 text-xs text-gray-300 focus:border-amber-600 focus:outline-none"
+              className="rounded-md border border-border-strong bg-surface-2 px-2 py-1.5 text-xs text-foreground focus:border-amber-600 focus:outline-none"
             >
               <option value="">All Types</option>
               <option value="continuous">Continuous</option>
@@ -557,20 +557,20 @@ export default function VideoArchivePage() {
               <option value="manual">Manual</option>
             </select>
             <div className="flex items-center gap-1.5">
-              <Calendar className="h-3.5 w-3.5 text-gray-500 shrink-0" />
+              <Calendar className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
               <input
                 type="date"
                 value={filterStartDate}
                 onChange={(e) => { setFilterStartDate(e.target.value); setPage(1); }}
-                className="rounded-md border border-gray-700 bg-gray-900 px-2 py-1.5 text-xs text-gray-300 focus:border-amber-600 focus:outline-none [color-scheme:dark]"
+                className="rounded-md border border-border-strong bg-surface-2 px-2 py-1.5 text-xs text-foreground focus:border-amber-600 focus:outline-none [color-scheme:dark]"
                 title="Start date"
               />
-              <span className="text-[10px] text-gray-600">to</span>
+              <span className="text-[10px] text-muted-foreground">to</span>
               <input
                 type="date"
                 value={filterEndDate}
                 onChange={(e) => { setFilterEndDate(e.target.value); setPage(1); }}
-                className="rounded-md border border-gray-700 bg-gray-900 px-2 py-1.5 text-xs text-gray-300 focus:border-amber-600 focus:outline-none [color-scheme:dark]"
+                className="rounded-md border border-border-strong bg-surface-2 px-2 py-1.5 text-xs text-foreground focus:border-amber-600 focus:outline-none [color-scheme:dark]"
                 title="End date"
               />
             </div>
@@ -580,7 +580,7 @@ export default function VideoArchivePage() {
                 {recordings.length > 0 && (
                   <button
                     onClick={toggleSelectAll}
-                    className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-300 transition-colors"
+                    className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
                     title="Select / deselect all"
                   >
                     {selectedIds.size === recordings.length && recordings.length > 0
@@ -601,13 +601,13 @@ export default function VideoArchivePage() {
                 <div className="flex gap-1">
                   <button
                     onClick={() => setViewMode("grid")}
-                    className={cn("rounded p-1.5", viewMode === "grid" ? "bg-amber-600 text-white" : "text-gray-500 hover:text-gray-300")}
+                    className={cn("rounded p-1.5", viewMode === "grid" ? "bg-amber-600 text-white" : "text-muted-foreground hover:text-foreground")}
                   >
                     <Grid3X3 className="h-3.5 w-3.5" />
                   </button>
                   <button
                     onClick={() => setViewMode("list")}
-                    className={cn("rounded p-1.5", viewMode === "list" ? "bg-amber-600 text-white" : "text-gray-500 hover:text-gray-300")}
+                    className={cn("rounded p-1.5", viewMode === "list" ? "bg-amber-600 text-white" : "text-muted-foreground hover:text-foreground")}
                   >
                     <List className="h-3.5 w-3.5" />
                   </button>
@@ -631,8 +631,8 @@ export default function VideoArchivePage() {
             )}
 
             {!loading && !error && recordings.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-16 text-gray-500">
-                <Film className="h-10 w-10 mb-3 text-gray-700" />
+              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
+                <Film className="h-10 w-10 mb-3 text-muted-foreground" />
                 <p className="text-sm font-medium">No recordings found</p>
                 <p className="text-xs mt-1">Adjust filters or start recording cameras</p>
               </div>
@@ -654,12 +654,12 @@ export default function VideoArchivePage() {
                     {!selected && (
                       <button
                         onClick={(e) => { e.stopPropagation(); toggleSelect(rec.id); }}
-                        className="absolute top-2 left-2 z-10 rounded bg-gray-900/80 p-0.5 transition-opacity hover:opacity-100"
+                        className="absolute top-2 left-2 z-10 rounded bg-surface-2/80 p-0.5 transition-opacity hover:opacity-100"
                         title={selectedIds.has(rec.id) ? "Deselect" : "Select for export"}
                       >
                         {selectedIds.has(rec.id)
                           ? <CheckSquare className="h-4 w-4 text-amber-400" />
-                          : <Square className="h-4 w-4 text-gray-500" />}
+                          : <Square className="h-4 w-4 text-muted-foreground" />}
                       </button>
                     )}
                     <RecordingCard
@@ -675,21 +675,21 @@ export default function VideoArchivePage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between border-t border-gray-800 px-4 py-2">
+            <div className="flex items-center justify-between border-t border-border px-4 py-2">
               <button
                 disabled={page <= 1}
                 onClick={() => setPage(page - 1)}
-                className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-200 disabled:opacity-30"
+                className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground disabled:opacity-30"
               >
                 <ChevronLeft className="h-3.5 w-3.5" /> Prev
               </button>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-muted-foreground">
                 {page} / {totalPages}
               </span>
               <button
                 disabled={page >= totalPages}
                 onClick={() => setPage(page + 1)}
-                className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-200 disabled:opacity-30"
+                className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground disabled:opacity-30"
               >
                 Next <ChevronRight className="h-3.5 w-3.5" />
               </button>
@@ -701,18 +701,18 @@ export default function VideoArchivePage() {
         {selected && (
           <div className="flex flex-1 flex-col overflow-hidden">
             {/* Player header */}
-            <div className="flex items-center justify-between border-b border-gray-800 px-4 py-2">
+            <div className="flex items-center justify-between border-b border-border px-4 py-2">
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-gray-200 truncate">
+                <p className="text-sm font-semibold text-foreground truncate">
                   {selected.camera_name || "Unknown Camera"}
                 </p>
-                <p className="text-[10px] text-gray-500">
+                <p className="text-[10px] text-muted-foreground">
                   {formatTimestamp(selected.start_time)} &middot; {formatDuration(selected.duration_seconds)} &middot; {formatBytes(selected.file_size)}
                 </p>
               </div>
               <button
                 onClick={closePlayer}
-                className="rounded-md p-1.5 text-gray-500 hover:bg-gray-800 hover:text-gray-300"
+                className="rounded-md p-1.5 text-muted-foreground hover:bg-surface-3 hover:text-foreground"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -746,7 +746,7 @@ export default function VideoArchivePage() {
             <div className="px-4 pt-2">
               <div className="relative h-2 w-full group">
                 {/* Background */}
-                <div className="absolute inset-0 rounded-full bg-gray-800" />
+                <div className="absolute inset-0 rounded-full bg-surface-3" />
                 {/* Progress */}
                 <div
                   className="absolute h-full rounded-full bg-amber-500 transition-all"
@@ -779,8 +779,8 @@ export default function VideoArchivePage() {
             </div>
 
             {/* Custom controls */}
-            <div className="flex items-center gap-3 border-t border-gray-800/50 px-4 py-2">
-              <button onClick={() => skip(-10)} className="text-gray-400 hover:text-gray-200" title="Back 10s">
+            <div className="flex items-center gap-3 border-t border-border/50 px-4 py-2">
+              <button onClick={() => skip(-10)} className="text-muted-foreground hover:text-foreground" title="Back 10s">
                 <SkipBack className="h-4 w-4" />
               </button>
               <button
@@ -789,19 +789,19 @@ export default function VideoArchivePage() {
               >
                 {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
               </button>
-              <button onClick={() => skip(10)} className="text-gray-400 hover:text-gray-200" title="Forward 10s">
+              <button onClick={() => skip(10)} className="text-muted-foreground hover:text-foreground" title="Forward 10s">
                 <SkipForward className="h-4 w-4" />
               </button>
 
               {/* Time */}
-              <span className="text-xs font-mono text-gray-400 min-w-[80px]">
+              <span className="text-xs font-mono text-muted-foreground min-w-[80px]">
                 {formatDuration(currentTime)} / {formatDuration(duration)}
               </span>
 
               {/* Speed */}
               <button
                 onClick={cycleSpeed}
-                className="rounded border border-gray-700 px-2 py-0.5 text-[10px] font-bold text-gray-300 hover:border-amber-600 hover:text-amber-400"
+                className="rounded border border-border-strong px-2 py-0.5 text-[10px] font-bold text-foreground hover:border-amber-600 hover:text-amber-400"
                 title="Playback speed"
               >
                 {playbackRate}x
@@ -810,7 +810,7 @@ export default function VideoArchivePage() {
               <div className="flex-1" />
 
               {/* Volume */}
-              <button onClick={toggleMute} className="text-gray-400 hover:text-gray-200">
+              <button onClick={toggleMute} className="text-muted-foreground hover:text-foreground">
                 {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
               </button>
 
@@ -821,7 +821,7 @@ export default function VideoArchivePage() {
                   "rounded-md px-2 py-1 text-xs font-semibold transition-colors flex items-center gap-1",
                   showBookmarkForm
                     ? "bg-amber-600 text-white"
-                    : "text-gray-400 hover:text-amber-400 hover:bg-gray-800"
+                    : "text-muted-foreground hover:text-amber-400 hover:bg-surface-3"
                 )}
                 title="Add bookmark"
               >
@@ -830,17 +830,17 @@ export default function VideoArchivePage() {
               </button>
 
               {/* Fullscreen */}
-              <button onClick={toggleFullscreen} className="text-gray-400 hover:text-gray-200" title="Fullscreen">
+              <button onClick={toggleFullscreen} className="text-muted-foreground hover:text-foreground" title="Fullscreen">
                 <Maximize className="h-4 w-4" />
               </button>
             </div>
 
             {/* Bookmark form */}
             {showBookmarkForm && (
-              <div className="border-t border-gray-800 px-4 py-3 bg-gray-900/60">
+              <div className="border-t border-border px-4 py-3 bg-surface-2/60">
                 <div className="flex items-center gap-2 mb-2">
                   <BookmarkCheck className="h-4 w-4 text-amber-400" />
-                  <span className="text-xs font-semibold text-gray-300">
+                  <span className="text-xs font-semibold text-foreground">
                     Bookmark at {formatDuration(currentTime)}
                   </span>
                 </div>
@@ -849,12 +849,12 @@ export default function VideoArchivePage() {
                     value={bmLabel}
                     onChange={(e) => setBmLabel(e.target.value)}
                     placeholder="Label..."
-                    className="flex-1 rounded-md border border-gray-700 bg-gray-900 px-2 py-1.5 text-xs text-gray-200 placeholder-gray-600 focus:border-amber-600 focus:outline-none"
+                    className="flex-1 rounded-md border border-border-strong bg-surface-2 px-2 py-1.5 text-xs text-foreground placeholder-gray-600 focus:border-amber-600 focus:outline-none"
                   />
                   <select
                     value={bmType}
                     onChange={(e) => setBmType(e.target.value as "marker" | "annotation" | "evidence_flag")}
-                    className="rounded-md border border-gray-700 bg-gray-900 px-2 py-1.5 text-xs text-gray-300 focus:border-amber-600 focus:outline-none"
+                    className="rounded-md border border-border-strong bg-surface-2 px-2 py-1.5 text-xs text-foreground focus:border-amber-600 focus:outline-none"
                   >
                     <option value="marker">Marker</option>
                     <option value="annotation">Annotation</option>
@@ -873,7 +873,7 @@ export default function VideoArchivePage() {
                   onChange={(e) => setBmNotes(e.target.value)}
                   placeholder="Notes (optional)..."
                   rows={2}
-                  className="mt-2 w-full rounded-md border border-gray-700 bg-gray-900 px-2 py-1.5 text-xs text-gray-200 placeholder-gray-600 focus:border-amber-600 focus:outline-none resize-none"
+                  className="mt-2 w-full rounded-md border border-border-strong bg-surface-2 px-2 py-1.5 text-xs text-foreground placeholder-gray-600 focus:border-amber-600 focus:outline-none resize-none"
                 />
               </div>
             )}
@@ -882,10 +882,10 @@ export default function VideoArchivePage() {
 
         {/* ── Right: Forensics Sidebar ───────────────────── */}
         {selected && (
-          <aside className="hidden lg:flex w-80 shrink-0 flex-col border-l border-gray-800 bg-gray-950 overflow-hidden">
+          <aside className="hidden lg:flex w-80 shrink-0 flex-col border-l border-border bg-surface-0 overflow-hidden">
             {/* Forensics tools */}
-            <div className="border-b border-gray-800 p-4 space-y-3">
-              <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-400">
+            <div className="border-b border-border p-4 space-y-3">
+              <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                 <Microscope className="h-3.5 w-3.5" />
                 Forensic Analysis
               </h3>
@@ -893,7 +893,7 @@ export default function VideoArchivePage() {
                 value={forensicQuery}
                 onChange={(e) => setForensicQuery(e.target.value)}
                 rows={2}
-                className="w-full rounded-md border border-gray-700 bg-gray-900 px-2 py-1.5 text-xs text-gray-200 placeholder-gray-600 focus:border-amber-600 focus:outline-none resize-none"
+                className="w-full rounded-md border border-border-strong bg-surface-2 px-2 py-1.5 text-xs text-foreground placeholder-gray-600 focus:border-amber-600 focus:outline-none resize-none"
                 placeholder="Forensic query..."
               />
               <button
@@ -915,19 +915,19 @@ export default function VideoArchivePage() {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const fa = forensicResult.forensic_analysis as Record<string, any>;
                 return (
-                <div className="border-b border-gray-800 p-4 space-y-3">
+                <div className="border-b border-border p-4 space-y-3">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-amber-400">
                     Analysis Results
                   </h3>
-                  <p className="text-[10px] text-gray-500">
+                  <p className="text-[10px] text-muted-foreground">
                     Provider: {forensicResult.ai_provider} &middot; at {formatDuration(forensicResult.timestamp_offset)}
                   </p>
 
                   {/* Summary */}
                   {fa.forensic_summary && (
-                    <div className="rounded-md border border-gray-800 bg-gray-900/60 p-3">
-                      <p className="text-xs font-semibold text-gray-300 mb-1">Summary</p>
-                      <p className="text-[11px] text-gray-400 leading-relaxed">
+                    <div className="rounded-md border border-border bg-surface-2/60 p-3">
+                      <p className="text-xs font-semibold text-foreground mb-1">Summary</p>
+                      <p className="text-[11px] text-muted-foreground leading-relaxed">
                         {String(fa.forensic_summary)}
                       </p>
                     </div>
@@ -935,13 +935,13 @@ export default function VideoArchivePage() {
 
                   {/* Risk */}
                   {fa.risk_assessment && typeof fa.risk_assessment === "object" && (
-                    <div className="rounded-md border border-gray-800 bg-gray-900/60 p-3">
-                      <p className="text-xs font-semibold text-gray-300 mb-1">Risk Assessment</p>
+                    <div className="rounded-md border border-border bg-surface-2/60 p-3">
+                      <p className="text-xs font-semibold text-foreground mb-1">Risk Assessment</p>
                       <div className="space-y-1">
                         {Object.entries(fa.risk_assessment as Record<string, unknown>).map(([k, v]) => (
                           <div key={k} className="flex justify-between text-[10px]">
-                            <span className="text-gray-500">{k.replace(/_/g, " ")}</span>
-                            <span className="text-gray-300">{Array.isArray(v) ? (v as string[]).join(", ") : String(v)}</span>
+                            <span className="text-muted-foreground">{k.replace(/_/g, " ")}</span>
+                            <span className="text-foreground">{Array.isArray(v) ? (v as string[]).join(", ") : String(v)}</span>
                           </div>
                         ))}
                       </div>
@@ -950,14 +950,14 @@ export default function VideoArchivePage() {
 
                   {/* Persons */}
                   {Array.isArray(fa.persons_detailed) && fa.persons_detailed.length > 0 && (
-                    <div className="rounded-md border border-gray-800 bg-gray-900/60 p-3">
-                      <p className="text-xs font-semibold text-gray-300 mb-1">
+                    <div className="rounded-md border border-border bg-surface-2/60 p-3">
+                      <p className="text-xs font-semibold text-foreground mb-1">
                         Persons ({fa.persons_detailed.length})
                       </p>
                       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                       {(fa.persons_detailed as Record<string, any>[]).map((p, i) => (
-                        <div key={i} className="mt-2 text-[10px] text-gray-400 border-t border-gray-800 pt-1.5">
-                          <p className="text-gray-300 font-medium">{String(p.physical_description || p.id || `Person ${i + 1}`)}</p>
+                        <div key={i} className="mt-2 text-[10px] text-muted-foreground border-t border-border pt-1.5">
+                          <p className="text-foreground font-medium">{String(p.physical_description || p.id || `Person ${i + 1}`)}</p>
                           {p.behavior_analysis && <p className="mt-0.5">{String(p.behavior_analysis)}</p>}
                           {Array.isArray(p.suspicious_indicators) && (p.suspicious_indicators as string[]).length > 0 && (
                             <p className="mt-0.5 text-red-400">
@@ -971,11 +971,11 @@ export default function VideoArchivePage() {
 
                   {/* Evidence markers */}
                   {Array.isArray(fa.evidence_markers) && fa.evidence_markers.length > 0 && (
-                    <div className="rounded-md border border-gray-800 bg-gray-900/60 p-3">
-                      <p className="text-xs font-semibold text-gray-300 mb-1">Evidence Markers</p>
+                    <div className="rounded-md border border-border bg-surface-2/60 p-3">
+                      <p className="text-xs font-semibold text-foreground mb-1">Evidence Markers</p>
                       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                       {(fa.evidence_markers as Record<string, any>[]).map((em, i) => (
-                        <div key={i} className="text-[10px] text-gray-400 mt-1">
+                        <div key={i} className="text-[10px] text-muted-foreground mt-1">
                           <span className="text-amber-400 font-medium">{String(em.type)}</span>
                           {em.significance && <span> &mdash; {String(em.significance)}</span>}
                         </div>
@@ -985,12 +985,12 @@ export default function VideoArchivePage() {
 
                   {/* Similar frames */}
                   {forensicResult.similar_frames.length > 0 && (
-                    <div className="rounded-md border border-gray-800 bg-gray-900/60 p-3">
-                      <p className="text-xs font-semibold text-gray-300 mb-1">
+                    <div className="rounded-md border border-border bg-surface-2/60 p-3">
+                      <p className="text-xs font-semibold text-foreground mb-1">
                         Similar Frames ({forensicResult.similar_frames.length})
                       </p>
                       {forensicResult.similar_frames.map((sf, i) => (
-                        <div key={i} className="flex items-center justify-between text-[10px] text-gray-400 mt-1">
+                        <div key={i} className="flex items-center justify-between text-[10px] text-muted-foreground mt-1">
                           <span>{sf.camera_id.slice(0, 8)}... @ {formatTimestamp(sf.timestamp)}</span>
                           <span className="text-amber-400 font-mono">{(sf.score * 100).toFixed(0)}%</span>
                         </div>
@@ -1009,8 +1009,8 @@ export default function VideoArchivePage() {
               })()}
 
               {/* Bookmarks list */}
-              <div className="border-b border-gray-800 p-4 space-y-2">
-                <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-400">
+              <div className="border-b border-border p-4 space-y-2">
+                <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   <Bookmark className="h-3.5 w-3.5" />
                   Bookmarks ({bookmarks.length})
                 </h3>
@@ -1024,7 +1024,7 @@ export default function VideoArchivePage() {
                         "rounded-md px-2 py-1 text-[10px] font-semibold transition-colors",
                         bmFilterType === tab.key
                           ? "bg-amber-600 text-white"
-                          : "text-gray-500 hover:text-gray-300 hover:bg-gray-800"
+                          : "text-muted-foreground hover:text-foreground hover:bg-surface-3"
                       )}
                     >
                       {tab.label}
@@ -1037,32 +1037,32 @@ export default function VideoArchivePage() {
                   ))}
                 </div>
                 {filteredBookmarks.length === 0 && (
-                  <p className="text-[10px] text-gray-600">
+                  <p className="text-[10px] text-muted-foreground">
                     {bookmarks.length === 0 ? "No bookmarks yet" : "No bookmarks match this filter"}
                   </p>
                 )}
                 {filteredBookmarks.map((bm) => (
                   <div
                     key={bm.id}
-                    className="group flex items-start gap-2 rounded-md border border-gray-800 bg-gray-900/40 p-2 cursor-pointer hover:border-amber-700/50 transition-colors"
+                    className="group flex items-start gap-2 rounded-md border border-border bg-surface-2/40 p-2 cursor-pointer hover:border-amber-700/50 transition-colors"
                     onClick={() => seek(bm.timestamp_offset)}
                   >
                     <div className={cn("mt-0.5 h-2 w-2 rounded-full shrink-0", BM_COLORS[bm.bookmark_type] || "bg-gray-500")} />
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between">
-                        <p className="text-xs font-medium text-gray-300 truncate">{bm.label}</p>
+                        <p className="text-xs font-medium text-foreground truncate">{bm.label}</p>
                         <span className="text-[10px] font-mono text-amber-400 shrink-0 ml-1">
                           {formatDuration(bm.timestamp_offset)}
                         </span>
                       </div>
-                      {bm.notes && <p className="text-[10px] text-gray-500 mt-0.5 truncate">{bm.notes}</p>}
+                      {bm.notes && <p className="text-[10px] text-muted-foreground mt-0.5 truncate">{bm.notes}</p>}
                       {bm.severity && (
                         <span className="text-[9px] text-red-400 font-semibold uppercase">{bm.severity}</span>
                       )}
                     </div>
                     <button
                       onClick={(e) => { e.stopPropagation(); deleteBookmark(bm.id); }}
-                      className="opacity-0 group-hover:opacity-100 text-gray-600 hover:text-red-400 transition-opacity"
+                      className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-red-400 transition-opacity"
                     >
                       <Trash2 className="h-3 w-3" />
                     </button>
@@ -1072,7 +1072,7 @@ export default function VideoArchivePage() {
 
               {/* Export */}
               <div className="p-4 space-y-3">
-                <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-400">
+                <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   <Download className="h-3.5 w-3.5" />
                   Evidence Export
                 </h3>
@@ -1090,19 +1090,19 @@ export default function VideoArchivePage() {
                 {exportResult && (
                   <div className="rounded-md border border-green-800/50 bg-green-900/20 p-3 space-y-1">
                     <p className="text-xs font-semibold text-green-400">Evidence Exported</p>
-                    <p className="text-[10px] text-gray-400">
-                      Hash: <span className="font-mono text-gray-300">{String(exportResult.evidence_hash).slice(0, 24)}...</span>
+                    <p className="text-[10px] text-muted-foreground">
+                      Hash: <span className="font-mono text-foreground">{String(exportResult.evidence_hash).slice(0, 24)}...</span>
                     </p>
                     {exportResult.case_evidence_id && (
-                      <p className="text-[10px] text-gray-400">
-                        Case evidence ID: <span className="font-mono text-gray-300">{String(exportResult.case_evidence_id).slice(0, 8)}</span>
+                      <p className="text-[10px] text-muted-foreground">
+                        Case evidence ID: <span className="font-mono text-foreground">{String(exportResult.case_evidence_id).slice(0, 8)}</span>
                       </p>
                     )}
                   </div>
                 )}
 
                 {/* Recording info */}
-                <div className="mt-4 space-y-1 text-[10px] text-gray-600">
+                <div className="mt-4 space-y-1 text-[10px] text-muted-foreground">
                   <p>Recording ID: {selected.id.slice(0, 8)}...</p>
                   <p>Camera: {selected.camera_name}</p>
                   <p>Type: {TYPE_LABELS[selected.recording_type] || selected.recording_type}</p>

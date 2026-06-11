@@ -23,7 +23,7 @@ const BOLO_TYPE_STYLES: Record<string, string> = {
 const SHIFT_STATUS_STYLES: Record<string, string> = {
   scheduled: "bg-blue-500/10 text-blue-400 border-blue-500/40",
   active: "bg-green-500/10 text-green-400 border-green-500/40",
-  completed: "bg-gray-500/10 text-gray-400 border-gray-500/40",
+  completed: "bg-gray-500/10 text-muted-foreground border-gray-500/40",
   cancelled: "bg-red-500/10 text-red-400 border-red-500/40",
 };
 
@@ -111,20 +111,20 @@ function ShiftSummaryModal({ entries, onClose }: ShiftSummaryModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      <div className="w-full max-w-2xl rounded-xl border border-gray-700 bg-gray-900 p-6 shadow-2xl flex flex-col max-h-[85vh]">
+      <div className="w-full max-w-2xl rounded-xl border border-border-strong bg-surface-2 p-6 shadow-2xl flex flex-col max-h-[85vh]">
         {/* Header */}
         <div className="mb-4 flex items-center justify-between shrink-0">
           <div>
-            <h3 className="text-base font-semibold text-gray-100">
+            <h3 className="text-base font-semibold text-foreground">
               Shift Handover Summary
             </h3>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               {activeEntries.length} active BOLO{activeEntries.length !== 1 ? "s" : ""} at shift change
             </p>
           </div>
           <button
             onClick={onClose}
-            className="rounded-md p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+            className="rounded-md p-1 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -134,16 +134,16 @@ function ShiftSummaryModal({ entries, onClose }: ShiftSummaryModalProps) {
 
         {/* Summary text */}
         <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-track-gray-900 scrollbar-thumb-gray-700">
-          <pre className="whitespace-pre-wrap rounded-lg border border-gray-800 bg-gray-950/60 p-4 text-xs text-gray-300 font-mono leading-relaxed">
+          <pre className="whitespace-pre-wrap rounded-lg border border-border bg-surface-0/60 p-4 text-xs text-foreground font-mono leading-relaxed">
             {summaryText}
           </pre>
         </div>
 
         {/* Export actions */}
-        <div className="mt-4 flex items-center justify-end gap-3 shrink-0 border-t border-gray-800 pt-4">
+        <div className="mt-4 flex items-center justify-end gap-3 shrink-0 border-t border-border pt-4">
           <button
             onClick={handleExportCSV}
-            className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-2 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -152,7 +152,7 @@ function ShiftSummaryModal({ entries, onClose }: ShiftSummaryModalProps) {
           </button>
           <button
             onClick={handleExportJSON}
-            className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-2 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -161,7 +161,7 @@ function ShiftSummaryModal({ entries, onClose }: ShiftSummaryModalProps) {
           </button>
           <button
             onClick={onClose}
-            className="rounded-lg border border-gray-700 px-4 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="rounded-lg border border-border-strong px-4 py-2 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             Close
           </button>
@@ -244,20 +244,20 @@ function SightingsModal({ boloId, boloDescription, onClose }: SightingsModalProp
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      <div className="w-full max-w-xl rounded-xl border border-gray-700 bg-gray-900 p-6 shadow-2xl flex flex-col max-h-[80vh]">
+      <div className="w-full max-w-xl rounded-xl border border-border-strong bg-surface-2 p-6 shadow-2xl flex flex-col max-h-[80vh]">
         {/* Header */}
         <div className="mb-4 flex items-center justify-between shrink-0">
           <div>
-            <h3 className="text-base font-semibold text-gray-100">
+            <h3 className="text-base font-semibold text-foreground">
               Multi-Camera Sightings
             </h3>
-            <p className="text-xs text-gray-500 mt-0.5 truncate max-w-xs">
+            <p className="text-xs text-muted-foreground mt-0.5 truncate max-w-xs">
               {boloDescription}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="rounded-md p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+            className="rounded-md p-1 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -273,29 +273,29 @@ function SightingsModal({ boloId, boloDescription, onClose }: SightingsModalProp
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
               </svg>
-              <span className="ml-3 text-sm text-gray-500">Loading sightings...</span>
+              <span className="ml-3 text-sm text-muted-foreground">Loading sightings...</span>
             </div>
           )}
 
           {!loading && noSightings && (
             <div className="flex flex-col items-center justify-center py-12">
-              <svg className="mb-3 h-8 w-8 text-gray-700" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <svg className="mb-3 h-8 w-8 text-muted-foreground" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
               </svg>
-              <p className="text-sm text-gray-500">No sightings recorded</p>
+              <p className="text-sm text-muted-foreground">No sightings recorded</p>
             </div>
           )}
 
           {!loading && !noSightings && sightings.length === 0 && (
             <div className="flex flex-col items-center justify-center py-12">
-              <p className="text-sm text-gray-500">No sightings recorded</p>
+              <p className="text-sm text-muted-foreground">No sightings recorded</p>
             </div>
           )}
 
           {!loading && !noSightings && sightings.length > 0 && (
             <div className="px-1">
-              <p className="mb-3 text-xs text-gray-500">
+              <p className="mb-3 text-xs text-muted-foreground">
                 {sightings.length} sighting{sightings.length !== 1 ? "s" : ""} across camera network
               </p>
               <TimelineView events={timelineEvents} maxVisible={10} />
@@ -303,10 +303,10 @@ function SightingsModal({ boloId, boloDescription, onClose }: SightingsModalProp
           )}
         </div>
 
-        <div className="mt-4 flex justify-end shrink-0 border-t border-gray-800 pt-4">
+        <div className="mt-4 flex justify-end shrink-0 border-t border-border pt-4">
           <button
             onClick={onClose}
-            className="rounded-lg border border-gray-700 px-4 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="rounded-lg border border-border-strong px-4 py-2 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             Close
           </button>
@@ -349,14 +349,14 @@ function BOLOForm({
   });
 
   return (
-    <div className="rounded-lg border border-cyan-800/40 bg-gray-900/80 p-4 mb-4">
+    <div className="rounded-lg border border-cyan-800/40 bg-surface-2/80 p-4 mb-4">
       <h3 className="text-sm font-semibold text-cyan-400 mb-3">
         New BOLO Entry
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {/* BOLO Type */}
         <div>
-          <label className="block text-[10px] uppercase tracking-wider text-gray-500 mb-1">
+          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
             BOLO Type
           </label>
           <select
@@ -364,7 +364,7 @@ function BOLOForm({
             onChange={(e) =>
               setForm({ ...form, bolo_type: e.target.value as "person" | "vehicle" })
             }
-            className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
           >
             <option value="person">Person</option>
             <option value="vehicle">Vehicle</option>
@@ -373,13 +373,13 @@ function BOLOForm({
 
         {/* Severity */}
         <div>
-          <label className="block text-[10px] uppercase tracking-wider text-gray-500 mb-1">
+          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
             Severity
           </label>
           <select
             value={form.severity}
             onChange={(e) => setForm({ ...form, severity: e.target.value })}
-            className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
           >
             <option value="critical">Critical</option>
             <option value="high">High</option>
@@ -392,7 +392,7 @@ function BOLOForm({
         {/* Plate text (conditional) */}
         {form.bolo_type === "vehicle" && (
           <div>
-            <label className="block text-[10px] uppercase tracking-wider text-gray-500 mb-1">
+            <label className="block text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
               Plate Text
             </label>
             <input
@@ -400,14 +400,14 @@ function BOLOForm({
               value={form.plate_text}
               onChange={(e) => setForm({ ...form, plate_text: e.target.value })}
               placeholder="e.g. ABC-1234"
-              className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-xs text-gray-300 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+              className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             />
           </div>
         )}
 
         {/* Description (full width) */}
         <div className="md:col-span-2">
-          <label className="block text-[10px] uppercase tracking-wider text-gray-500 mb-1">
+          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
             Description
           </label>
           <textarea
@@ -415,13 +415,13 @@ function BOLOForm({
             onChange={(e) => setForm({ ...form, description: e.target.value })}
             rows={3}
             placeholder="Detailed description of the BOLO subject..."
-            className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-xs text-gray-300 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700 resize-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700 resize-none"
           />
         </div>
 
         {/* Reason */}
         <div className="md:col-span-2">
-          <label className="block text-[10px] uppercase tracking-wider text-gray-500 mb-1">
+          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
             Reason
           </label>
           <textarea
@@ -429,13 +429,13 @@ function BOLOForm({
             onChange={(e) => setForm({ ...form, reason: e.target.value })}
             rows={2}
             placeholder="Reason for issuing this BOLO..."
-            className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-xs text-gray-300 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700 resize-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700 resize-none"
           />
         </div>
 
         {/* Photo Upload */}
         <div className="md:col-span-2">
-          <label className="block text-[10px] uppercase tracking-wider text-gray-500 mb-1">
+          <label className="block text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
             Photo
           </label>
           <div className="flex items-center gap-3">
@@ -455,7 +455,7 @@ function BOLOForm({
                 <img
                   src={form.photo_url}
                   alt="BOLO preview"
-                  className="h-12 w-12 rounded-lg object-cover border border-gray-700"
+                  className="h-12 w-12 rounded-lg object-cover border border-border-strong"
                 />
                 <button
                   type="button"
@@ -502,7 +502,7 @@ function BOLOForm({
         </button>
         <button
           onClick={onCancel}
-          className="rounded-lg px-4 py-2 text-xs text-gray-400 border border-gray-700 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+          className="rounded-lg px-4 py-2 text-xs text-muted-foreground border border-border-strong hover:bg-surface-3 hover:text-foreground transition-colors"
         >
           Cancel
         </button>
@@ -700,7 +700,7 @@ export default function BOLOLogbookPage() {
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
           />
         </svg>
-        <p className="mt-3 text-sm text-gray-500">{text}</p>
+        <p className="mt-3 text-sm text-muted-foreground">{text}</p>
       </div>
     );
   }
@@ -725,7 +725,7 @@ export default function BOLOLogbookPage() {
         <p className="text-sm text-red-400">{message}</p>
         <button
           onClick={retry}
-          className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+          className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
         >
           Retry
         </button>
@@ -741,9 +741,9 @@ export default function BOLOLogbookPage() {
   }
 
   return (
-    <div className="flex h-full flex-col bg-gray-950">
+    <div className="flex h-full flex-col bg-surface-0">
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-900/30 border border-amber-800/50">
             <svg
@@ -761,10 +761,10 @@ export default function BOLOLogbookPage() {
             </svg>
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               BOLO & Shift Logbook
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Be-On-the-Lookout alerts and shift management
             </p>
           </div>
@@ -783,13 +783,13 @@ export default function BOLOLogbookPage() {
       </div>
 
       {/* ---- Tabs ---- */}
-      <div className="flex items-center gap-0 border-b border-gray-800 px-6">
+      <div className="flex items-center gap-0 border-b border-border px-6">
         <button
           onClick={() => setTab("bolo")}
           className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
             tab === "bolo"
               ? "text-cyan-400 border-cyan-400"
-              : "text-gray-500 border-transparent hover:text-gray-300"
+              : "text-muted-foreground border-transparent hover:text-foreground"
           }`}
         >
           BOLO Entries
@@ -799,7 +799,7 @@ export default function BOLOLogbookPage() {
           className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
             tab === "logbook"
               ? "text-cyan-400 border-cyan-400"
-              : "text-gray-500 border-transparent hover:text-gray-300"
+              : "text-muted-foreground border-transparent hover:text-foreground"
           }`}
         >
           Shift Logbook
@@ -813,7 +813,7 @@ export default function BOLOLogbookPage() {
           <>
             {/* Add BOLO button */}
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-muted-foreground">
                 {boloEntries.length} entries
               </span>
               {!showForm && (
@@ -857,49 +857,49 @@ export default function BOLOLogbookPage() {
             {/* Empty */}
             {!boloLoading && !boloError && boloEntries.length === 0 && (
               <div className="flex flex-col items-center justify-center py-16">
-                <p className="text-sm text-gray-500">No BOLO entries found</p>
+                <p className="text-sm text-muted-foreground">No BOLO entries found</p>
               </div>
             )}
 
             {/* BOLO Table */}
             {!boloLoading && !boloError && boloEntries.length > 0 && (
-              <div className="overflow-x-auto rounded-lg border border-gray-800">
+              <div className="overflow-x-auto rounded-lg border border-border">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="border-b border-gray-800 bg-gray-900/60">
-                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-gray-500 font-medium">
+                    <tr className="border-b border-border bg-surface-2/60">
+                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
                         Photo
                       </th>
-                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-gray-500 font-medium">
+                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
                         Type
                       </th>
-                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-gray-500 font-medium">
+                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
                         Description
                       </th>
-                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-gray-500 font-medium">
+                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
                         Plate
                       </th>
-                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-gray-500 font-medium">
+                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
                         Severity
                       </th>
-                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-gray-500 font-medium">
+                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
                         Active
                       </th>
-                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-gray-500 font-medium">
+                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
                         Expiration
                       </th>
-                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-gray-500 font-medium">
+                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
                         Expires
                       </th>
-                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-gray-500 font-medium">
+                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
                         Created
                       </th>
-                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-gray-500 font-medium">
+                      <th className="px-3 py-2.5 text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
                         Actions
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-800/50">
+                  <tbody className="divide-y divide-border/50">
                     {boloEntries.map((entry) => {
                       const exp = getBoloExpirationStatus(entry);
                       const descText = getBoloDescription(entry.description);
@@ -907,7 +907,7 @@ export default function BOLOLogbookPage() {
                       return (
                         <tr
                           key={entry.id}
-                          className="hover:bg-gray-900/50 transition-colors"
+                          className="hover:bg-surface-2/50 transition-colors"
                         >
                           {/* Photo thumbnail */}
                           <td className="px-3 py-2.5">
@@ -915,11 +915,11 @@ export default function BOLOLogbookPage() {
                               <img
                                 src={(entry as BOLOEntry & { photo_url?: string | null }).photo_url!}
                                 alt="BOLO"
-                                className="h-9 w-9 rounded-lg object-cover border border-gray-700"
+                                className="h-9 w-9 rounded-lg object-cover border border-border-strong"
                               />
                             ) : (
-                              <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-800 bg-gray-900">
-                                <svg className="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                              <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface-2">
+                                <svg className="h-4 w-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                                 </svg>
                               </div>
@@ -930,7 +930,7 @@ export default function BOLOLogbookPage() {
                           <td className="px-3 py-2.5">
                             <span
                               className={`inline-flex items-center rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border ${
-                                BOLO_TYPE_STYLES[entry.bolo_type] || "bg-gray-500/10 text-gray-400 border-gray-500/40"
+                                BOLO_TYPE_STYLES[entry.bolo_type] || "bg-gray-500/10 text-muted-foreground border-gray-500/40"
                               }`}
                             >
                               {entry.bolo_type}
@@ -939,7 +939,7 @@ export default function BOLOLogbookPage() {
 
                           {/* Description */}
                           <td className="px-3 py-2.5 max-w-xs">
-                            <p className="text-xs text-gray-300 truncate">
+                            <p className="text-xs text-foreground truncate">
                               {descText}
                             </p>
                           </td>
@@ -951,7 +951,7 @@ export default function BOLOLogbookPage() {
                                 {entry.plate_text}
                               </span>
                             ) : (
-                              <span className="text-xs text-gray-600">---</span>
+                              <span className="text-xs text-muted-foreground">---</span>
                             )}
                           </td>
 
@@ -972,7 +972,7 @@ export default function BOLOLogbookPage() {
                                 Active
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 text-xs text-gray-500">
+                              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
                                 <span className="h-1.5 w-1.5 rounded-full bg-gray-600" />
                                 Inactive
                               </span>
@@ -998,22 +998,22 @@ export default function BOLOLogbookPage() {
                               </span>
                             )}
                             {entry.active && exp.badge === "active" && (
-                              <span className="text-[10px] text-gray-600">
+                              <span className="text-[10px] text-muted-foreground">
                                 {exp.hoursOld > 0 ? `${Math.round(exp.hoursOld)}h old` : "New"}
                               </span>
                             )}
                             {!entry.active && (
-                              <span className="text-[10px] text-gray-700">—</span>
+                              <span className="text-[10px] text-muted-foreground">—</span>
                             )}
                           </td>
 
                           {/* Expires */}
-                          <td className="px-3 py-2.5 text-xs text-gray-500">
+                          <td className="px-3 py-2.5 text-xs text-muted-foreground">
                             {formatDate(entry.expires_at)}
                           </td>
 
                           {/* Created */}
-                          <td className="px-3 py-2.5 text-xs text-gray-500">
+                          <td className="px-3 py-2.5 text-xs text-muted-foreground">
                             {formatDate(entry.created_at)}
                           </td>
 
@@ -1048,7 +1048,7 @@ export default function BOLOLogbookPage() {
                                   setSightingsBoloId(entry.id);
                                   setSightingsBoloDesc(descText);
                                 }}
-                                className="inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] font-semibold border bg-gray-800 text-gray-400 border-gray-700 hover:bg-gray-700 hover:text-gray-200 transition-colors"
+                                className="inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] font-semibold border bg-surface-3 text-muted-foreground border-border-strong hover:bg-surface-3 hover:text-foreground transition-colors"
                               >
                                 <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -1073,7 +1073,7 @@ export default function BOLOLogbookPage() {
           <>
             {/* Start Shift button */}
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-muted-foreground">
                 {shifts.length} shifts recorded
               </span>
               <button
@@ -1117,7 +1117,7 @@ export default function BOLOLogbookPage() {
             {/* Empty */}
             {!shiftLoading && !shiftError && shifts.length === 0 && (
               <div className="flex flex-col items-center justify-center py-16">
-                <p className="text-sm text-gray-500">No shifts recorded yet</p>
+                <p className="text-sm text-muted-foreground">No shifts recorded yet</p>
               </div>
             )}
 
@@ -1125,7 +1125,7 @@ export default function BOLOLogbookPage() {
             {!shiftLoading && !shiftError && shifts.length > 0 && (
               <div className="relative space-y-0">
                 {/* Vertical timeline line */}
-                <div className="absolute left-[15px] top-0 bottom-0 w-px bg-gray-800" />
+                <div className="absolute left-[15px] top-0 bottom-0 w-px bg-surface-3" />
 
                 {sortedShifts.map((shift, idx) => (
                   <div key={shift.id} className="relative flex gap-4 pb-4">
@@ -1146,27 +1146,27 @@ export default function BOLOLogbookPage() {
                     </div>
 
                     {/* Shift card */}
-                    <div className="flex-1 rounded-lg border border-gray-800 bg-gray-900/60 p-3 hover:bg-gray-900/90 transition-colors">
+                    <div className="flex-1 rounded-lg border border-border bg-surface-2/60 p-3 hover:bg-surface-2/90 transition-colors">
                       <div className="flex items-center gap-2 mb-2">
                         {/* Status badge */}
                         <span
                           className={`inline-flex items-center rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border ${
-                            SHIFT_STATUS_STYLES[shift.status] || "bg-gray-500/10 text-gray-400 border-gray-500/40"
+                            SHIFT_STATUS_STYLES[shift.status] || "bg-gray-500/10 text-muted-foreground border-gray-500/40"
                           }`}
                         >
                           {shift.status}
                         </span>
 
                         {/* Shift ID */}
-                        <span className="text-[10px] font-mono text-gray-600">
+                        <span className="text-[10px] font-mono text-muted-foreground">
                           {shift.id.slice(0, 8)}
                         </span>
                       </div>
 
                       {/* Time range */}
-                      <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
                         <svg
-                          className="h-3.5 w-3.5 text-gray-600"
+                          className="h-3.5 w-3.5 text-muted-foreground"
                           fill="none"
                           viewBox="0 0 24 24"
                           strokeWidth={1.5}
@@ -1181,7 +1181,7 @@ export default function BOLOLogbookPage() {
                         <span>
                           {formatDate(shift.start_time)}
                           {" "}
-                          <span className="text-gray-600">to</span>
+                          <span className="text-muted-foreground">to</span>
                           {" "}
                           {shift.end_time ? formatDate(shift.end_time) : "ongoing"}
                         </span>
@@ -1193,7 +1193,7 @@ export default function BOLOLogbookPage() {
                           {shift.zone_ids.map((zid) => (
                             <span
                               key={zid}
-                              className="rounded bg-gray-800 px-1.5 py-0.5 text-[10px] font-mono text-gray-400"
+                              className="rounded bg-surface-3 px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground"
                             >
                               {zid.slice(0, 8)}
                             </span>
@@ -1203,14 +1203,14 @@ export default function BOLOLogbookPage() {
 
                       {/* Checkpoints completed */}
                       {shift.checkpoints_completed.length > 0 && (
-                        <div className="text-[10px] text-gray-500 mb-1">
+                        <div className="text-[10px] text-muted-foreground mb-1">
                           Checkpoints: {shift.checkpoints_completed.length} completed
                         </div>
                       )}
 
                       {/* Route waypoints count */}
                       {shift.route_waypoints.length > 0 && (
-                        <div className="text-[10px] text-gray-500">
+                        <div className="text-[10px] text-muted-foreground">
                           Route waypoints: {shift.route_waypoints.length}
                         </div>
                       )}

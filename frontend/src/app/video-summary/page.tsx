@@ -96,7 +96,7 @@ function statusBadge(status: string): string {
     case "failed":
       return "bg-red-900/40 text-red-400 border-red-800/60";
     default:
-      return "bg-gray-800 text-gray-400 border-gray-700";
+      return "bg-surface-3 text-muted-foreground border-border-strong";
   }
 }
 
@@ -134,7 +134,7 @@ function extractKeyMoments(text: string | null | undefined): KeyMoment[] {
 function ScoreBadge({ score }: { score: number | null | undefined }) {
   if (score === null || score === undefined) {
     return (
-      <span className="flex items-center gap-1 rounded border border-gray-700 bg-gray-800/40 px-2 py-0.5 text-[10px] font-medium text-gray-500">
+      <span className="flex items-center gap-1 rounded border border-border-strong bg-surface-3/40 px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
         <Star className="h-2.5 w-2.5" />
         AI Confidence: N/A
       </span>
@@ -144,7 +144,7 @@ function ScoreBadge({ score }: { score: number | null | undefined }) {
   // Normalize to 0–100
   const pct = score > 1 ? Math.min(score, 100) : Math.round(score * 100);
 
-  let colorClass = "border-gray-700 bg-gray-800/40 text-gray-400";
+  let colorClass = "border-border-strong bg-surface-3/40 text-muted-foreground";
   if (pct >= 80) colorClass = "border-emerald-800 bg-emerald-900/30 text-emerald-400";
   else if (pct >= 60) colorClass = "border-yellow-800 bg-yellow-900/30 text-yellow-400";
   else colorClass = "border-red-800 bg-red-900/30 text-red-400";
@@ -423,18 +423,18 @@ export default function VideoSummaryPage() {
   /* ---------------------------------------------------------------- */
 
   return (
-    <div className="flex h-full flex-col overflow-auto bg-gray-950 text-gray-100">
+    <div className="flex h-full flex-col overflow-auto bg-surface-0 text-foreground">
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-900/30 border border-violet-800/50">
             <Film className="h-5 w-5 text-violet-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Video Summary
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Generate highlight reels and timelapse videos from camera feeds
             </p>
           </div>
@@ -443,7 +443,7 @@ export default function VideoSummaryPage() {
           {summaries.length > 0 && (
             <button
               onClick={handleExportAllCSV}
-              className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
+              className="flex items-center gap-2 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
             >
               <Download className="h-3.5 w-3.5" />
               Export All CSV
@@ -451,7 +451,7 @@ export default function VideoSummaryPage() {
           )}
           <button
             onClick={fetchSummaries}
-            className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
+            className="flex items-center gap-2 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             Refresh
@@ -460,20 +460,20 @@ export default function VideoSummaryPage() {
       </div>
 
       {/* ---- Generator Form ---- */}
-      <div className="border-b border-gray-800 bg-gray-900/40 px-6 py-4">
-        <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+      <div className="border-b border-border bg-surface-2/40 px-6 py-4">
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Generate New Summary
         </h2>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {/* Camera */}
           <div>
-            <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+            <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
               Camera
             </label>
             <select
               value={formCamera}
               onChange={(e) => setFormCamera(e.target.value)}
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-300 focus:border-violet-600 focus:outline-none"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground focus:border-violet-600 focus:outline-none"
             >
               {cameras.length === 0 && (
                 <option value="">No cameras</option>
@@ -488,40 +488,40 @@ export default function VideoSummaryPage() {
 
           {/* Start time */}
           <div>
-            <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+            <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
               Start Time
             </label>
             <input
               type="datetime-local"
               value={formStart}
               onChange={(e) => setFormStart(e.target.value)}
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-300 focus:border-violet-600 focus:outline-none"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground focus:border-violet-600 focus:outline-none"
             />
           </div>
 
           {/* End time */}
           <div>
-            <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+            <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
               End Time
             </label>
             <input
               type="datetime-local"
               value={formEnd}
               onChange={(e) => setFormEnd(e.target.value)}
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-300 focus:border-violet-600 focus:outline-none"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground focus:border-violet-600 focus:outline-none"
             />
           </div>
 
           {/* Threshold / Speed */}
           <div>
-            <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+            <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
               Threshold / Speed
             </label>
             <div className="flex gap-2">
               <select
                 value={formThreshold}
                 onChange={(e) => setFormThreshold(e.target.value)}
-                className="flex-1 rounded-lg border border-gray-700 bg-gray-900 px-2 py-2 text-xs text-gray-300 focus:border-violet-600 focus:outline-none"
+                className="flex-1 rounded-lg border border-border-strong bg-surface-2 px-2 py-2 text-xs text-foreground focus:border-violet-600 focus:outline-none"
               >
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -531,7 +531,7 @@ export default function VideoSummaryPage() {
               <select
                 value={formSpeedFactor}
                 onChange={(e) => setFormSpeedFactor(Number(e.target.value))}
-                className="w-20 rounded-lg border border-gray-700 bg-gray-900 px-2 py-2 text-xs text-gray-300 focus:border-violet-600 focus:outline-none"
+                className="w-20 rounded-lg border border-border-strong bg-surface-2 px-2 py-2 text-xs text-foreground focus:border-violet-600 focus:outline-none"
               >
                 <option value={30}>30x</option>
                 <option value={60}>60x</option>
@@ -574,10 +574,10 @@ export default function VideoSummaryPage() {
       {/* ---- Summaries List ---- */}
       <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-track-gray-950 scrollbar-thumb-gray-800 px-6 py-4">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Generated Summaries
           </h2>
-          <span className="text-xs text-gray-600">
+          <span className="text-xs text-muted-foreground">
             {summaries.length} summary{summaries.length !== 1 ? "ies" : "y"}
           </span>
         </div>
@@ -585,7 +585,7 @@ export default function VideoSummaryPage() {
         {loading && (
           <div className="flex flex-col items-center justify-center py-16">
             <Loader2 className="h-8 w-8 animate-spin text-violet-400" />
-            <p className="mt-3 text-sm text-gray-500">Loading summaries...</p>
+            <p className="mt-3 text-sm text-muted-foreground">Loading summaries...</p>
           </div>
         )}
 
@@ -598,11 +598,11 @@ export default function VideoSummaryPage() {
 
         {!loading && !error && summaries.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16">
-            <Film className="mb-2 h-10 w-10 text-gray-700" />
-            <p className="text-sm font-medium text-gray-400">
+            <Film className="mb-2 h-10 w-10 text-muted-foreground" />
+            <p className="text-sm font-medium text-muted-foreground">
               No summaries generated yet
             </p>
-            <p className="mt-1 text-xs text-gray-600">
+            <p className="mt-1 text-xs text-muted-foreground">
               Use the form above to create your first highlight or timelapse
             </p>
           </div>
@@ -617,7 +617,7 @@ export default function VideoSummaryPage() {
               return (
                 <div
                   key={s.id}
-                  className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 transition-shadow hover:shadow-lg hover:shadow-violet-900/10"
+                  className="rounded-lg border border-border bg-surface-2/60 p-4 transition-shadow hover:shadow-lg hover:shadow-violet-900/10"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
@@ -644,7 +644,7 @@ export default function VideoSummaryPage() {
                       </div>
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-sm font-semibold text-gray-200 capitalize">
+                          <span className="text-sm font-semibold text-foreground capitalize">
                             {s.summary_type}
                           </span>
                           <span
@@ -658,7 +658,7 @@ export default function VideoSummaryPage() {
                           {/* AI Confidence badge */}
                           <ScoreBadge score={score} />
                         </div>
-                        <div className="mt-0.5 flex flex-wrap items-center gap-3 text-[11px] text-gray-500">
+                        <div className="mt-0.5 flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <Camera className="h-3 w-3" />
                             {s.camera_id.substring(0, 8)}...
@@ -701,7 +701,7 @@ export default function VideoSummaryPage() {
                         onClick={() => handleExportSummary(s)}
                         disabled={exportingId === s.id}
                         title="Export summary as JSON"
-                        className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-900 px-2 py-1.5 text-[11px] text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors disabled:opacity-50"
+                        className="flex items-center gap-1 rounded-lg border border-border-strong bg-surface-2 px-2 py-1.5 text-[11px] text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors disabled:opacity-50"
                       >
                         {exportingId === s.id ? (
                           <Loader2 className="h-3 w-3 animate-spin" />
@@ -715,7 +715,7 @@ export default function VideoSummaryPage() {
                         <>
                           <button
                             onClick={() => togglePreview(s.id)}
-                            className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-900 px-2 py-1.5 text-[11px] text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+                            className="flex items-center gap-1 rounded-lg border border-border-strong bg-surface-2 px-2 py-1.5 text-[11px] text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
                           >
                             <Play className="h-3 w-3" />
                             Preview
@@ -727,7 +727,7 @@ export default function VideoSummaryPage() {
                           </button>
                           <button
                             onClick={() => handleDownload(s.id)}
-                            className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-900 px-2 py-1.5 text-[11px] text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+                            className="flex items-center gap-1 rounded-lg border border-border-strong bg-surface-2 px-2 py-1.5 text-[11px] text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
                           >
                             <Download className="h-3 w-3" />
                             Download
@@ -750,16 +750,16 @@ export default function VideoSummaryPage() {
 
                   {/* ---- Summary text with key moment badges ---- */}
                   {s.summary_text && (
-                    <div className="mt-3 rounded-lg border border-gray-800 bg-gray-950/50 px-3 py-2.5">
-                      <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-500 mb-1.5">
+                    <div className="mt-3 rounded-lg border border-border bg-surface-0/50 px-3 py-2.5">
+                      <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
                         AI Summary
                       </p>
-                      <p className="text-xs text-gray-400 leading-relaxed">
+                      <p className="text-xs text-muted-foreground leading-relaxed">
                         {s.summary_text}
                       </p>
                       {keyMoments.length > 0 && (
                         <div className="mt-2 flex flex-wrap gap-1.5">
-                          <span className="text-[9px] uppercase tracking-wider text-gray-600 self-center">
+                          <span className="text-[9px] uppercase tracking-wider text-muted-foreground self-center">
                             Key moments:
                           </span>
                           {keyMoments.map((km) => (
@@ -793,7 +793,7 @@ export default function VideoSummaryPage() {
 
                   {/* Inline video preview */}
                   {s.status === "complete" && s.file_path && expandedPreviews.has(s.id) && (
-                    <div className="mt-3 rounded-lg border border-gray-800 bg-gray-950/80 p-3">
+                    <div className="mt-3 rounded-lg border border-border bg-surface-0/80 p-3">
                       <video
                         data-summary-id={s.id}
                         src={`/api/video-summary/${s.id}/download?token=${typeof window !== "undefined" ? localStorage.getItem("sentinel_token") || "" : ""}`}

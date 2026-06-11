@@ -93,7 +93,7 @@ const ZONE_STATE_STYLES: Record<string, string> = {
   faulted: "bg-yellow-900/40 text-yellow-400 border-yellow-800",
   alarm: "bg-red-900/40 text-red-400 border-red-800",
   trouble: "bg-orange-900/40 text-orange-400 border-orange-800",
-  bypassed: "bg-gray-800 text-gray-400 border-gray-700",
+  bypassed: "bg-surface-3 text-muted-foreground border-border-strong",
 };
 
 const ZONE_TYPE_ICONS: Record<string, typeof Shield> = {
@@ -112,7 +112,7 @@ const SEVERITY_STYLES: Record<string, string> = {
   high: "bg-orange-900/40 text-orange-400 border-orange-800",
   medium: "bg-yellow-900/40 text-yellow-400 border-yellow-800",
   low: "bg-blue-900/40 text-blue-400 border-blue-800",
-  info: "bg-gray-800 text-gray-400 border-gray-700",
+  info: "bg-surface-3 text-muted-foreground border-border-strong",
 };
 
 const TABS: { key: TabKey; label: string }[] = [
@@ -217,7 +217,7 @@ export default function AlarmPanelPage() {
     : zones;
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6">
+    <div className="min-h-screen bg-surface-0 p-6">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -228,14 +228,14 @@ export default function AlarmPanelPage() {
             <h1 className="text-xl font-bold text-red-400 tracking-wide">
               Alarm Panel Management
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Monitor panels, zones, arm states, and alarm events
             </p>
           </div>
         </div>
         <button
           onClick={fetchData}
-          className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+          className="flex items-center gap-2 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
         >
           <RefreshCw className="h-3.5 w-3.5" />
           Refresh
@@ -244,40 +244,40 @@ export default function AlarmPanelPage() {
 
       {/* Stats Row */}
       <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+        <div className="rounded-lg border border-border bg-surface-2/60 p-4">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             <Shield className="h-3.5 w-3.5" />
             Panels
           </div>
-          <p className="mt-2 text-3xl font-bold text-gray-100">
+          <p className="mt-2 text-3xl font-bold text-foreground">
             {loading ? "--" : panels.length}
           </p>
         </div>
-        <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+        <div className="rounded-lg border border-border bg-surface-2/60 p-4">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             <Hash className="h-3.5 w-3.5" />
             Zones
           </div>
-          <p className="mt-2 text-3xl font-bold text-gray-100">
+          <p className="mt-2 text-3xl font-bold text-foreground">
             {loading ? "--" : `${faultedZones}/${totalZones}`}
           </p>
-          <p className="text-[10px] text-gray-600">faulted / total</p>
+          <p className="text-[10px] text-muted-foreground">faulted / total</p>
         </div>
         <div className="rounded-lg border border-red-900/40 bg-red-950/20 p-4">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-red-400/80">
             <AlertTriangle className="h-3.5 w-3.5" />
             Active Alarms
           </div>
-          <p className={cn("mt-2 text-3xl font-bold", totalAlarms > 0 ? "text-red-400" : "text-gray-100")}>
+          <p className={cn("mt-2 text-3xl font-bold", totalAlarms > 0 ? "text-red-400" : "text-foreground")}>
             {loading ? "--" : totalAlarms}
           </p>
         </div>
-        <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+        <div className="rounded-lg border border-border bg-surface-2/60 p-4">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             <Clock className="h-3.5 w-3.5" />
             Unacknowledged
           </div>
-          <p className={cn("mt-2 text-3xl font-bold", unacknowledged > 0 ? "text-yellow-400" : "text-gray-100")}>
+          <p className={cn("mt-2 text-3xl font-bold", unacknowledged > 0 ? "text-yellow-400" : "text-foreground")}>
             {loading ? "--" : unacknowledged}
           </p>
         </div>
@@ -285,11 +285,11 @@ export default function AlarmPanelPage() {
 
       {/* SIA Receiver Status */}
       {siaStatus && (
-        <div className="mb-6 rounded-lg border border-gray-800 bg-gray-900/60 p-4">
+        <div className="mb-6 rounded-lg border border-border bg-surface-2/60 p-4">
           <div className="flex items-center gap-4 flex-wrap">
             <div className="flex items-center gap-2">
               <Radio className={cn("h-4 w-4", siaStatus.connected ? "text-emerald-400" : "text-red-400")} />
-              <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 SIA Receiver
               </span>
               <span className={cn(
@@ -301,15 +301,15 @@ export default function AlarmPanelPage() {
                 {siaStatus.connected ? "CONNECTED" : "DISCONNECTED"}
               </span>
             </div>
-            <span className="text-xs text-gray-500">
-              Accounts: <span className="text-gray-300">{siaStatus.account_count}</span>
+            <span className="text-xs text-muted-foreground">
+              Accounts: <span className="text-foreground">{siaStatus.account_count}</span>
             </span>
-            <span className="text-xs text-gray-500">
-              Events Today: <span className="text-gray-300">{siaStatus.events_today}</span>
+            <span className="text-xs text-muted-foreground">
+              Events Today: <span className="text-foreground">{siaStatus.events_today}</span>
             </span>
             {siaStatus.last_event_time && (
-              <span className="text-xs text-gray-500">
-                Last Event: <span className="text-gray-300">{formatTimestamp(siaStatus.last_event_time)}</span>
+              <span className="text-xs text-muted-foreground">
+                Last Event: <span className="text-foreground">{formatTimestamp(siaStatus.last_event_time)}</span>
               </span>
             )}
           </div>
@@ -317,7 +317,7 @@ export default function AlarmPanelPage() {
       )}
 
       {/* Tabs */}
-      <div className="mb-4 flex gap-1 border-b border-gray-800">
+      <div className="mb-4 flex gap-1 border-b border-border">
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -326,7 +326,7 @@ export default function AlarmPanelPage() {
               "px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px",
               tab === t.key
                 ? "border-cyan-400 text-cyan-400"
-                : "border-transparent text-gray-500 hover:text-gray-300"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             )}
           >
             {t.label}
@@ -338,7 +338,7 @@ export default function AlarmPanelPage() {
       {loading && (
         <div className="flex flex-col items-center justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-          <p className="mt-3 text-sm text-gray-500">Loading alarm data...</p>
+          <p className="mt-3 text-sm text-muted-foreground">Loading alarm data...</p>
         </div>
       )}
 
@@ -349,7 +349,7 @@ export default function AlarmPanelPage() {
           <p className="text-sm text-red-400">{error}</p>
           <button
             onClick={fetchData}
-            className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             Retry
           </button>
@@ -361,8 +361,8 @@ export default function AlarmPanelPage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {panels.length === 0 ? (
             <div className="col-span-full flex flex-col items-center justify-center py-20">
-              <Siren className="mb-2 h-10 w-10 text-gray-700" />
-              <p className="text-sm text-gray-500">No alarm panels registered</p>
+              <Siren className="mb-2 h-10 w-10 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">No alarm panels registered</p>
             </div>
           ) : (
             panels.map((panel) => {
@@ -373,7 +373,7 @@ export default function AlarmPanelPage() {
                 <div
                   key={panel.id}
                   className={cn(
-                    "rounded-lg border bg-gray-900/60 p-5 transition-colors",
+                    "rounded-lg border bg-surface-2/60 p-5 transition-colors",
                     armStyle.border
                   )}
                 >
@@ -384,7 +384,7 @@ export default function AlarmPanelPage() {
                         <ArmIcon className={cn("h-4 w-4", armStyle.text)} />
                       </div>
                       <div>
-                        <span className="text-sm font-semibold text-gray-200">{panel.name}</span>
+                        <span className="text-sm font-semibold text-foreground">{panel.name}</span>
                         <span className={cn("ml-2 rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border", armStyle.bg, armStyle.text, armStyle.border)}>
                           {panel.arm_state.replace(/_/g, " ")}
                         </span>
@@ -393,10 +393,10 @@ export default function AlarmPanelPage() {
                   </div>
 
                   {/* Panel details */}
-                  <div className="space-y-2 text-xs text-gray-500 mb-4">
+                  <div className="space-y-2 text-xs text-muted-foreground mb-4">
                     <div className="flex justify-between">
                       <span>Zones</span>
-                      <span className="text-gray-300">
+                      <span className="text-foreground">
                         {panel.zones_faulted > 0 && (
                           <span className="text-red-400 mr-1">{panel.zones_faulted} faulted /</span>
                         )}
@@ -408,7 +408,7 @@ export default function AlarmPanelPage() {
                         {panel.power_source === "ac" ? <Plug className="h-3 w-3" /> : <Battery className="h-3 w-3" />}
                         Power
                       </span>
-                      <span className="text-gray-300 capitalize">{panel.power_source}</span>
+                      <span className="text-foreground capitalize">{panel.power_source}</span>
                     </div>
                     {panel.battery_level !== null && (
                       <div className="flex justify-between">
@@ -416,7 +416,7 @@ export default function AlarmPanelPage() {
                           {panel.battery_level < 20 ? <BatteryLow className="h-3 w-3 text-red-400" /> : <Battery className="h-3 w-3" />}
                           Battery
                         </span>
-                        <span className={cn("font-mono", panel.battery_level < 20 ? "text-red-400" : "text-gray-300")}>
+                        <span className={cn("font-mono", panel.battery_level < 20 ? "text-red-400" : "text-foreground")}>
                           {panel.battery_level}%
                         </span>
                       </div>
@@ -424,19 +424,19 @@ export default function AlarmPanelPage() {
                     {panel.last_heartbeat && (
                       <div className="flex justify-between">
                         <span>Last Heartbeat</span>
-                        <span className="text-gray-300">{formatTimestamp(panel.last_heartbeat)}</span>
+                        <span className="text-foreground">{formatTimestamp(panel.last_heartbeat)}</span>
                       </div>
                     )}
                     {panel.firmware_version && (
                       <div className="flex justify-between">
                         <span>Firmware</span>
-                        <span className="font-mono text-gray-300">{panel.firmware_version}</span>
+                        <span className="font-mono text-foreground">{panel.firmware_version}</span>
                       </div>
                     )}
                   </div>
 
                   {/* Arm/Disarm controls */}
-                  <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-800/60">
+                  <div className="flex flex-wrap gap-2 pt-3 border-t border-border/60">
                     {panel.arm_state === "disarmed" ? (
                       <>
                         <button
@@ -488,11 +488,11 @@ export default function AlarmPanelPage() {
           {/* Panel filter */}
           {panels.length > 1 && (
             <div className="mb-4 flex items-center gap-2">
-              <span className="text-xs text-gray-500">Panel:</span>
+              <span className="text-xs text-muted-foreground">Panel:</span>
               <select
                 value={selectedPanelId || "all"}
                 onChange={(e) => setSelectedPanelId(e.target.value === "all" ? null : e.target.value)}
-                className="rounded-lg border border-gray-700 bg-gray-900 px-3 py-1.5 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none"
+                className="rounded-lg border border-border-strong bg-surface-2 px-3 py-1.5 text-xs text-foreground focus:border-cyan-700 focus:outline-none"
               >
                 <option value="all">All Panels</option>
                 {panels.map((p) => (
@@ -504,8 +504,8 @@ export default function AlarmPanelPage() {
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredZones.length === 0 ? (
               <div className="col-span-full flex flex-col items-center justify-center py-20">
-                <Shield className="mb-2 h-10 w-10 text-gray-700" />
-                <p className="text-sm text-gray-500">No zones configured</p>
+                <Shield className="mb-2 h-10 w-10 text-muted-foreground" />
+                <p className="text-sm text-muted-foreground">No zones configured</p>
               </div>
             ) : (
               filteredZones.map((zone) => {
@@ -514,44 +514,44 @@ export default function AlarmPanelPage() {
                   <div
                     key={zone.id}
                     className={cn(
-                      "rounded-lg border bg-gray-900/60 p-4 transition-colors",
+                      "rounded-lg border bg-surface-2/60 p-4 transition-colors",
                       zone.state === "alarm" && "border-l-2 border-l-red-500",
-                      zone.state !== "alarm" && "border-gray-800"
+                      zone.state !== "alarm" && "border-border"
                     )}
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <ZoneIcon className="h-4 w-4 text-cyan-400" />
-                        <span className="text-sm font-semibold text-gray-200">
+                        <span className="text-sm font-semibold text-foreground">
                           {zone.name}
                         </span>
                       </div>
                       <span className={cn(
                         "rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border",
-                        ZONE_STATE_STYLES[zone.state] || "bg-gray-800 text-gray-400 border-gray-700"
+                        ZONE_STATE_STYLES[zone.state] || "bg-surface-3 text-muted-foreground border-border-strong"
                       )}>
                         {zone.state}
                       </span>
                     </div>
-                    <div className="space-y-1 text-xs text-gray-500">
+                    <div className="space-y-1 text-xs text-muted-foreground">
                       <div className="flex justify-between">
                         <span>Zone #</span>
-                        <span className="font-mono text-gray-300">{zone.zone_number}</span>
+                        <span className="font-mono text-foreground">{zone.zone_number}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Type</span>
-                        <span className="text-gray-300 capitalize">{zone.zone_type.replace(/_/g, " ")}</span>
+                        <span className="text-foreground capitalize">{zone.zone_type.replace(/_/g, " ")}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Alarm Count</span>
-                        <span className={cn("font-mono", zone.alarm_count > 0 ? "text-red-400" : "text-gray-300")}>
+                        <span className={cn("font-mono", zone.alarm_count > 0 ? "text-red-400" : "text-foreground")}>
                           {zone.alarm_count}
                         </span>
                       </div>
                       {zone.last_triggered && (
                         <div className="flex justify-between">
                           <span>Last Triggered</span>
-                          <span className="text-gray-300">{formatTimestamp(zone.last_triggered)}</span>
+                          <span className="text-foreground">{formatTimestamp(zone.last_triggered)}</span>
                         </div>
                       )}
                     </div>
@@ -572,7 +572,7 @@ export default function AlarmPanelPage() {
               <select
                 value={filterSeverity}
                 onChange={(e) => setFilterSeverity(e.target.value)}
-                className="appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none"
+                className="appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none"
               >
                 <option value="all">All Severities</option>
                 <option value="critical">Critical</option>
@@ -581,49 +581,49 @@ export default function AlarmPanelPage() {
                 <option value="low">Low</option>
                 <option value="info">Info</option>
               </select>
-              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             </div>
             <div className="relative">
               <select
                 value={filterAcknowledged}
                 onChange={(e) => setFilterAcknowledged(e.target.value)}
-                className="appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none"
+                className="appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none"
               >
                 <option value="all">All Events</option>
                 <option value="unacknowledged">Unacknowledged</option>
                 <option value="acknowledged">Acknowledged</option>
               </select>
-              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             </div>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-muted-foreground">
               Showing {filteredEvents.length} event{filteredEvents.length !== 1 && "s"}
             </span>
           </div>
 
           {/* Events table */}
-          <div className="overflow-x-auto rounded-lg border border-gray-800 max-h-[60vh] overflow-y-auto">
+          <div className="overflow-x-auto rounded-lg border border-border max-h-[60vh] overflow-y-auto">
             <table className="w-full text-left text-sm">
               <thead className="sticky top-0 z-10">
-                <tr className="border-b border-gray-800 bg-gray-900/80">
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Severity</th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Type</th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Zone</th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Description</th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Code</th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Time</th>
-                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Actions</th>
+                <tr className="border-b border-border bg-surface-2/80">
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Severity</th>
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Type</th>
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Zone</th>
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Description</th>
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Code</th>
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Time</th>
+                  <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-800/50">
+              <tbody className="divide-y divide-border/50">
                 {filteredEvents.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="px-4 py-12 text-center text-sm text-gray-600">
+                    <td colSpan={7} className="px-4 py-12 text-center text-sm text-muted-foreground">
                       No alarm events found
                     </td>
                   </tr>
                 )}
                 {filteredEvents.map((ev) => (
-                  <tr key={ev.id} className="hover:bg-gray-900/60 transition-colors">
+                  <tr key={ev.id} className="hover:bg-surface-2/60 transition-colors">
                     <td className="px-4 py-3">
                       <span className={cn(
                         "inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border",
@@ -632,11 +632,11 @@ export default function AlarmPanelPage() {
                         {ev.severity}
                       </span>
                     </td>
-                    <td className="px-4 py-3 font-mono text-xs text-gray-300">{ev.event_type}</td>
-                    <td className="px-4 py-3 text-xs text-gray-300">{ev.zone_name || "---"}</td>
-                    <td className="px-4 py-3 text-xs text-gray-400 max-w-xs truncate">{ev.description}</td>
-                    <td className="px-4 py-3 font-mono text-xs text-gray-500">{ev.event_code || "---"}</td>
-                    <td className="px-4 py-3 text-xs text-gray-500">{formatTimestamp(ev.timestamp)}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-foreground">{ev.event_type}</td>
+                    <td className="px-4 py-3 text-xs text-foreground">{ev.zone_name || "---"}</td>
+                    <td className="px-4 py-3 text-xs text-muted-foreground max-w-xs truncate">{ev.description}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{ev.event_code || "---"}</td>
+                    <td className="px-4 py-3 text-xs text-muted-foreground">{formatTimestamp(ev.timestamp)}</td>
                     <td className="px-4 py-3">
                       {ev.acknowledged ? (
                         <span className="flex items-center gap-1 text-xs text-emerald-400">

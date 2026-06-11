@@ -85,7 +85,7 @@ const roleBadgeColor: Record<string, string> = {
   admin: "bg-red-500/10 text-red-400 border-red-500/30",
   analyst: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
   operator: "bg-amber-500/10 text-amber-400 border-amber-500/30",
-  viewer: "bg-gray-500/10 text-gray-400 border-gray-500/30",
+  viewer: "bg-gray-500/10 text-muted-foreground border-gray-500/30",
 };
 
 /* ------------------------------------------------------------------ */
@@ -130,9 +130,9 @@ function AddUserForm({ onCreated, onCancel }: AddUserFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-lg border border-gray-800 bg-gray-900/60 p-4 space-y-4"
+      className="rounded-lg border border-border bg-surface-2/60 p-4 space-y-4"
     >
-      <h3 className="text-sm font-semibold text-gray-200">New User</h3>
+      <h3 className="text-sm font-semibold text-foreground">New User</h3>
 
       {error && (
         <div className="rounded-lg border border-red-800 bg-red-900/20 px-3 py-2 text-sm text-red-400">
@@ -142,53 +142,53 @@ function AddUserForm({ onCreated, onCancel }: AddUserFormProps) {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400">
+          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Email
           </label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             placeholder="user@sentinel.local"
             required
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400">
+          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Full Name
           </label>
           <input
             type="text"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             placeholder="John Doe"
             required
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400">
+          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Password
           </label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
             placeholder="Min 8 characters"
             required
             minLength={8}
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400">
+          <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Role
           </label>
           <select
             value={role}
             onChange={(e) => setRole(e.target.value as User["role"])}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
           >
             <option value="admin">Admin</option>
             <option value="analyst">Analyst</option>
@@ -210,7 +210,7 @@ function AddUserForm({ onCreated, onCancel }: AddUserFormProps) {
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
+          className="rounded-lg border border-border-strong px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
         >
           Cancel
         </button>
@@ -289,7 +289,7 @@ function UsersTab() {
       )}
 
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-muted-foreground">
           {users.length} user{users.length !== 1 && "s"} registered
         </p>
         <button
@@ -311,40 +311,40 @@ function UsersTab() {
         />
       )}
 
-      <div className="overflow-x-auto rounded-lg border border-gray-800">
+      <div className="overflow-x-auto rounded-lg border border-border">
         <table className="w-full text-left text-sm">
-          <thead className="border-b border-gray-800 bg-gray-900/60">
+          <thead className="border-b border-border bg-surface-2/60">
             <tr>
-              <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-gray-400">
+              <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Email
               </th>
-              <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-gray-400">
+              <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Name
               </th>
-              <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-gray-400">
+              <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Role
               </th>
-              <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-gray-400">
+              <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Status
               </th>
-              <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-gray-400">
+              <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Created
               </th>
-              <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-gray-400">
+              <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-800">
+          <tbody className="divide-y divide-border">
             {users.map((user) => (
               <tr
                 key={user.id}
-                className="bg-gray-950 transition-colors hover:bg-gray-900/50"
+                className="bg-surface-0 transition-colors hover:bg-surface-2/50"
               >
-                <td className="px-4 py-3 font-mono text-xs text-gray-200">
+                <td className="px-4 py-3 font-mono text-xs text-foreground">
                   {user.email}
                 </td>
-                <td className="px-4 py-3 text-gray-300">{user.full_name}</td>
+                <td className="px-4 py-3 text-foreground">{user.full_name}</td>
                 <td className="px-4 py-3">
                   {editingRole === user.id ? (
                     <select
@@ -354,7 +354,7 @@ function UsersTab() {
                       }
                       onBlur={() => setEditingRole(null)}
                       autoFocus
-                      className="rounded border border-gray-700 bg-gray-900 px-2 py-1 text-xs text-gray-100 focus:border-cyan-700 focus:outline-none"
+                      className="rounded border border-border-strong bg-surface-2 px-2 py-1 text-xs text-foreground focus:border-cyan-700 focus:outline-none"
                     >
                       <option value="admin">Admin</option>
                       <option value="analyst">Analyst</option>
@@ -378,26 +378,26 @@ function UsersTab() {
                       <CheckCircle2 className="h-3 w-3" /> Active
                     </span>
                   ) : (
-                    <span className="flex items-center gap-1 text-xs text-gray-500">
+                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
                       <XCircle className="h-3 w-3" /> Inactive
                     </span>
                   )}
                 </td>
-                <td className="px-4 py-3 font-mono text-xs text-gray-500">
+                <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
                   {formatTimestamp(user.created_at)}
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setEditingRole(user.id)}
-                      className="rounded p-1 text-gray-500 transition-colors hover:bg-gray-800 hover:text-cyan-400"
+                      className="rounded p-1 text-muted-foreground transition-colors hover:bg-surface-3 hover:text-cyan-400"
                       title="Edit role"
                     >
                       <Edit3 className="h-3.5 w-3.5" />
                     </button>
                     <button
                       onClick={() => handleToggleActive(user)}
-                      className="rounded p-1 text-gray-500 transition-colors hover:bg-gray-800 hover:text-amber-400"
+                      className="rounded p-1 text-muted-foreground transition-colors hover:bg-surface-3 hover:text-amber-400"
                       title={user.is_active ? "Deactivate" : "Activate"}
                     >
                       {user.is_active ? (
@@ -668,15 +668,15 @@ function SystemTab() {
   return (
     <div className="space-y-6">
       {/* System Health */}
-      <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-5 space-y-4">
+      <div className="rounded-lg border border-border bg-surface-2/60 p-5 space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-300">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
             System Health
           </h3>
           <button
             onClick={fetchDeepHealth}
             disabled={healthLoading}
-            className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800 transition-colors disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 transition-colors disabled:opacity-50"
           >
             {healthLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
             Refresh
@@ -705,24 +705,24 @@ function SystemTab() {
           </div>
         )}
         {!deepHealth && !healthLoading && (
-          <p className="text-center text-xs text-gray-600">Health metrics unavailable</p>
+          <p className="text-center text-xs text-muted-foreground">Health metrics unavailable</p>
         )}
       </div>
 
       {/* AI Provider */}
-      <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-5 space-y-4">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-300">
+      <div className="rounded-lg border border-border bg-surface-2/60 p-5 space-y-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
           AI Provider
         </h3>
-        <p className="text-xs text-gray-500 leading-relaxed">
+        <p className="text-xs text-muted-foreground leading-relaxed">
           Select which AI backend powers analysis and reasoning. Choose between{" "}
-          <strong className="text-gray-300">cloud</strong> or{" "}
-          <strong className="text-gray-300">local</strong> models.
+          <strong className="text-foreground">cloud</strong> or{" "}
+          <strong className="text-foreground">local</strong> models.
         </p>
 
         {/* AI Provider Selection */}
         <div>
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 mb-2 block">
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-2 block">
             AI Provider
           </span>
           <div className="grid grid-cols-2 gap-3">
@@ -731,9 +731,9 @@ function SystemTab() {
               { key: "ollama", label: "Ollama", desc: "Local Ollama models (fallback)", color: "purple", badge: "FALLBACK" },
             ].map((opt) => {
               const isActive = aiProvider === opt.key;
-              const borderCls = isActive ? `border-${opt.color}-500/50` : "border-gray-700/50";
-              const bgCls = isActive ? `bg-${opt.color}-900/20` : "bg-gray-950";
-              const textCls = isActive ? `text-${opt.color}-400` : "text-gray-400";
+              const borderCls = isActive ? `border-${opt.color}-500/50` : "border-border-strong/50";
+              const bgCls = isActive ? `bg-${opt.color}-900/20` : "bg-surface-0";
+              const textCls = isActive ? `text-${opt.color}-400` : "text-muted-foreground";
               const ringCls = isActive ? `ring-2 ring-${opt.color}-500/50` : "";
               return (
                 <button
@@ -743,14 +743,14 @@ function SystemTab() {
                   className={cn(
                     "relative flex flex-col items-center gap-1.5 rounded-lg border p-3 transition-all text-center",
                     borderCls, bgCls, ringCls,
-                    !isActive && "hover:bg-gray-900/50 hover:border-gray-600",
+                    !isActive && "hover:bg-surface-2/50 hover:border-border-strong",
                     switchingProvider && "opacity-60 cursor-wait"
                   )}
                 >
                   <span className={cn("text-xs font-bold uppercase tracking-wider", textCls)}>
                     {opt.label}
                   </span>
-                  <span className="text-[10px] text-gray-500 leading-relaxed">
+                  <span className="text-[10px] text-muted-foreground leading-relaxed">
                     {opt.desc}
                   </span>
                   <span className={cn("text-[8px] font-bold uppercase tracking-widest rounded-full px-2 py-0.5 border",
@@ -769,13 +769,13 @@ function SystemTab() {
       </div>
 
       {/* Performance Mode */}
-      <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-5 space-y-4">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-300">
+      <div className="rounded-lg border border-border bg-surface-2/60 p-5 space-y-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
           Performance Mode
         </h3>
-        <p className="text-xs text-gray-500 leading-relaxed">
-          Control the balance between <strong className="text-gray-300">speed</strong> and{" "}
-          <strong className="text-gray-300">analysis depth</strong>. Gemini is the primary AI provider. Higher modes use deeper reasoning but consume more API calls.
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          Control the balance between <strong className="text-foreground">speed</strong> and{" "}
+          <strong className="text-foreground">analysis depth</strong>. Gemini is the primary AI provider. Higher modes use deeper reasoning but consume more API calls.
         </p>
 
         {perfData && (
@@ -795,27 +795,27 @@ function SystemTab() {
                     "relative flex flex-col items-center gap-1.5 rounded-lg border p-4 transition-all text-center",
                     isActive
                       ? `${colors.border} ${colors.bg} ring-2 ${colors.ring}`
-                      : "border-gray-700/50 bg-gray-950 hover:bg-gray-900/50 hover:border-gray-600",
+                      : "border-border-strong/50 bg-surface-0 hover:bg-surface-2/50 hover:border-border-strong",
                     switchingPerf && "opacity-60 cursor-wait"
                   )}
                 >
-                  <Icon className={cn("h-6 w-6", isActive ? colors.text : "text-gray-500")} />
+                  <Icon className={cn("h-6 w-6", isActive ? colors.text : "text-muted-foreground")} />
                   <span className={cn(
                     "text-xs font-bold uppercase tracking-wider",
-                    isActive ? colors.text : "text-gray-400"
+                    isActive ? colors.text : "text-muted-foreground"
                   )}>
                     {cfg.label}
                   </span>
                   {model && (
-                    <span className="text-[9px] font-mono text-gray-600">
+                    <span className="text-[9px] font-mono text-muted-foreground">
                       {model}
                     </span>
                   )}
-                  <span className="text-[10px] text-gray-500 leading-relaxed">
+                  <span className="text-[10px] text-muted-foreground leading-relaxed">
                     {cfg.description}
                   </span>
                   {useCase && (
-                    <span className="text-[9px] text-gray-600 italic leading-tight mt-0.5">
+                    <span className="text-[9px] text-muted-foreground italic leading-tight mt-0.5">
                       {useCase}
                     </span>
                   )}
@@ -843,13 +843,13 @@ function SystemTab() {
       </div>
 
       {/* Operation Mode */}
-      <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-5 space-y-4">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-300">
+      <div className="rounded-lg border border-border bg-surface-2/60 p-5 space-y-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
           Operation Mode
         </h3>
-        <p className="text-xs text-gray-500 leading-relaxed">
-          Switch between <strong className="text-gray-300">Autonomous</strong> (agents act independently) and{" "}
-          <strong className="text-gray-300">Human-in-the-Loop (HITL)</strong> (action-tier tools require human approval).
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          Switch between <strong className="text-foreground">Autonomous</strong> (agents act independently) and{" "}
+          <strong className="text-foreground">Human-in-the-Loop (HITL)</strong> (action-tier tools require human approval).
         </p>
 
         {modeError && (
@@ -887,7 +887,7 @@ function SystemTab() {
                 {modeStatus.mode === "autonomous" ? "AUTONOMOUS MODE" : "HITL MODE"}
               </button>
 
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-muted-foreground">
                 {modeStatus.mode === "autonomous"
                   ? "All agents operate independently. Click to switch to HITL."
                   : `Actions require approval. ${modeStatus.pending_count} pending. Click to switch to Autonomous.`}
@@ -914,7 +914,7 @@ function SystemTab() {
                   </button>
                   <button
                     onClick={() => setShowConfirm(null)}
-                    className="rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-400 hover:bg-gray-800"
+                    className="rounded-lg border border-border-strong px-4 py-2 text-sm text-muted-foreground hover:bg-surface-3"
                   >
                     Cancel
                   </button>
@@ -925,21 +925,21 @@ function SystemTab() {
             {/* Auto-Approve Timeout */}
             <div className="flex items-end gap-3 pt-2">
               <div>
-                <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-gray-400">
+                <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   Auto-Approve Timeout (minutes)
                 </label>
                 <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-gray-500" />
+                  <Clock className="h-4 w-4 text-muted-foreground" />
                   <input
                     type="number"
                     min={1}
                     max={60}
                     value={timeoutInput}
                     onChange={(e) => setTimeoutInput(e.target.value)}
-                    className="w-20 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                    className="w-20 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
                   />
                 </div>
-                <p className="mt-1 text-[10px] text-gray-600">
+                <p className="mt-1 text-[10px] text-muted-foreground">
                   Pending actions auto-approve after this timeout if no human acts.
                 </p>
               </div>
@@ -957,36 +957,36 @@ function SystemTab() {
       </div>
 
       {/* Current Config */}
-      <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-5 space-y-4">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-300">
+      <div className="rounded-lg border border-border bg-surface-2/60 p-5 space-y-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
           Current Configuration
         </h3>
 
         <div className="space-y-3">
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-gray-950 px-4 py-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-surface-0 px-4 py-3">
             <Globe className="h-4 w-4 text-cyan-400" />
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 API URL
               </p>
-              <p className="font-mono text-sm text-gray-200">{API_BASE}</p>
+              <p className="font-mono text-sm text-foreground">{API_BASE}</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-gray-950 px-4 py-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-surface-0 px-4 py-3">
             <Wifi className="h-4 w-4 text-cyan-400" />
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 WebSocket URL
               </p>
-              <p className="font-mono text-sm text-gray-200">{WS_BASE}</p>
+              <p className="font-mono text-sm text-foreground">{WS_BASE}</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-gray-950 px-4 py-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-surface-0 px-4 py-3">
             <Database className="h-4 w-4 text-emerald-400" />
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Database Status
               </p>
               <p className="flex items-center gap-2 text-sm text-emerald-400">
@@ -999,8 +999,8 @@ function SystemTab() {
       </div>
 
       {/* System Actions */}
-      <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-5 space-y-4">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-300">
+      <div className="rounded-lg border border-border bg-surface-2/60 p-5 space-y-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
           System Actions
         </h3>
         <div className="flex flex-wrap gap-3">
@@ -1053,7 +1053,7 @@ function SystemTab() {
             {backingUp ? "Backing up..." : "System Backup"}
           </button>
         </div>
-        <p className="text-xs text-gray-600">
+        <p className="text-xs text-muted-foreground">
           Destructive actions (Clear Cache, Reset Analytics) require confirmation. Export Config downloads a JSON snapshot.
         </p>
       </div>
@@ -1124,10 +1124,10 @@ function AuditLogTab() {
 
   if (unavailable) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-lg border border-gray-800 bg-gray-900/60 py-16 text-center">
-        <ScrollText className="mb-3 h-10 w-10 text-gray-700" />
-        <p className="text-sm font-medium text-gray-400">Audit log not available</p>
-        <p className="mt-1 text-xs text-gray-600">The audit log endpoint is not configured on this instance.</p>
+      <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-surface-2/60 py-16 text-center">
+        <ScrollText className="mb-3 h-10 w-10 text-muted-foreground" />
+        <p className="text-sm font-medium text-muted-foreground">Audit log not available</p>
+        <p className="mt-1 text-xs text-muted-foreground">The audit log endpoint is not configured on this instance.</p>
       </div>
     );
   }
@@ -1140,22 +1140,22 @@ function AuditLogTab() {
         </div>
       )}
 
-      <p className="text-sm text-gray-400">
+      <p className="text-sm text-muted-foreground">
         {total} audit log entr{total !== 1 ? "ies" : "y"}
       </p>
 
       <div className="space-y-2">
         {entries.length === 0 && (
-          <div className="flex flex-col items-center justify-center rounded-lg border border-gray-800 bg-gray-900/60 py-12 text-center">
-            <ScrollText className="mb-2 h-8 w-8 text-gray-700" />
-            <p className="text-sm text-gray-500">No audit log entries</p>
+          <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-surface-2/60 py-12 text-center">
+            <ScrollText className="mb-2 h-8 w-8 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">No audit log entries</p>
           </div>
         )}
 
         {entries.map((entry) => (
           <div
             key={entry.id}
-            className="rounded-lg border border-gray-800 bg-gray-900/60 px-4 py-3 transition-colors hover:bg-gray-900"
+            className="rounded-lg border border-border bg-surface-2/60 px-4 py-3 transition-colors hover:bg-surface-2"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0 flex-1 space-y-1">
@@ -1164,18 +1164,18 @@ function AuditLogTab() {
                     {entry.action}
                   </span>
                   {entry.user_email && (
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-muted-foreground">
                       by {entry.user_email}
                     </span>
                   )}
                 </div>
                 {entry.details && (
-                  <p className="text-xs leading-relaxed text-gray-400">
+                  <p className="text-xs leading-relaxed text-muted-foreground">
                     {entry.details}
                   </p>
                 )}
               </div>
-              <span className="whitespace-nowrap font-mono text-[10px] text-gray-600">
+              <span className="whitespace-nowrap font-mono text-[10px] text-muted-foreground">
                 {formatTimestamp(entry.timestamp)}
               </span>
             </div>
@@ -1185,16 +1185,16 @@ function AuditLogTab() {
 
       {/* Pagination */}
       {total > limit && (
-        <div className="flex items-center justify-between border-t border-gray-800 pt-4">
+        <div className="flex items-center justify-between border-t border-border pt-4">
           <button
             onClick={() => setOffset(Math.max(0, offset - limit))}
             disabled={offset === 0}
-            className="flex items-center gap-1 rounded-lg border border-gray-700 px-3 py-2 text-sm text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center gap-1 rounded-lg border border-border-strong px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
           >
             <ChevronLeft className="h-4 w-4" />
             Previous
           </button>
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-muted-foreground">
             Page {currentPage} of {totalPages}
           </span>
           <button
@@ -1202,7 +1202,7 @@ function AuditLogTab() {
               setOffset(Math.min(offset + limit, (totalPages - 1) * limit))
             }
             disabled={offset + limit >= total}
-            className="flex items-center gap-1 rounded-lg border border-gray-700 px-3 py-2 text-sm text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center gap-1 rounded-lg border border-border-strong px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
           >
             Next
             <ChevronRight className="h-4 w-4" />
@@ -1231,7 +1231,7 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<TabKey>("users");
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen bg-surface-0 text-foreground">
       <div className="mx-auto max-w-5xl space-y-6 px-6 py-8">
         {/* Header */}
         <div className="flex items-center gap-3">
@@ -1239,17 +1239,17 @@ export default function SettingsPage() {
             <Settings className="h-5 w-5 text-cyan-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wider text-gray-100 uppercase">
+            <h1 className="text-lg font-bold tracking-wider text-foreground uppercase">
               Settings
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Manage users, system configuration, and audit logs
             </p>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 border-b border-gray-800">
+        <div className="flex gap-1 border-b border-border">
           {tabs.map((tab) => (
             <button
               key={tab.key}
@@ -1258,7 +1258,7 @@ export default function SettingsPage() {
                 "flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors",
                 activeTab === tab.key
                   ? "border-cyan-400 text-cyan-400"
-                  : "border-transparent text-gray-500 hover:border-gray-700 hover:text-gray-300"
+                  : "border-transparent text-muted-foreground hover:border-border-strong hover:text-foreground"
               )}
             >
               {tab.icon}

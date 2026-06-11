@@ -76,10 +76,10 @@ const HAZARD_CATEGORIES: {
     type: "smoke",
     label: "Smoke",
     icon: CloudFog,
-    color: "text-gray-400",
+    color: "text-muted-foreground",
     bgColor: "bg-gray-500/10",
     borderColor: "border-gray-500/30",
-    textColor: "text-gray-300",
+    textColor: "text-foreground",
     ringColor: "ring-gray-500/30",
   },
   {
@@ -236,7 +236,7 @@ function statusBadgeClasses(status: string): string {
     case "resolved":
       return "bg-green-900/40 text-green-400 border-green-800/60";
     default:
-      return "bg-gray-800 text-gray-400 border-gray-700";
+      return "bg-surface-3 text-muted-foreground border-border-strong";
   }
 }
 
@@ -258,7 +258,7 @@ function SeverityBar({ severity }: { severity: number }) {
       >
         {clamped.toFixed(1)}
       </span>
-      <div className="h-2 flex-1 overflow-hidden rounded-full bg-gray-800">
+      <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface-3">
         <div
           className={cn(
             "h-full rounded-full transition-all duration-300",
@@ -267,7 +267,7 @@ function SeverityBar({ severity }: { severity: number }) {
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className="text-[10px] text-gray-600">/10</span>
+      <span className="text-[10px] text-muted-foreground">/10</span>
     </div>
   );
 }
@@ -302,8 +302,8 @@ function HazardEventCard({
       className={cn(
         "border rounded-lg transition-all duration-200",
         expanded
-          ? "bg-gray-900/90 border-gray-700"
-          : "bg-gray-900/50 border-gray-800 hover:bg-gray-900/80",
+          ? "bg-surface-2/90 border-border-strong"
+          : "bg-surface-2/50 border-border hover:bg-surface-2/80",
         event.status === "new" && "border-l-2 border-l-red-500"
       )}
     >
@@ -316,12 +316,12 @@ function HazardEventCard({
         <div
           className={cn(
             "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border",
-            hazard?.bgColor || "bg-gray-800",
-            hazard?.borderColor || "border-gray-700"
+            hazard?.bgColor || "bg-surface-3",
+            hazard?.borderColor || "border-border-strong"
           )}
         >
           <HazardIcon
-            className={cn("h-4 w-4", hazard?.color || "text-gray-400")}
+            className={cn("h-4 w-4", hazard?.color || "text-muted-foreground")}
           />
         </div>
 
@@ -329,19 +329,19 @@ function HazardEventCard({
         <span
           className={cn(
             "shrink-0 text-xs font-semibold uppercase tracking-wider",
-            hazard?.textColor || "text-gray-300"
+            hazard?.textColor || "text-foreground"
           )}
         >
           {hazard?.label || event.hazard_type}
         </span>
 
         {/* Description truncated */}
-        <span className="flex-1 truncate text-sm text-gray-400">
+        <span className="flex-1 truncate text-sm text-muted-foreground">
           {event.description}
         </span>
 
         {/* Camera */}
-        <span className="hidden items-center gap-1 text-xs text-gray-500 md:flex">
+        <span className="hidden items-center gap-1 text-xs text-muted-foreground md:flex">
           <Camera className="h-3 w-3" />
           {event.camera_name}
         </span>
@@ -383,7 +383,7 @@ function HazardEventCard({
         })()}
 
         {/* Time ago */}
-        <span className="flex shrink-0 items-center gap-1 text-[11px] text-gray-500">
+        <span className="flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground">
           <Clock className="h-3 w-3" />
           {timeAgo(event.created_at)}
         </span>
@@ -391,7 +391,7 @@ function HazardEventCard({
         {/* Expand chevron */}
         <ChevronDown
           className={cn(
-            "h-4 w-4 shrink-0 text-gray-600 transition-transform duration-200",
+            "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
             expanded && "rotate-180"
           )}
         />
@@ -399,10 +399,10 @@ function HazardEventCard({
 
       {/* Expanded detail */}
       {expanded && (
-        <div className="border-t border-gray-800 px-4 py-4 space-y-4">
+        <div className="border-t border-border px-4 py-4 space-y-4">
           {/* Severity bar */}
           <div>
-            <h4 className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <h4 className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               <Activity className="h-3.5 w-3.5" />
               Severity Level
             </h4>
@@ -412,7 +412,7 @@ function HazardEventCard({
           {/* Historical trend sparkline */}
           {event.recent_readings && event.recent_readings.length >= 2 && (
             <div>
-              <h4 className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <h4 className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 <BarChart3 className="h-3.5 w-3.5" />
                 Recent Readings Trend
               </h4>
@@ -429,7 +429,7 @@ function HazardEventCard({
                   fill={true}
                   showValue={true}
                 />
-                <span className="text-[10px] text-gray-500">
+                <span className="text-[10px] text-muted-foreground">
                   Last {Math.min(event.recent_readings.length, 20)} readings
                 </span>
               </div>
@@ -438,7 +438,7 @@ function HazardEventCard({
 
           {/* Description */}
           <div>
-            <h4 className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <h4 className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               <ShieldAlert className="h-3.5 w-3.5 text-orange-400" />
               Description
             </h4>
@@ -450,7 +450,7 @@ function HazardEventCard({
           {/* Recommended action */}
           {event.recommended_action && (
             <div>
-              <h4 className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <h4 className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 <CheckCircle2 className="h-3.5 w-3.5 text-amber-400" />
                 Recommended Action
               </h4>
@@ -461,27 +461,27 @@ function HazardEventCard({
           )}
 
           {/* Metadata row */}
-          <div className="flex flex-wrap gap-4 text-xs text-gray-500">
+          <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
             <span>
               ID:{" "}
-              <span className="font-mono text-gray-400">
+              <span className="font-mono text-muted-foreground">
                 {event.id.slice(0, 8)}
               </span>
             </span>
             <span>
               Camera:{" "}
-              <span className="text-gray-400">{event.camera_name}</span>
+              <span className="text-muted-foreground">{event.camera_name}</span>
             </span>
             <span>
               Created:{" "}
-              <span className="text-gray-400">
+              <span className="text-muted-foreground">
                 {formatTimestamp(event.created_at)}
               </span>
             </span>
             {event.acknowledged_at && (
               <span>
                 Acknowledged:{" "}
-                <span className="text-gray-400">
+                <span className="text-muted-foreground">
                   {formatTimestamp(event.acknowledged_at)}
                 </span>
               </span>
@@ -489,7 +489,7 @@ function HazardEventCard({
             {event.resolved_at && (
               <span>
                 Resolved:{" "}
-                <span className="text-gray-400">
+                <span className="text-muted-foreground">
                   {formatTimestamp(event.resolved_at)}
                 </span>
               </span>
@@ -695,7 +695,7 @@ export default function EnvironmentalSafetyPage() {
 
   /* --- Render --- */
   return (
-    <div className="flex h-full flex-col overflow-auto bg-gray-950 text-gray-100">
+    <div className="flex h-full flex-col overflow-auto bg-surface-0 text-foreground">
       {/* ---- Active Hazard Alert Banner ---- */}
       {hasActiveHazards && (
         <div className="border-b border-red-900/50 bg-gradient-to-r from-red-950/80 via-orange-950/60 to-red-950/80 px-6 py-3">
@@ -717,16 +717,16 @@ export default function EnvironmentalSafetyPage() {
       )}
 
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-900/30 border border-orange-800/50">
             <Flame className="h-5 w-5 text-orange-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Environmental Safety Monitor
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Real-time hazard detection and environmental threat monitoring
             </p>
           </div>
@@ -734,7 +734,7 @@ export default function EnvironmentalSafetyPage() {
 
         <button
           onClick={handleRefresh}
-          className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
+          className="flex items-center gap-2 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
         >
           <RefreshCw className="h-3.5 w-3.5" />
           Refresh
@@ -743,13 +743,13 @@ export default function EnvironmentalSafetyPage() {
 
       {/* ---- Stats Row ---- */}
       {stats && (
-        <div className="grid grid-cols-2 gap-3 border-b border-gray-800 px-6 py-4 md:grid-cols-5">
-          <div className="rounded-lg border border-gray-800 bg-gray-900/60 px-4 py-3">
-            <div className="flex items-center gap-2 text-xs text-gray-500">
+        <div className="grid grid-cols-2 gap-3 border-b border-border px-6 py-4 md:grid-cols-5">
+          <div className="rounded-lg border border-border bg-surface-2/60 px-4 py-3">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <BarChart3 className="h-3.5 w-3.5" />
               Total Events
             </div>
-            <p className="mt-1 text-2xl font-bold tabular-nums text-gray-100">
+            <p className="mt-1 text-2xl font-bold tabular-nums text-foreground">
               {stats.total_events}
             </p>
           </div>
@@ -789,12 +789,12 @@ export default function EnvironmentalSafetyPage() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-gray-800 bg-gray-900/60 px-4 py-3">
-            <div className="flex items-center gap-2 text-xs text-gray-500">
+          <div className="rounded-lg border border-border bg-surface-2/60 px-4 py-3">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Camera className="h-3.5 w-3.5" />
               Cameras Monitored
             </div>
-            <p className="mt-1 text-2xl font-bold tabular-nums text-gray-100">
+            <p className="mt-1 text-2xl font-bold tabular-nums text-foreground">
               {stats.cameras_monitored}
             </p>
           </div>
@@ -802,8 +802,8 @@ export default function EnvironmentalSafetyPage() {
       )}
 
       {/* ---- Hazard Type Grid ---- */}
-      <div className="border-b border-gray-800 px-6 py-4">
-        <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+      <div className="border-b border-border px-6 py-4">
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Hazard Categories
         </h2>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-8">
@@ -824,8 +824,8 @@ export default function EnvironmentalSafetyPage() {
                   "flex flex-col items-center gap-1.5 rounded-lg border px-3 py-3 text-center transition-all duration-200",
                   filterHazardType === hazard.type
                     ? cn(hazard.bgColor, hazard.borderColor, "ring-1", hazard.ringColor)
-                    : "border-gray-800 bg-gray-900/40 hover:bg-gray-900/70",
-                  isActive && filterHazardType !== hazard.type && "border-gray-700"
+                    : "border-border bg-surface-2/40 hover:bg-surface-2/70",
+                  isActive && filterHazardType !== hazard.type && "border-border-strong"
                 )}
               >
                 <HIcon
@@ -833,7 +833,7 @@ export default function EnvironmentalSafetyPage() {
                     "h-5 w-5",
                     isActive || filterHazardType === hazard.type
                       ? hazard.color
-                      : "text-gray-600"
+                      : "text-muted-foreground"
                   )}
                 />
                 <span
@@ -841,7 +841,7 @@ export default function EnvironmentalSafetyPage() {
                     "text-[10px] font-medium leading-tight",
                     isActive || filterHazardType === hazard.type
                       ? hazard.textColor
-                      : "text-gray-500"
+                      : "text-muted-foreground"
                   )}
                 >
                   {hazard.label}
@@ -849,7 +849,7 @@ export default function EnvironmentalSafetyPage() {
                 <span
                   className={cn(
                     "text-lg font-bold tabular-nums",
-                    isActive ? hazard.color : "text-gray-700"
+                    isActive ? hazard.color : "text-muted-foreground"
                   )}
                 >
                   {count}
@@ -861,13 +861,13 @@ export default function EnvironmentalSafetyPage() {
       </div>
 
       {/* ---- Filter Bar ---- */}
-      <div className="flex flex-wrap items-center gap-3 border-b border-gray-800 px-6 py-3">
+      <div className="flex flex-wrap items-center gap-3 border-b border-border px-6 py-3">
         {/* Hazard type filter */}
         <div className="relative">
           <select
             value={filterHazardType}
             onChange={(e) => setFilterHazardType(e.target.value)}
-            className="appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2 text-xs text-gray-300 focus:border-orange-700 focus:outline-none focus:ring-1 focus:ring-orange-700"
+            className="appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2 text-xs text-foreground focus:border-orange-700 focus:outline-none focus:ring-1 focus:ring-orange-700"
           >
             {HAZARD_FILTER_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -875,7 +875,7 @@ export default function EnvironmentalSafetyPage() {
               </option>
             ))}
           </select>
-          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
         </div>
 
         {/* Status filter */}
@@ -883,7 +883,7 @@ export default function EnvironmentalSafetyPage() {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2 text-xs text-gray-300 focus:border-orange-700 focus:outline-none focus:ring-1 focus:ring-orange-700"
+            className="appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2 text-xs text-foreground focus:border-orange-700 focus:outline-none focus:ring-1 focus:ring-orange-700"
           >
             {STATUS_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -891,7 +891,7 @@ export default function EnvironmentalSafetyPage() {
               </option>
             ))}
           </select>
-          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
         </div>
 
         {/* Active filter indicator */}
@@ -908,7 +908,7 @@ export default function EnvironmentalSafetyPage() {
         )}
 
         {/* Results info */}
-        <div className="ml-auto text-xs text-gray-500">
+        <div className="ml-auto text-xs text-muted-foreground">
           {!loading && (
             <span>
               Showing {events.length} event{events.length !== 1 ? "s" : ""}
@@ -923,7 +923,7 @@ export default function EnvironmentalSafetyPage() {
         {loading && (
           <div className="flex flex-col items-center justify-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-orange-400" />
-            <p className="mt-3 text-sm text-gray-500">
+            <p className="mt-3 text-sm text-muted-foreground">
               Loading environmental events...
             </p>
           </div>
@@ -936,7 +936,7 @@ export default function EnvironmentalSafetyPage() {
             <p className="text-sm text-red-400">{error}</p>
             <button
               onClick={handleRefresh}
-              className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+              className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             >
               Retry
             </button>
@@ -947,10 +947,10 @@ export default function EnvironmentalSafetyPage() {
         {!loading && !error && events.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20">
             <CheckCircle2 className="mb-2 h-10 w-10 text-emerald-700" />
-            <p className="text-sm font-medium text-gray-400">
+            <p className="text-sm font-medium text-muted-foreground">
               No environmental hazards detected
             </p>
-            <p className="mt-1 text-xs text-gray-600">
+            <p className="mt-1 text-xs text-muted-foreground">
               {filterHazardType !== "all" || filterStatus !== "all"
                 ? "Try adjusting your filters"
                 : "All clear -- the environment is safe"}

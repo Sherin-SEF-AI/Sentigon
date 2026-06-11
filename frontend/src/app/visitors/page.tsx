@@ -102,7 +102,7 @@ const TAB_LABELS: Record<Tab, string> = {
 const STATUS_BADGE: Record<string, string> = {
   pre_registered: "text-blue-400 bg-blue-900/30",
   checked_in: "text-green-400 bg-green-900/30",
-  checked_out: "text-gray-400 bg-gray-800",
+  checked_out: "text-muted-foreground bg-surface-3",
   overstay: "text-red-400 bg-red-900/30",
   denied: "text-red-500 bg-red-900/40",
 };
@@ -216,8 +216,8 @@ function VisitorAnalyticsTab({ visitors }: { visitors: Visitor[] }) {
   if (visitors.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <BarChart2 className="mb-2 h-10 w-10 text-gray-700" />
-        <p className="text-sm text-gray-500">No visitor data to analyse yet.</p>
+        <BarChart2 className="mb-2 h-10 w-10 text-muted-foreground" />
+        <p className="text-sm text-muted-foreground">No visitor data to analyse yet.</p>
       </div>
     );
   }
@@ -226,13 +226,13 @@ function VisitorAnalyticsTab({ visitors }: { visitors: Visitor[] }) {
     <div className="space-y-8 pb-8">
       {/* Summary cards */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <div className="rounded-lg border border-gray-800 bg-zinc-900/60 p-4">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Total (loaded)</p>
-          <p className="mt-1 text-2xl font-bold text-gray-100">{visitors.length}</p>
+        <div className="rounded-lg border border-border bg-zinc-900/60 p-4">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Total (loaded)</p>
+          <p className="mt-1 text-2xl font-bold text-foreground">{visitors.length}</p>
         </div>
-        <div className="rounded-lg border border-gray-800 bg-zinc-900/60 p-4">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Avg Duration</p>
-          <p className="mt-1 text-2xl font-bold text-gray-100">
+        <div className="rounded-lg border border-border bg-zinc-900/60 p-4">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Avg Duration</p>
+          <p className="mt-1 text-2xl font-bold text-foreground">
             {avgDurationMin === null
               ? "---"
               : avgDurationMin >= 60
@@ -254,23 +254,23 @@ function VisitorAnalyticsTab({ visitors }: { visitors: Visitor[] }) {
 
       {/* Visit Volume — Last 7 Days */}
       <section>
-        <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-300">
+        <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
           <Calendar className="h-4 w-4 text-cyan-400" />
           Visit Volume — Last 7 Days
         </h3>
-        <div className="rounded-lg border border-gray-800 bg-zinc-900/60 p-4 space-y-2">
+        <div className="rounded-lg border border-border bg-zinc-900/60 p-4 space-y-2">
           {visitsByDay.map(({ label, count }) => {
             const pct = (count / maxDayCount) * 100;
             return (
               <div key={label} className="flex items-center gap-3">
-                <span className="w-28 shrink-0 text-right text-[11px] text-gray-500">{label}</span>
-                <div className="relative flex-1 h-5 rounded overflow-hidden bg-gray-800/60">
+                <span className="w-28 shrink-0 text-right text-[11px] text-muted-foreground">{label}</span>
+                <div className="relative flex-1 h-5 rounded overflow-hidden bg-surface-3/60">
                   <div
                     className="h-full rounded bg-cyan-700/70 transition-all duration-300"
                     style={{ width: `${pct}%` }}
                   />
                 </div>
-                <span className="w-8 shrink-0 text-right text-[11px] font-mono text-gray-400">{count}</span>
+                <span className="w-8 shrink-0 text-right text-[11px] font-mono text-muted-foreground">{count}</span>
               </div>
             );
           })}
@@ -279,25 +279,25 @@ function VisitorAnalyticsTab({ visitors }: { visitors: Visitor[] }) {
 
       {/* Peak Visiting Hours */}
       <section>
-        <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-300">
+        <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
           <Clock className="h-4 w-4 text-cyan-400" />
           Peak Visiting Hours
         </h3>
-        <div className="rounded-lg border border-gray-800 bg-zinc-900/60 p-4 space-y-1.5">
+        <div className="rounded-lg border border-border bg-zinc-900/60 p-4 space-y-1.5">
           {visitsByHour.map(({ hour, count }) => {
             const pct = (count / maxHourCount) * 100;
             return (
               <div key={hour} className="flex items-center gap-3">
-                <span className="w-12 shrink-0 text-right text-[11px] font-mono text-gray-500">
+                <span className="w-12 shrink-0 text-right text-[11px] font-mono text-muted-foreground">
                   {String(hour).padStart(2, "0")}:00
                 </span>
-                <div className="relative flex-1 h-4 rounded overflow-hidden bg-gray-800/60">
+                <div className="relative flex-1 h-4 rounded overflow-hidden bg-surface-3/60">
                   <div
                     className="h-full rounded bg-blue-700/70 transition-all duration-300"
                     style={{ width: `${pct}%` }}
                   />
                 </div>
-                <span className="w-8 shrink-0 text-right text-[11px] font-mono text-gray-400">{count}</span>
+                <span className="w-8 shrink-0 text-right text-[11px] font-mono text-muted-foreground">{count}</span>
               </div>
             );
           })}
@@ -387,12 +387,12 @@ function VisitorDetailPanel({
   const overstayLabel = getOverstayLabel(visitor);
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 flex w-[480px] flex-col border-l border-gray-800 bg-[#030712] shadow-2xl">
-      <div className="flex items-center justify-between border-b border-gray-800 px-5 py-4">
-        <h2 className="text-sm font-bold text-gray-100">Visitor Details</h2>
+    <div className="fixed inset-y-0 right-0 z-50 flex w-[480px] flex-col border-l border-border bg-[#030712] shadow-2xl">
+      <div className="flex items-center justify-between border-b border-border px-5 py-4">
+        <h2 className="text-sm font-bold text-foreground">Visitor Details</h2>
         <button
           onClick={onClose}
-          className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-800 hover:text-gray-300"
+          className="rounded-lg p-1.5 text-muted-foreground hover:bg-surface-3 hover:text-foreground"
         >
           <X className="h-4 w-4" />
         </button>
@@ -416,7 +416,7 @@ function VisitorDetailPanel({
 
         {/* Photo + Basic Info */}
         <div className="flex items-start gap-4">
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl border border-gray-700 bg-gray-900">
+          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl border border-border-strong bg-surface-2">
             {visitor.photo_url ? (
               <img
                 src={visitor.photo_url}
@@ -424,18 +424,18 @@ function VisitorDetailPanel({
                 className="h-full w-full rounded-xl object-cover"
               />
             ) : (
-              <Users className="h-8 w-8 text-gray-600" />
+              <Users className="h-8 w-8 text-muted-foreground" />
             )}
           </div>
           <div>
-            <h3 className="text-lg font-bold text-gray-100">
+            <h3 className="text-lg font-bold text-foreground">
               {visitor.first_name} {visitor.last_name}
             </h3>
-            <p className="text-xs text-gray-400">{visitor.company || "No company"}</p>
+            <p className="text-xs text-muted-foreground">{visitor.company || "No company"}</p>
             <span
               className={cn(
                 "mt-1 inline-block rounded px-2 py-0.5 text-[10px] font-semibold uppercase",
-                STATUS_BADGE[visitor.status] || "text-gray-400 bg-gray-800"
+                STATUS_BADGE[visitor.status] || "text-muted-foreground bg-surface-3"
               )}
             >
               {visitor.status.replace("_", " ")}
@@ -445,13 +445,13 @@ function VisitorDetailPanel({
 
         {/* QR Badge */}
         {visitor.qr_code_url && (
-          <div className="flex flex-col items-center rounded-lg border border-gray-800 bg-zinc-900/50 p-4">
+          <div className="flex flex-col items-center rounded-lg border border-border bg-zinc-900/50 p-4">
             <img
               src={visitor.qr_code_url}
               alt="QR Badge"
               className="h-32 w-32 rounded-lg"
             />
-            <p className="mt-2 text-[10px] text-gray-500 uppercase tracking-wider">
+            <p className="mt-2 text-[10px] text-muted-foreground uppercase tracking-wider">
               Visitor Badge QR
             </p>
           </div>
@@ -459,46 +459,46 @@ function VisitorDetailPanel({
 
         {/* Contact Info */}
         <div className="space-y-2">
-          <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-500">
+          <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
             Contact
           </h4>
-          <div className="flex items-center gap-2 text-xs text-gray-300">
-            <Mail className="h-3.5 w-3.5 text-gray-500" />
+          <div className="flex items-center gap-2 text-xs text-foreground">
+            <Mail className="h-3.5 w-3.5 text-muted-foreground" />
             {visitor.email || "---"}
           </div>
-          <div className="flex items-center gap-2 text-xs text-gray-300">
-            <Phone className="h-3.5 w-3.5 text-gray-500" />
+          <div className="flex items-center gap-2 text-xs text-foreground">
+            <Phone className="h-3.5 w-3.5 text-muted-foreground" />
             {visitor.phone || "---"}
           </div>
-          <div className="flex items-center gap-2 text-xs text-gray-300">
-            <Building2 className="h-3.5 w-3.5 text-gray-500" />
+          <div className="flex items-center gap-2 text-xs text-foreground">
+            <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
             {visitor.company || "---"}
           </div>
         </div>
 
         {/* Visit Info */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-3">
-            <span className="text-[10px] text-gray-500 uppercase">Host</span>
-            <p className="mt-0.5 text-sm font-medium text-gray-200">
+          <div className="rounded-lg border border-border bg-surface-2/50 p-3">
+            <span className="text-[10px] text-muted-foreground uppercase">Host</span>
+            <p className="mt-0.5 text-sm font-medium text-foreground">
               {visitor.host || "---"}
             </p>
           </div>
-          <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-3">
-            <span className="text-[10px] text-gray-500 uppercase">Purpose</span>
-            <p className="mt-0.5 text-sm font-medium text-gray-200">
+          <div className="rounded-lg border border-border bg-surface-2/50 p-3">
+            <span className="text-[10px] text-muted-foreground uppercase">Purpose</span>
+            <p className="mt-0.5 text-sm font-medium text-foreground">
               {visitor.purpose || "---"}
             </p>
           </div>
-          <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-3">
-            <span className="text-[10px] text-gray-500 uppercase">Type</span>
-            <p className="mt-0.5 text-sm font-medium text-gray-200 capitalize">
+          <div className="rounded-lg border border-border bg-surface-2/50 p-3">
+            <span className="text-[10px] text-muted-foreground uppercase">Type</span>
+            <p className="mt-0.5 text-sm font-medium text-foreground capitalize">
               {visitor.visitor_type}
             </p>
           </div>
-          <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-3">
-            <span className="text-[10px] text-gray-500 uppercase">Escort</span>
-            <p className="mt-0.5 text-sm font-medium text-gray-200">
+          <div className="rounded-lg border border-border bg-surface-2/50 p-3">
+            <span className="text-[10px] text-muted-foreground uppercase">Escort</span>
+            <p className="mt-0.5 text-sm font-medium text-foreground">
               {visitor.escort_required ? "Required" : "Not required"}
             </p>
           </div>
@@ -507,14 +507,14 @@ function VisitorDetailPanel({
         {/* Zones */}
         {visitor.zones.length > 0 && (
           <div>
-            <h4 className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+            <h4 className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
               Authorized Zones
             </h4>
             <div className="flex flex-wrap gap-1.5">
               {visitor.zones.map((z) => (
                 <span
                   key={z}
-                  className="rounded-full border border-gray-700 bg-gray-800 px-2.5 py-0.5 text-[10px] text-gray-300"
+                  className="rounded-full border border-border-strong bg-surface-3 px-2.5 py-0.5 text-[10px] text-foreground"
                 >
                   {z}
                 </span>
@@ -580,34 +580,34 @@ function VisitorDetailPanel({
 
         {/* Access Log Timeline */}
         <div>
-          <h4 className="mb-2 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+          <h4 className="mb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
             Access Log
           </h4>
           {logLoading ? (
-            <div className="flex items-center gap-2 text-xs text-gray-500">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Loader2 className="h-3 w-3 animate-spin" />
               Loading...
             </div>
           ) : accessLog.length === 0 ? (
-            <p className="text-xs text-gray-600">No access log entries.</p>
+            <p className="text-xs text-muted-foreground">No access log entries.</p>
           ) : (
             <div className="space-y-2">
               {accessLog.map((entry) => (
                 <div
                   key={entry.id}
-                  className="flex items-start gap-2 rounded-lg border border-gray-800 bg-gray-900/40 p-2.5"
+                  className="flex items-start gap-2 rounded-lg border border-border bg-surface-2/40 p-2.5"
                 >
                   <div className="mt-0.5 h-2 w-2 shrink-0 rounded-full bg-cyan-500" />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-gray-200">
+                      <span className="text-xs font-semibold text-foreground">
                         {entry.action}
                       </span>
-                      <span className="text-[10px] text-gray-500">
+                      <span className="text-[10px] text-muted-foreground">
                         {formatTimestamp(entry.timestamp)}
                       </span>
                     </div>
-                    <p className="mt-0.5 text-[11px] text-gray-400">
+                    <p className="mt-0.5 text-[11px] text-muted-foreground">
                       {entry.zone} &mdash; {entry.details}
                     </p>
                   </div>
@@ -691,20 +691,20 @@ function PreRegisterForm({ onCreated }: { onCreated: () => void }) {
     return (
       <div className="flex flex-col items-center justify-center py-12 space-y-4">
         <CheckCircle2 className="h-12 w-12 text-green-400" />
-        <h3 className="text-lg font-bold text-gray-100">
+        <h3 className="text-lg font-bold text-foreground">
           Visitor Pre-Registered
         </h3>
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-muted-foreground">
           {createdVisitor.first_name} {createdVisitor.last_name}
         </p>
         {createdVisitor.qr_code_url && (
-          <div className="rounded-lg border border-gray-800 bg-zinc-900/50 p-6">
+          <div className="rounded-lg border border-border bg-zinc-900/50 p-6">
             <img
               src={createdVisitor.qr_code_url}
               alt="QR Badge"
               className="h-48 w-48 rounded-lg"
             />
-            <p className="mt-3 text-center text-[10px] text-gray-500 uppercase tracking-wider">
+            <p className="mt-3 text-center text-[10px] text-muted-foreground uppercase tracking-wider">
               Visitor Badge QR Code
             </p>
           </div>
@@ -727,7 +727,7 @@ function PreRegisterForm({ onCreated }: { onCreated: () => void }) {
               photo_url: null,
             });
           }}
-          className="rounded-lg border border-gray-700 px-4 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200"
+          className="rounded-lg border border-border-strong px-4 py-2 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground"
         >
           Register Another Visitor
         </button>
@@ -739,96 +739,96 @@ function PreRegisterForm({ onCreated }: { onCreated: () => void }) {
     <div className="mx-auto max-w-2xl space-y-4 py-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="mb-1 block text-xs font-semibold text-gray-400">
+          <label className="mb-1 block text-xs font-semibold text-muted-foreground">
             First Name *
           </label>
           <input
             value={form.first_name}
             onChange={(e) => updateField("first_name", e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 focus:border-cyan-700 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-semibold text-gray-400">
+          <label className="mb-1 block text-xs font-semibold text-muted-foreground">
             Last Name *
           </label>
           <input
             value={form.last_name}
             onChange={(e) => updateField("last_name", e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 focus:border-cyan-700 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
           />
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="mb-1 block text-xs font-semibold text-gray-400">
+          <label className="mb-1 block text-xs font-semibold text-muted-foreground">
             Email
           </label>
           <input
             type="email"
             value={form.email}
             onChange={(e) => updateField("email", e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 focus:border-cyan-700 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-semibold text-gray-400">
+          <label className="mb-1 block text-xs font-semibold text-muted-foreground">
             Phone
           </label>
           <input
             type="tel"
             value={form.phone}
             onChange={(e) => updateField("phone", e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 focus:border-cyan-700 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
           />
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="mb-1 block text-xs font-semibold text-gray-400">
+          <label className="mb-1 block text-xs font-semibold text-muted-foreground">
             Company
           </label>
           <input
             value={form.company}
             onChange={(e) => updateField("company", e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 focus:border-cyan-700 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-semibold text-gray-400">
+          <label className="mb-1 block text-xs font-semibold text-muted-foreground">
             Host
           </label>
           <input
             value={form.host}
             onChange={(e) => updateField("host", e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 focus:border-cyan-700 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
           />
         </div>
       </div>
 
       <div>
-        <label className="mb-1 block text-xs font-semibold text-gray-400">
+        <label className="mb-1 block text-xs font-semibold text-muted-foreground">
           Purpose
         </label>
         <input
           value={form.purpose}
           onChange={(e) => updateField("purpose", e.target.value)}
           placeholder="Meeting, delivery, interview..."
-          className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 focus:border-cyan-700 focus:outline-none"
+          className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
         />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="mb-1 block text-xs font-semibold text-gray-400">
+          <label className="mb-1 block text-xs font-semibold text-muted-foreground">
             Visitor Type
           </label>
           <select
             value={form.visitor_type}
             onChange={(e) => updateField("visitor_type", e.target.value)}
-            className="w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-300 focus:border-cyan-700 focus:outline-none"
+            className="w-full appearance-none rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
           >
             {VISITOR_TYPES.map((t) => (
               <option key={t} value={t}>
@@ -838,14 +838,14 @@ function PreRegisterForm({ onCreated }: { onCreated: () => void }) {
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-xs font-semibold text-gray-400">
+          <label className="mb-1 block text-xs font-semibold text-muted-foreground">
             Expected Checkout
           </label>
           <input
             type="datetime-local"
             value={form.expected_checkout}
             onChange={(e) => updateField("expected_checkout", e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-300 focus:border-cyan-700 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
           />
         </div>
       </div>
@@ -859,7 +859,7 @@ function PreRegisterForm({ onCreated }: { onCreated: () => void }) {
             "relative h-6 w-11 rounded-full border transition-colors",
             form.escort_required
               ? "bg-cyan-600 border-cyan-500"
-              : "bg-gray-700 border-gray-600"
+              : "bg-surface-3 border-border-strong"
           )}
         >
           <span
@@ -869,12 +869,12 @@ function PreRegisterForm({ onCreated }: { onCreated: () => void }) {
             )}
           />
         </button>
-        <span className="text-xs text-gray-300">Escort Required</span>
+        <span className="text-xs text-foreground">Escort Required</span>
       </div>
 
       {/* Photo Upload */}
       <div>
-        <label className="mb-1 block text-xs font-semibold text-gray-400">
+        <label className="mb-1 block text-xs font-semibold text-muted-foreground">
           Visitor Photo
         </label>
         <div className="flex items-center gap-3">
@@ -894,7 +894,7 @@ function PreRegisterForm({ onCreated }: { onCreated: () => void }) {
               <img
                 src={form.photo_url}
                 alt="Visitor preview"
-                className="h-12 w-12 rounded-full object-cover border border-gray-700"
+                className="h-12 w-12 rounded-full object-cover border border-border-strong"
               />
               <button
                 type="button"
@@ -910,7 +910,7 @@ function PreRegisterForm({ onCreated }: { onCreated: () => void }) {
 
       {/* Zones Multi-Select */}
       <div>
-        <label className="mb-1 block text-xs font-semibold text-gray-400">
+        <label className="mb-1 block text-xs font-semibold text-muted-foreground">
           Authorized Zones
         </label>
         <div className="flex items-center gap-2">
@@ -919,12 +919,12 @@ function PreRegisterForm({ onCreated }: { onCreated: () => void }) {
             onChange={(e) => setZoneInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addZone())}
             placeholder="Add zone..."
-            className="flex-1 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 focus:border-cyan-700 focus:outline-none"
+            className="flex-1 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
           />
           <button
             type="button"
             onClick={addZone}
-            className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-xs text-gray-300 hover:bg-gray-700"
+            className="rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-xs text-foreground hover:bg-surface-3"
           >
             Add
           </button>
@@ -934,10 +934,10 @@ function PreRegisterForm({ onCreated }: { onCreated: () => void }) {
             {form.zones.map((z) => (
               <span
                 key={z}
-                className="flex items-center gap-1 rounded-full border border-gray-700 bg-gray-800 px-2.5 py-0.5 text-[10px] text-gray-300"
+                className="flex items-center gap-1 rounded-full border border-border-strong bg-surface-3 px-2.5 py-0.5 text-[10px] text-foreground"
               >
                 {z}
-                <button onClick={() => removeZone(z)} className="text-gray-500 hover:text-gray-300">
+                <button onClick={() => removeZone(z)} className="text-muted-foreground hover:text-foreground">
                   <X className="h-2.5 w-2.5" />
                 </button>
               </span>
@@ -1026,7 +1026,7 @@ function WatchlistTab() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-300">
+        <h3 className="text-sm font-semibold text-foreground">
           Watchlist Entries
         </h3>
         <button
@@ -1039,7 +1039,7 @@ function WatchlistTab() {
       </div>
 
       {showAdd && (
-        <div className="rounded-lg border border-gray-800 bg-zinc-900/50 p-4 space-y-3">
+        <div className="rounded-lg border border-border bg-zinc-900/50 p-4 space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <input
               value={addForm.first_name}
@@ -1047,7 +1047,7 @@ function WatchlistTab() {
                 setAddForm((p) => ({ ...p, first_name: e.target.value }))
               }
               placeholder="First name"
-              className="rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 focus:border-cyan-700 focus:outline-none"
+              className="rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
             />
             <input
               value={addForm.last_name}
@@ -1055,7 +1055,7 @@ function WatchlistTab() {
                 setAddForm((p) => ({ ...p, last_name: e.target.value }))
               }
               placeholder="Last name"
-              className="rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 focus:border-cyan-700 focus:outline-none"
+              className="rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
             />
           </div>
           <input
@@ -1064,7 +1064,7 @@ function WatchlistTab() {
               setAddForm((p) => ({ ...p, reason: e.target.value }))
             }
             placeholder="Reason for watchlist..."
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 focus:border-cyan-700 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground focus:border-cyan-700 focus:outline-none"
           />
           <div className="flex items-center gap-2">
             <button
@@ -1077,7 +1077,7 @@ function WatchlistTab() {
             </button>
             <button
               onClick={() => setShowAdd(false)}
-              className="rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800"
+              className="rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3"
             >
               Cancel
             </button>
@@ -1091,25 +1091,25 @@ function WatchlistTab() {
         </div>
       ) : entries.length === 0 ? (
         <div className="flex flex-col items-center py-12">
-          <Shield className="mb-2 h-10 w-10 text-gray-700" />
-          <p className="text-sm text-gray-500">No watchlist entries</p>
+          <Shield className="mb-2 h-10 w-10 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">No watchlist entries</p>
         </div>
       ) : (
         <div className="space-y-2">
           {entries.map((entry) => (
             <div
               key={entry.id}
-              className="flex items-center justify-between rounded-lg border border-gray-800 bg-zinc-900/50 p-3"
+              className="flex items-center justify-between rounded-lg border border-border bg-zinc-900/50 p-3"
             >
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-900/30 border border-red-800/50">
                   <ShieldAlert className="h-5 w-5 text-red-400" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-gray-200">
+                  <p className="text-sm font-semibold text-foreground">
                     {entry.first_name} {entry.last_name}
                   </p>
-                  <p className="text-[11px] text-gray-500">
+                  <p className="text-[11px] text-muted-foreground">
                     {entry.reason} &mdash; Added by {entry.added_by},{" "}
                     {timeAgo(entry.created_at)}
                   </p>
@@ -1118,7 +1118,7 @@ function WatchlistTab() {
               <button
                 onClick={() => handleDelete(entry.id)}
                 disabled={deleteLoading === entry.id}
-                className="rounded-lg p-2 text-gray-500 hover:bg-gray-800 hover:text-red-400 disabled:opacity-50"
+                className="rounded-lg p-2 text-muted-foreground hover:bg-surface-3 hover:text-red-400 disabled:opacity-50"
               >
                 {deleteLoading === entry.id ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -1239,16 +1239,16 @@ export default function VisitorManagementPage() {
   return (
     <div className="flex h-full flex-col bg-[#030712]">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-900/30 border border-blue-800/50">
             <Users className="h-5 w-5 text-blue-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Visitor Management
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Track, register, and manage facility visitors
             </p>
           </div>
@@ -1257,25 +1257,25 @@ export default function VisitorManagementPage() {
 
       {/* Stats Bar */}
       {stats && (
-        <div className="grid grid-cols-4 gap-4 border-b border-gray-800 px-6 py-3">
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/60 p-3">
+        <div className="grid grid-cols-4 gap-4 border-b border-border px-6 py-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/60 p-3">
             <UserCheck className="h-5 w-5 text-green-400" />
             <div>
-              <p className="text-lg font-bold text-gray-100">
+              <p className="text-lg font-bold text-foreground">
                 {stats.checked_in}
               </p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 Checked In
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/60 p-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/60 p-3">
             <Users className="h-5 w-5 text-cyan-400" />
             <div>
-              <p className="text-lg font-bold text-gray-100">
+              <p className="text-lg font-bold text-foreground">
                 {stats.today_total}
               </p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 Today Total
               </p>
             </div>
@@ -1286,18 +1286,18 @@ export default function VisitorManagementPage() {
               <p className="text-lg font-bold text-red-400">
                 {stats.overstays}
               </p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 Overstays
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/60 p-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/60 p-3">
             <ShieldAlert className="h-5 w-5 text-orange-400" />
             <div>
-              <p className="text-lg font-bold text-gray-100">
+              <p className="text-lg font-bold text-foreground">
                 {stats.watchlist_matches}
               </p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 Watchlist Matches
               </p>
             </div>
@@ -1306,7 +1306,7 @@ export default function VisitorManagementPage() {
       )}
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 border-b border-gray-800 px-6">
+      <div className="flex items-center gap-1 border-b border-border px-6">
         {TABS.map((tab) => (
           <button
             key={tab}
@@ -1315,7 +1315,7 @@ export default function VisitorManagementPage() {
               "px-4 py-3 text-xs font-semibold uppercase tracking-wider border-b-2 transition-colors",
               activeTab === tab
                 ? "border-cyan-400 text-cyan-400"
-                : "border-transparent text-gray-500 hover:text-gray-300"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             )}
           >
             {TAB_LABELS[tab]}
@@ -1330,19 +1330,19 @@ export default function VisitorManagementPage() {
           <>
             {/* Search */}
             <div className="mb-4 relative max-w-sm">
-              <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+              <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
               <input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search visitors..."
-                className="w-full rounded-lg border border-gray-700 bg-gray-900 pl-9 pr-3 py-2 text-xs text-gray-300 placeholder:text-gray-600 focus:border-cyan-700 focus:outline-none"
+                className="w-full rounded-lg border border-border-strong bg-surface-2 pl-9 pr-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:border-cyan-700 focus:outline-none"
               />
             </div>
 
             {loading ? (
               <div className="flex flex-col items-center justify-center py-20">
                 <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-                <p className="mt-3 text-sm text-gray-500">Loading visitors...</p>
+                <p className="mt-3 text-sm text-muted-foreground">Loading visitors...</p>
               </div>
             ) : error ? (
               <div className="flex flex-col items-center justify-center py-20">
@@ -1351,15 +1351,15 @@ export default function VisitorManagementPage() {
               </div>
             ) : visitors.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20">
-                <Users className="mb-2 h-10 w-10 text-gray-700" />
-                <p className="text-sm font-medium text-gray-400">
+                <Users className="mb-2 h-10 w-10 text-muted-foreground" />
+                <p className="text-sm font-medium text-muted-foreground">
                   No visitors found
                 </p>
               </div>
             ) : (
               <table className="w-full text-left text-sm">
                 <thead className="sticky top-0 z-10 bg-zinc-900/90 backdrop-blur">
-                  <tr className="border-b border-gray-800 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+                  <tr className="border-b border-border text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                     <th className="px-4 py-3">Name</th>
                     <th className="px-3 py-3">Company</th>
                     <th className="px-3 py-3">Host</th>
@@ -1374,7 +1374,7 @@ export default function VisitorManagementPage() {
                     <tr
                       key={v.id}
                       onClick={() => setSelectedVisitor(v)}
-                      className="border-b border-gray-800/50 cursor-pointer transition-colors hover:bg-zinc-900/70"
+                      className="border-b border-border/50 cursor-pointer transition-colors hover:bg-zinc-900/70"
                     >
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
@@ -1384,42 +1384,42 @@ export default function VisitorManagementPage() {
                               <img
                                 src={v.photo_url}
                                 alt={`${v.first_name} ${v.last_name}`}
-                                className="h-7 w-7 rounded-full object-cover border border-gray-700"
+                                className="h-7 w-7 rounded-full object-cover border border-border-strong"
                               />
                             ) : (
-                              <div className="flex h-7 w-7 items-center justify-center rounded-full border border-gray-800 bg-gray-900">
-                                <Users className="h-3.5 w-3.5 text-gray-600" />
+                              <div className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-surface-2">
+                                <Users className="h-3.5 w-3.5 text-muted-foreground" />
                               </div>
                             )}
                           </div>
                           {v.watchlist_match && (
                             <ShieldAlert className="h-3.5 w-3.5 text-red-500 shrink-0" />
                           )}
-                          <span className="font-medium text-gray-200">
+                          <span className="font-medium text-foreground">
                             {v.first_name} {v.last_name}
                           </span>
                         </div>
                       </td>
-                      <td className="px-3 py-3 text-xs text-gray-400">
+                      <td className="px-3 py-3 text-xs text-muted-foreground">
                         {v.company || "---"}
                       </td>
-                      <td className="px-3 py-3 text-xs text-gray-400">
+                      <td className="px-3 py-3 text-xs text-muted-foreground">
                         {v.host || "---"}
                       </td>
-                      <td className="px-3 py-3 text-xs text-gray-400 capitalize">
+                      <td className="px-3 py-3 text-xs text-muted-foreground capitalize">
                         {v.visitor_type}
                       </td>
                       <td className="px-3 py-3">
                         <span
                           className={cn(
                             "rounded px-2 py-0.5 text-[10px] font-semibold uppercase",
-                            STATUS_BADGE[v.status] || "text-gray-400 bg-gray-800"
+                            STATUS_BADGE[v.status] || "text-muted-foreground bg-surface-3"
                           )}
                         >
                           {v.status.replace("_", " ")}
                         </span>
                       </td>
-                      <td className="px-3 py-3 text-[11px] text-gray-500">
+                      <td className="px-3 py-3 text-[11px] text-muted-foreground">
                         {v.checked_in_at
                           ? formatTimestamp(v.checked_in_at)
                           : "---"}

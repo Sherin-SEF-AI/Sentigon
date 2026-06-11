@@ -207,7 +207,7 @@ function CircularProgress({ score, size = 160 }: { score: number; size?: number 
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className={cn("text-3xl font-bold", scoreColor(score))}>{score}</span>
-        <span className="text-[10px] text-gray-500 uppercase tracking-wider">Score</span>
+        <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Score</span>
       </div>
     </div>
   );
@@ -423,7 +423,7 @@ export default function CameraPrivacyTab() {
       <div className="flex h-full items-center justify-center bg-[#030712]">
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="h-10 w-10 animate-spin text-cyan-400" />
-          <p className="text-sm text-gray-500">Loading privacy center...</p>
+          <p className="text-sm text-muted-foreground">Loading privacy center...</p>
         </div>
       </div>
     );
@@ -432,23 +432,23 @@ export default function CameraPrivacyTab() {
   return (
     <div className="flex h-full flex-col bg-[#030712]">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-900/30 border border-teal-800/50">
             <Shield className="h-5 w-5 text-teal-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Privacy & Compliance Center
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Privacy controls, compliance scoring, and data governance
             </p>
           </div>
         </div>
         <button
           onClick={() => { setLoading(true); fetchInitial(); }}
-          className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800 transition-colors"
+          className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 transition-colors"
         >
           <RefreshCw className="h-3.5 w-3.5" /> Refresh
         </button>
@@ -465,23 +465,23 @@ export default function CameraPrivacyTab() {
 
       {/* Compliance scorecard overview */}
       {scorecard && (
-        <div className="border-b border-gray-800 px-6 py-4">
+        <div className="border-b border-border px-6 py-4">
           <div className="flex items-center gap-8">
             <CircularProgress score={scorecard.overall_score} />
             <div className="flex-1 grid grid-cols-5 gap-3">
               {(Object.entries(scorecard.categories) as [string, number][]).map(([cat, score]) => (
-                <div key={cat} className="rounded-lg border border-gray-800 bg-zinc-900/60 p-3">
+                <div key={cat} className="rounded-lg border border-border bg-zinc-900/60 p-3">
                   <div className="flex items-center gap-2 mb-1">
                     {cat === "retention" && <Clock className="h-3.5 w-3.5 text-blue-400" />}
                     {cat === "consent" && <UserCheck className="h-3.5 w-3.5 text-green-400" />}
                     {cat === "access" && <KeyRound className="h-3.5 w-3.5 text-purple-400" />}
                     {cat === "redaction" && <EyeOff className="h-3.5 w-3.5 text-orange-400" />}
                     {cat === "audit" && <FileText className="h-3.5 w-3.5 text-cyan-400" />}
-                    <span className="text-[10px] text-gray-500 uppercase tracking-wider">{cat}</span>
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{cat}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className={cn("text-lg font-bold", scoreColor(score))}>{score}</span>
-                    <div className="flex-1 h-1.5 rounded-full bg-gray-800 overflow-hidden">
+                    <div className="flex-1 h-1.5 rounded-full bg-surface-3 overflow-hidden">
                       <div
                         className="h-full rounded-full transition-all duration-500"
                         style={{
@@ -496,13 +496,13 @@ export default function CameraPrivacyTab() {
             </div>
           </div>
           {scorecard.last_assessed && (
-            <p className="text-[10px] text-gray-600 mt-2">Last assessed: {timeAgo(scorecard.last_assessed)}</p>
+            <p className="text-[10px] text-muted-foreground mt-2">Last assessed: {timeAgo(scorecard.last_assessed)}</p>
           )}
         </div>
       )}
 
       {/* Tab navigation */}
-      <div className="flex items-center gap-1 border-b border-gray-800 px-6">
+      <div className="flex items-center gap-1 border-b border-border px-6">
         {TABS.map((tab) => (
           <button
             key={tab}
@@ -511,7 +511,7 @@ export default function CameraPrivacyTab() {
               "px-4 py-2.5 text-xs font-medium border-b-2 transition-colors",
               activeTab === tab
                 ? "border-cyan-400 text-cyan-400"
-                : "border-transparent text-gray-500 hover:text-gray-300"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             )}
           >
             {tab}
@@ -525,7 +525,7 @@ export default function CameraPrivacyTab() {
         {activeTab === "Scorecard" && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <BarChart3 className="h-4 w-4 text-teal-400" />
                 Compliance Assessment
               </h2>
@@ -542,32 +542,32 @@ export default function CameraPrivacyTab() {
             {/* Issues list */}
             {issues.length > 0 && (
               <div className="space-y-2">
-                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   Issues Found ({issues.length})
                 </h3>
                 {issues.map((issue) => (
                   <div key={issue.id} className={cn(
                     "rounded-xl border p-4",
-                    issue.resolved ? "border-gray-800/50 bg-gray-900/30 opacity-60" :
+                    issue.resolved ? "border-border/50 bg-surface-2/30 opacity-60" :
                     issue.severity === "critical" ? "border-red-800/60 bg-red-950/20" :
                     issue.severity === "high" ? "border-orange-800/50 bg-orange-950/10" :
-                    "border-gray-800 bg-zinc-900/30"
+                    "border-border bg-zinc-900/30"
                   )}>
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs font-semibold text-gray-200">{issue.title}</span>
+                          <span className="text-xs font-semibold text-foreground">{issue.title}</span>
                           <span className={cn(
                             "rounded px-1.5 py-0.5 text-[9px] font-bold uppercase border",
                             SEVERITY_BADGE[issue.severity]
                           )}>
                             {issue.severity}
                           </span>
-                          <span className="rounded bg-gray-800/60 px-1.5 py-0.5 text-[9px] text-gray-500">
+                          <span className="rounded bg-surface-3/60 px-1.5 py-0.5 text-[9px] text-muted-foreground">
                             {issue.category}
                           </span>
                         </div>
-                        <p className="text-[11px] text-gray-400">{issue.description}</p>
+                        <p className="text-[11px] text-muted-foreground">{issue.description}</p>
                         {issue.recommendation && (
                           <div className="mt-2 flex items-start gap-2 rounded-lg bg-teal-500/5 border border-teal-500/20 px-3 py-2">
                             <CheckCircle2 className="h-3 w-3 text-teal-400 mt-0.5 shrink-0" />
@@ -585,7 +585,7 @@ export default function CameraPrivacyTab() {
             )}
 
             {issues.length === 0 && !assessing && (
-              <div className="flex flex-col items-center justify-center py-16 text-gray-600">
+              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <Shield className="h-10 w-10 mb-3 opacity-30" />
                 <p className="text-sm">Run an assessment to check compliance status</p>
                 <p className="text-xs mt-1">The AI will analyze your privacy configuration across all cameras and zones</p>
@@ -597,7 +597,7 @@ export default function CameraPrivacyTab() {
         {/* ============ SILHOUETTE CONFIG TAB ============ */}
         {activeTab === "Silhouette Config" && (
           <div className="space-y-4">
-            <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
               <EyeOff className="h-4 w-4 text-orange-400" />
               Privacy Mode Configuration
             </h2>
@@ -607,15 +607,15 @@ export default function CameraPrivacyTab() {
                 <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
               </div>
             ) : silhouetteConfigs.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-gray-600">
+              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <Settings className="h-10 w-10 mb-3 opacity-30" />
                 <p className="text-sm">No privacy configurations found</p>
               </div>
             ) : (
-              <div className="overflow-x-auto rounded-xl border border-gray-800 bg-zinc-900/30">
+              <div className="overflow-x-auto rounded-xl border border-border bg-zinc-900/30">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="border-b border-gray-800 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+                    <tr className="border-b border-border text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                       <th className="px-4 py-3">Camera</th>
                       <th className="px-4 py-3">Zone</th>
                       <th className="px-4 py-3">Privacy Mode</th>
@@ -626,14 +626,14 @@ export default function CameraPrivacyTab() {
                   </thead>
                   <tbody>
                     {silhouetteConfigs.map((config) => (
-                      <tr key={config.camera_id} className="border-b border-gray-800/30 hover:bg-gray-800/20 transition-colors">
+                      <tr key={config.camera_id} className="border-b border-border/30 hover:bg-surface-3/20 transition-colors">
                         <td className="px-4 py-2.5">
-                          <span className="flex items-center gap-1.5 text-xs text-gray-300">
-                            <Camera className="h-3 w-3 text-gray-500" />
+                          <span className="flex items-center gap-1.5 text-xs text-foreground">
+                            <Camera className="h-3 w-3 text-muted-foreground" />
                             {config.camera_name}
                           </span>
                         </td>
-                        <td className="px-4 py-2.5 text-xs text-gray-400">{config.zone}</td>
+                        <td className="px-4 py-2.5 text-xs text-muted-foreground">{config.zone}</td>
                         <td className="px-4 py-2.5">
                           <span className={cn(
                             "rounded-md border px-2 py-0.5 text-[10px] font-bold uppercase",
@@ -648,13 +648,13 @@ export default function CameraPrivacyTab() {
                               <CheckCircle2 className="h-3 w-3" /> On
                             </span>
                           ) : (
-                            <span className="text-[10px] text-gray-600">Off</span>
+                            <span className="text-[10px] text-muted-foreground">Off</span>
                           )}
                         </td>
                         <td className="px-4 py-2.5">
                           <div className="flex flex-wrap gap-1">
                             {Object.entries(config.tier_roles).slice(0, 3).map(([tier, role]) => (
-                              <span key={tier} className="rounded bg-gray-800/60 px-1.5 py-0.5 text-[9px] text-gray-500">
+                              <span key={tier} className="rounded bg-surface-3/60 px-1.5 py-0.5 text-[9px] text-muted-foreground">
                                 {tier}: {role}
                               </span>
                             ))}
@@ -663,7 +663,7 @@ export default function CameraPrivacyTab() {
                         <td className="px-4 py-2.5 text-right">
                           <button
                             onClick={() => setEditingConfig(config)}
-                            className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+                            className="rounded p-1 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
                           >
                             <Settings className="h-3.5 w-3.5" />
                           </button>
@@ -681,14 +681,14 @@ export default function CameraPrivacyTab() {
         {activeTab === "Video Access Audit" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <Eye className="h-4 w-4 text-purple-400" />
                 Video Access Audit Log
               </h2>
               <button
                 onClick={fetchAccessLogs}
                 disabled={accessLoading}
-                className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800 transition-colors disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 transition-colors disabled:opacity-50"
               >
                 {accessLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
               </button>
@@ -699,15 +699,15 @@ export default function CameraPrivacyTab() {
                 <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
               </div>
             ) : accessLogs.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-gray-600">
+              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <FileText className="h-10 w-10 mb-3 opacity-30" />
                 <p className="text-sm">No access logs recorded</p>
               </div>
             ) : (
-              <div className="overflow-x-auto rounded-xl border border-gray-800 bg-zinc-900/30">
+              <div className="overflow-x-auto rounded-xl border border-border bg-zinc-900/30">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="border-b border-gray-800 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+                    <tr className="border-b border-border text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                       <th className="px-4 py-3">User</th>
                       <th className="px-4 py-3">Camera</th>
                       <th className="px-4 py-3">Access Tier</th>
@@ -718,16 +718,16 @@ export default function CameraPrivacyTab() {
                   </thead>
                   <tbody>
                     {accessLogs.map((log) => (
-                      <tr key={log.id} className="border-b border-gray-800/30 hover:bg-gray-800/20 transition-colors">
+                      <tr key={log.id} className="border-b border-border/30 hover:bg-surface-3/20 transition-colors">
                         <td className="px-4 py-2.5">
-                          <span className="flex items-center gap-1.5 text-xs text-gray-300">
-                            <Users className="h-3 w-3 text-gray-500" />
+                          <span className="flex items-center gap-1.5 text-xs text-foreground">
+                            <Users className="h-3 w-3 text-muted-foreground" />
                             {log.user}
                           </span>
                         </td>
                         <td className="px-4 py-2.5">
-                          <span className="flex items-center gap-1.5 text-xs text-gray-400">
-                            <Camera className="h-3 w-3 text-gray-500" />
+                          <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                            <Camera className="h-3 w-3 text-muted-foreground" />
                             {log.camera_name}
                           </span>
                         </td>
@@ -741,9 +741,9 @@ export default function CameraPrivacyTab() {
                             {log.access_tier}
                           </span>
                         </td>
-                        <td className="px-4 py-2.5 text-[11px] text-gray-400 max-w-[200px] truncate">{log.reason}</td>
-                        <td className="px-4 py-2.5 text-xs text-gray-400 font-mono">{log.duration_seconds}s</td>
-                        <td className="px-4 py-2.5 text-[11px] text-gray-500">{timeAgo(log.timestamp)}</td>
+                        <td className="px-4 py-2.5 text-[11px] text-muted-foreground max-w-[200px] truncate">{log.reason}</td>
+                        <td className="px-4 py-2.5 text-xs text-muted-foreground font-mono">{log.duration_seconds}s</td>
+                        <td className="px-4 py-2.5 text-[11px] text-muted-foreground">{timeAgo(log.timestamp)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -756,20 +756,20 @@ export default function CameraPrivacyTab() {
         {/* ============ PIA TAB ============ */}
         {activeTab === "PIA" && (
           <div className="space-y-6">
-            <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
               <FileText className="h-4 w-4 text-blue-400" />
               Privacy Impact Assessment
             </h2>
 
-            <div className="rounded-xl border border-gray-800 bg-zinc-900/30 p-5">
-              <p className="text-xs text-gray-500 mb-3">
+            <div className="rounded-xl border border-border bg-zinc-900/30 p-5">
+              <p className="text-xs text-muted-foreground mb-3">
                 Generate a Privacy Impact Assessment for a specific camera or zone to identify risks and mitigations.
               </p>
               <div className="flex gap-3">
                 <select
                   value={piaTargetType}
                   onChange={(e) => setPiaTargetType(e.target.value as "camera" | "zone")}
-                  className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-300 focus:border-cyan-600 focus:outline-none"
+                  className="rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
                 >
                   <option value="camera">Camera</option>
                   <option value="zone">Zone</option>
@@ -779,7 +779,7 @@ export default function CameraPrivacyTab() {
                   value={piaTarget}
                   onChange={(e) => setPiaTarget(e.target.value)}
                   placeholder={`Enter ${piaTargetType} name or ID...`}
-                  className="flex-1 rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-200 placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
+                  className="flex-1 rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
                 />
                 <button
                   onClick={generatePIA}
@@ -795,7 +795,7 @@ export default function CameraPrivacyTab() {
             {piaGenerating && (
               <div className="flex flex-col items-center justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-blue-400 mb-3" />
-                <p className="text-xs text-gray-500">Generating privacy impact assessment...</p>
+                <p className="text-xs text-muted-foreground">Generating privacy impact assessment...</p>
               </div>
             )}
 
@@ -803,7 +803,7 @@ export default function CameraPrivacyTab() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-gray-300">{piaResult.target}</span>
+                    <span className="text-xs font-medium text-foreground">{piaResult.target}</span>
                     <span className={cn(
                       "rounded-md border px-2 py-0.5 text-[10px] font-bold uppercase",
                       piaResult.risk_level === "high" ? "text-red-400 bg-red-500/10 border-red-500/30" :
@@ -813,29 +813,29 @@ export default function CameraPrivacyTab() {
                       {piaResult.risk_level} risk
                     </span>
                   </div>
-                  <span className="text-[10px] text-gray-600">Generated {timeAgo(piaResult.generated_at)}</span>
+                  <span className="text-[10px] text-muted-foreground">Generated {timeAgo(piaResult.generated_at)}</span>
                 </div>
 
                 {/* Overall assessment */}
                 <div className="rounded-xl border border-blue-800/40 bg-blue-950/20 p-4">
                   <h3 className="text-xs font-bold text-blue-300 uppercase tracking-wider mb-2">Overall Assessment</h3>
-                  <p className="text-[11px] text-gray-300 leading-relaxed">{piaResult.overall_assessment}</p>
+                  <p className="text-[11px] text-foreground leading-relaxed">{piaResult.overall_assessment}</p>
                 </div>
 
                 {/* Risks and mitigations */}
                 <div className="space-y-2">
                   {piaResult.risks.map((risk, i) => (
-                    <div key={i} className="rounded-xl border border-gray-800 bg-zinc-900/30 p-4">
+                    <div key={i} className="rounded-xl border border-border bg-zinc-900/30 p-4">
                       <div className="flex items-center gap-2 mb-2">
                         <AlertTriangle className={cn(
                           "h-3.5 w-3.5",
                           risk.severity === "high" ? "text-red-400" :
                           risk.severity === "medium" ? "text-yellow-400" : "text-blue-400"
                         )} />
-                        <span className="text-xs font-medium text-gray-200">{risk.risk}</span>
+                        <span className="text-xs font-medium text-foreground">{risk.risk}</span>
                         <span className={cn(
                           "rounded px-1.5 py-0.5 text-[9px] font-bold uppercase border",
-                          SEVERITY_BADGE[risk.severity] || "text-gray-400 bg-gray-500/10 border-gray-500/30"
+                          SEVERITY_BADGE[risk.severity] || "text-muted-foreground bg-gray-500/10 border-gray-500/30"
                         )}>
                           {risk.severity}
                         </span>
@@ -855,7 +855,7 @@ export default function CameraPrivacyTab() {
         {/* ============ DATA FLOWS TAB ============ */}
         {activeTab === "Data Flows" && (
           <div className="space-y-4">
-            <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
               <Database className="h-4 w-4 text-purple-400" />
               Data Flow Mapping
             </h2>
@@ -865,7 +865,7 @@ export default function CameraPrivacyTab() {
                 <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
               </div>
             ) : dataFlows.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-gray-600">
+              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <Database className="h-10 w-10 mb-3 opacity-30" />
                 <p className="text-sm">No data flows configured</p>
               </div>
@@ -876,8 +876,8 @@ export default function CameraPrivacyTab() {
                   const flows = dataFlows.filter((f) => f.flow_type === flowType);
                   if (flows.length === 0) return null;
                   return (
-                    <div key={flowType} className="rounded-xl border border-gray-800 bg-zinc-900/30 p-4">
-                      <h3 className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <div key={flowType} className="rounded-xl border border-border bg-zinc-900/30 p-4">
+                      <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
                         {flowType === "processing" && <Server className="h-3.5 w-3.5 text-blue-400" />}
                         {flowType === "storage" && <Database className="h-3.5 w-3.5 text-purple-400" />}
                         {flowType === "external" && <Globe className="h-3.5 w-3.5 text-orange-400" />}
@@ -885,19 +885,19 @@ export default function CameraPrivacyTab() {
                       </h3>
                       <div className="space-y-2">
                         {flows.map((flow) => (
-                          <div key={flow.id} className="flex items-center gap-3 rounded-lg border border-gray-800/60 bg-zinc-900/50 p-3">
+                          <div key={flow.id} className="flex items-center gap-3 rounded-lg border border-border/60 bg-zinc-900/50 p-3">
                             <div className="flex items-center gap-2 flex-1 min-w-0">
-                              <span className="text-xs text-gray-300 font-medium shrink-0">{flow.source}</span>
-                              <ArrowRight className="h-3 w-3 text-gray-600 shrink-0" />
-                              <span className="text-xs text-gray-300 font-medium shrink-0">{flow.destination}</span>
+                              <span className="text-xs text-foreground font-medium shrink-0">{flow.source}</span>
+                              <ArrowRight className="h-3 w-3 text-muted-foreground shrink-0" />
+                              <span className="text-xs text-foreground font-medium shrink-0">{flow.destination}</span>
                             </div>
-                            <span className="rounded bg-gray-800/60 px-1.5 py-0.5 text-[9px] text-gray-500 shrink-0">
+                            <span className="rounded bg-surface-3/60 px-1.5 py-0.5 text-[9px] text-muted-foreground shrink-0">
                               {flow.data_type}
                             </span>
-                            <span className="text-[10px] text-gray-500 shrink-0 max-w-[150px] truncate">
+                            <span className="text-[10px] text-muted-foreground shrink-0 max-w-[150px] truncate">
                               {flow.purpose}
                             </span>
-                            <span className="text-[10px] text-gray-600 font-mono shrink-0">
+                            <span className="text-[10px] text-muted-foreground font-mono shrink-0">
                               {flow.retention_days}d
                             </span>
                             {flow.encrypted ? (
@@ -920,14 +920,14 @@ export default function CameraPrivacyTab() {
         {activeTab === "Redaction Queue" && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <EyeOff className="h-4 w-4 text-orange-400" />
                 Redaction Queue Dashboard
               </h2>
               <button
                 onClick={fetchRedactionQueue}
                 disabled={redactionLoading}
-                className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800 transition-colors disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 transition-colors disabled:opacity-50"
               >
                 {redactionLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
               </button>
@@ -938,10 +938,10 @@ export default function CameraPrivacyTab() {
                 <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
               </div>
             ) : redactionUnavailable ? (
-              <div className="rounded-xl border border-gray-800 bg-zinc-900/30 p-6 text-center">
-                <EyeOff className="h-10 w-10 mx-auto mb-3 text-gray-700" />
-                <p className="text-sm text-gray-500">Redaction queue not available</p>
-                <p className="text-xs text-gray-600 mt-1">The redaction API endpoint is not configured.</p>
+              <div className="rounded-xl border border-border bg-zinc-900/30 p-6 text-center">
+                <EyeOff className="h-10 w-10 mx-auto mb-3 text-muted-foreground" />
+                <p className="text-sm text-muted-foreground">Redaction queue not available</p>
+                <p className="text-xs text-muted-foreground mt-1">The redaction API endpoint is not configured.</p>
               </div>
             ) : redactionQueue ? (
               <div className="grid grid-cols-3 gap-4">
@@ -949,23 +949,23 @@ export default function CameraPrivacyTab() {
                 <div className="rounded-xl border border-amber-800/50 bg-amber-950/20 p-5 flex flex-col items-center gap-2">
                   <Clock className="h-6 w-6 text-amber-400" />
                   <span className="text-3xl font-bold text-amber-400">{redactionQueue.pending}</span>
-                  <span className="text-xs text-gray-500 uppercase tracking-wider">Pending</span>
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider">Pending</span>
                 </div>
                 {/* In Progress */}
                 <div className="rounded-xl border border-blue-800/50 bg-blue-950/20 p-5 flex flex-col items-center gap-2">
                   <Loader2 className="h-6 w-6 text-blue-400 animate-spin" />
                   <span className="text-3xl font-bold text-blue-400">{redactionQueue.in_progress}</span>
-                  <span className="text-xs text-gray-500 uppercase tracking-wider">In Progress</span>
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider">In Progress</span>
                 </div>
                 {/* Completed */}
                 <div className="rounded-xl border border-green-800/50 bg-green-950/20 p-5 flex flex-col items-center gap-2">
                   <CheckCircle2 className="h-6 w-6 text-green-400" />
                   <span className="text-3xl font-bold text-green-400">{redactionQueue.completed}</span>
-                  <span className="text-xs text-gray-500 uppercase tracking-wider">Completed</span>
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider">Completed</span>
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-16 text-gray-600">
+              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <EyeOff className="h-10 w-10 mb-3 opacity-30" />
                 <p className="text-sm">No redaction queue data</p>
               </div>
@@ -977,14 +977,14 @@ export default function CameraPrivacyTab() {
         {activeTab === "Retention" && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <Database className="h-4 w-4 text-blue-400" />
                 Data Retention Policies
               </h2>
               <button
                 onClick={fetchRetentionPolicies}
                 disabled={retentionLoading}
-                className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800 transition-colors disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 transition-colors disabled:opacity-50"
               >
                 {retentionLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
               </button>
@@ -995,7 +995,7 @@ export default function CameraPrivacyTab() {
                 <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
               </div>
             ) : retentionPolicies.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-gray-600">
+              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <Database className="h-10 w-10 mb-3 opacity-30" />
                 <p className="text-sm">No retention policies configured</p>
               </div>
@@ -1022,21 +1022,21 @@ export default function CameraPrivacyTab() {
                       ? "text-red-400"
                       : daysUntilPurge !== null && daysUntilPurge <= 7
                       ? "text-amber-400"
-                      : "text-gray-400";
+                      : "text-muted-foreground";
 
                   const barColor =
                     progressPct >= 90 ? "#ef4444" : progressPct >= 70 ? "#f59e0b" : "#22d3ee";
 
                   return (
-                    <div key={policy.id} className="rounded-xl border border-gray-800 bg-zinc-900/40 p-4 space-y-3">
+                    <div key={policy.id} className="rounded-xl border border-border bg-zinc-900/40 p-4 space-y-3">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold text-gray-200 truncate">{policy.name}</p>
+                          <p className="text-sm font-semibold text-foreground truncate">{policy.name}</p>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="rounded bg-gray-800/60 px-1.5 py-0.5 text-[9px] text-gray-500 uppercase">
+                            <span className="rounded bg-surface-3/60 px-1.5 py-0.5 text-[9px] text-muted-foreground uppercase">
                               {policy.data_type}
                             </span>
-                            <span className="text-[10px] text-gray-600">
+                            <span className="text-[10px] text-muted-foreground">
                               {policy.retention_days}d retention
                             </span>
                           </div>
@@ -1046,21 +1046,21 @@ export default function CameraPrivacyTab() {
                             <span className={cn("text-sm font-bold font-mono", urgencyColor)}>
                               {daysUntilPurge}d
                             </span>
-                            <p className="text-[10px] text-gray-600">until purge</p>
+                            <p className="text-[10px] text-muted-foreground">until purge</p>
                           </div>
                         ) : (
-                          <span className="text-[10px] text-gray-700 shrink-0">No schedule</span>
+                          <span className="text-[10px] text-muted-foreground shrink-0">No schedule</span>
                         )}
                       </div>
 
                       {/* Progress bar toward next purge */}
                       {daysUntilPurge !== null && (
                         <div>
-                          <div className="flex justify-between text-[9px] text-gray-600 mb-1">
+                          <div className="flex justify-between text-[9px] text-muted-foreground mb-1">
                             <span>Last purge: {policy.last_purge ? timeAgo(policy.last_purge) : "Never"}</span>
                             <span>{Math.round(progressPct)}% elapsed</span>
                           </div>
-                          <div className="h-2 w-full rounded-full bg-gray-800 overflow-hidden">
+                          <div className="h-2 w-full rounded-full bg-surface-3 overflow-hidden">
                             <div
                               className="h-full rounded-full transition-all duration-500"
                               style={{ width: `${progressPct}%`, backgroundColor: barColor }}
@@ -1080,22 +1080,22 @@ export default function CameraPrivacyTab() {
       {/* Silhouette Config Edit Modal */}
       {editingConfig && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="w-full max-w-lg rounded-2xl border border-gray-800 bg-gray-950 p-6 shadow-2xl">
+          <div className="w-full max-w-lg rounded-2xl border border-border bg-surface-0 p-6 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-bold text-gray-200">
+              <h2 className="text-sm font-bold text-foreground">
                 Configure Privacy: {editingConfig.camera_name}
               </h2>
-              <button onClick={() => setEditingConfig(null)} className="text-gray-500 hover:text-gray-300">
+              <button onClick={() => setEditingConfig(null)} className="text-muted-foreground hover:text-foreground">
                 <X className="h-4 w-4" />
               </button>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="text-[10px] text-gray-500 uppercase tracking-wider block mb-1.5">Privacy Mode</label>
+                <label className="text-[10px] text-muted-foreground uppercase tracking-wider block mb-1.5">Privacy Mode</label>
                 <select
                   value={editingConfig.privacy_mode}
                   onChange={(e) => setEditingConfig({ ...editingConfig, privacy_mode: e.target.value as SilhouetteConfig["privacy_mode"] })}
-                  className="w-full rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-300 focus:border-cyan-600 focus:outline-none"
+                  className="w-full rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
                 >
                   <option value="silhouette_only">Silhouette Only</option>
                   <option value="blurred_faces">Blurred Faces</option>
@@ -1108,15 +1108,15 @@ export default function CameraPrivacyTab() {
                     type="checkbox"
                     checked={editingConfig.auto_redaction}
                     onChange={(e) => setEditingConfig({ ...editingConfig, auto_redaction: e.target.checked })}
-                    className="rounded border-gray-700"
+                    className="rounded border-border-strong"
                   />
-                  <span className="text-xs text-gray-300">Enable auto-redaction</span>
+                  <span className="text-xs text-foreground">Enable auto-redaction</span>
                 </label>
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   onClick={() => setEditingConfig(null)}
-                  className="rounded-lg border border-gray-700 px-4 py-2 text-xs text-gray-400 hover:bg-gray-800 transition-colors"
+                  className="rounded-lg border border-border-strong px-4 py-2 text-xs text-muted-foreground hover:bg-surface-3 transition-colors"
                 >
                   Cancel
                 </button>

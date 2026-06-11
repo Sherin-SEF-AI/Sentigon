@@ -200,7 +200,7 @@ export default function AnnotationCanvas({
   return (
     <div className="flex flex-col gap-2">
       {!readOnly && (
-        <div className="flex items-center gap-2 rounded-lg border border-gray-800 bg-gray-900/60 px-3 py-1.5">
+        <div className="flex items-center gap-2 rounded-lg border border-border bg-surface-2/60 px-3 py-1.5">
           {tools.map((t) => (
             <button
               key={t.id}
@@ -208,7 +208,7 @@ export default function AnnotationCanvas({
               className={`rounded-md p-1.5 transition-colors ${
                 tool === t.id
                   ? "bg-cyan-900/40 text-cyan-400"
-                  : "text-gray-500 hover:bg-gray-800 hover:text-gray-300"
+                  : "text-muted-foreground hover:bg-surface-3 hover:text-foreground"
               }`}
               title={t.label}
             >
@@ -216,25 +216,25 @@ export default function AnnotationCanvas({
             </button>
           ))}
 
-          <div className="mx-2 h-4 w-px bg-gray-800" />
+          <div className="mx-2 h-4 w-px bg-surface-3" />
 
           {COLORS.map((c) => (
             <button
               key={c}
               onClick={() => setColor(c)}
               className={`h-4 w-4 rounded-full border-2 transition-transform ${
-                color === c ? "border-white scale-125" : "border-gray-700"
+                color === c ? "border-white scale-125" : "border-border-strong"
               }`}
               style={{ backgroundColor: c }}
             />
           ))}
 
-          <div className="mx-2 h-4 w-px bg-gray-800" />
+          <div className="mx-2 h-4 w-px bg-surface-3" />
 
           <button
             onClick={undo}
             disabled={annotations.length === 0}
-            className="rounded-md p-1.5 text-gray-500 hover:bg-gray-800 hover:text-gray-300 disabled:opacity-30 transition-colors"
+            className="rounded-md p-1.5 text-muted-foreground hover:bg-surface-3 hover:text-foreground disabled:opacity-30 transition-colors"
             title="Undo"
           >
             <Undo2 className="h-3.5 w-3.5" />
@@ -242,7 +242,7 @@ export default function AnnotationCanvas({
           <button
             onClick={clear}
             disabled={annotations.length === 0}
-            className="rounded-md p-1.5 text-gray-500 hover:bg-gray-800 hover:text-red-400 disabled:opacity-30 transition-colors"
+            className="rounded-md p-1.5 text-muted-foreground hover:bg-surface-3 hover:text-red-400 disabled:opacity-30 transition-colors"
             title="Clear All"
           >
             <Trash2 className="h-3.5 w-3.5" />
@@ -250,7 +250,7 @@ export default function AnnotationCanvas({
           {onExport && (
             <button
               onClick={exportImage}
-              className="rounded-md p-1.5 text-gray-500 hover:bg-gray-800 hover:text-cyan-400 transition-colors"
+              className="rounded-md p-1.5 text-muted-foreground hover:bg-surface-3 hover:text-cyan-400 transition-colors"
               title="Export Image"
             >
               <Download className="h-3.5 w-3.5" />
@@ -263,7 +263,7 @@ export default function AnnotationCanvas({
         ref={canvasRef}
         width={width}
         height={height}
-        className="rounded-lg border border-gray-800 cursor-crosshair"
+        className="rounded-lg border border-border cursor-crosshair"
         style={{ width: "100%", height: "auto", maxHeight: height }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}

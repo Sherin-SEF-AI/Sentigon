@@ -156,7 +156,7 @@ function ComplianceGauge({ pct }: { pct: number }) {
       </svg>
       <div className="absolute text-center">
         <p className={cn("text-2xl font-black tabular-nums", complianceColor(pct))}>{pct.toFixed(1)}%</p>
-        <p className="text-[9px] text-gray-500 uppercase tracking-wider">Compliance</p>
+        <p className="text-[9px] text-muted-foreground uppercase tracking-wider">Compliance</p>
       </div>
     </div>
   );
@@ -169,7 +169,7 @@ function ComplianceGauge({ pct }: { pct: number }) {
 function MiniBar({ pct }: { pct: number }) {
   const color = pct >= 95 ? "bg-emerald-500" : pct >= 85 ? "bg-amber-500" : "bg-red-500";
   return (
-    <div className="h-1.5 rounded-full bg-gray-800 overflow-hidden w-full mt-1">
+    <div className="h-1.5 rounded-full bg-surface-3 overflow-hidden w-full mt-1">
       <div
         className={cn("h-full rounded-full transition-all duration-500", color)}
         style={{ width: `${pct}%` }}
@@ -372,16 +372,16 @@ export default function SLADashboardPage() {
 
   /* --- Render --- */
   return (
-    <div className="flex h-full flex-col bg-gray-950 overflow-hidden">
+    <div className="flex h-full flex-col bg-surface-0 overflow-hidden">
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-900/30 border border-cyan-800/50">
             <BarChart3 className="h-5 w-5 text-cyan-400" />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-wide text-gray-100">SLA Compliance</h1>
-            <p className="text-xs text-gray-500">
+            <h1 className="text-xl font-bold tracking-wide text-foreground">SLA Compliance</h1>
+            <p className="text-xs text-muted-foreground">
               Service level agreement tracking and breach analysis
             </p>
           </div>
@@ -392,7 +392,7 @@ export default function SLADashboardPage() {
             <button
               onClick={fetchAlerts}
               disabled={loading}
-              className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-xs font-semibold text-gray-400 hover:bg-gray-700 hover:text-gray-200 transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-xs font-semibold text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors disabled:opacity-50"
             >
               <RefreshCw className={cn("h-3.5 w-3.5", loading && "animate-spin")} />
               Refresh
@@ -421,7 +421,7 @@ export default function SLADashboardPage() {
             <p className="text-sm text-red-400">{error}</p>
             <button
               onClick={fetchAlerts}
-              className="mt-3 text-xs text-gray-500 underline hover:text-gray-300"
+              className="mt-3 text-xs text-muted-foreground underline hover:text-foreground"
             >
               Retry
             </button>
@@ -473,7 +473,7 @@ export default function SLADashboardPage() {
 
             {/* ---- Compliance by Severity ---- */}
             <section>
-              <h2 className="text-sm font-bold uppercase tracking-wider text-gray-400 mb-3">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-3">
                 Compliance by Severity
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -492,19 +492,19 @@ export default function SLADashboardPage() {
                       </div>
 
                       <div className="space-y-1">
-                        <div className="flex justify-between text-[10px] text-gray-500">
+                        <div className="flex justify-between text-[10px] text-muted-foreground">
                           <span>SLA Target</span>
-                          <span className="font-mono text-gray-300">{formatMinutes(m.targetMinutes)}</span>
+                          <span className="font-mono text-foreground">{formatMinutes(m.targetMinutes)}</span>
                         </div>
-                        <div className="flex justify-between text-[10px] text-gray-500">
+                        <div className="flex justify-between text-[10px] text-muted-foreground">
                           <span>Avg Response</span>
                           <span className={cn("font-mono font-bold", m.avgResponseMinutes > m.targetMinutes ? "text-red-400" : "text-emerald-400")}>
                             {m.total > 0 ? formatMinutes(m.avgResponseMinutes) : "—"}
                           </span>
                         </div>
-                        <div className="flex justify-between text-[10px] text-gray-500">
+                        <div className="flex justify-between text-[10px] text-muted-foreground">
                           <span>Breaches</span>
-                          <span className={cn("font-mono font-bold", m.breached > 0 ? "text-red-400" : "text-gray-400")}>
+                          <span className={cn("font-mono font-bold", m.breached > 0 ? "text-red-400" : "text-muted-foreground")}>
                             {m.breached}
                           </span>
                         </div>
@@ -512,7 +512,7 @@ export default function SLADashboardPage() {
 
                       <div>
                         <div className="flex justify-between items-center">
-                          <span className="text-[10px] text-gray-500">Compliance</span>
+                          <span className="text-[10px] text-muted-foreground">Compliance</span>
                           <span className={cn("text-sm font-black tabular-nums", complianceColor(m.compliancePercent))}>
                             {m.total > 0 ? `${m.compliancePercent.toFixed(0)}%` : "N/A"}
                           </span>
@@ -520,7 +520,7 @@ export default function SLADashboardPage() {
                         <MiniBar pct={m.compliancePercent} />
                       </div>
 
-                      <p className="text-[9px] text-gray-600">
+                      <p className="text-[9px] text-muted-foreground">
                         {m.withinSLA} of {m.total} alerts acknowledged on time
                       </p>
                     </div>
@@ -531,10 +531,10 @@ export default function SLADashboardPage() {
 
             {/* ---- Trend Chart ---- */}
             <section>
-              <h2 className="text-sm font-bold uppercase tracking-wider text-gray-400 mb-3">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-3">
                 30-Day Compliance Trend
               </h2>
-              <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-4">
+              <div className="rounded-xl border border-border bg-surface-2/60 p-4">
                 {trendData.some((d) => d.total > 0) ? (
                   <ResponsiveContainer width="100%" height={200}>
                     <LineChart data={trendData} margin={{ top: 5, right: 10, bottom: 0, left: 0 }}>
@@ -579,9 +579,9 @@ export default function SLADashboardPage() {
                   </ResponsiveContainer>
                 ) : (
                   <div className="flex flex-col items-center justify-center h-40">
-                    <BarChart3 className="h-8 w-8 text-gray-700 mb-2" />
-                    <p className="text-sm text-gray-600">Not enough data for trend analysis</p>
-                    <p className="text-xs text-gray-700 mt-1">
+                    <BarChart3 className="h-8 w-8 text-muted-foreground mb-2" />
+                    <p className="text-sm text-muted-foreground">Not enough data for trend analysis</p>
+                    <p className="text-xs text-muted-foreground mt-1">
                       Trend will populate as acknowledged alerts accumulate
                     </p>
                   </div>
@@ -592,26 +592,26 @@ export default function SLADashboardPage() {
             {/* ---- Breach History Table ---- */}
             <section>
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-bold uppercase tracking-wider text-gray-400">
+                <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
                   Breach History
                 </h2>
-                <span className="text-xs text-gray-600">{breachHistory.length} breaches</span>
+                <span className="text-xs text-muted-foreground">{breachHistory.length} breaches</span>
               </div>
 
               {breachHistory.length === 0 ? (
-                <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-10 text-center">
+                <div className="rounded-xl border border-border bg-surface-2/40 p-10 text-center">
                   <CheckCircle2 className="h-10 w-10 text-emerald-700 mx-auto mb-3" />
-                  <p className="text-sm font-bold text-gray-400">No SLA Breaches</p>
-                  <p className="text-xs text-gray-600 mt-1">
+                  <p className="text-sm font-bold text-muted-foreground">No SLA Breaches</p>
+                  <p className="text-xs text-muted-foreground mt-1">
                     All alerts with acknowledgement times are within SLA targets
                   </p>
                 </div>
               ) : (
-                <div className="rounded-xl border border-gray-800 bg-gray-900/60 overflow-hidden">
+                <div className="rounded-xl border border-border bg-surface-2/60 overflow-hidden">
                   <div className="overflow-x-auto">
                     <table className="w-full text-xs">
                       <thead>
-                        <tr className="border-b border-gray-800 bg-gray-900/80">
+                        <tr className="border-b border-border bg-surface-2/80">
                           {[
                             { key: "title" as const, label: "Alert" },
                             { key: "severity" as const, label: "Severity" },
@@ -623,7 +623,7 @@ export default function SLADashboardPage() {
                             <th
                               key={key}
                               onClick={() => handleSort(key)}
-                              className="px-4 py-3 text-left font-bold uppercase tracking-wider text-gray-500 cursor-pointer hover:text-gray-300 transition-colors select-none whitespace-nowrap"
+                              className="px-4 py-3 text-left font-bold uppercase tracking-wider text-muted-foreground cursor-pointer hover:text-foreground transition-colors select-none whitespace-nowrap"
                             >
                               {label}
                               {sortCol === key && (
@@ -635,13 +635,13 @@ export default function SLADashboardPage() {
                           ))}
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-800/60">
+                      <tbody className="divide-y divide-border/60">
                         {breachHistory.map((breach) => (
                           <tr
                             key={breach.id}
-                            className="hover:bg-gray-800/30 transition-colors"
+                            className="hover:bg-surface-3/30 transition-colors"
                           >
-                            <td className="px-4 py-3 text-gray-200 max-w-[200px] truncate">
+                            <td className="px-4 py-3 text-foreground max-w-[200px] truncate">
                               {breach.title}
                             </td>
                             <td className="px-4 py-3">
@@ -657,13 +657,13 @@ export default function SLADashboardPage() {
                             <td className="px-4 py-3 font-mono text-red-400 font-bold">
                               {formatMinutes(breach.responseMinutes)}
                             </td>
-                            <td className="px-4 py-3 font-mono text-gray-400">
+                            <td className="px-4 py-3 font-mono text-muted-foreground">
                               {formatMinutes(breach.targetMinutes)}
                             </td>
                             <td className="px-4 py-3 font-mono text-red-500 font-bold">
                               +{formatMinutes(breach.breachMinutes)}
                             </td>
-                            <td className="px-4 py-3 text-gray-500 whitespace-nowrap">
+                            <td className="px-4 py-3 text-muted-foreground whitespace-nowrap">
                               {new Date(breach.date).toLocaleDateString("en-US", {
                                 month: "short",
                                 day: "numeric",

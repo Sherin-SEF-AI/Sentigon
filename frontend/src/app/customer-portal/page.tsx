@@ -148,7 +148,7 @@ function KPICard({ label, value, subtext, icon, color, bg, border }: KPICardProp
       </div>
       <div>
         <p className={cn("text-3xl font-black tabular-nums", color)}>{value}</p>
-        {subtext && <p className="text-[11px] text-gray-500 mt-0.5">{subtext}</p>}
+        {subtext && <p className="text-[11px] text-muted-foreground mt-0.5">{subtext}</p>}
       </div>
     </div>
   );
@@ -161,9 +161,9 @@ function KPICard({ label, value, subtext, icon, color, bg, border }: KPICardProp
 function BarTooltip({ active, payload, label }: { active?: boolean; payload?: { value: number }[]; label?: string }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs shadow-lg">
-      <p className="font-semibold text-gray-300 mb-1">{label}</p>
-      <p className="text-gray-400">
+    <div className="rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs shadow-lg">
+      <p className="font-semibold text-foreground mb-1">{label}</p>
+      <p className="text-muted-foreground">
         <span className="font-bold text-cyan-400">{payload[0].value}</span> incidents
       </p>
     </div>
@@ -328,16 +328,16 @@ export default function CustomerPortalPage() {
 
   /* --- Render --- */
   return (
-    <div className="flex h-full flex-col bg-gray-950 overflow-hidden">
+    <div className="flex h-full flex-col bg-surface-0 overflow-hidden">
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-8 py-5">
+      <div className="flex items-center justify-between border-b border-border px-8 py-5">
         <div className="flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-900/30 border border-cyan-800/50 shadow-lg shadow-cyan-900/20">
             <Shield className="h-6 w-6 text-cyan-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-black tracking-wide text-gray-100">Security Overview</h1>
-            <p className="text-sm text-gray-500">
+            <h1 className="text-2xl font-black tracking-wide text-foreground">Security Overview</h1>
+            <p className="text-sm text-muted-foreground">
               {now.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
             </p>
           </div>
@@ -346,7 +346,7 @@ export default function CustomerPortalPage() {
           <button
             onClick={fetchAll}
             disabled={loading}
-            className="flex items-center gap-2 rounded-xl border border-gray-700 bg-gray-800 px-4 py-2.5 text-sm font-semibold text-gray-400 hover:bg-gray-700 hover:text-gray-200 transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 rounded-xl border border-border-strong bg-surface-3 px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors disabled:opacity-50"
           >
             <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
             Refresh
@@ -374,7 +374,7 @@ export default function CustomerPortalPage() {
             <p className="text-sm text-red-400">{error}</p>
             <button
               onClick={fetchAll}
-              className="mt-3 text-sm text-gray-500 underline hover:text-gray-300"
+              className="mt-3 text-sm text-muted-foreground underline hover:text-foreground"
             >
               Try again
             </button>
@@ -434,10 +434,10 @@ export default function CustomerPortalPage() {
             {/* ---- Charts row ---- */}
             <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Incident Trend Bar Chart */}
-              <div className="lg:col-span-2 rounded-2xl border border-gray-800 bg-gray-900/60 p-6">
+              <div className="lg:col-span-2 rounded-2xl border border-border bg-surface-2/60 p-6">
                 <div className="flex items-center gap-2 mb-5">
                   <Activity className="h-4 w-4 text-cyan-400" />
-                  <h2 className="text-sm font-bold text-gray-300 uppercase tracking-wider">
+                  <h2 className="text-sm font-bold text-foreground uppercase tracking-wider">
                     Incident Trend — Last 30 Days
                   </h2>
                 </div>
@@ -471,23 +471,23 @@ export default function CustomerPortalPage() {
                 ) : (
                   <div className="flex flex-col items-center justify-center h-[220px]">
                     <CheckCircle2 className="h-10 w-10 text-emerald-800 mb-3" />
-                    <p className="text-sm text-gray-500 font-medium">No incidents recorded this period</p>
+                    <p className="text-sm text-muted-foreground font-medium">No incidents recorded this period</p>
                   </div>
                 )}
               </div>
 
               {/* Camera Health Pie */}
-              <div className="rounded-2xl border border-gray-800 bg-gray-900/60 p-6">
+              <div className="rounded-2xl border border-border bg-surface-2/60 p-6">
                 <div className="flex items-center gap-2 mb-5">
                   <Camera className="h-4 w-4 text-cyan-400" />
-                  <h2 className="text-sm font-bold text-gray-300 uppercase tracking-wider">
+                  <h2 className="text-sm font-bold text-foreground uppercase tracking-wider">
                     Camera Health
                   </h2>
                 </div>
                 {cameras.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-[220px]">
-                    <Camera className="h-10 w-10 text-gray-700 mb-3" />
-                    <p className="text-sm text-gray-600">No cameras configured</p>
+                    <Camera className="h-10 w-10 text-muted-foreground mb-3" />
+                    <p className="text-sm text-muted-foreground">No cameras configured</p>
                   </div>
                 ) : (
                   <>
@@ -525,9 +525,9 @@ export default function CustomerPortalPage() {
                               className="h-2.5 w-2.5 rounded-full shrink-0"
                               style={{ backgroundColor: entry.color }}
                             />
-                            <span className="text-gray-400">{entry.name}</span>
+                            <span className="text-muted-foreground">{entry.name}</span>
                           </div>
-                          <span className="font-bold text-gray-200 tabular-nums">{entry.value}</span>
+                          <span className="font-bold text-foreground tabular-nums">{entry.value}</span>
                         </div>
                       ))}
                     </div>
@@ -541,30 +541,30 @@ export default function CustomerPortalPage() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Building className="h-4 w-4 text-cyan-400" />
-                  <h2 className="text-sm font-bold text-gray-300 uppercase tracking-wider">
+                  <h2 className="text-sm font-bold text-foreground uppercase tracking-wider">
                     Recent Resolved Incidents
                   </h2>
                 </div>
-                <span className="text-xs text-gray-600">{recentResolved.length} shown</span>
+                <span className="text-xs text-muted-foreground">{recentResolved.length} shown</span>
               </div>
 
               {recentResolved.length === 0 ? (
-                <div className="rounded-2xl border border-gray-800 bg-gray-900/40 p-10 text-center">
+                <div className="rounded-2xl border border-border bg-surface-2/40 p-10 text-center">
                   <CheckCircle2 className="h-10 w-10 text-emerald-700 mx-auto mb-3" />
-                  <p className="text-base font-bold text-gray-400">No resolved incidents</p>
-                  <p className="text-sm text-gray-600 mt-1">Resolved incidents will appear here</p>
+                  <p className="text-base font-bold text-muted-foreground">No resolved incidents</p>
+                  <p className="text-sm text-muted-foreground mt-1">Resolved incidents will appear here</p>
                 </div>
               ) : (
-                <div className="rounded-2xl border border-gray-800 bg-gray-900/60 overflow-hidden">
+                <div className="rounded-2xl border border-border bg-surface-2/60 overflow-hidden">
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="border-b border-gray-800 bg-gray-900/80">
+                        <tr className="border-b border-border bg-surface-2/80">
                           {["Date", "Incident Type", "Severity", "Response Time", "Resolution", "Zone"].map(
                             (col) => (
                               <th
                                 key={col}
-                                className="px-5 py-4 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 whitespace-nowrap"
+                                className="px-5 py-4 text-left text-[10px] font-bold uppercase tracking-wider text-muted-foreground whitespace-nowrap"
                               >
                                 {col}
                               </th>
@@ -572,7 +572,7 @@ export default function CustomerPortalPage() {
                           )}
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-800/40">
+                      <tbody className="divide-y divide-border/40">
                         {recentResolved.map((incident) => {
                           const respMin = responseMinutes(incident);
                           const target = SLA_TARGETS[incident.severity] ?? 60;
@@ -580,16 +580,16 @@ export default function CustomerPortalPage() {
                           return (
                             <tr
                               key={incident.id}
-                              className="hover:bg-gray-800/30 transition-colors"
+                              className="hover:bg-surface-3/30 transition-colors"
                             >
-                              <td className="px-5 py-4 text-gray-400 whitespace-nowrap">
+                              <td className="px-5 py-4 text-muted-foreground whitespace-nowrap">
                                 {new Date(incident.created_at).toLocaleDateString("en-US", {
                                   month: "short",
                                   day: "numeric",
                                   year: "numeric",
                                 })}
                               </td>
-                              <td className="px-5 py-4 text-gray-200 font-medium">
+                              <td className="px-5 py-4 text-foreground font-medium">
                                 {friendlyIncidentType(incident.threat_type)}
                               </td>
                               <td className="px-5 py-4">
@@ -619,10 +619,10 @@ export default function CustomerPortalPage() {
                                     {formatResponseTime(respMin)}
                                   </span>
                                 ) : (
-                                  <span className="text-gray-600">—</span>
+                                  <span className="text-muted-foreground">—</span>
                                 )}
                               </td>
-                              <td className="px-5 py-4 text-gray-400 whitespace-nowrap">
+                              <td className="px-5 py-4 text-muted-foreground whitespace-nowrap">
                                 {incident.resolved_at
                                   ? new Date(incident.resolved_at).toLocaleDateString("en-US", {
                                       month: "short",
@@ -630,7 +630,7 @@ export default function CustomerPortalPage() {
                                     })
                                   : "—"}
                               </td>
-                              <td className="px-5 py-4 text-gray-500">
+                              <td className="px-5 py-4 text-muted-foreground">
                                 {incident.zone_name || "—"}
                               </td>
                             </tr>
@@ -644,7 +644,7 @@ export default function CustomerPortalPage() {
             </section>
 
             {/* ---- Footer note ---- */}
-            <div className="flex items-center gap-2 text-xs text-gray-700 pb-2">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground pb-2">
               <Shield className="h-3.5 w-3.5" />
               <span>
                 Data is updated in real time. Contact your security operations team for further details.

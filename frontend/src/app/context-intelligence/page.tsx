@@ -112,7 +112,7 @@ const INTENT_COLORS: Record<string, string> = {
   suspicious: "text-yellow-400 bg-yellow-500/10 border-yellow-500/30",
   reconnaissance: "text-orange-400 bg-orange-500/10 border-orange-500/30",
   hostile: "text-red-400 bg-red-500/10 border-red-500/30",
-  unknown: "text-gray-400 bg-gray-500/10 border-gray-500/30",
+  unknown: "text-muted-foreground bg-gray-500/10 border-gray-500/30",
 };
 
 /* ------------------------------------------------------------------ */
@@ -138,7 +138,7 @@ function anomalyColor(score: number): string {
 function anomalyBg(score: number): string {
   if (score > 2.0) return "border-red-800/60 bg-red-950/20";
   if (score >= 1.0) return "border-yellow-800/50 bg-yellow-950/10";
-  return "border-gray-800 bg-zinc-900/50";
+  return "border-border bg-zinc-900/50";
 }
 
 /* ------------------------------------------------------------------ */
@@ -425,7 +425,7 @@ export default function ContextIntelligencePage() {
       <div className="flex h-full items-center justify-center bg-[#030712]">
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="h-10 w-10 animate-spin text-cyan-400" />
-          <p className="text-sm text-gray-500">Loading context intelligence...</p>
+          <p className="text-sm text-muted-foreground">Loading context intelligence...</p>
         </div>
       </div>
     );
@@ -434,23 +434,23 @@ export default function ContextIntelligencePage() {
   return (
     <div className="flex h-full flex-col bg-[#030712]">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-900/30 border border-purple-800/50">
             <Brain className="h-5 w-5 text-purple-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Context Intelligence Engine
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Adaptive baselines, anomaly scoring, and intent classification
             </p>
           </div>
         </div>
         <button
           onClick={() => { setLoading(true); fetchStats(); }}
-          className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800 transition-colors"
+          className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 transition-colors"
         >
           <RefreshCw className="h-3.5 w-3.5" /> Refresh
         </button>
@@ -467,42 +467,42 @@ export default function ContextIntelligencePage() {
 
       {/* Stat Cards */}
       {stats && (
-        <div className="grid grid-cols-4 gap-4 border-b border-gray-800 px-6 py-3">
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/60 p-3">
+        <div className="grid grid-cols-4 gap-4 border-b border-border px-6 py-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/60 p-3">
             <Target className="h-5 w-5 text-cyan-400" />
             <div>
-              <p className="text-lg font-bold text-gray-100">{stats.active_rules}</p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">Active Context Rules</p>
+              <p className="text-lg font-bold text-foreground">{stats.active_rules}</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Active Context Rules</p>
             </div>
           </div>
           <div className="flex items-center gap-3 rounded-lg border border-red-900/50 bg-red-950/20 p-3">
             <AlertTriangle className="h-5 w-5 text-red-400" />
             <div>
               <p className="text-lg font-bold text-red-400">{stats.anomalies_today}</p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">Anomalies Today</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Anomalies Today</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/60 p-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/60 p-3">
             <BarChart3 className="h-5 w-5 text-green-400" />
             <div>
-              <p className="text-lg font-bold text-gray-100">{Math.round(stats.baseline_coverage * 100)}%</p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">Baseline Coverage</p>
+              <p className="text-lg font-bold text-foreground">{Math.round(stats.baseline_coverage * 100)}%</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Baseline Coverage</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/60 p-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/60 p-3">
             <TrendingUp className="h-5 w-5 text-yellow-400" />
             <div>
               <p className={cn("text-lg font-bold", anomalyColor(stats.avg_anomaly_score))}>
                 {stats.avg_anomaly_score.toFixed(2)}
               </p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">Avg Anomaly Score</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Avg Anomaly Score</p>
             </div>
           </div>
         </div>
       )}
 
       {/* Tab navigation */}
-      <div className="flex items-center gap-1 border-b border-gray-800 px-6">
+      <div className="flex items-center gap-1 border-b border-border px-6">
         {TABS.map((tab) => (
           <button
             key={tab}
@@ -511,7 +511,7 @@ export default function ContextIntelligencePage() {
               "px-4 py-2.5 text-xs font-medium border-b-2 transition-colors",
               activeTab === tab
                 ? "border-cyan-400 text-cyan-400"
-                : "border-transparent text-gray-500 hover:text-gray-300"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             )}
           >
             {tab}
@@ -525,7 +525,7 @@ export default function ContextIntelligencePage() {
         {activeTab === "Rules" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <Shield className="h-4 w-4 text-cyan-400" />
                 Context Rules ({rules.length})
               </h2>
@@ -542,16 +542,16 @@ export default function ContextIntelligencePage() {
                 <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
               </div>
             ) : rules.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-gray-600">
+              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <Target className="h-10 w-10 mb-3 opacity-30" />
                 <p className="text-sm">No context rules configured</p>
                 <p className="text-xs mt-1">Create rules to define threat scoring by zone and object</p>
               </div>
             ) : (
-              <div className="overflow-x-auto rounded-xl border border-gray-800 bg-zinc-900/30">
+              <div className="overflow-x-auto rounded-xl border border-border bg-zinc-900/30">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="border-b border-gray-800 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+                    <tr className="border-b border-border text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                       <th className="px-4 py-3">Zone Type</th>
                       <th className="px-4 py-3">Object Class</th>
                       <th className="px-4 py-3">Base Score</th>
@@ -564,13 +564,13 @@ export default function ContextIntelligencePage() {
                   <tbody>
                     {rules.map((rule) => (
                       <React.Fragment key={rule.id}>
-                      <tr className="border-b border-gray-800/30 hover:bg-gray-800/20 transition-colors">
+                      <tr className="border-b border-border/30 hover:bg-surface-3/20 transition-colors">
                         <td className="px-4 py-2.5">
                           <span className="inline-flex rounded-md border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-cyan-400">
                             {rule.zone_type}
                           </span>
                         </td>
-                        <td className="px-4 py-2.5 text-xs text-gray-300">{rule.object_class}</td>
+                        <td className="px-4 py-2.5 text-xs text-foreground">{rule.object_class}</td>
                         <td className="px-4 py-2.5">
                           <span className={cn(
                             "text-xs font-bold font-mono",
@@ -583,16 +583,16 @@ export default function ContextIntelligencePage() {
                         <td className="px-4 py-2.5">
                           <div className="flex flex-wrap gap-1">
                             {Object.entries(rule.time_multipliers).slice(0, 3).map(([key, val]) => (
-                              <span key={key} className="rounded bg-gray-800/60 px-1.5 py-0.5 text-[9px] text-gray-500">
+                              <span key={key} className="rounded bg-surface-3/60 px-1.5 py-0.5 text-[9px] text-muted-foreground">
                                 {key}: {val}x
                               </span>
                             ))}
                             {Object.keys(rule.time_multipliers).length > 3 && (
-                              <span className="text-[9px] text-gray-600">+{Object.keys(rule.time_multipliers).length - 3}</span>
+                              <span className="text-[9px] text-muted-foreground">+{Object.keys(rule.time_multipliers).length - 3}</span>
                             )}
                           </div>
                         </td>
-                        <td className="px-4 py-2.5 text-[11px] text-gray-500 max-w-[200px] truncate">
+                        <td className="px-4 py-2.5 text-[11px] text-muted-foreground max-w-[200px] truncate">
                           {rule.description || "-"}
                         </td>
                         <td className="px-4 py-2.5">
@@ -603,7 +603,7 @@ export default function ContextIntelligencePage() {
                               "rounded px-1.5 py-0.5 text-[9px] font-bold uppercase border transition-opacity",
                               rule.is_active
                                 ? "text-green-400 bg-green-500/10 border-green-500/30 hover:bg-green-500/20"
-                                : "text-gray-500 bg-gray-500/10 border-gray-500/30 hover:bg-gray-500/20",
+                                : "text-muted-foreground bg-gray-500/10 border-gray-500/30 hover:bg-gray-500/20",
                               togglingRuleId === rule.id && "opacity-50 cursor-not-allowed"
                             )}
                           >
@@ -621,7 +621,7 @@ export default function ContextIntelligencePage() {
                                 "flex items-center gap-1 rounded px-1.5 py-0.5 text-[9px] font-bold border transition-colors",
                                 expandedRuleId === rule.id
                                   ? "bg-purple-500/20 border-purple-500/40 text-purple-300"
-                                  : "bg-gray-800/60 border-gray-700 text-gray-500 hover:text-purple-300 hover:border-purple-500/40"
+                                  : "bg-surface-3/60 border-border-strong text-muted-foreground hover:text-purple-300 hover:border-purple-500/40"
                               )}
                               title="Explain this rule"
                             >
@@ -631,14 +631,14 @@ export default function ContextIntelligencePage() {
                             <button
                               onClick={() => openEditRule(rule)}
                               disabled={deletingRuleId === rule.id || togglingRuleId === rule.id}
-                              className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors disabled:opacity-40"
+                              className="rounded p-1 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors disabled:opacity-40"
                             >
                               <Pencil className="h-3.5 w-3.5" />
                             </button>
                             <button
                               onClick={() => handleDeleteRule(rule.id)}
                               disabled={deletingRuleId === rule.id || togglingRuleId === rule.id}
-                              className="rounded p-1 text-gray-500 hover:bg-red-900/30 hover:text-red-400 transition-colors disabled:opacity-40"
+                              className="rounded p-1 text-muted-foreground hover:bg-red-900/30 hover:text-red-400 transition-colors disabled:opacity-40"
                             >
                               {deletingRuleId === rule.id
                                 ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -657,19 +657,19 @@ export default function ContextIntelligencePage() {
                               </p>
                               <div className="grid grid-cols-2 gap-3 text-[11px]">
                                 <div className="rounded-md border border-purple-900/40 bg-purple-950/20 p-2.5 space-y-1">
-                                  <p className="font-semibold text-gray-300">Conditions</p>
-                                  <p className="text-gray-400">Zone type: <span className="text-cyan-400 font-mono">{rule.zone_type}</span></p>
-                                  <p className="text-gray-400">Object class: <span className="text-cyan-400 font-mono">{rule.object_class}</span></p>
-                                  <p className="text-gray-400">Base threat score: <span className={cn("font-mono font-bold", rule.base_threat_score >= 8 ? "text-red-400" : rule.base_threat_score >= 5 ? "text-yellow-400" : "text-green-400")}>{rule.base_threat_score.toFixed(1)}</span></p>
-                                  <p className="text-gray-400">Status: <span className={rule.is_active ? "text-green-400" : "text-gray-500"}>{rule.is_active ? "Active — currently evaluating detections" : "Inactive — not applied to events"}</span></p>
+                                  <p className="font-semibold text-foreground">Conditions</p>
+                                  <p className="text-muted-foreground">Zone type: <span className="text-cyan-400 font-mono">{rule.zone_type}</span></p>
+                                  <p className="text-muted-foreground">Object class: <span className="text-cyan-400 font-mono">{rule.object_class}</span></p>
+                                  <p className="text-muted-foreground">Base threat score: <span className={cn("font-mono font-bold", rule.base_threat_score >= 8 ? "text-red-400" : rule.base_threat_score >= 5 ? "text-yellow-400" : "text-green-400")}>{rule.base_threat_score.toFixed(1)}</span></p>
+                                  <p className="text-muted-foreground">Status: <span className={rule.is_active ? "text-green-400" : "text-muted-foreground"}>{rule.is_active ? "Active — currently evaluating detections" : "Inactive — not applied to events"}</span></p>
                                 </div>
                                 <div className="rounded-md border border-purple-900/40 bg-purple-950/20 p-2.5 space-y-1">
-                                  <p className="font-semibold text-gray-300">Time Multipliers</p>
+                                  <p className="font-semibold text-foreground">Time Multipliers</p>
                                   {Object.keys(rule.time_multipliers).length === 0 ? (
-                                    <p className="text-gray-500">No time multipliers — base score applied at all times</p>
+                                    <p className="text-muted-foreground">No time multipliers — base score applied at all times</p>
                                   ) : (
                                     Object.entries(rule.time_multipliers).map(([period, mult]) => (
-                                      <p key={period} className="text-gray-400">
+                                      <p key={period} className="text-muted-foreground">
                                         During <span className="text-amber-400 font-mono">{period}</span>: score &times; <span className="text-amber-400 font-mono font-bold">{mult}</span> = <span className="text-white font-mono">{(rule.base_threat_score * Number(mult)).toFixed(1)}</span>
                                       </p>
                                     ))
@@ -677,9 +677,9 @@ export default function ContextIntelligencePage() {
                                 </div>
                               </div>
                               {rule.description && (
-                                <p className="text-[11px] text-gray-400 italic border-l-2 border-purple-700 pl-2">{rule.description}</p>
+                                <p className="text-[11px] text-muted-foreground italic border-l-2 border-purple-700 pl-2">{rule.description}</p>
                               )}
-                              <p className="text-[10px] text-gray-600">
+                              <p className="text-[10px] text-muted-foreground">
                                 Rule ID: <span className="font-mono">{rule.id}</span> &middot; Created: {timeAgo(rule.created_at)}
                               </p>
                             </div>
@@ -699,14 +699,14 @@ export default function ContextIntelligencePage() {
         {activeTab === "Rules" && (
           <div className="mt-6 space-y-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <Globe className="h-4 w-4 text-blue-400" />
                 External Threat Feeds
               </h2>
               <button
                 onClick={fetchExternalFeeds}
                 disabled={externalFeedsLoading}
-                className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800 transition-colors disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 transition-colors disabled:opacity-50"
               >
                 {externalFeedsLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
                 Refresh
@@ -727,9 +727,9 @@ export default function ContextIntelligencePage() {
             )}
 
             {!externalFeedsLoading && !externalFeedsError && externalThreats.length === 0 && (
-              <div className="rounded-xl border border-gray-800 bg-zinc-900/30 p-6 text-center">
-                <Globe className="h-8 w-8 text-gray-700 mx-auto mb-2" />
-                <p className="text-sm text-gray-500">No feeds configured</p>
+              <div className="rounded-xl border border-border bg-zinc-900/30 p-6 text-center">
+                <Globe className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground">No feeds configured</p>
               </div>
             )}
 
@@ -739,7 +739,7 @@ export default function ContextIntelligencePage() {
                   <div key={threat.id ?? i} className="rounded-xl border border-blue-900/40 bg-blue-950/10 p-3 space-y-1.5">
                     <div className="flex items-center gap-2">
                       <CloudRain className="h-4 w-4 text-blue-400 shrink-0" />
-                      <span className="text-xs font-semibold text-gray-200 truncate">{threat.title}</span>
+                      <span className="text-xs font-semibold text-foreground truncate">{threat.title}</span>
                       {threat.severity && (
                         <span className={cn(
                           "shrink-0 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase border",
@@ -754,12 +754,12 @@ export default function ContextIntelligencePage() {
                       )}
                     </div>
                     {threat.description && (
-                      <p className="text-[11px] text-gray-400 leading-relaxed">{threat.description}</p>
+                      <p className="text-[11px] text-muted-foreground leading-relaxed">{threat.description}</p>
                     )}
-                    <div className="flex flex-wrap gap-3 text-[10px] text-gray-500">
-                      {threat.type && <span>Type: <span className="text-gray-400">{threat.type}</span></span>}
-                      {threat.location && <span>Location: <span className="text-gray-400">{threat.location}</span></span>}
-                      {threat.source && <span>Source: <span className="text-gray-400">{threat.source}</span></span>}
+                    <div className="flex flex-wrap gap-3 text-[10px] text-muted-foreground">
+                      {threat.type && <span>Type: <span className="text-muted-foreground">{threat.type}</span></span>}
+                      {threat.location && <span>Location: <span className="text-muted-foreground">{threat.location}</span></span>}
+                      {threat.source && <span>Source: <span className="text-muted-foreground">{threat.source}</span></span>}
                       {threat.timestamp && <span>{timeAgo(threat.timestamp)}</span>}
                     </div>
                   </div>
@@ -773,14 +773,14 @@ export default function ContextIntelligencePage() {
         {activeTab === "Baselines" && (
           <div className="space-y-4">
             <div className="flex items-center gap-4">
-              <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <BarChart3 className="h-4 w-4 text-green-400" />
                 Camera Baselines
               </h2>
               <select
                 value={selectedCamera}
                 onChange={(e) => setSelectedCamera(e.target.value)}
-                className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-300 focus:border-cyan-600 focus:outline-none min-w-[200px]"
+                className="rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none min-w-[200px]"
               >
                 <option value="">Select a camera...</option>
                 {cameras.map((cam) => (
@@ -790,7 +790,7 @@ export default function ContextIntelligencePage() {
             </div>
 
             {!selectedCamera ? (
-              <div className="flex flex-col items-center justify-center py-16 text-gray-600">
+              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <Camera className="h-10 w-10 mb-3 opacity-30" />
                 <p className="text-sm">Select a camera to view baselines</p>
               </div>
@@ -801,20 +801,20 @@ export default function ContextIntelligencePage() {
             ) : (
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 {/* Baseline chart */}
-                <div className="rounded-xl border border-gray-800 bg-zinc-900/30 p-4">
-                  <h3 className="mb-3 text-xs font-bold text-gray-300 uppercase tracking-wider">
+                <div className="rounded-xl border border-border bg-zinc-900/30 p-4">
+                  <h3 className="mb-3 text-xs font-bold text-foreground uppercase tracking-wider">
                     Baseline per Time Slot
                   </h3>
                   {baselineSlots.length === 0 ? (
-                    <p className="text-xs text-gray-600 py-8 text-center">No baseline data</p>
+                    <p className="text-xs text-muted-foreground py-8 text-center">No baseline data</p>
                   ) : (
                     <div className="space-y-1.5 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-track-gray-950 scrollbar-thumb-gray-800">
                       {baselineSlots.map((slot) => {
                         const pct = Math.min((slot.avg_count / (slot.adaptive_threshold || 1)) * 100, 100);
                         return (
                           <div key={slot.time_slot} className="flex items-center gap-3">
-                            <span className="text-[10px] text-gray-500 font-mono w-14 shrink-0">{slot.time_slot}</span>
-                            <div className="flex-1 h-3 rounded-full bg-gray-800 overflow-hidden">
+                            <span className="text-[10px] text-muted-foreground font-mono w-14 shrink-0">{slot.time_slot}</span>
+                            <div className="flex-1 h-3 rounded-full bg-surface-3 overflow-hidden">
                               <div
                                 className={cn(
                                   "h-full rounded-full transition-all",
@@ -823,10 +823,10 @@ export default function ContextIntelligencePage() {
                                 style={{ width: `${pct}%` }}
                               />
                             </div>
-                            <span className="text-[10px] text-gray-400 font-mono w-12 text-right">
+                            <span className="text-[10px] text-muted-foreground font-mono w-12 text-right">
                               {slot.avg_count.toFixed(1)}
                             </span>
-                            <span className="text-[9px] text-gray-600 w-10 text-right">
+                            <span className="text-[9px] text-muted-foreground w-10 text-right">
                               +/-{slot.std_dev.toFixed(1)}
                             </span>
                           </div>
@@ -837,12 +837,12 @@ export default function ContextIntelligencePage() {
                 </div>
 
                 {/* Anomaly scores */}
-                <div className="rounded-xl border border-gray-800 bg-zinc-900/30 p-4">
-                  <h3 className="mb-3 text-xs font-bold text-gray-300 uppercase tracking-wider">
+                <div className="rounded-xl border border-border bg-zinc-900/30 p-4">
+                  <h3 className="mb-3 text-xs font-bold text-foreground uppercase tracking-wider">
                     Anomaly Scores
                   </h3>
                   {baselineAnomalies.length === 0 ? (
-                    <p className="text-xs text-gray-600 py-8 text-center">No anomalies for this camera</p>
+                    <p className="text-xs text-muted-foreground py-8 text-center">No anomalies for this camera</p>
                   ) : (
                     <div className="space-y-2 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-track-gray-950 scrollbar-thumb-gray-800">
                       {baselineAnomalies.map((a, i) => (
@@ -851,12 +851,12 @@ export default function ContextIntelligencePage() {
                             <span className={cn("text-sm font-bold font-mono", anomalyColor(a.score))}>
                               {a.score.toFixed(2)}
                             </span>
-                            <span className="text-[10px] text-gray-500">{timeAgo(a.timestamp)}</span>
+                            <span className="text-[10px] text-muted-foreground">{timeAgo(a.timestamp)}</span>
                           </div>
                           {a.contributing_factors.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-2">
                               {a.contributing_factors.map((f, j) => (
-                                <span key={j} className="rounded bg-gray-800/60 px-1.5 py-0.5 text-[9px] text-gray-500">{f}</span>
+                                <span key={j} className="rounded bg-surface-3/60 px-1.5 py-0.5 text-[9px] text-muted-foreground">{f}</span>
                               ))}
                             </div>
                           )}
@@ -874,7 +874,7 @@ export default function ContextIntelligencePage() {
         {activeTab === "Anomaly Monitor" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <Activity className="h-4 w-4 text-red-400" />
                 Live Anomaly Monitor
                 <span className="ml-2 flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
@@ -882,7 +882,7 @@ export default function ContextIntelligencePage() {
               <button
                 onClick={fetchAnomalies}
                 disabled={anomalyLoading}
-                className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800 transition-colors disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 transition-colors disabled:opacity-50"
               >
                 {anomalyLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
                 Refresh
@@ -894,7 +894,7 @@ export default function ContextIntelligencePage() {
                 <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
               </div>
             ) : anomalyScores.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-gray-600">
+              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <Activity className="h-10 w-10 mb-3 opacity-30" />
                 <p className="text-sm">No anomaly data available</p>
               </div>
@@ -904,8 +904,8 @@ export default function ContextIntelligencePage() {
                   <div key={a.camera_id} className={cn("rounded-lg border p-3 transition-colors", anomalyBg(a.score))}>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <Camera className="h-3.5 w-3.5 text-gray-500" />
-                        <span className="text-xs font-semibold text-gray-200 truncate max-w-[120px]">
+                        <Camera className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span className="text-xs font-semibold text-foreground truncate max-w-[120px]">
                           {a.camera_name}
                         </span>
                       </div>
@@ -913,7 +913,7 @@ export default function ContextIntelligencePage() {
                         {a.score.toFixed(2)}
                       </span>
                     </div>
-                    <div className="h-2 w-full rounded-full bg-gray-800 overflow-hidden">
+                    <div className="h-2 w-full rounded-full bg-surface-3 overflow-hidden">
                       <div
                         className={cn(
                           "h-full rounded-full transition-all duration-500",
@@ -923,9 +923,9 @@ export default function ContextIntelligencePage() {
                       />
                     </div>
                     <div className="flex items-center justify-between mt-2">
-                      <span className="text-[9px] text-gray-600">{timeAgo(a.timestamp)}</span>
+                      <span className="text-[9px] text-muted-foreground">{timeAgo(a.timestamp)}</span>
                       {a.contributing_factors.length > 0 && (
-                        <span className="text-[9px] text-gray-500">{a.contributing_factors.length} factors</span>
+                        <span className="text-[9px] text-muted-foreground">{a.contributing_factors.length} factors</span>
                       )}
                     </div>
                   </div>
@@ -937,15 +937,15 @@ export default function ContextIntelligencePage() {
             <div className="flex items-center gap-6 pt-2">
               <div className="flex items-center gap-2">
                 <div className="h-3 w-3 rounded-full bg-green-500" />
-                <span className="text-[10px] text-gray-500">Normal (&lt; 1.0)</span>
+                <span className="text-[10px] text-muted-foreground">Normal (&lt; 1.0)</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="h-3 w-3 rounded-full bg-yellow-500" />
-                <span className="text-[10px] text-gray-500">Elevated (1.0 - 2.0)</span>
+                <span className="text-[10px] text-muted-foreground">Elevated (1.0 - 2.0)</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="h-3 w-3 rounded-full bg-red-500" />
-                <span className="text-[10px] text-gray-500">Critical (&gt; 2.0)</span>
+                <span className="text-[10px] text-muted-foreground">Critical (&gt; 2.0)</span>
               </div>
             </div>
           </div>
@@ -955,14 +955,14 @@ export default function ContextIntelligencePage() {
         {activeTab === "Intent History" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <Zap className="h-4 w-4 text-yellow-400" />
                 Intent Classifications
               </h2>
               <button
                 onClick={fetchIntents}
                 disabled={intentLoading}
-                className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800 transition-colors disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 transition-colors disabled:opacity-50"
               >
                 {intentLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
                 Refresh
@@ -972,18 +972,18 @@ export default function ContextIntelligencePage() {
             {/* Intent stats summary */}
             {intentStats && (
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="rounded-lg border border-gray-800 bg-zinc-900/50 p-3">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-wider">Total</p>
-                  <p className="text-lg font-bold text-gray-100">{intentStats.total_classifications}</p>
+                <div className="rounded-lg border border-border bg-zinc-900/50 p-3">
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Total</p>
+                  <p className="text-lg font-bold text-foreground">{intentStats.total_classifications}</p>
                 </div>
                 <div className="rounded-lg border border-red-900/50 bg-red-950/20 p-3">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-wider">High Risk</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">High Risk</p>
                   <p className="text-lg font-bold text-red-400">{intentStats.high_risk_count}</p>
                 </div>
                 {Object.entries(intentStats.categories).slice(0, 2).map(([cat, count]) => (
-                  <div key={cat} className="rounded-lg border border-gray-800 bg-zinc-900/50 p-3">
-                    <p className="text-[10px] text-gray-500 uppercase tracking-wider">{cat}</p>
-                    <p className="text-lg font-bold text-gray-100">{count}</p>
+                  <div key={cat} className="rounded-lg border border-border bg-zinc-900/50 p-3">
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{cat}</p>
+                    <p className="text-lg font-bold text-foreground">{count}</p>
                   </div>
                 ))}
               </div>
@@ -994,15 +994,15 @@ export default function ContextIntelligencePage() {
                 <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
               </div>
             ) : intents.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-gray-600">
+              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <Users className="h-10 w-10 mb-3 opacity-30" />
                 <p className="text-sm">No intent classifications yet</p>
               </div>
             ) : (
-              <div className="overflow-x-auto rounded-xl border border-gray-800 bg-zinc-900/30">
+              <div className="overflow-x-auto rounded-xl border border-border bg-zinc-900/30">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="border-b border-gray-800 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+                    <tr className="border-b border-border text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                       <th className="px-4 py-3">Camera</th>
                       <th className="px-4 py-3">Track ID</th>
                       <th className="px-4 py-3">Intent</th>
@@ -1014,14 +1014,14 @@ export default function ContextIntelligencePage() {
                   </thead>
                   <tbody>
                     {intents.map((intent) => (
-                      <tr key={intent.id} className="border-b border-gray-800/30 hover:bg-gray-800/20 transition-colors">
+                      <tr key={intent.id} className="border-b border-border/30 hover:bg-surface-3/20 transition-colors">
                         <td className="px-4 py-2.5">
-                          <span className="flex items-center gap-1.5 text-xs text-gray-300">
-                            <Camera className="h-3 w-3 text-gray-500" />
+                          <span className="flex items-center gap-1.5 text-xs text-foreground">
+                            <Camera className="h-3 w-3 text-muted-foreground" />
                             {intent.camera_name}
                           </span>
                         </td>
-                        <td className="px-4 py-2.5 text-xs text-gray-400 font-mono">{intent.track_id}</td>
+                        <td className="px-4 py-2.5 text-xs text-muted-foreground font-mono">{intent.track_id}</td>
                         <td className="px-4 py-2.5">
                           <span className={cn(
                             "rounded-md border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
@@ -1039,18 +1039,18 @@ export default function ContextIntelligencePage() {
                             {(intent.risk_score * 100).toFixed(0)}%
                           </span>
                         </td>
-                        <td className="px-4 py-2.5 text-xs text-gray-400">{(intent.confidence * 100).toFixed(0)}%</td>
+                        <td className="px-4 py-2.5 text-xs text-muted-foreground">{(intent.confidence * 100).toFixed(0)}%</td>
                         <td className="px-4 py-2.5">
                           <div className="flex flex-wrap gap-1">
                             {intent.precursors.slice(0, 3).map((p, i) => (
-                              <span key={i} className="rounded bg-gray-800/60 px-1.5 py-0.5 text-[9px] text-gray-500">{p}</span>
+                              <span key={i} className="rounded bg-surface-3/60 px-1.5 py-0.5 text-[9px] text-muted-foreground">{p}</span>
                             ))}
                             {intent.precursors.length > 3 && (
-                              <span className="text-[9px] text-gray-600">+{intent.precursors.length - 3}</span>
+                              <span className="text-[9px] text-muted-foreground">+{intent.precursors.length - 3}</span>
                             )}
                           </div>
                         </td>
-                        <td className="px-4 py-2.5 text-[11px] text-gray-500">{timeAgo(intent.timestamp)}</td>
+                        <td className="px-4 py-2.5 text-[11px] text-muted-foreground">{timeAgo(intent.timestamp)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -1064,12 +1064,12 @@ export default function ContextIntelligencePage() {
       {/* Rule create/edit modal */}
       {showRuleForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="w-full max-w-lg rounded-2xl border border-gray-800 bg-gray-950 p-6 shadow-2xl">
+          <div className="w-full max-w-lg rounded-2xl border border-border bg-surface-0 p-6 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-bold text-gray-200">
+              <h2 className="text-sm font-bold text-foreground">
                 {editingRule ? "Edit Context Rule" : "Create Context Rule"}
               </h2>
-              <button onClick={() => { setShowRuleForm(false); setEditingRule(null); }} className="text-gray-500 hover:text-gray-300">
+              <button onClick={() => { setShowRuleForm(false); setEditingRule(null); }} className="text-muted-foreground hover:text-foreground">
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -1079,17 +1079,17 @@ export default function ContextIntelligencePage() {
                   placeholder="Zone type (e.g., parking, lobby)"
                   value={ruleForm.zone_type}
                   onChange={(e) => setRuleForm({ ...ruleForm, zone_type: e.target.value })}
-                  className="w-full rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-200 placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
+                  className="w-full rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
                 />
                 <input
                   placeholder="Object class (e.g., person, vehicle)"
                   value={ruleForm.object_class}
                   onChange={(e) => setRuleForm({ ...ruleForm, object_class: e.target.value })}
-                  className="w-full rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-200 placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
+                  className="w-full rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-[10px] text-gray-500 uppercase tracking-wider">Base Threat Score</label>
+                <label className="text-[10px] text-muted-foreground uppercase tracking-wider">Base Threat Score</label>
                 <input
                   type="number"
                   step="0.1"
@@ -1097,17 +1097,17 @@ export default function ContextIntelligencePage() {
                   max="10"
                   value={ruleForm.base_threat_score}
                   onChange={(e) => setRuleForm({ ...ruleForm, base_threat_score: parseFloat(e.target.value) || 0 })}
-                  className="w-full rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-200 focus:border-cyan-600 focus:outline-none"
+                  className="w-full rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-[10px] text-gray-500 uppercase tracking-wider">Time Multipliers (JSON)</label>
+                <label className="text-[10px] text-muted-foreground uppercase tracking-wider">Time Multipliers (JSON)</label>
                 <textarea
                   value={ruleForm.time_multipliers}
                   onChange={(e) => setRuleForm({ ...ruleForm, time_multipliers: e.target.value })}
                   rows={3}
                   placeholder='{"night": 2.0, "weekend": 1.5}'
-                  className="w-full rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-200 placeholder-gray-600 focus:border-cyan-600 focus:outline-none font-mono resize-none"
+                  className="w-full rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none font-mono resize-none"
                 />
               </div>
               <textarea
@@ -1115,12 +1115,12 @@ export default function ContextIntelligencePage() {
                 value={ruleForm.description}
                 onChange={(e) => setRuleForm({ ...ruleForm, description: e.target.value })}
                 rows={2}
-                className="w-full rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2 text-xs text-gray-200 placeholder-gray-600 focus:border-cyan-600 focus:outline-none resize-none"
+                className="w-full rounded-lg border border-border bg-surface-2/50 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none resize-none"
               />
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   onClick={() => { setShowRuleForm(false); setEditingRule(null); }}
-                  className="rounded-lg border border-gray-700 px-4 py-2 text-xs text-gray-400 hover:bg-gray-800 transition-colors"
+                  className="rounded-lg border border-border-strong px-4 py-2 text-xs text-muted-foreground hover:bg-surface-3 transition-colors"
                 >
                   Cancel
                 </button>

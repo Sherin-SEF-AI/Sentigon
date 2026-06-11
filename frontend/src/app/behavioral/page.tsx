@@ -159,11 +159,11 @@ function OccupancyCard({ zone }: { zone: OccupancyZone }) {
           ? "border-red-800/60 bg-red-950/20"
           : util >= 0.7
           ? "border-yellow-800/50 bg-yellow-950/10"
-          : "border-gray-800 bg-zinc-900/50"
+          : "border-border bg-zinc-900/50"
       )}
     >
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-semibold text-gray-200">
+        <span className="text-sm font-semibold text-foreground">
           {zone.zone_name}
         </span>
         <span
@@ -175,7 +175,7 @@ function OccupancyCard({ zone }: { zone: OccupancyZone }) {
           {zone.current_count}/{zone.max_capacity}
         </span>
       </div>
-      <div className="h-2 w-full rounded-full bg-gray-800 overflow-hidden">
+      <div className="h-2 w-full rounded-full bg-surface-3 overflow-hidden">
         <div
           className={cn(
             "h-full rounded-full transition-all duration-500",
@@ -184,7 +184,7 @@ function OccupancyCard({ zone }: { zone: OccupancyZone }) {
           style={{ width: `${pct}%` }}
         />
       </div>
-      <p className="mt-1.5 text-[10px] text-gray-500">
+      <p className="mt-1.5 text-[10px] text-muted-foreground">
         {Math.round(pct)}% utilized
       </p>
     </div>
@@ -277,7 +277,7 @@ export default function BehavioralAnalyticsPage() {
       <div className="flex h-full items-center justify-center bg-[#030712]">
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="h-10 w-10 animate-spin text-cyan-400" />
-          <p className="text-sm text-gray-500">Loading behavioral analytics...</p>
+          <p className="text-sm text-muted-foreground">Loading behavioral analytics...</p>
         </div>
       </div>
     );
@@ -286,16 +286,16 @@ export default function BehavioralAnalyticsPage() {
   return (
     <div className="flex h-full flex-col bg-[#030712]">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-900/30 border border-indigo-800/50">
             <Activity className="h-5 w-5 text-indigo-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Behavioral Analytics
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Loitering, tailgating, occupancy, and anomaly detection
             </p>
           </div>
@@ -304,25 +304,25 @@ export default function BehavioralAnalyticsPage() {
 
       {/* Stats Cards */}
       {stats && (
-        <div className="grid grid-cols-4 gap-4 border-b border-gray-800 px-6 py-3">
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/60 p-3">
+        <div className="grid grid-cols-4 gap-4 border-b border-border px-6 py-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/60 p-3">
             <Footprints className="h-5 w-5 text-yellow-400" />
             <div>
-              <p className="text-lg font-bold text-gray-100">
+              <p className="text-lg font-bold text-foreground">
                 {stats.loitering_today}
               </p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 Loitering Today
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/60 p-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/60 p-3">
             <Users className="h-5 w-5 text-orange-400" />
             <div>
-              <p className="text-lg font-bold text-gray-100">
+              <p className="text-lg font-bold text-foreground">
                 {stats.tailgating_alerts}
               </p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 Tailgating Alerts
               </p>
             </div>
@@ -333,18 +333,18 @@ export default function BehavioralAnalyticsPage() {
               <p className="text-lg font-bold text-red-400">
                 {stats.occupancy_violations}
               </p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 Occupancy Violations
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/60 p-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/60 p-3">
             <AlertTriangle className="h-5 w-5 text-cyan-400" />
             <div>
-              <p className="text-lg font-bold text-gray-100">
+              <p className="text-lg font-bold text-foreground">
                 {stats.unresolved_events}
               </p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 Unresolved Events
               </p>
             </div>
@@ -357,13 +357,13 @@ export default function BehavioralAnalyticsPage() {
         {/* Row 1: Occupancy Map + Events Feed */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Occupancy Map */}
-          <div className="rounded-xl border border-gray-800 bg-zinc-900/30 p-4">
-            <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-gray-200">
+          <div className="rounded-xl border border-border bg-zinc-900/30 p-4">
+            <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-foreground">
               <MapPin className="h-4 w-4 text-cyan-400" />
               Zone Occupancy
             </h3>
             {occupancy.length === 0 ? (
-              <p className="text-xs text-gray-600 py-8 text-center">
+              <p className="text-xs text-muted-foreground py-8 text-center">
                 No occupancy data available
               </p>
             ) : (
@@ -376,14 +376,14 @@ export default function BehavioralAnalyticsPage() {
           </div>
 
           {/* Events Feed */}
-          <div className="rounded-xl border border-gray-800 bg-zinc-900/30 p-4">
-            <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-gray-200">
+          <div className="rounded-xl border border-border bg-zinc-900/30 p-4">
+            <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-foreground">
               <Activity className="h-4 w-4 text-orange-400" />
               Behavioral Events
             </h3>
             <div className="max-h-[380px] overflow-y-auto space-y-2 scrollbar-thin scrollbar-track-gray-950 scrollbar-thumb-gray-800">
               {events.length === 0 ? (
-                <p className="text-xs text-gray-600 py-8 text-center">
+                <p className="text-xs text-muted-foreground py-8 text-center">
                   No events detected
                 </p>
               ) : (
@@ -396,8 +396,8 @@ export default function BehavioralAnalyticsPage() {
                     className={cn(
                       "rounded-lg border transition-colors",
                       event.resolved
-                        ? "border-gray-800/50 bg-gray-900/30 opacity-60"
-                        : "border-gray-800 bg-zinc-900/50"
+                        ? "border-border/50 bg-surface-2/30 opacity-60"
+                        : "border-border bg-zinc-900/50"
                     )}
                   >
                     <div className="flex items-start gap-3 p-3">
@@ -421,14 +421,14 @@ export default function BehavioralAnalyticsPage() {
 
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-xs font-semibold text-gray-200">
+                          <span className="text-xs font-semibold text-foreground">
                             {EVENT_TYPE_LABELS[event.type] || event.type}
                           </span>
                           <span
                             className={cn(
                               "rounded px-1.5 py-0.5 text-[9px] font-bold uppercase border",
                               SEVERITY_BADGE[event.severity] ||
-                                "text-gray-400 bg-gray-800 border-gray-700"
+                                "text-muted-foreground bg-surface-3 border-border-strong"
                             )}
                           >
                             {event.severity}
@@ -451,10 +451,10 @@ export default function BehavioralAnalyticsPage() {
                             <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
                           )}
                         </div>
-                        <p className="mt-0.5 text-[11px] text-gray-400 truncate">
+                        <p className="mt-0.5 text-[11px] text-muted-foreground truncate">
                           {event.description}
                         </p>
-                        <div className="mt-1 flex items-center gap-3 text-[10px] text-gray-500">
+                        <div className="mt-1 flex items-center gap-3 text-[10px] text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <MapPin className="h-2.5 w-2.5" />
                             {event.zone}
@@ -501,12 +501,12 @@ export default function BehavioralAnalyticsPage() {
                           <HelpCircle className="h-3 w-3" /> Alert Explanation
                         </p>
                         {(event.reason || event.explanation) && (
-                          <p className="text-[11px] text-gray-300 leading-relaxed border-l-2 border-indigo-700 pl-2">
+                          <p className="text-[11px] text-foreground leading-relaxed border-l-2 border-indigo-700 pl-2">
                             {event.reason || event.explanation}
                           </p>
                         )}
                         {event.confidence !== undefined && (
-                          <p className="text-[10px] text-gray-500">
+                          <p className="text-[10px] text-muted-foreground">
                             Model confidence: <span className={cn(
                               "font-mono font-bold",
                               event.confidence >= 0.8 ? "text-green-400" :
@@ -525,14 +525,14 @@ export default function BehavioralAnalyticsPage() {
         </div>
 
         {/* Row 2: Crowd Flow Chart */}
-        <div className="rounded-xl border border-gray-800 bg-zinc-900/30 p-4">
-          <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-gray-200">
+        <div className="rounded-xl border border-border bg-zinc-900/30 p-4">
+          <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-foreground">
             <TrendingUp className="h-4 w-4 text-cyan-400" />
             Occupancy Over Time
           </h3>
           {occupancyTimeSeries.length === 0 ? (
             <div className="flex items-center justify-center py-12">
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-muted-foreground">
                 No time series data available yet
               </p>
             </div>
@@ -596,20 +596,20 @@ export default function BehavioralAnalyticsPage() {
         {/* Row 3: Tailgating + Unusual Access */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Tailgating Table */}
-          <div className="rounded-xl border border-gray-800 bg-zinc-900/30 p-4">
-            <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-gray-200">
+          <div className="rounded-xl border border-border bg-zinc-900/30 p-4">
+            <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-foreground">
               <Users className="h-4 w-4 text-orange-400" />
               Tailgating Events
             </h3>
             {tailgating.length === 0 ? (
-              <p className="text-xs text-gray-600 py-8 text-center">
+              <p className="text-xs text-muted-foreground py-8 text-center">
                 No tailgating events detected
               </p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
                   <thead>
-                    <tr className="border-b border-gray-800 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+                    <tr className="border-b border-border text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                       <th className="pb-2 pr-3">Door</th>
                       <th className="pb-2 pr-3">Time</th>
                       <th className="pb-2 pr-3">Count</th>
@@ -620,15 +620,15 @@ export default function BehavioralAnalyticsPage() {
                     {tailgating.map((entry) => (
                       <tr
                         key={entry.id}
-                        className="border-b border-gray-800/30"
+                        className="border-b border-border/30"
                       >
                         <td className="py-2 pr-3">
-                          <span className="flex items-center gap-1 text-xs text-gray-300">
-                            <DoorOpen className="h-3 w-3 text-gray-500" />
+                          <span className="flex items-center gap-1 text-xs text-foreground">
+                            <DoorOpen className="h-3 w-3 text-muted-foreground" />
                             {entry.door}
                           </span>
                         </td>
-                        <td className="py-2 pr-3 text-[11px] text-gray-500">
+                        <td className="py-2 pr-3 text-[11px] text-muted-foreground">
                           {timeAgo(entry.timestamp)}
                         </td>
                         <td className="py-2 pr-3">
@@ -643,7 +643,7 @@ export default function BehavioralAnalyticsPage() {
                             {entry.person_count}
                           </span>
                         </td>
-                        <td className="py-2 text-xs text-gray-400">
+                        <td className="py-2 text-xs text-muted-foreground">
                           {entry.authorized_user}
                         </td>
                       </tr>
@@ -655,20 +655,20 @@ export default function BehavioralAnalyticsPage() {
           </div>
 
           {/* Unusual Access Table */}
-          <div className="rounded-xl border border-gray-800 bg-zinc-900/30 p-4">
-            <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-gray-200">
+          <div className="rounded-xl border border-border bg-zinc-900/30 p-4">
+            <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-foreground">
               <Shield className="h-4 w-4 text-red-400" />
               Unusual Access Patterns
             </h3>
             {unusualAccess.length === 0 ? (
-              <p className="text-xs text-gray-600 py-8 text-center">
+              <p className="text-xs text-muted-foreground py-8 text-center">
                 No unusual access patterns detected
               </p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
                   <thead>
-                    <tr className="border-b border-gray-800 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+                    <tr className="border-b border-border text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                       <th className="pb-2 pr-3">User</th>
                       <th className="pb-2 pr-3">Door</th>
                       <th className="pb-2 pr-3">Time</th>
@@ -679,18 +679,18 @@ export default function BehavioralAnalyticsPage() {
                     {unusualAccess.map((entry) => (
                       <tr
                         key={entry.id}
-                        className="border-b border-gray-800/30"
+                        className="border-b border-border/30"
                       >
-                        <td className="py-2 pr-3 text-xs text-gray-300 font-medium">
+                        <td className="py-2 pr-3 text-xs text-foreground font-medium">
                           {entry.user}
                         </td>
                         <td className="py-2 pr-3">
-                          <span className="flex items-center gap-1 text-xs text-gray-400">
-                            <DoorOpen className="h-3 w-3 text-gray-500" />
+                          <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                            <DoorOpen className="h-3 w-3 text-muted-foreground" />
                             {entry.door}
                           </span>
                         </td>
-                        <td className="py-2 pr-3 text-[11px] text-gray-500">
+                        <td className="py-2 pr-3 text-[11px] text-muted-foreground">
                           {timeAgo(entry.timestamp)}
                         </td>
                         <td className="py-2">
@@ -705,7 +705,7 @@ export default function BehavioralAnalyticsPage() {
                                   ? "text-red-400 bg-red-900/30"
                                   : entry.risk_score >= 0.5
                                   ? "text-yellow-400 bg-yellow-900/30"
-                                  : "text-gray-400 bg-gray-800"
+                                  : "text-muted-foreground bg-surface-3"
                               )}
                             >
                               {Math.round(entry.risk_score * 100)}

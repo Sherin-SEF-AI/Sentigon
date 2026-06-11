@@ -75,7 +75,7 @@ function SeverityBadge({ severity }: { severity: string }) {
     high: "bg-orange-500 text-white",
     medium: "bg-yellow-500 text-black",
     low: "bg-blue-500 text-white",
-    info: "bg-gray-600 text-gray-200",
+    info: "bg-gray-600 text-foreground",
   };
   return (
     <span
@@ -193,7 +193,7 @@ function PanicButton() {
           <div className="flex w-full gap-3">
             <button
               onClick={handleCancel}
-              className="flex-1 rounded-xl border border-gray-600 bg-gray-800 py-3 text-sm font-semibold text-gray-300 active:scale-95"
+              className="flex-1 rounded-xl border border-border-strong bg-surface-3 py-3 text-sm font-semibold text-foreground active:scale-95"
             >
               Cancel
             </button>
@@ -271,12 +271,12 @@ function IncidentReportForm({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="rounded-2xl border border-gray-700 bg-gray-900 p-4 space-y-3">
+    <div className="rounded-2xl border border-border-strong bg-surface-2 p-4 space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-bold text-gray-200">Report Incident</span>
+        <span className="text-sm font-bold text-foreground">Report Incident</span>
         <button
           onClick={onClose}
-          className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-800 hover:text-gray-300"
+          className="rounded-lg p-1.5 text-muted-foreground hover:bg-surface-3 hover:text-foreground"
         >
           <X className="h-4 w-4" />
         </button>
@@ -287,7 +287,7 @@ function IncidentReportForm({ onClose }: { onClose: () => void }) {
         onChange={(e) => setDescription(e.target.value)}
         placeholder="Describe what you observed..."
         rows={4}
-        className="w-full resize-none rounded-xl border border-gray-700 bg-gray-800 px-4 py-3 text-base text-gray-100 placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600"
+        className="w-full resize-none rounded-xl border border-border-strong bg-surface-3 px-4 py-3 text-base text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600"
       />
 
       <div className="flex items-center gap-3">
@@ -302,7 +302,7 @@ function IncidentReportForm({ onClose }: { onClose: () => void }) {
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="flex items-center gap-2 rounded-xl border border-gray-700 bg-gray-800 px-4 py-2.5 text-sm font-medium text-gray-300 active:scale-95"
+          className="flex items-center gap-2 rounded-xl border border-border-strong bg-surface-3 px-4 py-2.5 text-sm font-medium text-foreground active:scale-95"
         >
           <Upload className="h-4 w-4" />
           {photoFile ? photoFile.name.slice(0, 20) + (photoFile.name.length > 20 ? "…" : "") : "Add Photo"}
@@ -440,7 +440,7 @@ export default function MobilePage() {
       label: "Active Alerts",
       value: newAlertCount,
       badge: newAlertCount > 0 ? newAlertCount : undefined,
-      color: newAlertCount > 0 ? "text-red-400" : "text-gray-300",
+      color: newAlertCount > 0 ? "text-red-400" : "text-foreground",
     },
     {
       label: "Cameras Online",
@@ -450,7 +450,7 @@ export default function MobilePage() {
     {
       label: "Dispatched",
       value: dispatchCount,
-      color: dispatchCount > 0 ? "text-cyan-400" : "text-gray-300",
+      color: dispatchCount > 0 ? "text-cyan-400" : "text-foreground",
     },
   ];
 
@@ -460,7 +460,7 @@ export default function MobilePage() {
 
   return (
     <div
-      className="min-h-screen bg-gray-950 text-gray-100 select-none"
+      className="min-h-screen bg-surface-0 text-foreground select-none"
       style={{
         paddingTop: "env(safe-area-inset-top)",
         paddingBottom: "env(safe-area-inset-bottom)",
@@ -469,10 +469,10 @@ export default function MobilePage() {
       }}
     >
       {/* ── Top bar ─────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-gray-800/60 bg-gray-950/95 px-4 py-3 backdrop-blur-md">
+      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border/60 bg-surface-0/95 px-4 py-3 backdrop-blur-md">
         <div className="flex items-center gap-2">
           <Shield className="h-6 w-6 text-cyan-400 shrink-0" />
-          <span className="text-sm font-black uppercase tracking-[0.2em] text-gray-100">
+          <span className="text-sm font-black uppercase tracking-[0.2em] text-foreground">
             SENTINEL AI
           </span>
         </div>
@@ -494,7 +494,7 @@ export default function MobilePage() {
           </div>
 
           {/* Clock */}
-          <span className="font-mono text-sm font-semibold text-gray-300">
+          <span className="font-mono text-sm font-semibold text-foreground">
             {formatClock(now)}
           </span>
         </div>
@@ -508,19 +508,19 @@ export default function MobilePage() {
             ? [0, 1, 2].map((i) => (
                 <div
                   key={i}
-                  className="flex min-w-[120px] flex-col rounded-2xl border border-gray-800 bg-gray-900 p-4 animate-pulse"
+                  className="flex min-w-[120px] flex-col rounded-2xl border border-border bg-surface-2 p-4 animate-pulse"
                 >
-                  <div className="h-3 w-16 rounded bg-gray-800 mb-2" />
-                  <div className="h-7 w-10 rounded bg-gray-800" />
+                  <div className="h-3 w-16 rounded bg-surface-3 mb-2" />
+                  <div className="h-7 w-10 rounded bg-surface-3" />
                 </div>
               ))
             : stats.map((stat) => (
                 <div
                   key={stat.label}
-                  className="flex min-w-[120px] flex-col rounded-2xl border border-gray-800/60 bg-gray-900 p-4"
+                  className="flex min-w-[120px] flex-col rounded-2xl border border-border/60 bg-surface-2 p-4"
                 >
                   <div className="mb-1 flex items-center justify-between">
-                    <span className="text-xs font-medium text-gray-500 leading-snug">
+                    <span className="text-xs font-medium text-muted-foreground leading-snug">
                       {stat.label}
                     </span>
                     {stat.badge !== undefined && (
@@ -537,7 +537,7 @@ export default function MobilePage() {
         </div>
 
         {/* ── Panic Button ────────────────────────────────────────────── */}
-        <section className="rounded-2xl border border-red-900/40 bg-gray-900/60 px-4 py-5">
+        <section className="rounded-2xl border border-red-900/40 bg-surface-2/60 px-4 py-5">
           <h2 className="mb-4 text-center text-xs font-bold uppercase tracking-widest text-red-400">
             Emergency Panic
           </h2>
@@ -546,7 +546,7 @@ export default function MobilePage() {
 
         {/* ── Quick Actions Grid ──────────────────────────────────────── */}
         <section>
-          <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-gray-500">
+          <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
             Quick Actions
           </h2>
           <div className="grid grid-cols-2 gap-3">
@@ -612,12 +612,12 @@ export default function MobilePage() {
         {/* ── Lockdown confirmation dialog ─────────────────────────── */}
         {lockdownConfirm && (
           <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-4 backdrop-blur-sm sm:items-center">
-            <div className="w-full max-w-sm rounded-2xl border border-red-700/60 bg-gray-950 p-6 shadow-2xl shadow-red-900/30">
+            <div className="w-full max-w-sm rounded-2xl border border-red-700/60 bg-surface-0 p-6 shadow-2xl shadow-red-900/30">
               <div className="mb-4 flex items-center gap-3">
                 <Lock className="h-6 w-6 text-red-400 shrink-0" />
                 <div>
                   <p className="text-base font-bold text-red-300">Activate Lockdown?</p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     All access points will be secured immediately.
                   </p>
                 </div>
@@ -626,7 +626,7 @@ export default function MobilePage() {
                 <button
                   onClick={() => setLockdownConfirm(false)}
                   disabled={lockdownSending}
-                  className="flex-1 rounded-xl border border-gray-700 bg-gray-800 py-3 text-sm font-semibold text-gray-300 active:scale-95 disabled:opacity-50"
+                  className="flex-1 rounded-xl border border-border-strong bg-surface-3 py-3 text-sm font-semibold text-foreground active:scale-95 disabled:opacity-50"
                 >
                   Cancel
                 </button>
@@ -650,7 +650,7 @@ export default function MobilePage() {
         {/* ── Recent Alerts Feed ──────────────────────────────────────── */}
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-gray-500">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
               Recent Alerts
             </h2>
             <button
@@ -667,14 +667,14 @@ export default function MobilePage() {
               {[0, 1, 2].map((i) => (
                 <div
                   key={i}
-                  className="h-16 rounded-xl border border-gray-800 bg-gray-900 animate-pulse"
+                  className="h-16 rounded-xl border border-border bg-surface-2 animate-pulse"
                 />
               ))}
             </div>
           ) : alerts.length === 0 ? (
-            <div className="flex flex-col items-center gap-2 rounded-2xl border border-gray-800 bg-gray-900/50 py-8">
-              <AlertTriangle className="h-8 w-8 text-gray-700" />
-              <p className="text-sm text-gray-600">No new alerts</p>
+            <div className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface-2/50 py-8">
+              <AlertTriangle className="h-8 w-8 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">No new alerts</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -682,7 +682,7 @@ export default function MobilePage() {
                 <button
                   key={alert.id}
                   onClick={() => router.push("/alerts")}
-                  className="flex w-full items-center gap-3 rounded-2xl border border-gray-800/60 bg-gray-900 px-4 py-3 text-left transition-colors hover:border-gray-700 active:scale-[0.99]"
+                  className="flex w-full items-center gap-3 rounded-2xl border border-border/60 bg-surface-2 px-4 py-3 text-left transition-colors hover:border-border-strong active:scale-[0.99]"
                 >
                   <AlertTriangle
                     className={cn(
@@ -697,10 +697,10 @@ export default function MobilePage() {
                     )}
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="truncate text-sm font-semibold text-gray-200">
+                    <p className="truncate text-sm font-semibold text-foreground">
                       {alert.title}
                     </p>
-                    <p className="text-xs text-gray-500">{timeAgo(alert.created_at)}</p>
+                    <p className="text-xs text-muted-foreground">{timeAgo(alert.created_at)}</p>
                   </div>
                   <SeverityBadge severity={alert.severity} />
                 </button>
@@ -713,7 +713,7 @@ export default function MobilePage() {
         {!loading && cameras.length > 0 && (
           <section>
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-gray-500">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                 Camera Status
               </h2>
               <button
@@ -725,13 +725,13 @@ export default function MobilePage() {
               </button>
             </div>
 
-            <div className="flex items-center gap-4 rounded-2xl border border-gray-800/60 bg-gray-900 px-5 py-4">
-              <Camera className="h-6 w-6 text-gray-500 shrink-0" />
+            <div className="flex items-center gap-4 rounded-2xl border border-border/60 bg-surface-2 px-5 py-4">
+              <Camera className="h-6 w-6 text-muted-foreground shrink-0" />
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-lg font-bold text-gray-100">
+                  <span className="text-lg font-bold text-foreground">
                     {onlineCameras}{" "}
-                    <span className="text-sm font-normal text-gray-500">
+                    <span className="text-sm font-normal text-muted-foreground">
                       / {cameras.length} online
                     </span>
                   </span>
@@ -751,7 +751,7 @@ export default function MobilePage() {
                     %
                   </span>
                 </div>
-                <div className="h-2 w-full overflow-hidden rounded-full bg-gray-800">
+                <div className="h-2 w-full overflow-hidden rounded-full bg-surface-3">
                   <div
                     className={cn(
                       "h-2 rounded-full transition-all duration-700",

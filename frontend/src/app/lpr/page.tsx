@@ -164,11 +164,11 @@ function StatCard({
   accent?: string;
 }) {
   return (
-    <div className="flex flex-col items-center gap-1 rounded-xl border border-gray-800 bg-gray-900/50 px-4 py-3 min-w-[120px]">
+    <div className="flex flex-col items-center gap-1 rounded-xl border border-border bg-surface-2/50 px-4 py-3 min-w-[120px]">
       <span className={cn("text-lg font-bold tabular-nums", accent)}>
         {value}
       </span>
-      <span className="text-[11px] text-gray-500 whitespace-nowrap">{label}</span>
+      <span className="text-[11px] text-muted-foreground whitespace-nowrap">{label}</span>
     </div>
   );
 }
@@ -421,18 +421,18 @@ export default function LprPage() {
   /* --- Render --- */
 
   return (
-    <div className="flex h-full flex-col bg-gray-950">
+    <div className="flex h-full flex-col bg-surface-0">
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-900/30 border border-cyan-800/50">
             <Car className="h-5 w-5 text-cyan-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               License Plate Recognition
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Automated plate detection, watchlist matching &amp; vehicle tracking
             </p>
           </div>
@@ -440,19 +440,19 @@ export default function LprPage() {
 
         {/* Search */}
         <form onSubmit={handleSearch} className="relative w-72">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search plates..."
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 pl-10 pr-4 py-2 text-sm text-gray-300 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="w-full rounded-lg border border-border-strong bg-surface-2 pl-10 pr-4 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
           />
           {searchInput && (
             <button
               type="button"
               onClick={handleClearSearch}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
             >
               <X className="h-3.5 w-3.5" />
             </button>
@@ -461,11 +461,11 @@ export default function LprPage() {
       </div>
 
       {/* ---- Stats Bar ---- */}
-      <div className="flex items-center gap-3 overflow-x-auto border-b border-gray-800 px-6 py-3 scrollbar-thin scrollbar-track-gray-950 scrollbar-thumb-gray-800">
+      <div className="flex items-center gap-3 overflow-x-auto border-b border-border px-6 py-3 scrollbar-thin scrollbar-track-gray-950 scrollbar-thumb-gray-800">
         {loadingStats ? (
           <div className="flex items-center gap-2 py-3">
             <Loader2 className="h-4 w-4 animate-spin text-cyan-400" />
-            <span className="text-xs text-gray-500">Loading stats...</span>
+            <span className="text-xs text-muted-foreground">Loading stats...</span>
           </div>
         ) : stats ? (
           <>
@@ -499,12 +499,12 @@ export default function LprPage() {
             />
           </>
         ) : (
-          <span className="py-3 text-xs text-gray-600">Stats unavailable</span>
+          <span className="py-3 text-xs text-muted-foreground">Stats unavailable</span>
         )}
       </div>
 
       {/* ---- Tabs ---- */}
-      <div className="flex items-center gap-1 border-b border-gray-800 px-6">
+      <div className="flex items-center gap-1 border-b border-border px-6">
         {TABS.map((tab) => (
           <button
             key={tab.key}
@@ -513,7 +513,7 @@ export default function LprPage() {
               "flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors",
               activeTab === tab.key
                 ? "border-cyan-500 text-cyan-400"
-                : "border-transparent text-gray-500 hover:text-gray-300"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             )}
           >
             {tab.icon}
@@ -530,7 +530,7 @@ export default function LprPage() {
             {loadingPlates && (
               <div className="flex flex-col items-center justify-center py-20">
                 <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-                <p className="mt-3 text-sm text-gray-500">Loading plates...</p>
+                <p className="mt-3 text-sm text-muted-foreground">Loading plates...</p>
               </div>
             )}
 
@@ -540,7 +540,7 @@ export default function LprPage() {
                 <p className="text-sm text-red-400">{error}</p>
                 <button
                   onClick={fetchPlates}
-                  className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+                  className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
                 >
                   Retry
                 </button>
@@ -549,13 +549,13 @@ export default function LprPage() {
 
             {!loadingPlates && !error && plates.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20">
-                <Car className="mb-2 h-10 w-10 text-gray-700" />
-                <p className="text-sm font-medium text-gray-400">
+                <Car className="mb-2 h-10 w-10 text-muted-foreground" />
+                <p className="text-sm font-medium text-muted-foreground">
                   {searchQuery
                     ? `No plates matching "${searchQuery}"`
                     : "No plate detections yet"}
                 </p>
-                <p className="mt-1 text-xs text-gray-600">
+                <p className="mt-1 text-xs text-muted-foreground">
                   {searchQuery
                     ? "Try a different search term"
                     : "Plates will appear as cameras detect them"}
@@ -564,10 +564,10 @@ export default function LprPage() {
             )}
 
             {!loadingPlates && !error && plates.length > 0 && (
-              <div className="rounded-xl border border-gray-800 bg-gray-900/50 overflow-hidden">
+              <div className="rounded-xl border border-border bg-surface-2/50 overflow-hidden">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-gray-800 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <tr className="border-b border-border text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       <th className="px-4 py-3">Plate Number</th>
                       <th className="px-4 py-3">Camera</th>
                       <th className="px-4 py-3">Vehicle Type</th>
@@ -586,9 +586,9 @@ export default function LprPage() {
                           <tr
                             key={plate.id}
                             className={cn(
-                              "border-b border-gray-800/50 transition-colors hover:bg-gray-800/30 cursor-pointer",
+                              "border-b border-border/50 transition-colors hover:bg-surface-3/30 cursor-pointer",
                               plate.watchlisted && "bg-red-950/10",
-                              isRowExpanded && "bg-gray-800/20"
+                              isRowExpanded && "bg-surface-3/20"
                             )}
                             onClick={() => {
                               if (isRowExpanded) {
@@ -608,9 +608,9 @@ export default function LprPage() {
                                 {isRowExpanded ? (
                                   <ChevronDown className="h-3 w-3 text-cyan-400 shrink-0" />
                                 ) : (
-                                  <ChevronRight className="h-3 w-3 text-gray-600 shrink-0" />
+                                  <ChevronRight className="h-3 w-3 text-muted-foreground shrink-0" />
                                 )}
-                                <span className="inline-flex items-center gap-2 rounded-md border border-gray-700 bg-gray-800 px-2.5 py-1 font-mono text-sm font-bold tracking-wider text-gray-100">
+                                <span className="inline-flex items-center gap-2 rounded-md border border-border-strong bg-surface-3 px-2.5 py-1 font-mono text-sm font-bold tracking-wider text-foreground">
                                   {plate.plate_number}
                                 </span>
                               </div>
@@ -618,19 +618,19 @@ export default function LprPage() {
 
                             {/* Camera */}
                             <td className="px-4 py-3">
-                              <span className="flex items-center gap-1.5 text-gray-400">
-                                <Camera className="h-3.5 w-3.5 text-gray-600" />
+                              <span className="flex items-center gap-1.5 text-muted-foreground">
+                                <Camera className="h-3.5 w-3.5 text-muted-foreground" />
                                 {plate.camera}
                               </span>
                             </td>
 
                             {/* Vehicle Type */}
-                            <td className="px-4 py-3 capitalize text-gray-400">
+                            <td className="px-4 py-3 capitalize text-muted-foreground">
                               {plate.vehicle_type}
                             </td>
 
                             {/* Color */}
-                            <td className="px-4 py-3 capitalize text-gray-400">
+                            <td className="px-4 py-3 capitalize text-muted-foreground">
                               {plate.color}
                             </td>
 
@@ -652,11 +652,11 @@ export default function LprPage() {
 
                             {/* Time */}
                             <td className="px-4 py-3">
-                              <span className="flex items-center gap-1.5 text-xs text-gray-500">
+                              <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                                 <Clock className="h-3 w-3" />
                                 {timeAgo(plate.timestamp)}
                               </span>
-                              <span className="mt-0.5 block text-[11px] text-gray-600">
+                              <span className="mt-0.5 block text-[11px] text-muted-foreground">
                                 {formatTimestamp(plate.timestamp)}
                               </span>
                             </td>
@@ -669,21 +669,21 @@ export default function LprPage() {
                                   Watchlisted
                                 </span>
                               ) : (
-                                <span className="text-xs text-gray-600">---</span>
+                                <span className="text-xs text-muted-foreground">---</span>
                               )}
                             </td>
                           </tr>
 
                           {/* Feature 1: Cross-camera timeline — inline expanded row */}
                           {isRowExpanded && (
-                            <tr key={`${plate.id}-timeline`} className="border-b border-gray-800/50 bg-gray-900/80">
+                            <tr key={`${plate.id}-timeline`} className="border-b border-border/50 bg-surface-2/80">
                               <td colSpan={7} className="px-6 py-4">
                                 <div className="space-y-3">
                                   <div className="flex items-center justify-between">
                                     <h3 className="text-xs font-semibold text-cyan-400 flex items-center gap-2">
                                       <Camera className="h-3.5 w-3.5" />
                                       Cross-Camera Sightings for{" "}
-                                      <span className="font-mono text-gray-100">{plate.plate_number}</span>
+                                      <span className="font-mono text-foreground">{plate.plate_number}</span>
                                     </h3>
                                     {/* Feature 3: Speed estimation */}
                                     {!loadingSightings && speedEstimation && selectedTimelinePlate === plate.plate_number && (
@@ -697,7 +697,7 @@ export default function LprPage() {
                                   {loadingSightings ? (
                                     <div className="flex items-center gap-2 py-4">
                                       <Loader2 className="h-4 w-4 animate-spin text-cyan-400" />
-                                      <span className="text-xs text-gray-500">Loading sightings...</span>
+                                      <span className="text-xs text-muted-foreground">Loading sightings...</span>
                                     </div>
                                   ) : (
                                     <TimelineView
@@ -725,7 +725,7 @@ export default function LprPage() {
           <>
             {/* Add button */}
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-gray-300">
+              <h2 className="text-sm font-semibold text-foreground">
                 Watchlisted Plates
               </h2>
               <button
@@ -742,7 +742,7 @@ export default function LprPage() {
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
                 <form
                   onSubmit={handleAddWatchlist}
-                  className="relative w-full max-w-lg rounded-xl border border-gray-800 bg-gray-900 p-6 shadow-2xl"
+                  className="relative w-full max-w-lg rounded-xl border border-border bg-surface-2 p-6 shadow-2xl"
                 >
                   <button
                     type="button"
@@ -750,19 +750,19 @@ export default function LprPage() {
                       setShowForm(false);
                       setForm(EMPTY_FORM);
                     }}
-                    className="absolute right-4 top-4 text-gray-500 hover:text-gray-300"
+                    className="absolute right-4 top-4 text-muted-foreground hover:text-foreground"
                   >
                     <X className="h-5 w-5" />
                   </button>
 
-                  <h2 className="mb-5 text-lg font-semibold text-gray-100">
+                  <h2 className="mb-5 text-lg font-semibold text-foreground">
                     Add to Watchlist
                   </h2>
 
                   <div className="space-y-4">
                     {/* Plate number */}
                     <div>
-                      <label className="mb-1 block text-xs font-medium text-gray-400">
+                      <label className="mb-1 block text-xs font-medium text-muted-foreground">
                         Plate Number
                       </label>
                       <input
@@ -771,34 +771,34 @@ export default function LprPage() {
                         onChange={(e) =>
                           setForm({ ...form, plate_number: e.target.value.toUpperCase() })
                         }
-                        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm font-mono tracking-wider text-gray-100 placeholder-gray-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                        className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm font-mono tracking-wider text-foreground placeholder-gray-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                         placeholder="e.g. ABC 1234"
                       />
                     </div>
 
                     {/* Reason */}
                     <div>
-                      <label className="mb-1 block text-xs font-medium text-gray-400">
+                      <label className="mb-1 block text-xs font-medium text-muted-foreground">
                         Reason
                       </label>
                       <input
                         required
                         value={form.reason}
                         onChange={(e) => setForm({ ...form, reason: e.target.value })}
-                        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                        className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                         placeholder="e.g. Stolen vehicle, Person of interest"
                       />
                     </div>
 
                     {/* Severity */}
                     <div>
-                      <label className="mb-1 block text-xs font-medium text-gray-400">
+                      <label className="mb-1 block text-xs font-medium text-muted-foreground">
                         Severity
                       </label>
                       <select
                         value={form.severity}
                         onChange={(e) => setForm({ ...form, severity: e.target.value })}
-                        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                        className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                       >
                         {SEVERITY_OPTIONS.map((sev) => (
                           <option key={sev} value={sev}>
@@ -810,7 +810,7 @@ export default function LprPage() {
 
                     {/* Vehicle description */}
                     <div>
-                      <label className="mb-1 block text-xs font-medium text-gray-400">
+                      <label className="mb-1 block text-xs font-medium text-muted-foreground">
                         Vehicle Description
                       </label>
                       <textarea
@@ -819,7 +819,7 @@ export default function LprPage() {
                         onChange={(e) =>
                           setForm({ ...form, vehicle_description: e.target.value })
                         }
-                        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                        className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                         placeholder="e.g. White Toyota Camry, 2020 model"
                       />
                     </div>
@@ -833,7 +833,7 @@ export default function LprPage() {
                         setShowForm(false);
                         setForm(EMPTY_FORM);
                       }}
-                      className="rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-400 transition-colors hover:text-gray-200"
+                      className="rounded-lg border border-border-strong px-4 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
                     >
                       Cancel
                     </button>
@@ -854,17 +854,17 @@ export default function LprPage() {
             {loadingWatchlist && (
               <div className="flex flex-col items-center justify-center py-20">
                 <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-                <p className="mt-3 text-sm text-gray-500">Loading watchlist...</p>
+                <p className="mt-3 text-sm text-muted-foreground">Loading watchlist...</p>
               </div>
             )}
 
             {!loadingWatchlist && watchlist.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20">
-                <Shield className="mb-2 h-10 w-10 text-gray-700" />
-                <p className="text-sm font-medium text-gray-400">
+                <Shield className="mb-2 h-10 w-10 text-muted-foreground" />
+                <p className="text-sm font-medium text-muted-foreground">
                   No watchlisted plates
                 </p>
-                <p className="mt-1 text-xs text-gray-600">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Add plates to your watchlist to receive alerts on detection
                 </p>
               </div>
@@ -875,11 +875,11 @@ export default function LprPage() {
                 {watchlist.map((entry) => (
                   <div
                     key={entry.id}
-                    className="rounded-xl border border-gray-800 bg-gray-900/50 p-4 transition-shadow hover:shadow-lg hover:shadow-cyan-900/10"
+                    className="rounded-xl border border-border bg-surface-2/50 p-4 transition-shadow hover:shadow-lg hover:shadow-cyan-900/10"
                   >
                     {/* Top row: plate + severity */}
                     <div className="flex items-start justify-between mb-3">
-                      <span className="inline-flex items-center rounded-md border border-gray-700 bg-gray-800 px-3 py-1.5 font-mono text-base font-bold tracking-wider text-gray-100">
+                      <span className="inline-flex items-center rounded-md border border-border-strong bg-surface-3 px-3 py-1.5 font-mono text-base font-bold tracking-wider text-foreground">
                         {entry.plate_number}
                       </span>
                       <span
@@ -894,34 +894,34 @@ export default function LprPage() {
 
                     {/* Reason */}
                     <div className="mb-2">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                         Reason
                       </span>
-                      <p className="mt-0.5 text-sm text-gray-300">{entry.reason}</p>
+                      <p className="mt-0.5 text-sm text-foreground">{entry.reason}</p>
                     </div>
 
                     {/* Vehicle description */}
                     {entry.vehicle_description && (
                       <div className="mb-3">
-                        <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                           Vehicle
                         </span>
-                        <p className="mt-0.5 text-sm text-gray-400">
+                        <p className="mt-0.5 text-sm text-muted-foreground">
                           {entry.vehicle_description}
                         </p>
                       </div>
                     )}
 
                     {/* Footer: date + delete */}
-                    <div className="flex items-center justify-between border-t border-gray-800 pt-3">
-                      <span className="flex items-center gap-1 text-[11px] text-gray-600">
+                    <div className="flex items-center justify-between border-t border-border pt-3">
+                      <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
                         <Clock className="h-3 w-3" />
                         Added {timeAgo(entry.created_at)}
                       </span>
                       <button
                         onClick={() => handleDeleteWatchlist(entry.id)}
                         disabled={deletingId === entry.id}
-                        className="flex items-center gap-1.5 rounded-md border border-gray-700 px-3 py-1.5 text-xs text-red-400 transition-colors hover:border-red-500/40 hover:bg-red-500/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex items-center gap-1.5 rounded-md border border-border-strong px-3 py-1.5 text-xs text-red-400 transition-colors hover:border-red-500/40 hover:bg-red-500/10 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {deletingId === entry.id ? (
                           <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -943,12 +943,12 @@ export default function LprPage() {
           <>
             {/* Feature 2: Threshold control */}
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-gray-300 flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <Timer className="h-4 w-4 text-amber-400" />
                 Vehicle Dwell Tracking
               </h2>
               <div className="flex items-center gap-2">
-                <label className="text-xs text-gray-500 whitespace-nowrap">
+                <label className="text-xs text-muted-foreground whitespace-nowrap">
                   Extended Stay Threshold
                 </label>
                 <div className="flex items-center gap-1">
@@ -960,9 +960,9 @@ export default function LprPage() {
                     onChange={(e) =>
                       setDwellThresholdMinutes(Math.max(1, Number(e.target.value)))
                     }
-                    className="w-20 rounded-lg border border-gray-700 bg-gray-900 px-2 py-1 text-sm text-gray-200 text-center font-mono focus:border-cyan-600 focus:outline-none"
+                    className="w-20 rounded-lg border border-border-strong bg-surface-2 px-2 py-1 text-sm text-foreground text-center font-mono focus:border-cyan-600 focus:outline-none"
                   />
-                  <span className="text-xs text-gray-500">min</span>
+                  <span className="text-xs text-muted-foreground">min</span>
                 </div>
               </div>
             </div>
@@ -970,7 +970,7 @@ export default function LprPage() {
             {loadingDwell && (
               <div className="flex flex-col items-center justify-center py-20">
                 <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-                <p className="mt-3 text-sm text-gray-500">
+                <p className="mt-3 text-sm text-muted-foreground">
                   Loading dwell records...
                 </p>
               </div>
@@ -978,11 +978,11 @@ export default function LprPage() {
 
             {!loadingDwell && dwellRecords.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20">
-                <Timer className="mb-2 h-10 w-10 text-gray-700" />
-                <p className="text-sm font-medium text-gray-400">
+                <Timer className="mb-2 h-10 w-10 text-muted-foreground" />
+                <p className="text-sm font-medium text-muted-foreground">
                   No vehicles currently being tracked
                 </p>
-                <p className="mt-1 text-xs text-gray-600">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Vehicle dwell records will appear when cameras detect prolonged
                   presence
                 </p>
@@ -1002,37 +1002,37 @@ export default function LprPage() {
                     <div
                       key={record.id}
                       className={cn(
-                        "flex items-center gap-4 rounded-xl border bg-gray-900/50 px-5 py-4 transition-colors",
+                        "flex items-center gap-4 rounded-xl border bg-surface-2/50 px-5 py-4 transition-colors",
                         isExtendedStay
                           ? "border-red-800/50 bg-red-950/10"
                           : isLong
                             ? "border-amber-800/30"
-                            : "border-gray-800"
+                            : "border-border"
                       )}
                     >
                       {/* Plate */}
-                      <span className="inline-flex items-center rounded-md border border-gray-700 bg-gray-800 px-2.5 py-1 font-mono text-sm font-bold tracking-wider text-gray-100">
+                      <span className="inline-flex items-center rounded-md border border-border-strong bg-surface-3 px-2.5 py-1 font-mono text-sm font-bold tracking-wider text-foreground">
                         {record.plate_number}
                       </span>
 
                       {/* Zone */}
-                      <span className="flex items-center gap-1.5 text-sm text-gray-400">
-                        <MapPin className="h-3.5 w-3.5 text-gray-600" />
+                      <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                        <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
                         {record.zone}
                       </span>
 
                       {/* First seen */}
                       <div className="flex flex-col text-xs">
-                        <span className="text-gray-600">First Seen</span>
-                        <span className="text-gray-400 tabular-nums">
+                        <span className="text-muted-foreground">First Seen</span>
+                        <span className="text-muted-foreground tabular-nums">
                           {formatTimestamp(record.first_seen)}
                         </span>
                       </div>
 
                       {/* Last seen */}
                       <div className="flex flex-col text-xs">
-                        <span className="text-gray-600">Last Seen</span>
-                        <span className="text-gray-400 tabular-nums">
+                        <span className="text-muted-foreground">Last Seen</span>
+                        <span className="text-muted-foreground tabular-nums">
                           {formatTimestamp(record.last_seen)}
                         </span>
                       </div>
@@ -1053,7 +1053,7 @@ export default function LprPage() {
                               ? "text-red-400"
                               : isLong
                                 ? "text-amber-400"
-                                : "text-gray-600"
+                                : "text-muted-foreground"
                           )}
                         />
                         <span

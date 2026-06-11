@@ -68,7 +68,7 @@ const DEVICE_STATE_STYLES: Record<string, { bg: string; text: string; border: st
   ringing: { bg: "bg-yellow-900/30", text: "text-yellow-400", border: "border-yellow-800/50" },
   in_call: { bg: "bg-cyan-900/30", text: "text-cyan-400", border: "border-cyan-800/50" },
   broadcasting: { bg: "bg-purple-900/30", text: "text-purple-400", border: "border-purple-800/50" },
-  offline: { bg: "bg-gray-800", text: "text-gray-500", border: "border-gray-700" },
+  offline: { bg: "bg-surface-3", text: "text-muted-foreground", border: "border-border-strong" },
   error: { bg: "bg-red-900/30", text: "text-red-400", border: "border-red-800/50" },
 };
 
@@ -168,9 +168,9 @@ function BroadcastPanel() {
   return (
     <div className="space-y-6">
       {/* Zone Selection */}
-      <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-5 space-y-4">
+      <div className="rounded-lg border border-border bg-surface-2/60 p-5 space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-300">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
             Select Broadcast Zones
           </h3>
           <button
@@ -181,7 +181,7 @@ function BroadcastPanel() {
           </button>
         </div>
         {zones.length === 0 ? (
-          <p className="text-xs text-gray-600">No broadcast zones configured</p>
+          <p className="text-xs text-muted-foreground">No broadcast zones configured</p>
         ) : (
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
             {zones.map((zone) => {
@@ -194,13 +194,13 @@ function BroadcastPanel() {
                     "rounded-lg border p-3 text-left transition-all",
                     isSelected
                       ? "border-cyan-700/50 bg-cyan-950/20 ring-1 ring-cyan-700/30"
-                      : "border-gray-800 bg-gray-950 hover:border-gray-700"
+                      : "border-border bg-surface-0 hover:border-border-strong"
                   )}
                 >
-                  <span className={cn("text-xs font-semibold", isSelected ? "text-cyan-400" : "text-gray-300")}>
+                  <span className={cn("text-xs font-semibold", isSelected ? "text-cyan-400" : "text-foreground")}>
                     {zone.name}
                   </span>
-                  <span className="mt-1 block text-[10px] text-gray-500">
+                  <span className="mt-1 block text-[10px] text-muted-foreground">
                     {zone.device_count} device{zone.device_count !== 1 && "s"}
                   </span>
                 </button>
@@ -211,8 +211,8 @@ function BroadcastPanel() {
       </div>
 
       {/* Message Input */}
-      <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-5 space-y-4">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-300">
+      <div className="rounded-lg border border-border bg-surface-2/60 p-5 space-y-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
           Broadcast Message
         </h3>
 
@@ -233,7 +233,7 @@ function BroadcastPanel() {
           onChange={(e) => setMessage(e.target.value)}
           rows={4}
           placeholder="Enter message to broadcast..."
-          className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700 resize-none"
+          className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700 resize-none"
         />
         <div className="flex items-center gap-3">
           <button
@@ -244,7 +244,7 @@ function BroadcastPanel() {
             {broadcasting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Megaphone className="h-4 w-4" />}
             {broadcasting ? "Broadcasting..." : "Send Broadcast"}
           </button>
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-muted-foreground">
             {selectedZones.length} zone{selectedZones.length !== 1 && "s"} selected
           </span>
         </div>
@@ -352,7 +352,7 @@ export default function IntercomPage() {
   const ringing = devices.filter((d) => d.state === "ringing").length;
 
   return (
-    <div className="min-h-screen bg-gray-950 p-6">
+    <div className="min-h-screen bg-surface-0 p-6">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -363,14 +363,14 @@ export default function IntercomPage() {
             <h1 className="text-xl font-bold text-purple-400 tracking-wide">
               Intercom System
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Manage intercom devices, calls, door releases, and broadcasts
             </p>
           </div>
         </div>
         <button
           onClick={fetchData}
-          className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+          className="flex items-center gap-2 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
         >
           <RefreshCw className="h-3.5 w-3.5" />
           Refresh
@@ -379,17 +379,17 @@ export default function IntercomPage() {
 
       {/* Stats Row */}
       <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+        <div className="rounded-lg border border-border bg-surface-2/60 p-4">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             <Radio className="h-3.5 w-3.5" />
             Devices
           </div>
-          <p className="mt-2 text-3xl font-bold text-gray-100">
+          <p className="mt-2 text-3xl font-bold text-foreground">
             {loading ? "--" : devices.length}
           </p>
         </div>
-        <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+        <div className="rounded-lg border border-border bg-surface-2/60 p-4">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             <CheckCircle2 className="h-3.5 w-3.5" />
             Online
           </div>
@@ -397,8 +397,8 @@ export default function IntercomPage() {
             {loading ? "--" : online}
           </p>
         </div>
-        <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+        <div className="rounded-lg border border-border bg-surface-2/60 p-4">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             <PhoneCall className="h-3.5 w-3.5" />
             In Call
           </div>
@@ -406,19 +406,19 @@ export default function IntercomPage() {
             {loading ? "--" : inCall}
           </p>
         </div>
-        <div className="rounded-lg border border-gray-800 bg-gray-900/60 p-4">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+        <div className="rounded-lg border border-border bg-surface-2/60 p-4">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             <PhoneIncoming className="h-3.5 w-3.5" />
             Ringing
           </div>
-          <p className={cn("mt-2 text-3xl font-bold", ringing > 0 ? "text-yellow-400" : "text-gray-100")}>
+          <p className={cn("mt-2 text-3xl font-bold", ringing > 0 ? "text-yellow-400" : "text-foreground")}>
             {loading ? "--" : ringing}
           </p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="mb-4 flex gap-1 border-b border-gray-800">
+      <div className="mb-4 flex gap-1 border-b border-border">
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -427,7 +427,7 @@ export default function IntercomPage() {
               "flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors",
               tab === t.key
                 ? "border-cyan-400 text-cyan-400"
-                : "border-transparent text-gray-500 hover:text-gray-300"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             )}
           >
             {t.icon}
@@ -440,7 +440,7 @@ export default function IntercomPage() {
       {loading && (
         <div className="flex flex-col items-center justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-          <p className="mt-3 text-sm text-gray-500">Loading intercom data...</p>
+          <p className="mt-3 text-sm text-muted-foreground">Loading intercom data...</p>
         </div>
       )}
 
@@ -451,7 +451,7 @@ export default function IntercomPage() {
           <p className="text-sm text-red-400">{error}</p>
           <button
             onClick={fetchData}
-            className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             Retry
           </button>
@@ -463,8 +463,8 @@ export default function IntercomPage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {devices.length === 0 ? (
             <div className="col-span-full flex flex-col items-center justify-center py-20">
-              <Mic className="mb-2 h-10 w-10 text-gray-700" />
-              <p className="text-sm text-gray-500">No intercom devices registered</p>
+              <Mic className="mb-2 h-10 w-10 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">No intercom devices registered</p>
             </div>
           ) : (
             devices.map((device) => {
@@ -474,16 +474,16 @@ export default function IntercomPage() {
                 <div
                   key={device.id}
                   className={cn(
-                    "rounded-lg border bg-gray-900/60 p-4 transition-colors",
+                    "rounded-lg border bg-surface-2/60 p-4 transition-colors",
                     device.state === "ringing" && "border-l-2 border-l-yellow-500 animate-pulse",
-                    device.state !== "ringing" && "border-gray-800"
+                    device.state !== "ringing" && "border-border"
                   )}
                 >
                   {/* Device header */}
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                       <Mic className={cn("h-4 w-4", stateStyle.text)} />
-                      <span className="text-sm font-semibold text-gray-200 truncate">
+                      <span className="text-sm font-semibold text-foreground truncate">
                         {device.name}
                       </span>
                     </div>
@@ -496,27 +496,27 @@ export default function IntercomPage() {
                   </div>
 
                   {/* Device info */}
-                  <div className="space-y-1 text-xs text-gray-500 mb-4">
+                  <div className="space-y-1 text-xs text-muted-foreground mb-4">
                     {device.zone && (
                       <div className="flex items-center gap-1">
                         <MapPin className="h-3 w-3" />
-                        <span className="text-gray-300">{device.zone}</span>
+                        <span className="text-foreground">{device.zone}</span>
                       </div>
                     )}
                     <div className="flex items-center gap-1">
                       <Volume2 className="h-3 w-3" />
-                      <span>Volume: <span className="text-gray-300">{device.volume}%</span></span>
+                      <span>Volume: <span className="text-foreground">{device.volume}%</span></span>
                     </div>
                     {device.last_call_time && (
                       <div className="flex items-center gap-1">
                         <Clock className="h-3 w-3" />
-                        <span>Last call: <span className="text-gray-300">{formatTimestamp(device.last_call_time)}</span></span>
+                        <span>Last call: <span className="text-foreground">{formatTimestamp(device.last_call_time)}</span></span>
                       </div>
                     )}
                   </div>
 
                   {/* Action buttons */}
-                  <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-800/60">
+                  <div className="flex flex-wrap gap-2 pt-3 border-t border-border/60">
                     {/* Dial / Answer / End Call based on state */}
                     {device.state === "idle" && (
                       <button
@@ -584,28 +584,28 @@ export default function IntercomPage() {
 
       {/* ---- Call History Tab ---- */}
       {!loading && !error && tab === "history" && (
-        <div className="overflow-x-auto rounded-lg border border-gray-800 max-h-[65vh] overflow-y-auto">
+        <div className="overflow-x-auto rounded-lg border border-border max-h-[65vh] overflow-y-auto">
           <table className="w-full text-left text-sm">
             <thead className="sticky top-0 z-10">
-              <tr className="border-b border-gray-800 bg-gray-900/80">
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Direction</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Device</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Caller</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Duration</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Result</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Time</th>
+              <tr className="border-b border-border bg-surface-2/80">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Direction</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Device</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Caller</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Duration</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Result</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Time</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-800/50">
+            <tbody className="divide-y divide-border/50">
               {callHistory.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-12 text-center text-sm text-gray-600">
+                  <td colSpan={6} className="px-4 py-12 text-center text-sm text-muted-foreground">
                     No call history
                   </td>
                 </tr>
               )}
               {callHistory.map((entry) => (
-                <tr key={entry.id} className="hover:bg-gray-900/60 transition-colors">
+                <tr key={entry.id} className="hover:bg-surface-2/60 transition-colors">
                   <td className="px-4 py-3">
                     <span className="flex items-center gap-1.5 text-xs">
                       {entry.direction === "incoming" ? (
@@ -618,20 +618,20 @@ export default function IntercomPage() {
                       </span>
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-xs text-gray-300">{entry.device_name}</td>
-                  <td className="px-4 py-3 text-xs text-gray-400">{entry.caller_info || "---"}</td>
-                  <td className="px-4 py-3 font-mono text-xs text-gray-300">
+                  <td className="px-4 py-3 text-xs text-foreground">{entry.device_name}</td>
+                  <td className="px-4 py-3 text-xs text-muted-foreground">{entry.caller_info || "---"}</td>
+                  <td className="px-4 py-3 font-mono text-xs text-foreground">
                     {formatDuration(entry.duration_seconds)}
                   </td>
                   <td className="px-4 py-3">
                     <span className={cn(
                       "inline-flex rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border",
-                      CALL_RESULT_STYLES[entry.result] || "bg-gray-800 text-gray-400 border-gray-700"
+                      CALL_RESULT_STYLES[entry.result] || "bg-surface-3 text-muted-foreground border-border-strong"
                     )}>
                       {entry.result.replace(/_/g, " ")}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-xs text-gray-500">
+                  <td className="px-4 py-3 text-xs text-muted-foreground">
                     {formatTimestamp(entry.timestamp)}
                   </td>
                 </tr>

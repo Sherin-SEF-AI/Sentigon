@@ -76,7 +76,7 @@ const SEVERITY_COLORS: Record<string, string> = {
   high: "text-orange-500 bg-orange-500/10 border-orange-500/40",
   medium: "text-yellow-500 bg-yellow-500/10 border-yellow-500/40",
   low: "text-blue-400 bg-blue-400/10 border-blue-400/40",
-  info: "text-gray-400 bg-gray-400/10 border-gray-400/40",
+  info: "text-muted-foreground bg-gray-400/10 border-gray-400/40",
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -85,7 +85,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   gunshot: "text-red-500 bg-red-600/10 border-red-600/30",
   alarm_siren: "text-yellow-400 bg-yellow-500/10 border-yellow-500/30",
   vehicle_horn: "text-blue-400 bg-blue-500/10 border-blue-500/30",
-  metal_impact: "text-gray-400 bg-gray-500/10 border-gray-500/30",
+  metal_impact: "text-muted-foreground bg-gray-500/10 border-gray-500/30",
   explosion: "text-red-600 bg-red-700/10 border-red-700/30",
   dog_barking: "text-amber-400 bg-amber-500/10 border-amber-500/30",
   scream: "text-rose-400 bg-rose-500/10 border-rose-500/30",
@@ -110,7 +110,7 @@ const STATUS_COLORS: Record<string, string> = {
   acknowledged: "text-yellow-400",
   investigating: "text-blue-400",
   resolved: "text-green-400",
-  dismissed: "text-gray-500",
+  dismissed: "text-muted-foreground",
 };
 
 /* ------------------------------------------------------------------ */
@@ -139,7 +139,7 @@ function formatDuration(seconds: number): string {
 }
 
 function getCategoryColor(category: string): string {
-  return CATEGORY_COLORS[category] || "text-gray-400 bg-gray-500/10 border-gray-500/30";
+  return CATEGORY_COLORS[category] || "text-muted-foreground bg-gray-500/10 border-gray-500/30";
 }
 
 function getCategoryLabel(category: string): string {
@@ -158,7 +158,7 @@ function Skeleton({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "animate-pulse rounded bg-gray-800/60",
+        "animate-pulse rounded bg-surface-3/60",
         className
       )}
     />
@@ -167,7 +167,7 @@ function Skeleton({ className }: { className?: string }) {
 
 function StatCardSkeleton() {
   return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-4 space-y-3">
+    <div className="rounded-xl border border-border bg-surface-2/50 p-4 space-y-3">
       <Skeleton className="h-3 w-20" />
       <Skeleton className="h-7 w-16" />
     </div>
@@ -176,7 +176,7 @@ function StatCardSkeleton() {
 
 function EventCardSkeleton() {
   return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-4 space-y-3">
+    <div className="rounded-xl border border-border bg-surface-2/50 p-4 space-y-3">
       <div className="flex items-center gap-3">
         <Skeleton className="h-5 w-24" />
         <Skeleton className="h-5 w-16" />
@@ -206,17 +206,17 @@ function StatCard({
   suffix?: string;
 }) {
   return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-4">
+    <div className="rounded-xl border border-border bg-surface-2/50 p-4">
       <div className="flex items-center gap-2 mb-2">
         <Icon className={cn("h-4 w-4", accent)} />
-        <span className="text-xs font-medium uppercase tracking-wider text-gray-500">
+        <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           {label}
         </span>
       </div>
       <div className="flex items-baseline gap-1">
-        <span className="text-2xl font-bold text-gray-100">{value}</span>
+        <span className="text-2xl font-bold text-foreground">{value}</span>
         {suffix && (
-          <span className="text-xs text-gray-500">{suffix}</span>
+          <span className="text-xs text-muted-foreground">{suffix}</span>
         )}
       </div>
     </div>
@@ -229,7 +229,7 @@ function StatCard({
 
 function AudioEventCard({ event }: { event: AudioEvent }) {
   return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-4 transition-all duration-200 hover:bg-gray-900/80 hover:border-gray-700">
+    <div className="rounded-xl border border-border bg-surface-2/50 p-4 transition-all duration-200 hover:bg-surface-2/80 hover:border-border-strong">
       {/* Top row: classification, camera, severity, time */}
       <div className="flex items-center gap-3 mb-3">
         {/* Classification badge */}
@@ -257,8 +257,8 @@ function AudioEventCard({ event }: { event: AudioEvent }) {
         {/* Status */}
         <span
           className={cn(
-            "rounded px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-gray-800 border border-gray-700",
-            STATUS_COLORS[event.status] || "text-gray-400"
+            "rounded px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-surface-3 border border-border-strong",
+            STATUS_COLORS[event.status] || "text-muted-foreground"
           )}
         >
           {event.status}
@@ -268,19 +268,19 @@ function AudioEventCard({ event }: { event: AudioEvent }) {
         <div className="flex-1" />
 
         {/* Camera */}
-        <span className="hidden items-center gap-1 text-xs text-gray-500 md:flex">
+        <span className="hidden items-center gap-1 text-xs text-muted-foreground md:flex">
           <Camera className="h-3 w-3" />
           {event.camera_name || event.camera_id}
         </span>
 
         {/* Duration */}
-        <span className="flex items-center gap-1 text-xs text-gray-500">
+        <span className="flex items-center gap-1 text-xs text-muted-foreground">
           <Timer className="h-3 w-3" />
           {formatDuration(event.duration_seconds)}
         </span>
 
         {/* Time ago */}
-        <span className="flex items-center gap-1 text-[11px] text-gray-500">
+        <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
           <Clock className="h-3 w-3" />
           {timeAgo(event.timestamp)}
         </span>
@@ -288,7 +288,7 @@ function AudioEventCard({ event }: { event: AudioEvent }) {
 
       {/* Description */}
       {event.description && (
-        <p className="text-sm text-gray-400 leading-relaxed mb-2">
+        <p className="text-sm text-muted-foreground leading-relaxed mb-2">
           {event.description}
         </p>
       )}
@@ -309,9 +309,9 @@ function AudioEventCard({ event }: { event: AudioEvent }) {
       )}
 
       {/* Footer metadata */}
-      <div className="flex items-center gap-4 mt-3 text-[10px] text-gray-600">
+      <div className="flex items-center gap-4 mt-3 text-[10px] text-muted-foreground">
         <span>
-          ID: <span className="font-mono text-gray-500">{event.id.slice(0, 8)}</span>
+          ID: <span className="font-mono text-muted-foreground">{event.id.slice(0, 8)}</span>
         </span>
         <span>
           Confidence:{" "}
@@ -320,7 +320,7 @@ function AudioEventCard({ event }: { event: AudioEvent }) {
           </span>
         </span>
         <span>
-          Timestamp: <span className="text-gray-500">{formatTimestamp(event.timestamp)}</span>
+          Timestamp: <span className="text-muted-foreground">{formatTimestamp(event.timestamp)}</span>
         </span>
       </div>
     </div>
@@ -470,18 +470,18 @@ export default function AudioIntelligencePage() {
 
   /* --- Render --- */
   return (
-    <div className="flex h-full flex-col bg-gray-950">
+    <div className="flex h-full flex-col bg-surface-0">
       {/* ---- Header ---- */}
-      <header className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <header className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-900/30 border border-orange-800/50">
             <Volume2 className="h-5 w-5 text-orange-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Audio Intelligence
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Real-time audio classification, anomaly detection &amp; visual correlation
             </p>
           </div>
@@ -507,7 +507,7 @@ export default function AudioIntelligencePage() {
         <section>
           <div className="flex items-center gap-2 mb-3">
             <BarChart3 className="h-4 w-4 text-orange-400" />
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-400">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
               Overview
             </h2>
           </div>
@@ -526,7 +526,7 @@ export default function AudioIntelligencePage() {
               {statsError}
               <button
                 onClick={fetchStats}
-                className="ml-auto rounded-lg border border-gray-700 px-3 py-1 text-xs text-gray-400 hover:bg-gray-800 transition-colors"
+                className="ml-auto rounded-lg border border-border-strong px-3 py-1 text-xs text-muted-foreground hover:bg-surface-3 transition-colors"
               >
                 Retry
               </button>
@@ -576,13 +576,13 @@ export default function AudioIntelligencePage() {
           <section>
             <div className="flex items-center gap-2 mb-3">
               <Activity className="h-4 w-4 text-orange-400" />
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-400">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                 Event Frequency (Last 24h)
               </h2>
             </div>
-            <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-4">
+            <div className="rounded-xl border border-border bg-surface-2/50 p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-gray-500">Hourly audio event count — oldest to newest</span>
+                <span className="text-xs text-muted-foreground">Hourly audio event count — oldest to newest</span>
                 <span className="text-xs font-mono text-orange-400">{events.length} total events</span>
               </div>
               <MetricSparkline
@@ -595,7 +595,7 @@ export default function AudioIntelligencePage() {
                 unit=" events"
                 className="w-full"
               />
-              <div className="flex justify-between text-[9px] text-gray-600 mt-1 px-0.5">
+              <div className="flex justify-between text-[9px] text-muted-foreground mt-1 px-0.5">
                 <span>24h ago</span>
                 <span>12h ago</span>
                 <span>Now</span>
@@ -608,15 +608,15 @@ export default function AudioIntelligencePage() {
         <section>
           <div className="flex items-center gap-2 mb-3">
             <Tag className="h-4 w-4 text-orange-400" />
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-400">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
               Alert Keywords
             </h2>
-            <span className="ml-1 rounded-full bg-gray-800 px-2 py-0.5 text-[10px] font-mono text-gray-500">
+            <span className="ml-1 rounded-full bg-surface-3 px-2 py-0.5 text-[10px] font-mono text-muted-foreground">
               {keywords.length} configured
             </span>
           </div>
-          <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-4 space-y-3">
-            <p className="text-xs text-gray-500">
+          <div className="rounded-xl border border-border bg-surface-2/50 p-4 space-y-3">
+            <p className="text-xs text-muted-foreground">
               Words/phrases that trigger priority alerts when detected in audio transcriptions. Stored locally.
             </p>
             {/* Add keyword input */}
@@ -626,7 +626,7 @@ export default function AudioIntelligencePage() {
                 onChange={(e) => setNewKeyword(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter") addKeyword(); }}
                 placeholder="Enter keyword or phrase..."
-                className="flex-1 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-200 placeholder-gray-600 focus:border-orange-600 focus:outline-none"
+                className="flex-1 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-orange-600 focus:outline-none"
               />
               <button
                 onClick={addKeyword}
@@ -638,7 +638,7 @@ export default function AudioIntelligencePage() {
             </div>
             {/* Keyword chips */}
             {keywords.length === 0 ? (
-              <p className="text-xs text-gray-600 text-center py-2">No keywords configured yet</p>
+              <p className="text-xs text-muted-foreground text-center py-2">No keywords configured yet</p>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {keywords.map((kw) => (
@@ -666,13 +666,13 @@ export default function AudioIntelligencePage() {
         <section>
           <div className="flex items-center gap-2 mb-3">
             <Waves className="h-4 w-4 text-orange-400" />
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-400">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
               Category Distribution
             </h2>
           </div>
 
           {categoriesLoading && (
-            <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-5">
+            <div className="rounded-xl border border-border bg-surface-2/50 p-5">
               <div className="flex flex-wrap gap-2">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <Skeleton key={i} className="h-8 w-28" />
@@ -687,7 +687,7 @@ export default function AudioIntelligencePage() {
               {categoriesError}
               <button
                 onClick={fetchCategories}
-                className="ml-auto rounded-lg border border-gray-700 px-3 py-1 text-xs text-gray-400 hover:bg-gray-800 transition-colors"
+                className="ml-auto rounded-lg border border-border-strong px-3 py-1 text-xs text-muted-foreground hover:bg-surface-3 transition-colors"
               >
                 Retry
               </button>
@@ -695,7 +695,7 @@ export default function AudioIntelligencePage() {
           )}
 
           {!categoriesLoading && !categoriesError && categories.length > 0 && (
-            <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-5">
+            <div className="rounded-xl border border-border bg-surface-2/50 p-5">
               <div className="flex flex-wrap gap-2">
                 {/* "All" category button */}
                 <button
@@ -704,7 +704,7 @@ export default function AudioIntelligencePage() {
                     "inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors",
                     categoryFilter === "all"
                       ? "text-orange-400 bg-orange-500/10 border-orange-500/40"
-                      : "text-gray-400 bg-gray-800/50 border-gray-700 hover:border-gray-600 hover:text-gray-300"
+                      : "text-muted-foreground bg-surface-3/50 border-border-strong hover:border-border-strong hover:text-foreground"
                   )}
                 >
                   All Categories
@@ -722,7 +722,7 @@ export default function AudioIntelligencePage() {
                       "inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors",
                       categoryFilter === cat.category
                         ? getCategoryColor(cat.category)
-                        : "text-gray-400 bg-gray-800/50 border-gray-700 hover:border-gray-600 hover:text-gray-300"
+                        : "text-muted-foreground bg-surface-3/50 border-border-strong hover:border-border-strong hover:text-foreground"
                     )}
                   >
                     <Volume2 className="h-3 w-3" />
@@ -732,7 +732,7 @@ export default function AudioIntelligencePage() {
                         "rounded-full px-1.5 py-0.5 text-[10px] font-bold",
                         categoryFilter === cat.category
                           ? "bg-white/10"
-                          : "bg-gray-700/50 text-gray-500"
+                          : "bg-surface-3/50 text-muted-foreground"
                       )}
                     >
                       {cat.count}
@@ -745,10 +745,10 @@ export default function AudioIntelligencePage() {
               <div className="mt-4 space-y-2">
                 {categories.map((cat) => (
                   <div key={cat.category} className="flex items-center gap-3">
-                    <span className="w-28 truncate text-xs text-gray-500">
+                    <span className="w-28 truncate text-xs text-muted-foreground">
                       {getCategoryLabel(cat.category)}
                     </span>
-                    <div className="flex-1 h-2 rounded-full bg-gray-800 overflow-hidden">
+                    <div className="flex-1 h-2 rounded-full bg-surface-3 overflow-hidden">
                       <div
                         className={cn(
                           "h-full rounded-full transition-all duration-500",
@@ -767,7 +767,7 @@ export default function AudioIntelligencePage() {
                         style={{ width: `${Math.min(cat.percentage ?? 0, 100)}%` }}
                       />
                     </div>
-                    <span className="w-12 text-right font-mono text-xs text-gray-500">
+                    <span className="w-12 text-right font-mono text-xs text-muted-foreground">
                       {(cat.percentage ?? 0).toFixed(1)}%
                     </span>
                   </div>
@@ -777,9 +777,9 @@ export default function AudioIntelligencePage() {
           )}
 
           {!categoriesLoading && !categoriesError && categories.length === 0 && (
-            <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-8 text-center">
-              <Waves className="mx-auto mb-2 h-8 w-8 text-gray-700" />
-              <p className="text-sm text-gray-500">No audio categories recorded yet</p>
+            <div className="rounded-xl border border-border bg-surface-2/50 p-8 text-center">
+              <Waves className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">No audio categories recorded yet</p>
             </div>
           )}
         </section>
@@ -788,10 +788,10 @@ export default function AudioIntelligencePage() {
         <section>
           <div className="flex items-center gap-2 mb-3">
             <Siren className="h-4 w-4 text-orange-400" />
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-400">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
               Audio Events
             </h2>
-            <span className="ml-2 rounded-full bg-gray-800 px-2 py-0.5 text-[10px] font-mono text-gray-500">
+            <span className="ml-2 rounded-full bg-surface-3 px-2 py-0.5 text-[10px] font-mono text-muted-foreground">
               {events.length} events
             </span>
           </div>
@@ -808,7 +808,7 @@ export default function AudioIntelligencePage() {
                     ? filter.value === "all"
                       ? "text-orange-400 bg-orange-500/10 border-orange-500/40"
                       : getSeverityColor(filter.value)
-                    : "text-gray-500 bg-gray-900 border-gray-700 hover:border-gray-600 hover:text-gray-400"
+                    : "text-muted-foreground bg-surface-2 border-border-strong hover:border-border-strong hover:text-muted-foreground"
                 )}
               >
                 {filter.label}
@@ -832,7 +832,7 @@ export default function AudioIntelligencePage() {
               <p className="text-sm text-red-400">{eventsError}</p>
               <button
                 onClick={fetchEvents}
-                className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+                className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
               >
                 Retry
               </button>
@@ -843,8 +843,8 @@ export default function AudioIntelligencePage() {
           {!eventsLoading && !eventsError && events.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16">
               <CheckCircle2 className="mb-2 h-10 w-10 text-emerald-700" />
-              <p className="text-sm font-medium text-gray-400">No audio events found</p>
-              <p className="mt-1 text-xs text-gray-600">
+              <p className="text-sm font-medium text-muted-foreground">No audio events found</p>
+              <p className="mt-1 text-xs text-muted-foreground">
                 {severityFilter !== "all" || categoryFilter !== "all"
                   ? "Try adjusting your filters"
                   : "No audio events have been detected yet"}

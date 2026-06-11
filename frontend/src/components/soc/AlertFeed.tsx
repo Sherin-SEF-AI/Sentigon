@@ -48,10 +48,10 @@ function AlertCard({ alert, onAcknowledge, onDismiss }: AlertCardProps) {
     <div
       className={cn(
         "group relative rounded border transition-all duration-150 cursor-pointer",
-        "bg-gray-900/40 hover:bg-gray-900/70",
+        "bg-surface-1 hover:bg-surface-2",
         isCritical && alert.status === "new"
-          ? "border-red-800/30"
-          : "border-gray-800/30",
+          ? "border-destructive/40"
+          : "border-border",
         isCritical && alert.status === "new" && "animate-pulse-alert"
       )}
       onClick={() => setExpanded(!expanded)}
@@ -73,7 +73,7 @@ function AlertCard({ alert, onAcknowledge, onDismiss }: AlertCardProps) {
               severityDot[alert.severity]
             )}
           />
-          <p className="text-[10px] font-medium leading-none text-gray-200 truncate flex-1 min-w-0">
+          <p className="text-[10px] font-medium leading-none text-foreground truncate flex-1 min-w-0">
             {alert.title}
           </p>
           {/* Inline actions — always visible for actionable alerts */}
@@ -97,7 +97,7 @@ function AlertCard({ alert, onAcknowledge, onDismiss }: AlertCardProps) {
                     e.stopPropagation();
                     onDismiss(alert.id);
                   }}
-                  className="rounded px-1 py-px text-[7px] font-bold uppercase tracking-wider text-gray-500 hover:bg-gray-800/60 transition-colors"
+                  className="rounded px-1 py-px text-[7px] font-bold uppercase tracking-wider text-muted-foreground hover:bg-surface-3/60 transition-colors"
                   title="Dismiss"
                 >
                   DIS
@@ -111,20 +111,20 @@ function AlertCard({ alert, onAcknowledge, onDismiss }: AlertCardProps) {
                 "rounded px-1 py-px text-[7px] font-bold uppercase tracking-wider shrink-0",
                 alert.status === "resolved"
                   ? "text-emerald-500"
-                  : "text-gray-600"
+                  : "text-muted-foreground"
               )}
             >
               {alert.status === "resolved" ? "RES" : "DIS"}
             </span>
           )}
-          <span className="text-[8px] text-gray-600 font-mono shrink-0 tabular-nums">
+          <span className="data text-[8px] text-muted-foreground/80 shrink-0">
             {timeAgo(alert.created_at)}
           </span>
         </div>
 
         {/* Sub-line: camera + threat type (only if exists, single line) */}
         {(alert.source_camera || alert.threat_type) && (
-          <div className="flex items-center gap-1 ml-2.5 text-[8px] text-gray-500 leading-none mt-px">
+          <div className="flex items-center gap-1 ml-2.5 text-[8px] text-muted-foreground leading-none mt-px">
             {alert.source_camera && (
               <>
                 <Camera className="h-2 w-2 shrink-0" />
@@ -133,12 +133,12 @@ function AlertCard({ alert, onAcknowledge, onDismiss }: AlertCardProps) {
             )}
             {alert.threat_type && (
               <>
-                <span className="text-gray-700">·</span>
+                <span className="text-muted-foreground">·</span>
                 <span className="truncate">{alert.threat_type}</span>
               </>
             )}
             {alert.confidence > 0 && (
-              <span className="text-gray-600 tabular-nums">
+              <span className="text-muted-foreground tabular-nums">
                 {Math.round(alert.confidence * 100)}%
               </span>
             )}
@@ -147,7 +147,7 @@ function AlertCard({ alert, onAcknowledge, onDismiss }: AlertCardProps) {
 
         {/* Expanded details — only description */}
         {expanded && alert.description && (
-          <p className="text-[9px] leading-tight text-gray-500 mt-0.5 ml-2.5 line-clamp-2">
+          <p className="text-[9px] leading-tight text-muted-foreground mt-0.5 ml-2.5 line-clamp-2">
             {alert.description}
           </p>
         )}
@@ -209,15 +209,15 @@ export function AlertFeed({ limit = 50, className }: AlertFeedProps) {
   return (
     <aside
       className={cn(
-        "flex h-full flex-col border-l border-gray-800/60 bg-gray-950 min-h-0 overflow-hidden",
+        "flex h-full flex-col border-l border-border bg-surface-0 min-h-0 overflow-hidden",
         className
       )}
     >
       {/* Header — fixed at top */}
-      <div className="flex items-center justify-between border-b border-gray-800/60 px-2 py-1 shrink-0">
+      <div className="flex items-center justify-between border-b border-border px-2 py-1 shrink-0">
         <div className="flex items-center gap-1">
-          <AlertTriangle className="h-2.5 w-2.5 text-amber-400" />
-          <h2 className="text-[9px] font-bold uppercase tracking-widest text-gray-400">
+          <AlertTriangle className="h-2.5 w-2.5 text-amber" />
+          <h2 className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
             Alerts
           </h2>
           {critCount > 0 && (
@@ -228,7 +228,7 @@ export function AlertFeed({ limit = 50, className }: AlertFeedProps) {
         </div>
         <div className="flex items-center gap-1.5">
           {/* Filter buttons */}
-          <div className="flex items-center rounded bg-gray-900/60 border border-gray-800/40 p-0.5">
+          <div className="flex items-center rounded bg-surface-1 border border-border p-0.5">
             {(["all", "high", "critical"] as const).map((f) => (
               <button
                 key={f}
@@ -236,23 +236,16 @@ export function AlertFeed({ limit = 50, className }: AlertFeedProps) {
                 className={cn(
                   "rounded px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-wider transition-colors",
                   filter === f
-                    ? "bg-gray-800 text-gray-200"
-                    : "text-gray-600 hover:text-gray-400"
+                    ? "bg-surface-3 text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 {f}
               </button>
             ))}
           </div>
-          <span
-            className={cn(
-              "h-1.5 w-1.5 rounded-full shrink-0",
-              connected
-                ? "bg-emerald-400 shadow-[0_0_4px_rgba(52,211,153,0.6)]"
-                : "bg-red-500 animate-pulse"
-            )}
-          />
-          <span className="font-mono text-[9px] text-gray-600">
+          <span className={cn("led shrink-0", connected ? "led-live led-pulse" : "led-crit led-pulse")} />
+          <span className="data text-[9px] text-muted-foreground">
             {sorted.length}
           </span>
         </div>
@@ -269,7 +262,7 @@ export function AlertFeed({ limit = 50, className }: AlertFeedProps) {
         {!loading && sorted.length === 0 && (
           <div className="flex flex-col items-center justify-center py-10 text-center">
             <CheckCircle2 className="mb-1.5 h-6 w-6 text-emerald-800" />
-            <p className="text-[10px] text-gray-600">No active alerts</p>
+            <p className="text-[10px] text-muted-foreground">No active alerts</p>
           </div>
         )}
 
@@ -284,8 +277,8 @@ export function AlertFeed({ limit = 50, className }: AlertFeedProps) {
       </div>
 
       {/* Footer — fixed at bottom */}
-      <div className="border-t border-gray-800/60 px-2 py-0.5 shrink-0">
-        <p className="text-center text-[8px] text-gray-700 font-mono">
+      <div className="border-t border-border/60 px-2 py-0.5 shrink-0">
+        <p className="text-center text-[8px] text-muted-foreground font-mono">
           {formatTimestamp(new Date().toISOString())}
         </p>
       </div>

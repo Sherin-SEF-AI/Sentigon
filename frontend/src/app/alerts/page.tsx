@@ -177,8 +177,8 @@ function AlertRow({
         selected
           ? "border-cyan-700/60 bg-cyan-950/10"
           : expanded
-          ? "border-gray-800 bg-gray-900/90"
-          : "border-gray-800 bg-gray-900/50 hover:bg-gray-900/80"
+          ? "border-border bg-surface-2/90"
+          : "border-border bg-surface-2/50 hover:bg-surface-2/80"
       )}
     >
       {/* Main row */}
@@ -213,7 +213,7 @@ function AlertRow({
           </span>
 
           {/* Title */}
-          <span className="flex-1 truncate text-sm font-medium text-gray-200">
+          <span className="flex-1 truncate text-sm font-medium text-foreground">
             {alert.title}
           </span>
 
@@ -231,7 +231,7 @@ function AlertRow({
               {alert.source_camera}
             </a>
           ) : (
-            <span className="hidden items-center gap-1 text-xs text-gray-500 md:flex">
+            <span className="hidden items-center gap-1 text-xs text-muted-foreground md:flex">
               <Camera className="h-3 w-3" />
               Unknown
             </span>
@@ -245,7 +245,7 @@ function AlertRow({
           )}
 
           {/* Zone */}
-          <span className="hidden items-center gap-1 text-xs text-gray-500 lg:flex">
+          <span className="hidden items-center gap-1 text-xs text-muted-foreground lg:flex">
             <MapPin className="h-3 w-3" />
             {alert.zone_name || "---"}
           </span>
@@ -254,7 +254,7 @@ function AlertRow({
           <span
             className={cn(
               "shrink-0 rounded px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
-              "bg-gray-800 border border-gray-700",
+              "bg-surface-3 border border-border-strong",
               statusColor(alert.status)
             )}
           >
@@ -262,7 +262,7 @@ function AlertRow({
           </span>
 
           {/* Time ago */}
-          <span className="flex shrink-0 items-center gap-1 text-[11px] text-gray-500">
+          <span className="flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground">
             <Clock className="h-3 w-3" />
             {timeAgo(alert.created_at)}
           </span>
@@ -275,7 +275,7 @@ function AlertRow({
           {/* Expand indicator */}
           <ChevronDown
             className={cn(
-              "h-4 w-4 shrink-0 text-gray-600 transition-transform duration-200",
+              "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
               expanded && "rotate-180"
             )}
           />
@@ -284,15 +284,15 @@ function AlertRow({
 
       {/* Expanded detail */}
       {expanded && (
-        <div className="border-t border-gray-800 px-4 py-4 space-y-4">
+        <div className="border-t border-border px-4 py-4 space-y-4">
           {/* Description */}
           {alert.description && (
             <div>
-              <h4 className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <h4 className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 <FileText className="h-3.5 w-3.5" />
                 Description
               </h4>
-              <p className="text-sm leading-relaxed text-gray-300">
+              <p className="text-sm leading-relaxed text-foreground">
                 {alert.description}
               </p>
             </div>
@@ -301,7 +301,7 @@ function AlertRow({
           {/* Gemini analysis - threat_type serves as a summary */}
           {alert.threat_type && (
             <div>
-              <h4 className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <h4 className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 <Brain className="h-3.5 w-3.5 text-purple-400" />
                 Gemini Analysis
               </h4>
@@ -314,7 +314,7 @@ function AlertRow({
           {/* Resolution notes */}
           {alert.resolution_notes && (
             <div>
-              <h4 className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <h4 className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 <CheckCircle2 className="h-3.5 w-3.5 text-green-400" />
                 Resolution Notes
               </h4>
@@ -325,32 +325,32 @@ function AlertRow({
           )}
 
           {/* Metadata row */}
-          <div className="flex flex-wrap gap-4 text-xs text-gray-500">
-            <span>ID: <span className="font-mono text-gray-400">{alert.id.slice(0, 8)}</span></span>
+          <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
+            <span>ID: <span className="font-mono text-muted-foreground">{alert.id.slice(0, 8)}</span></span>
             {alert.event_id && (
-              <span>Event: <span className="font-mono text-gray-400">{alert.event_id.slice(0, 8)}</span></span>
+              <span>Event: <span className="font-mono text-muted-foreground">{alert.event_id.slice(0, 8)}</span></span>
             )}
-            <span>Created: <span className="text-gray-400">{formatTimestamp(alert.created_at)}</span></span>
+            <span>Created: <span className="text-muted-foreground">{formatTimestamp(alert.created_at)}</span></span>
             {alert.acknowledged_at && (
-              <span>Acked: <span className="text-gray-400">{formatTimestamp(alert.acknowledged_at)}</span></span>
+              <span>Acked: <span className="text-muted-foreground">{formatTimestamp(alert.acknowledged_at)}</span></span>
             )}
             {alert.resolved_at && (
-              <span>Resolved: <span className="text-gray-400">{formatTimestamp(alert.resolved_at)}</span></span>
+              <span>Resolved: <span className="text-muted-foreground">{formatTimestamp(alert.resolved_at)}</span></span>
             )}
             {alert.assigned_to && (
-              <span>Assigned: <span className="text-gray-400">{alert.assigned_to}</span></span>
+              <span>Assigned: <span className="text-muted-foreground">{alert.assigned_to}</span></span>
             )}
           </div>
 
           {/* XAI Explanation Chain */}
           {expanded && (
-            <div className="mt-3 border-t border-gray-800/50 pt-3">
+            <div className="mt-3 border-t border-border/50 pt-3">
               <div className="flex items-center gap-1.5 mb-2">
                 <Brain className="h-3.5 w-3.5 text-purple-400" />
                 <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400">Why This Alert</span>
               </div>
               {xaiLoading ? (
-                <div className="flex items-center gap-2 text-xs text-gray-500">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Loader2 className="h-3 w-3 animate-spin" />
                   Analyzing reasoning chain...
                 </div>
@@ -368,23 +368,23 @@ function AlertRow({
                           {i + 1}
                         </div>
                         {i < xaiChain.steps.length - 1 && (
-                          <div className="w-px h-3 bg-gray-700/50" />
+                          <div className="w-px h-3 bg-surface-3/50" />
                         )}
                       </div>
                       <div className="min-w-0 flex-1 pb-1">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-[9px] font-bold text-gray-300 uppercase">{step.stage}</span>
+                          <span className="text-[9px] font-bold text-foreground uppercase">{step.stage}</span>
                           {step.confidence != null && (
-                            <span className="text-[8px] text-gray-500 tabular-nums">{Math.round(step.confidence * 100)}%</span>
+                            <span className="text-[8px] text-muted-foreground tabular-nums">{Math.round(step.confidence * 100)}%</span>
                           )}
                         </div>
-                        <p className="text-[10px] text-gray-400 leading-tight">{step.description}</p>
+                        <p className="text-[10px] text-muted-foreground leading-tight">{step.description}</p>
                       </div>
                     </div>
                   ))}
                   {xaiChain.final_confidence != null && (
-                    <div className="flex items-center gap-2 pt-1 border-t border-gray-800/30">
-                      <span className="text-[9px] font-bold text-gray-500">Combined Confidence:</span>
+                    <div className="flex items-center gap-2 pt-1 border-t border-border/30">
+                      <span className="text-[9px] font-bold text-muted-foreground">Combined Confidence:</span>
                       <span className={cn(
                         "text-xs font-bold tabular-nums",
                         xaiChain.final_confidence >= 0.8 ? "text-red-400" :
@@ -396,15 +396,15 @@ function AlertRow({
                   )}
                 </div>
               ) : (
-                <p className="text-[9px] text-gray-600">No explanation chain available for this alert.</p>
+                <p className="text-[9px] text-muted-foreground">No explanation chain available for this alert.</p>
               )}
             </div>
           )}
 
           {/* Priority override */}
-          <div className="flex items-center gap-2 pt-1 border-t border-gray-800/50">
-            <ShieldAlert className="h-3.5 w-3.5 text-gray-500" />
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-500">Override Severity</span>
+          <div className="flex items-center gap-2 pt-1 border-t border-border/50">
+            <ShieldAlert className="h-3.5 w-3.5 text-muted-foreground" />
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Override Severity</span>
             <div className="relative">
               <select
                 value={severityOverride}
@@ -420,12 +420,12 @@ function AlertRow({
                   }
                 }}
                 className={cn(
-                  "appearance-none rounded-lg border bg-gray-900 pl-2 pr-6 py-1 text-[11px] font-semibold focus:outline-none focus:ring-1 focus:ring-cyan-700",
+                  "appearance-none rounded-lg border bg-surface-2 pl-2 pr-6 py-1 text-[11px] font-semibold focus:outline-none focus:ring-1 focus:ring-cyan-700",
                   severityOverride === "critical" ? "border-red-700/60 text-red-400" :
                   severityOverride === "high" ? "border-orange-700/60 text-orange-400" :
                   severityOverride === "medium" ? "border-yellow-700/60 text-yellow-400" :
                   severityOverride === "low" ? "border-blue-700/60 text-blue-400" :
-                  "border-gray-700 text-gray-400",
+                  "border-border-strong text-muted-foreground",
                   "disabled:opacity-50 disabled:cursor-not-allowed"
                 )}
               >
@@ -433,7 +433,7 @@ function AlertRow({
                   <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-1.5 top-1/2 h-3 w-3 -translate-y-1/2 text-gray-500" />
+              <ChevronDown className="pointer-events-none absolute right-1.5 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground" />
             </div>
             {severityUpdating && <Loader2 className="h-3 w-3 animate-spin text-cyan-400" />}
           </div>
@@ -464,8 +464,8 @@ function AlertRow({
                   disabled={isActioning}
                   className={cn(
                     "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors",
-                    "bg-gray-800 text-gray-400 border border-gray-700",
-                    "hover:bg-gray-700 hover:text-gray-300",
+                    "bg-surface-3 text-muted-foreground border border-border-strong",
+                    "hover:bg-surface-3 hover:text-foreground",
                     "disabled:opacity-50 disabled:cursor-not-allowed"
                   )}
                 >
@@ -742,18 +742,18 @@ export default function AlertManagementPage() {
 
   /* --- Render --- */
   return (
-    <div className="flex h-full flex-col bg-gray-950">
+    <div className="flex h-full flex-col bg-surface-0">
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-900/30 border border-amber-800/50">
             <AlertTriangle className="h-5 w-5 text-amber-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Alert Management
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Monitor, triage, and resolve security alerts
             </p>
           </div>
@@ -774,13 +774,13 @@ export default function AlertManagementPage() {
       </div>
 
       {/* ---- Filter bar ---- */}
-      <div className="flex flex-wrap items-center gap-3 border-b border-gray-800 px-6 py-3">
+      <div className="flex flex-wrap items-center gap-3 border-b border-border px-6 py-3">
         {/* Severity filter */}
         <div className="relative">
           <select
             value={severity}
             onChange={(e) => setSeverity(e.target.value)}
-            className="appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
           >
             {SEVERITY_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -788,7 +788,7 @@ export default function AlertManagementPage() {
               </option>
             ))}
           </select>
-          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
         </div>
 
         {/* Status filter */}
@@ -796,7 +796,7 @@ export default function AlertManagementPage() {
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="appearance-none rounded-lg border border-gray-700 bg-gray-900 pl-3 pr-8 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+            className="appearance-none rounded-lg border border-border-strong bg-surface-2 pl-3 pr-8 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
           >
             {STATUS_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -804,7 +804,7 @@ export default function AlertManagementPage() {
               </option>
             ))}
           </select>
-          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
         </div>
 
         {/* Date from */}
@@ -812,7 +812,7 @@ export default function AlertManagementPage() {
           type="date"
           value={dateFrom}
           onChange={(e) => setDateFrom(e.target.value)}
-          className="rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+          className="rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
           placeholder="From"
         />
 
@@ -821,7 +821,7 @@ export default function AlertManagementPage() {
           type="date"
           value={dateTo}
           onChange={(e) => setDateTo(e.target.value)}
-          className="rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-300 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+          className="rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
           placeholder="To"
         />
 
@@ -833,7 +833,7 @@ export default function AlertManagementPage() {
             "flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition-colors border",
             deduplicate
               ? "bg-cyan-900/40 text-cyan-400 border-cyan-700/60"
-              : "bg-gray-800 text-gray-400 border-gray-700 hover:bg-gray-700 hover:text-gray-200"
+              : "bg-surface-3 text-muted-foreground border-border-strong hover:bg-surface-3 hover:text-foreground"
           )}
         >
           <Layers className="h-3.5 w-3.5" />
@@ -843,7 +843,7 @@ export default function AlertManagementPage() {
               "ml-0.5 inline-flex h-4 w-7 items-center rounded-full border transition-colors",
               deduplicate
                 ? "border-cyan-600 bg-cyan-600"
-                : "border-gray-600 bg-gray-700"
+                : "border-border-strong bg-surface-3"
             )}
           >
             <span
@@ -862,8 +862,8 @@ export default function AlertManagementPage() {
           title="Export current page to CSV"
           className={cn(
             "ml-auto flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition-colors border",
-            "bg-gray-800 text-gray-300 border-gray-700",
-            "hover:bg-gray-700 hover:text-gray-100",
+            "bg-surface-3 text-foreground border-border-strong",
+            "hover:bg-surface-3 hover:text-foreground",
             "disabled:opacity-40 disabled:cursor-not-allowed"
           )}
         >
@@ -872,7 +872,7 @@ export default function AlertManagementPage() {
         </button>
 
         {/* Results info */}
-        <div className="text-xs text-gray-500">
+        <div className="text-xs text-muted-foreground">
           {!loading && (
             <span>
               Showing {displayedAlerts.length > 0 ? offset + 1 : 0}
@@ -914,7 +914,7 @@ export default function AlertManagementPage() {
           <button
             onClick={() => setSelectedIds(new Set())}
             disabled={bulkLoading}
-            className="text-xs text-gray-500 hover:text-gray-300 transition-colors disabled:opacity-50"
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
           >
             Clear selection
           </button>
@@ -936,7 +936,7 @@ export default function AlertManagementPage() {
               className="h-3.5 w-3.5 cursor-pointer accent-cyan-500 rounded"
               aria-label="Select all alerts"
             />
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               Select All
             </span>
           </div>
@@ -946,7 +946,7 @@ export default function AlertManagementPage() {
         {loading && (
           <div className="flex flex-col items-center justify-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-            <p className="mt-3 text-sm text-gray-500">Loading alerts...</p>
+            <p className="mt-3 text-sm text-muted-foreground">Loading alerts...</p>
           </div>
         )}
 
@@ -957,7 +957,7 @@ export default function AlertManagementPage() {
             <p className="text-sm text-red-400">{error}</p>
             <button
               onClick={fetchAlerts}
-              className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+              className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             >
               Retry
             </button>
@@ -968,8 +968,8 @@ export default function AlertManagementPage() {
         {!loading && !error && displayedAlerts.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20">
             <CheckCircle2 className="mb-2 h-10 w-10 text-emerald-700" />
-            <p className="text-sm font-medium text-gray-400">No alerts found</p>
-            <p className="mt-1 text-xs text-gray-600">
+            <p className="text-sm font-medium text-muted-foreground">No alerts found</p>
+            <p className="mt-1 text-xs text-muted-foreground">
               Adjust your filters or check back later
             </p>
           </div>
@@ -998,23 +998,23 @@ export default function AlertManagementPage() {
 
       {/* ---- Pagination ---- */}
       {!loading && !error && displayedAlerts.length > 0 && (
-        <div className="flex items-center justify-between border-t border-gray-800 px-6 py-3">
+        <div className="flex items-center justify-between border-t border-border px-6 py-3">
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
             className={cn(
               "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
-              "border border-gray-700 bg-gray-900 text-gray-400",
-              "hover:bg-gray-800 hover:text-gray-200",
-              "disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-gray-900 disabled:hover:text-gray-400"
+              "border border-border-strong bg-surface-2 text-muted-foreground",
+              "hover:bg-surface-3 hover:text-foreground",
+              "disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-surface-2 disabled:hover:text-muted-foreground"
             )}
           >
             <ChevronLeft className="h-3.5 w-3.5" />
             Previous
           </button>
 
-          <span className="text-xs text-gray-500">
-            Page <span className="font-semibold text-gray-300">{page}</span>
+          <span className="text-xs text-muted-foreground">
+            Page <span className="font-semibold text-foreground">{page}</span>
           </span>
 
           <button
@@ -1022,9 +1022,9 @@ export default function AlertManagementPage() {
             disabled={!hasMore}
             className={cn(
               "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
-              "border border-gray-700 bg-gray-900 text-gray-400",
-              "hover:bg-gray-800 hover:text-gray-200",
-              "disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-gray-900 disabled:hover:text-gray-400"
+              "border border-border-strong bg-surface-2 text-muted-foreground",
+              "hover:bg-surface-3 hover:text-foreground",
+              "disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-surface-2 disabled:hover:text-muted-foreground"
             )}
           >
             Next

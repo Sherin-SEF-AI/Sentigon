@@ -32,7 +32,7 @@ export default function MetricSparkline({
   if (data.length < 2) {
     return (
       <div
-        className={`flex items-center justify-center text-[9px] text-gray-600 ${className}`}
+        className={`flex items-center justify-center text-[9px] text-muted-foreground ${className}`}
         style={{ width, height }}
       >
         No data
@@ -63,7 +63,7 @@ export default function MetricSparkline({
   const prevValue = data.length > 1 ? data[data.length - 2] : lastValue;
   const trend = lastValue > prevValue ? "up" : lastValue < prevValue ? "down" : "flat";
   const trendColor =
-    trend === "up" ? "text-emerald-400" : trend === "down" ? "text-red-400" : "text-gray-500";
+    trend === "up" ? "text-emerald-400" : trend === "down" ? "text-red-400" : "text-muted-foreground";
 
   return (
     <div className={`inline-flex items-center gap-2 ${className}`}>

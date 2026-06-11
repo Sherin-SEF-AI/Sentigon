@@ -23,7 +23,7 @@ function gaugeColor(value: number, status?: string): string {
 }
 
 function bgColor(value: number, status?: string): string {
-  if (status === "offline") return "text-gray-600";
+  if (status === "offline") return "text-muted-foreground";
   if (status === "critical" || value >= 90) return "text-red-400";
   if (status === "warning" || value >= 70) return "text-amber-400";
   return "text-emerald-400";

@@ -89,26 +89,26 @@ export default function EntityJourneyPage() {
       {/* Entity list */}
       <div className="space-y-3">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-100">Entity Journey</h1>
-          <p className="text-sm text-gray-400">
+          <h1 className="text-2xl font-semibold text-foreground">Entity Journey</h1>
+          <p className="text-sm text-muted-foreground">
             Cross-camera path of a tracked entity (privacy-preserving re-ID).
           </p>
         </div>
-        <div className="rounded-xl border border-gray-800 bg-gray-900/60">
-          <div className="px-3 py-2 border-b border-gray-800 text-xs text-gray-500">
+        <div className="rounded-xl border border-border bg-surface-2/60">
+          <div className="px-3 py-2 border-b border-border text-xs text-muted-foreground">
             {entities.length} active entit{entities.length === 1 ? "y" : "ies"}
           </div>
-          <ul className="divide-y divide-gray-800 max-h-[70vh] overflow-auto">
+          <ul className="divide-y divide-border max-h-[70vh] overflow-auto">
             {entities.map((e) => (
               <li key={e.entity_id}>
                 <button
                   onClick={() => loadJourney(e.entity_id)}
-                  className={`w-full text-left px-3 py-2 hover:bg-gray-800/60 ${
-                    selected === e.entity_id ? "bg-gray-800/80" : ""
+                  className={`w-full text-left px-3 py-2 hover:bg-surface-3/60 ${
+                    selected === e.entity_id ? "bg-surface-3/80" : ""
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-200">
+                    <span className="text-sm text-foreground">
                       {(e.entity_type ?? "entity")} · {e.entity_id.slice(0, 8)}
                     </span>
                     {typeof e.risk_score === "number" && e.risk_score >= 0.4 && (
@@ -117,7 +117,7 @@ export default function EntityJourneyPage() {
                       </span>
                     )}
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-muted-foreground">
                     {e.cameras_visited ?? 0} cameras · {e.zones_entered?.length ?? 0} zones
                   </div>
                   {e.behavioral_flags && e.behavioral_flags.length > 0 && (
@@ -127,28 +127,28 @@ export default function EntityJourneyPage() {
               </li>
             ))}
             {entities.length === 0 && (
-              <li className="px-3 py-6 text-center text-sm text-gray-500">No active entities.</li>
+              <li className="px-3 py-6 text-center text-sm text-muted-foreground">No active entities.</li>
             )}
           </ul>
         </div>
       </div>
 
       {/* Journey timeline */}
-      <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-4">
+      <div className="rounded-xl border border-border bg-surface-2/60 p-4">
         {!selected ? (
-          <div className="text-sm text-gray-500 py-12 text-center">
+          <div className="text-sm text-muted-foreground py-12 text-center">
             Select an entity to view its cross-camera journey.
           </div>
         ) : loading ? (
-          <div className="text-sm text-gray-500 py-12 text-center">Loading journey…</div>
+          <div className="text-sm text-muted-foreground py-12 text-center">Loading journey…</div>
         ) : appearances.length === 0 ? (
-          <div className="text-sm text-gray-500 py-12 text-center">No appearances recorded.</div>
+          <div className="text-sm text-muted-foreground py-12 text-center">No appearances recorded.</div>
         ) : (
           <>
             {selectedEntity && (
-              <div className="mb-4 rounded-lg border border-gray-800 bg-zinc-900/40 p-3">
+              <div className="mb-4 rounded-lg border border-border bg-zinc-900/40 p-3">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-medium text-gray-100">
+                  <span className="text-sm font-medium text-foreground">
                     {(selectedEntity.entity_type ?? "entity")} · {selectedEntity.entity_id.slice(0, 8)}
                   </span>
                   <div className="flex items-center gap-2 text-[11px]">
@@ -159,7 +159,7 @@ export default function EntityJourneyPage() {
                         </span>
                       )}
                     {typeof selectedEntity.risk_score === "number" && (
-                      <span className="text-gray-400">
+                      <span className="text-muted-foreground">
                         risk {selectedEntity.risk_score.toFixed(2)}
                       </span>
                     )}
@@ -175,22 +175,22 @@ export default function EntityJourneyPage() {
                   )}
               </div>
             )}
-            <div className="text-sm text-gray-400 mb-4">
+            <div className="text-sm text-muted-foreground mb-4">
               {appearances.length} appearances across {camerasInJourney} camera(s)
             </div>
-            <ol className="relative border-l border-gray-700 ml-3 space-y-4">
+            <ol className="relative border-l border-border-strong ml-3 space-y-4">
               {appearances.map((a) => (
                 <li key={a.id} className="ml-4">
-                  <span className="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full bg-cyan-500 border border-gray-900" />
+                  <span className="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full bg-cyan-500 border border-border" />
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-100">{camName(a.camera_id)}</span>
+                    <span className="text-sm font-medium text-foreground">{camName(a.camera_id)}</span>
                     {a.behavior && (
-                      <span className="text-[10px] px-1.5 py-0.5 rounded border border-gray-600 text-gray-400">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded border border-border-strong text-muted-foreground">
                         {a.behavior}
                       </span>
                     )}
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-muted-foreground">
                     {a.timestamp ? formatTimestamp(a.timestamp) : "—"}
                     {a.duration_seconds ? ` · ${a.duration_seconds.toFixed(0)}s dwell` : ""}
                     {a.zone_id ? ` · zone ${a.zone_id.slice(0, 8)}` : ""}

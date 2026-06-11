@@ -69,7 +69,7 @@ const PLAN_LABELS: Record<string, string> = {
 };
 
 const PLAN_COLORS: Record<string, string> = {
-  basic: "border-gray-700 text-gray-400 bg-gray-800/40",
+  basic: "border-border-strong text-muted-foreground bg-surface-3/40",
   professional: "border-blue-700/60 text-blue-400 bg-blue-900/20",
   enterprise: "border-cyan-700/60 text-cyan-400 bg-cyan-900/20",
 };
@@ -126,13 +126,13 @@ function StatCard({
   accent: string;
 }) {
   return (
-    <div className="rounded-xl border border-gray-800/60 bg-gray-900/60 p-4 flex items-center gap-4">
+    <div className="rounded-xl border border-border/60 bg-surface-2/60 p-4 flex items-center gap-4">
       <div className={cn("rounded-lg p-2.5", accent)}>
         <Icon className="h-5 w-5" />
       </div>
       <div>
-        <p className="text-xs text-gray-500 uppercase tracking-wider">{label}</p>
-        <p className="text-2xl font-bold text-gray-100 mt-0.5">{value}</p>
+        <p className="text-xs text-muted-foreground uppercase tracking-wider">{label}</p>
+        <p className="text-2xl font-bold text-foreground mt-0.5">{value}</p>
       </div>
     </div>
   );
@@ -154,12 +154,12 @@ function UsageBar({
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between text-xs">
-        <span className="text-gray-400">{label}</span>
-        <span className="text-gray-500">
+        <span className="text-muted-foreground">{label}</span>
+        <span className="text-muted-foreground">
           {used} / {unlimited ? "∞" : max}
         </span>
       </div>
-      <div className="h-1.5 w-full rounded-full bg-gray-800">
+      <div className="h-1.5 w-full rounded-full bg-surface-3">
         {!unlimited && (
           <div
             className={cn("h-1.5 rounded-full transition-all", color)}
@@ -244,16 +244,16 @@ function CreateOrgModal({ onClose, onCreated }: CreateOrgModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-      <div className="w-full max-w-md rounded-2xl border border-gray-700/60 bg-gray-900 shadow-2xl">
+      <div className="w-full max-w-md rounded-2xl border border-border-strong/60 bg-surface-2 shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
-          <h2 className="flex items-center gap-2 text-base font-semibold text-gray-100">
+        <div className="flex items-center justify-between border-b border-border px-6 py-4">
+          <h2 className="flex items-center gap-2 text-base font-semibold text-foreground">
             <Building2 className="h-4 w-4 text-cyan-400" />
             Create Organisation
           </h2>
           <button
             onClick={onClose}
-            className="rounded-md p-1 text-gray-500 hover:text-gray-300 transition-colors"
+            className="rounded-md p-1 text-muted-foreground hover:text-foreground transition-colors"
           >
             <X className="h-4 w-4" />
           </button>
@@ -263,7 +263,7 @@ function CreateOrgModal({ onClose, onCreated }: CreateOrgModalProps) {
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           {/* Name */}
           <div className="space-y-1.5">
-            <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider">
+            <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wider">
               Organisation Name
             </label>
             <input
@@ -271,14 +271,14 @@ function CreateOrgModal({ onClose, onCreated }: CreateOrgModalProps) {
               value={form.name}
               onChange={(e) => handleNameChange(e.target.value)}
               placeholder="Acme Security Corp"
-              className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
+              className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
               required
             />
           </div>
 
           {/* Slug */}
           <div className="space-y-1.5">
-            <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider">
+            <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wider">
               Slug (URL identifier)
             </label>
             <input
@@ -286,14 +286,14 @@ function CreateOrgModal({ onClose, onCreated }: CreateOrgModalProps) {
               value={form.slug}
               onChange={(e) => setForm((f) => ({ ...f, slug: slugify(e.target.value) }))}
               placeholder="acme-security"
-              className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm font-mono text-cyan-400 placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
+              className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm font-mono text-cyan-400 placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
               required
             />
           </div>
 
           {/* Plan */}
           <div className="space-y-1.5">
-            <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider">
+            <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wider">
               Plan Tier
             </label>
             <div className="relative">
@@ -308,20 +308,20 @@ function CreateOrgModal({ onClose, onCreated }: CreateOrgModalProps) {
                   }[plan];
                   setForm((f) => ({ ...f, plan, ...defaults }));
                 }}
-                className="w-full appearance-none rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50 pr-8"
+                className="w-full appearance-none rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50 pr-8"
               >
                 <option value="basic">Basic</option>
                 <option value="professional">Professional</option>
                 <option value="enterprise">Enterprise</option>
               </select>
-              <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+              <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             </div>
           </div>
 
           {/* Limits row */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider">
+              <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Max Sites
               </label>
               <input
@@ -332,11 +332,11 @@ function CreateOrgModal({ onClose, onCreated }: CreateOrgModalProps) {
                 }
                 placeholder="-1 = unlimited"
                 min={-1}
-                className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
+                className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider">
+              <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Max Users
               </label>
               <input
@@ -347,7 +347,7 @@ function CreateOrgModal({ onClose, onCreated }: CreateOrgModalProps) {
                 }
                 placeholder="-1 = unlimited"
                 min={-1}
-                className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
+                className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
               />
             </div>
           </div>
@@ -357,7 +357,7 @@ function CreateOrgModal({ onClose, onCreated }: CreateOrgModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-400 hover:text-gray-200 transition-colors"
+              className="rounded-lg border border-border-strong px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               Cancel
             </button>
@@ -390,9 +390,9 @@ function OrganisationsTab({
   if (tenants.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
-        <Building2 className="mb-3 h-10 w-10 text-gray-700" />
-        <p className="text-sm font-medium text-gray-400">No tenants configured</p>
-        <p className="mt-1 text-xs text-gray-600">
+        <Building2 className="mb-3 h-10 w-10 text-muted-foreground" />
+        <p className="text-sm font-medium text-muted-foreground">No tenants configured</p>
+        <p className="mt-1 text-xs text-muted-foreground">
           Create an organisation above to get started.
         </p>
       </div>
@@ -405,15 +405,15 @@ function OrganisationsTab({
         <div
           key={tenant.id}
           className={cn(
-            "rounded-xl border bg-gray-900/60 p-5 flex flex-col gap-3 transition-opacity",
-            tenant.disabled ? "border-gray-800 opacity-60" : "border-gray-700/60"
+            "rounded-xl border bg-surface-2/60 p-5 flex flex-col gap-3 transition-opacity",
+            tenant.disabled ? "border-border opacity-60" : "border-border-strong/60"
           )}
         >
           {/* Header */}
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <p className="font-semibold text-gray-100 truncate">{tenant.name}</p>
-              <p className="text-xs font-mono text-gray-500 mt-0.5">{tenant.slug}</p>
+              <p className="font-semibold text-foreground truncate">{tenant.name}</p>
+              <p className="text-xs font-mono text-muted-foreground mt-0.5">{tenant.slug}</p>
             </div>
             <span
               className={cn(
@@ -426,39 +426,39 @@ function OrganisationsTab({
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-2 rounded-lg bg-gray-800/40 p-3">
+          <div className="grid grid-cols-3 gap-2 rounded-lg bg-surface-3/40 p-3">
             <div className="text-center">
-              <p className="text-xs text-gray-500">Users</p>
-              <p className="text-sm font-bold text-gray-200 mt-0.5">
+              <p className="text-xs text-muted-foreground">Users</p>
+              <p className="text-sm font-bold text-foreground mt-0.5">
                 {tenant.user_count}
-                <span className="text-gray-600 font-normal">
+                <span className="text-muted-foreground font-normal">
                   /{tenant.max_users === -1 ? "∞" : tenant.max_users}
                 </span>
               </p>
             </div>
-            <div className="text-center border-x border-gray-700/50">
-              <p className="text-xs text-gray-500">Sites</p>
-              <p className="text-sm font-bold text-gray-200 mt-0.5">
+            <div className="text-center border-x border-border-strong/50">
+              <p className="text-xs text-muted-foreground">Sites</p>
+              <p className="text-sm font-bold text-foreground mt-0.5">
                 {tenant.site_count}
-                <span className="text-gray-600 font-normal">
+                <span className="text-muted-foreground font-normal">
                   /{tenant.max_sites === -1 ? "∞" : tenant.max_sites}
                 </span>
               </p>
             </div>
             <div className="text-center">
-              <p className="text-xs text-gray-500">Cameras</p>
-              <p className="text-sm font-bold text-gray-200 mt-0.5">{tenant.camera_count}</p>
+              <p className="text-xs text-muted-foreground">Cameras</p>
+              <p className="text-sm font-bold text-foreground mt-0.5">{tenant.camera_count}</p>
             </div>
           </div>
 
           {/* Created */}
-          <p className="text-[11px] text-gray-600">
+          <p className="text-[11px] text-muted-foreground">
             Created {formatDate(tenant.created_at)}
           </p>
 
           {/* Actions */}
           <div className="flex items-center gap-2 pt-1">
-            <button className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:border-cyan-700/60 hover:text-cyan-400 transition-colors">
+            <button className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:border-cyan-700/60 hover:text-cyan-400 transition-colors">
               <Edit2 className="h-3 w-3" />
               Edit
             </button>
@@ -494,36 +494,36 @@ function OrganisationsTab({
 
 function UsageTab({ tenants }: { tenants: Tenant[] }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-800/60">
+    <div className="overflow-x-auto rounded-xl border border-border/60">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-gray-800 bg-gray-900/80">
-            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+          <tr className="border-b border-border bg-surface-2/80">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Organisation
             </th>
-            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Users
             </th>
-            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Sites
             </th>
-            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Cameras
             </th>
-            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               API Calls (24h)
             </th>
-            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Storage
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-800/60">
+        <tbody className="divide-y divide-border/60">
           {tenants.map((tenant) => (
-            <tr key={tenant.id} className="bg-gray-900/40 hover:bg-gray-800/40 transition-colors">
+            <tr key={tenant.id} className="bg-surface-2/40 hover:bg-surface-3/40 transition-colors">
               <td className="px-4 py-3">
-                <p className="font-medium text-gray-200">{tenant.name}</p>
-                <p className="text-xs text-gray-500 font-mono">{tenant.slug}</p>
+                <p className="font-medium text-foreground">{tenant.name}</p>
+                <p className="text-xs text-muted-foreground font-mono">{tenant.slug}</p>
               </td>
               <td className="px-4 py-3 min-w-[140px]">
                 <UsageBar
@@ -540,20 +540,20 @@ function UsageTab({ tenants }: { tenants: Tenant[] }) {
                 />
               </td>
               <td className="px-4 py-3">
-                <span className="text-gray-200 font-medium">{tenant.camera_count}</span>
+                <span className="text-foreground font-medium">{tenant.camera_count}</span>
               </td>
               <td className="px-4 py-3">
-                <span className="text-gray-200 font-medium tabular-nums">0</span>
+                <span className="text-foreground font-medium tabular-nums">0</span>
               </td>
               <td className="px-4 py-3">
-                <span className="text-gray-200 font-medium">—</span>
+                <span className="text-foreground font-medium">—</span>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
       {tenants.length === 0 && (
-        <div className="py-12 text-center text-gray-500 text-sm">No organisations found.</div>
+        <div className="py-12 text-center text-muted-foreground text-sm">No organisations found.</div>
       )}
     </div>
   );
@@ -626,14 +626,14 @@ function BrandingTab({ tenants }: { tenants: Tenant[] }) {
       <div className="space-y-5">
         {/* Org selector */}
         <div className="space-y-2">
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Select Organisation
           </label>
           <div className="relative">
             <select
               value={selectedId}
               onChange={(e) => setSelectedId(e.target.value)}
-              className="w-full appearance-none rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50 pr-8"
+              className="w-full appearance-none rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50 pr-8"
             >
               {tenants.map((t) => (
                 <option key={t.id} value={t.id}>
@@ -641,13 +641,13 @@ function BrandingTab({ tenants }: { tenants: Tenant[] }) {
                 </option>
               ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+            <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
           </div>
         </div>
 
         {/* Logo URL */}
         <div className="space-y-2">
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Logo URL
           </label>
           <input
@@ -655,10 +655,10 @@ function BrandingTab({ tenants }: { tenants: Tenant[] }) {
             value={branding.logo_url ?? ""}
             onChange={(e) => setBranding((b) => ({ ...b, logo_url: e.target.value || null }))}
             placeholder="https://example.com/logo.svg"
-            className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
+            className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
           />
           {branding.logo_url && (
-            <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-3 flex items-center justify-center">
+            <div className="rounded-lg border border-border-strong bg-surface-3/50 p-3 flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={branding.logo_url}
@@ -672,12 +672,12 @@ function BrandingTab({ tenants }: { tenants: Tenant[] }) {
 
         {/* Primary color */}
         <div className="space-y-2">
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Primary Color
           </label>
           <div className="flex items-center gap-3">
             <div
-              className="h-9 w-9 rounded-lg border border-gray-600 shrink-0 cursor-pointer shadow-inner"
+              className="h-9 w-9 rounded-lg border border-border-strong shrink-0 cursor-pointer shadow-inner"
               style={{ backgroundColor: branding.primary_color }}
             />
             <input
@@ -686,13 +686,13 @@ function BrandingTab({ tenants }: { tenants: Tenant[] }) {
               onChange={(e) => setBranding((b) => ({ ...b, primary_color: e.target.value }))}
               placeholder="#06b6d4"
               maxLength={7}
-              className="flex-1 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm font-mono text-gray-100 placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
+              className="flex-1 rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm font-mono text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
             />
             <input
               type="color"
               value={branding.primary_color}
               onChange={(e) => setBranding((b) => ({ ...b, primary_color: e.target.value }))}
-              className="h-9 w-12 cursor-pointer rounded-lg border border-gray-700 bg-gray-800 p-0.5"
+              className="h-9 w-12 cursor-pointer rounded-lg border border-border-strong bg-surface-3 p-0.5"
               title="Pick primary color"
             />
           </div>
@@ -700,12 +700,12 @@ function BrandingTab({ tenants }: { tenants: Tenant[] }) {
 
         {/* Accent color */}
         <div className="space-y-2">
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Accent Color
           </label>
           <div className="flex items-center gap-3">
             <div
-              className="h-9 w-9 rounded-lg border border-gray-600 shrink-0 cursor-pointer shadow-inner"
+              className="h-9 w-9 rounded-lg border border-border-strong shrink-0 cursor-pointer shadow-inner"
               style={{ backgroundColor: branding.accent_color }}
             />
             <input
@@ -714,13 +714,13 @@ function BrandingTab({ tenants }: { tenants: Tenant[] }) {
               onChange={(e) => setBranding((b) => ({ ...b, accent_color: e.target.value }))}
               placeholder="#8b5cf6"
               maxLength={7}
-              className="flex-1 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm font-mono text-gray-100 placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
+              className="flex-1 rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm font-mono text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
             />
             <input
               type="color"
               value={branding.accent_color}
               onChange={(e) => setBranding((b) => ({ ...b, accent_color: e.target.value }))}
-              className="h-9 w-12 cursor-pointer rounded-lg border border-gray-700 bg-gray-800 p-0.5"
+              className="h-9 w-12 cursor-pointer rounded-lg border border-border-strong bg-surface-3 p-0.5"
               title="Pick accent color"
             />
           </div>
@@ -728,7 +728,7 @@ function BrandingTab({ tenants }: { tenants: Tenant[] }) {
 
         {/* Login background */}
         <div className="space-y-2">
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Custom Login Background URL
           </label>
           <input
@@ -738,13 +738,13 @@ function BrandingTab({ tenants }: { tenants: Tenant[] }) {
               setBranding((b) => ({ ...b, login_background_url: e.target.value || null }))
             }
             placeholder="https://example.com/bg.jpg"
-            className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
+            className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
           />
         </div>
 
         {/* Footer text */}
         <div className="space-y-2">
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Custom Footer Text
           </label>
           <input
@@ -752,7 +752,7 @@ function BrandingTab({ tenants }: { tenants: Tenant[] }) {
             value={branding.footer_text ?? ""}
             onChange={(e) => setBranding((b) => ({ ...b, footer_text: e.target.value || null }))}
             placeholder="Acme Security Corp © 2026"
-            className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
+            className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600/50"
           />
         </div>
 
@@ -773,11 +773,11 @@ function BrandingTab({ tenants }: { tenants: Tenant[] }) {
 
       {/* Right: Live Preview */}
       <div className="space-y-3">
-        <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Login Page Preview
         </p>
         <div
-          className="relative overflow-hidden rounded-2xl border border-gray-700/60 shadow-xl"
+          className="relative overflow-hidden rounded-2xl border border-border-strong/60 shadow-xl"
           style={{ minHeight: 420 }}
         >
           {/* Background */}
@@ -798,7 +798,7 @@ function BrandingTab({ tenants }: { tenants: Tenant[] }) {
 
           {/* Card */}
           <div className="relative z-10 flex items-center justify-center h-full p-8" style={{ minHeight: 420 }}>
-            <div className="w-72 rounded-2xl border bg-gray-900/90 shadow-2xl backdrop-blur-md p-6 space-y-5"
+            <div className="w-72 rounded-2xl border bg-surface-2/90 shadow-2xl backdrop-blur-md p-6 space-y-5"
               style={{ borderColor: branding.primary_color + "33" }}>
               {/* Logo / Brand */}
               <div className="flex flex-col items-center gap-2">
@@ -818,19 +818,19 @@ function BrandingTab({ tenants }: { tenants: Tenant[] }) {
                     <Shield className="h-5 w-5" style={{ color: branding.primary_color }} />
                   </div>
                 )}
-                <p className="text-sm font-bold text-gray-100">
+                <p className="text-sm font-bold text-foreground">
                   {selectedTenant?.name ?? "Platform Name"}
                 </p>
-                <p className="text-[10px] text-gray-500">Security Operations Platform</p>
+                <p className="text-[10px] text-muted-foreground">Security Operations Platform</p>
               </div>
 
               {/* Fake inputs */}
               <div className="space-y-2">
-                <div className="h-8 rounded-lg bg-gray-800 border border-gray-700 flex items-center px-3">
-                  <span className="text-xs text-gray-500">Email address</span>
+                <div className="h-8 rounded-lg bg-surface-3 border border-border-strong flex items-center px-3">
+                  <span className="text-xs text-muted-foreground">Email address</span>
                 </div>
-                <div className="h-8 rounded-lg bg-gray-800 border border-gray-700 flex items-center px-3">
-                  <span className="text-xs text-gray-500">Password</span>
+                <div className="h-8 rounded-lg bg-surface-3 border border-border-strong flex items-center px-3">
+                  <span className="text-xs text-muted-foreground">Password</span>
                 </div>
               </div>
 
@@ -854,7 +854,7 @@ function BrandingTab({ tenants }: { tenants: Tenant[] }) {
           {/* Footer preview */}
           {branding.footer_text && (
             <div
-              className="absolute bottom-0 inset-x-0 py-2 px-4 text-center text-[10px] text-gray-500 border-t"
+              className="absolute bottom-0 inset-x-0 py-2 px-4 text-center text-[10px] text-muted-foreground border-t"
               style={{ borderColor: branding.primary_color + "22", backgroundColor: "rgba(0,0,0,0.6)" }}
             >
               {branding.footer_text}
@@ -863,21 +863,21 @@ function BrandingTab({ tenants }: { tenants: Tenant[] }) {
         </div>
 
         {/* Color swatches summary */}
-        <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-gray-900/60 px-4 py-3">
+        <div className="flex items-center gap-3 rounded-lg border border-border bg-surface-2/60 px-4 py-3">
           <div className="flex items-center gap-2">
             <div
-              className="h-5 w-5 rounded-md border border-gray-700"
+              className="h-5 w-5 rounded-md border border-border-strong"
               style={{ backgroundColor: branding.primary_color }}
             />
-            <span className="text-xs font-mono text-gray-400">{branding.primary_color}</span>
+            <span className="text-xs font-mono text-muted-foreground">{branding.primary_color}</span>
           </div>
-          <div className="h-4 w-px bg-gray-700" />
+          <div className="h-4 w-px bg-surface-3" />
           <div className="flex items-center gap-2">
             <div
-              className="h-5 w-5 rounded-md border border-gray-700"
+              className="h-5 w-5 rounded-md border border-border-strong"
               style={{ backgroundColor: branding.accent_color }}
             />
-            <span className="text-xs font-mono text-gray-400">{branding.accent_color}</span>
+            <span className="text-xs font-mono text-muted-foreground">{branding.accent_color}</span>
           </div>
         </div>
       </div>
@@ -996,12 +996,12 @@ export default function AdminPage() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold text-gray-100">Platform Administration</h1>
+              <h1 className="text-xl font-bold text-foreground">Platform Administration</h1>
               <span className="rounded-full border border-amber-700/60 bg-amber-900/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-amber-400">
                 Admin Only
               </span>
             </div>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Manage organisations, usage quotas, and white-label branding
             </p>
           </div>
@@ -1010,7 +1010,7 @@ export default function AdminPage() {
         <button
           onClick={fetchTenants}
           disabled={loading}
-          className="flex items-center gap-2 rounded-lg border border-gray-700 px-3 py-2 text-xs text-gray-400 hover:text-gray-200 hover:border-gray-600 transition-colors disabled:opacity-50"
+          className="flex items-center gap-2 rounded-lg border border-border-strong px-3 py-2 text-xs text-muted-foreground hover:text-foreground hover:border-border-strong transition-colors disabled:opacity-50"
         >
           <RefreshCw className={cn("h-3.5 w-3.5", loading && "animate-spin")} />
           Refresh
@@ -1046,7 +1046,7 @@ export default function AdminPage() {
       </div>
 
       {/* ── Tabs ── */}
-      <div className="flex items-center gap-1 border-b border-gray-800">
+      <div className="flex items-center gap-1 border-b border-border">
         {TABS.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
@@ -1055,7 +1055,7 @@ export default function AdminPage() {
               "flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px",
               activeTab === id
                 ? "border-cyan-500 text-cyan-400"
-                : "border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-700"
+                : "border-transparent text-muted-foreground hover:text-foreground hover:border-border-strong"
             )}
           >
             <Icon className="h-3.5 w-3.5" />
@@ -1082,7 +1082,7 @@ export default function AdminPage() {
       {loading ? (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
-          <span className="ml-3 text-sm text-gray-500">Loading platform data...</span>
+          <span className="ml-3 text-sm text-muted-foreground">Loading platform data...</span>
         </div>
       ) : (
         <div>

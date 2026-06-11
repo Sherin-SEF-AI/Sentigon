@@ -208,7 +208,7 @@ function WidgetMessage({ message }: { message: ChatMessage }) {
               {message.content}
             </p>
           </div>
-          <p className="text-right text-[9px] text-gray-600 pr-1 mt-0.5">{time}</p>
+          <p className="text-right text-[9px] text-muted-foreground pr-1 mt-0.5">{time}</p>
         </div>
       </div>
     );
@@ -220,14 +220,14 @@ function WidgetMessage({ message }: { message: ChatMessage }) {
         <Brain className="h-3 w-3 text-purple-400" />
       </div>
       <div className="max-w-[85%] min-w-0">
-        <div className="rounded-xl rounded-tl-sm bg-gray-800/80 border border-gray-700/50 px-3 py-2">
-          <p className="text-xs text-gray-200 whitespace-pre-wrap leading-relaxed">
+        <div className="rounded-xl rounded-tl-sm bg-surface-3/80 border border-border-strong/50 px-3 py-2">
+          <p className="text-xs text-foreground whitespace-pre-wrap leading-relaxed">
             {message.content.split(/(`[^`]+`)/g).map((segment, i) => {
               if (segment.startsWith("`") && segment.endsWith("`")) {
                 return (
                   <code
                     key={i}
-                    className="rounded bg-gray-700/60 px-1 py-0.5 text-[10px] font-mono text-cyan-300"
+                    className="rounded bg-surface-3/60 px-1 py-0.5 text-[10px] font-mono text-cyan-300"
                   >
                     {segment.slice(1, -1)}
                   </code>
@@ -246,14 +246,14 @@ function WidgetMessage({ message }: { message: ChatMessage }) {
           </div>
         )}
         <div className="flex items-center gap-2 pl-1 mt-0.5">
-          <span className="text-[9px] text-gray-600">{time}</span>
+          <span className="text-[9px] text-muted-foreground">{time}</span>
           <button
             onClick={() => {
               navigator.clipboard.writeText(message.content);
               setCopied(true);
               setTimeout(() => setCopied(false), 2000);
             }}
-            className="text-[9px] text-gray-600 hover:text-gray-400 transition-colors flex items-center gap-0.5"
+            className="text-[9px] text-muted-foreground hover:text-muted-foreground transition-colors flex items-center gap-0.5"
           >
             {copied ? (
               <CheckCircle2 className="h-2.5 w-2.5 text-green-400" />
@@ -283,11 +283,11 @@ function TypingDots() {
       <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-purple-900/30 border border-purple-800/50">
         <Brain className="h-3 w-3 text-purple-400" />
       </div>
-      <div className="flex items-center gap-1 rounded-xl rounded-tl-sm bg-gray-800/80 border border-gray-700/50 px-3 py-2">
+      <div className="flex items-center gap-1 rounded-xl rounded-tl-sm bg-surface-3/80 border border-border-strong/50 px-3 py-2">
         <div className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-bounce" style={{ animationDelay: "0ms" }} />
         <div className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-bounce" style={{ animationDelay: "150ms" }} />
         <div className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-bounce" style={{ animationDelay: "300ms" }} />
-        <span className="ml-1.5 text-[10px] text-gray-500">Analyzing...</span>
+        <span className="ml-1.5 text-[10px] text-muted-foreground">Analyzing...</span>
       </div>
     </div>
   );
@@ -459,19 +459,19 @@ export default function CopilotWidget() {
 
   return (
     <div
-      className={`fixed bottom-5 right-5 z-[9990] ${panelWidth} ${panelHeight} flex flex-col rounded-2xl border border-gray-800 bg-gray-950 shadow-2xl shadow-black/60 transition-all duration-200`}
+      className={`fixed bottom-5 right-5 z-[9990] ${panelWidth} ${panelHeight} flex flex-col rounded-2xl border border-border bg-surface-0 shadow-2xl shadow-black/60 transition-all duration-200`}
     >
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-4 py-2.5 shrink-0">
+      <div className="flex items-center justify-between border-b border-border px-4 py-2.5 shrink-0">
         <div className="flex items-center gap-2">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-cyan-900/30 border border-cyan-800/50">
             <Brain className="h-3.5 w-3.5 text-cyan-400" />
           </div>
           <div>
-            <h3 className="text-xs font-bold text-gray-100">SOC Copilot</h3>
+            <h3 className="text-xs font-bold text-foreground">SOC Copilot</h3>
             <div className="flex items-center gap-1.5">
               <div className="h-1.5 w-1.5 rounded-full bg-green-500" />
-              <span className="text-[9px] text-gray-500">
+              <span className="text-[9px] text-muted-foreground">
                 {pageContext?.label || "Active"}
               </span>
             </div>
@@ -481,21 +481,21 @@ export default function CopilotWidget() {
         <div className="flex items-center gap-1">
           <button
             onClick={startNewSession}
-            className="rounded-md px-2 py-1 text-[9px] text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+            className="rounded-md px-2 py-1 text-[9px] text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             title="New Chat"
           >
             New
           </button>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="rounded-md p-1.5 text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+            className="rounded-md p-1.5 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             title={isExpanded ? "Minimize" : "Expand"}
           >
             {isExpanded ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
           </button>
           <button
             onClick={() => setIsOpen(false)}
-            className="rounded-md p-1.5 text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+            className="rounded-md p-1.5 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             title="Close"
           >
             <X className="h-3.5 w-3.5" />
@@ -511,7 +511,7 @@ export default function CopilotWidget() {
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-900/40 to-purple-900/40 border border-cyan-800/30 mb-4">
               <Sparkles className="h-6 w-6 text-cyan-400" />
             </div>
-            <p className="text-xs text-gray-400 mb-4">
+            <p className="text-xs text-muted-foreground mb-4">
               I have context about your current view ({pageContext?.label}).
               <br />
               Ask me anything or try a suggestion:
@@ -521,7 +521,7 @@ export default function CopilotWidget() {
                 <button
                   key={s}
                   onClick={() => sendMessage(s)}
-                  className="w-full rounded-lg border border-gray-800 bg-gray-900/60 px-3 py-2 text-left text-[11px] text-gray-400 hover:border-cyan-800/50 hover:bg-cyan-950/20 hover:text-cyan-300 transition-all"
+                  className="w-full rounded-lg border border-border bg-surface-2/60 px-3 py-2 text-left text-[11px] text-muted-foreground hover:border-cyan-800/50 hover:bg-cyan-950/20 hover:text-cyan-300 transition-all"
                 >
                   {s}
                 </button>
@@ -543,14 +543,14 @@ export default function CopilotWidget() {
       {messages.length > 4 && (
         <button
           onClick={() => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })}
-          className="absolute bottom-[72px] right-4 rounded-full bg-gray-800 border border-gray-700 p-1.5 text-gray-400 hover:text-gray-200 shadow-lg transition-colors"
+          className="absolute bottom-[72px] right-4 rounded-full bg-surface-3 border border-border-strong p-1.5 text-muted-foreground hover:text-foreground shadow-lg transition-colors"
         >
           <ChevronDown className="h-3.5 w-3.5" />
         </button>
       )}
 
       {/* ---- Input ---- */}
-      <div className="border-t border-gray-800 bg-gray-900/50 px-3 py-2.5 shrink-0">
+      <div className="border-t border-border bg-surface-2/50 px-3 py-2.5 shrink-0">
         <form onSubmit={handleSubmit} className="flex items-end gap-2">
           <textarea
             ref={inputRef}
@@ -560,7 +560,7 @@ export default function CopilotWidget() {
             placeholder={`Ask about ${pageContext?.label?.toLowerCase() || "security"}...`}
             disabled={isProcessing}
             rows={1}
-            className="flex-1 resize-none rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-200 placeholder:text-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700/50 disabled:opacity-50 transition-all"
+            className="flex-1 resize-none rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700/50 disabled:opacity-50 transition-all"
             style={{ minHeight: "36px", maxHeight: "80px" }}
             onInput={(e) => {
               const target = e.target as HTMLTextAreaElement;
@@ -571,7 +571,7 @@ export default function CopilotWidget() {
           <button
             type="submit"
             disabled={!inputValue.trim() || isProcessing}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-cyan-600 text-white hover:bg-cyan-500 disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed transition-all active:scale-95"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-cyan-600 text-white hover:bg-cyan-500 disabled:bg-surface-3 disabled:text-muted-foreground disabled:cursor-not-allowed transition-all active:scale-95"
           >
             {isProcessing ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />

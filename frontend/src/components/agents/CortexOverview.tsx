@@ -203,7 +203,7 @@ export default function CortexOverview({
     return (
       <div className={cn("flex items-center justify-center py-12", className)}>
         <Loader2 className="h-6 w-6 animate-spin text-purple-400" />
-        <span className="ml-2 text-sm text-gray-500">
+        <span className="ml-2 text-sm text-muted-foreground">
           Loading Cortex overview...
         </span>
       </div>
@@ -217,7 +217,7 @@ export default function CortexOverview({
         <p className="text-sm text-red-400">{error}</p>
         <button
           onClick={fetchData}
-          className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 transition-colors"
+          className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 transition-colors"
         >
           Retry
         </button>
@@ -233,7 +233,7 @@ export default function CortexOverview({
   return (
     <div
       className={cn(
-        "rounded-lg border border-gray-800 bg-gray-900/60",
+        "rounded-lg border border-border bg-surface-2/60",
         className
       )}
     >
@@ -244,7 +244,7 @@ export default function CortexOverview({
           <div className="flex-1 min-w-0 space-y-2">
             <div className="flex items-center gap-2">
               <Brain className="h-4 w-4 text-purple-400" />
-              <h3 className="text-sm font-bold text-gray-200">
+              <h3 className="text-sm font-bold text-foreground">
                 Sentinel Cortex
               </h3>
               <span
@@ -252,7 +252,7 @@ export default function CortexOverview({
                   "rounded-full px-2 py-0.5 text-[10px] font-semibold capitalize",
                   cortexStatus?.status === "running"
                     ? "bg-green-900/30 text-green-400 border border-green-800/40"
-                    : "bg-gray-800 text-gray-500 border border-gray-700"
+                    : "bg-surface-3 text-muted-foreground border border-border-strong"
                 )}
               >
                 {cortexStatus?.status || "unknown"}
@@ -275,14 +275,14 @@ export default function CortexOverview({
             {cortexStatus?.active_directives &&
               cortexStatus.active_directives.length > 0 && (
                 <div>
-                  <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                  <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                     Active Directives
                   </p>
                   <ul className="space-y-1">
                     {cortexStatus.active_directives.map((d, i) => (
                       <li
                         key={i}
-                        className="flex items-start gap-1.5 text-xs text-gray-300"
+                        className="flex items-start gap-1.5 text-xs text-foreground"
                       >
                         <ChevronRight className="mt-0.5 h-3 w-3 shrink-0 text-cyan-500" />
                         {d}
@@ -298,64 +298,64 @@ export default function CortexOverview({
         <div className="flex flex-1 flex-col gap-4 lg:flex-row lg:gap-6">
           {/* Fleet health */}
           {fleetHealth && (
-            <div className="rounded-md border border-gray-800 bg-gray-950/50 p-4 min-w-[180px]">
-              <p className="mb-2.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+            <div className="rounded-md border border-border bg-surface-0/50 p-4 min-w-[180px]">
+              <p className="mb-2.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 <Activity className="h-3 w-3" />
                 Fleet Health
               </p>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <p className="text-lg font-bold text-gray-200">
+                  <p className="text-lg font-bold text-foreground">
                     {fleetHealth.total}
                   </p>
-                  <p className="text-[10px] text-gray-500">Total</p>
+                  <p className="text-[10px] text-muted-foreground">Total</p>
                 </div>
                 <div>
                   <p className="text-lg font-bold text-green-400">
                     {fleetHealth.running}
                   </p>
-                  <p className="text-[10px] text-gray-500">Running</p>
+                  <p className="text-[10px] text-muted-foreground">Running</p>
                 </div>
                 <div>
-                  <p className="text-lg font-bold text-gray-400">
+                  <p className="text-lg font-bold text-muted-foreground">
                     {fleetHealth.stopped}
                   </p>
-                  <p className="text-[10px] text-gray-500">Stopped</p>
+                  <p className="text-[10px] text-muted-foreground">Stopped</p>
                 </div>
                 <div>
                   <p
                     className={cn(
                       "text-lg font-bold",
-                      fleetHealth.error > 0 ? "text-red-400" : "text-gray-400"
+                      fleetHealth.error > 0 ? "text-red-400" : "text-muted-foreground"
                     )}
                   >
                     {fleetHealth.error}
                   </p>
-                  <p className="text-[10px] text-gray-500">Errors</p>
+                  <p className="text-[10px] text-muted-foreground">Errors</p>
                 </div>
               </div>
             </div>
           )}
 
           {/* Latest decisions */}
-          <div className="flex-1 rounded-md border border-gray-800 bg-gray-950/50 p-4">
-            <p className="mb-2.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+          <div className="flex-1 rounded-md border border-border bg-surface-0/50 p-4">
+            <p className="mb-2.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
               <Eye className="h-3 w-3" />
               Latest Assessments
             </p>
             {decisions.length === 0 ? (
-              <p className="text-xs text-gray-600">No assessments yet</p>
+              <p className="text-xs text-muted-foreground">No assessments yet</p>
             ) : (
               <div className="space-y-2">
                 {decisions.slice(0, 3).map((d) => (
                   <div
                     key={d.id}
-                    className="rounded border border-gray-800/60 bg-gray-900/40 px-3 py-2"
+                    className="rounded border border-border/60 bg-surface-2/40 px-3 py-2"
                   >
-                    <p className="text-xs text-gray-300 line-clamp-2">
+                    <p className="text-xs text-foreground line-clamp-2">
                       {d.decision || d.response_summary || "---"}
                     </p>
-                    <div className="mt-1 flex items-center gap-2 text-[10px] text-gray-600">
+                    <div className="mt-1 flex items-center gap-2 text-[10px] text-muted-foreground">
                       <span>{formatTimestamp(d.timestamp)}</span>
                       {d.confidence != null && (
                         <span className="font-mono text-cyan-400">
@@ -373,12 +373,12 @@ export default function CortexOverview({
 
       {/* Prediction section */}
       {decisions.length > 0 && decisions[0]?.response_summary && (
-        <div className="border-t border-gray-800 px-5 py-3">
+        <div className="border-t border-border px-5 py-3">
           <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-amber-500">
             <TrendingUp className="h-3 w-3" />
             Predictive Assessment
           </div>
-          <p className="mt-1 text-xs text-gray-400 leading-relaxed line-clamp-2">
+          <p className="mt-1 text-xs text-muted-foreground leading-relaxed line-clamp-2">
             {decisions[0].response_summary}
           </p>
         </div>

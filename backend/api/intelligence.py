@@ -160,6 +160,50 @@ async def deep_analyze(body: SceneAnalyzeRequest):
     }
 
 
+class AnalyzeAudioRequest(BaseModel):
+    audio_base64: str = Field(..., description="WAV audio (base64)")
+
+
+@router.post("/analyze-audio")
+async def analyze_audio(body: AnalyzeAudioRequest):
+    """Detect security-relevant sound events (gunshot/glass/scream/alarm) in a WAV
+    clip via the local audio DSP engine."""
+    import base64
+    from backend.services.audio_detection_service import audio_detection_service
+    try:
+        raw = base64.b64decode(body.audio_base64.split(",", 1)[-1])
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid audio_base64")
+    events = audio_detection_service.analyze_bytes(raw)
+    return {"event_count": len(events), "events": events}
+
+
+class ReadPlateRequest(BaseModel):
+    image_base64: str = Field(..., description="Image containing a plate (base64)")
+    bbox: Optional[List[float]] = Field(None, description="Optional vehicle/plate crop [x1,y1,x2,y2]")
+
+
+@router.post("/read-plate")
+async def read_plate(body: ReadPlateRequest):
+    """Read a license plate via the local ALPR (EasyOCR) engine and check it
+    against active vehicle BOLOs."""
+    import base64
+    import cv2
+    import numpy as np
+    from backend.services.alpr_service import alpr_service
+
+    try:
+        raw = base64.b64decode(body.image_base64.split(",", 1)[-1])
+        frame = cv2.imdecode(np.frombuffer(raw, np.uint8), cv2.IMREAD_COLOR)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid image_base64")
+    if frame is None:
+        raise HTTPException(status_code=400, detail="Could not decode image")
+    if not alpr_service.available():
+        raise HTTPException(status_code=503, detail="ALPR engine unavailable")
+    return await alpr_service.read_and_match(frame, body.bbox)
+
+
 class SegmentRequest(BaseModel):
     camera_id: Optional[str] = None
     image_base64: Optional[str] = None

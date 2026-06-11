@@ -124,14 +124,14 @@ function GlobalThreatLevelCard({ sites }: { sites: Site[] }) {
   const colors = THREAT_COLORS[level];
 
   return (
-    <div className={cn("rounded-xl border bg-gray-900/60 p-5", colors.ring)}>
+    <div className={cn("rounded-xl border bg-surface-2/60 p-5", colors.ring)}>
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className={cn("flex h-10 w-10 items-center justify-center rounded-lg border", colors.badge)}>
             <ShieldAlert className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               Global Threat Level
             </p>
             <p className={cn("text-2xl font-bold tracking-tight", colors.badge.split(" ")[0])}>
@@ -141,16 +141,16 @@ function GlobalThreatLevelCard({ sites }: { sites: Site[] }) {
         </div>
 
         <div className="text-right">
-          <p className="text-[10px] uppercase tracking-wider text-gray-500">Score</p>
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Score</p>
           <p className={cn("text-3xl font-black font-mono", colors.badge.split(" ")[0])}>
             {avgThreatScore}
           </p>
-          <p className="text-[9px] text-gray-600 mt-0.5">avg across {sites.length} sites</p>
+          <p className="text-[9px] text-muted-foreground mt-0.5">avg across {sites.length} sites</p>
         </div>
       </div>
 
       {/* Gauge bar */}
-      <div className="mt-4 h-2.5 w-full rounded-full bg-gray-800">
+      <div className="mt-4 h-2.5 w-full rounded-full bg-surface-3">
         <div
           className="h-2.5 rounded-full transition-all duration-700"
           style={{
@@ -169,7 +169,7 @@ function GlobalThreatLevelCard({ sites }: { sites: Site[] }) {
 
       {/* Sparkline trend */}
       <div className="mt-3 flex items-center justify-between">
-        <p className="text-[9px] uppercase tracking-wider text-gray-600">Trend</p>
+        <p className="text-[9px] uppercase tracking-wider text-muted-foreground">Trend</p>
         {trendHistory.length >= 2 ? (
           <MetricSparkline
             data={trendHistory}
@@ -181,7 +181,7 @@ function GlobalThreatLevelCard({ sites }: { sites: Site[] }) {
             unit=""
           />
         ) : (
-          <span className="text-[9px] text-gray-600">Accumulating data…</span>
+          <span className="text-[9px] text-muted-foreground">Accumulating data…</span>
         )}
       </div>
     </div>
@@ -257,19 +257,19 @@ function CrossSiteCorrelationsPanel({ sites }: { sites: Site[] }) {
   if (sites.length < 2) return null;
 
   return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900/50">
-      <div className="flex items-center justify-between border-b border-gray-800 px-5 py-3">
+    <div className="rounded-xl border border-border bg-surface-2/50">
+      <div className="flex items-center justify-between border-b border-border px-5 py-3">
         <h2 className="flex items-center gap-2 text-sm font-semibold text-cyan-400">
           <Link2 className="h-4 w-4" />
           Cross-Site Correlations
-          <span className="text-[10px] text-gray-500 font-normal">(1h window)</span>
+          <span className="text-[10px] text-muted-foreground font-normal">(1h window)</span>
         </h2>
-        {loading && <RefreshCw className="h-3.5 w-3.5 animate-spin text-gray-500" />}
+        {loading && <RefreshCw className="h-3.5 w-3.5 animate-spin text-muted-foreground" />}
       </div>
 
       <div className="p-5">
         {!loading && correlatedGroups.length === 0 && (
-          <p className="text-center text-xs text-gray-600 py-4">
+          <p className="text-center text-xs text-muted-foreground py-4">
             No correlated threats detected across sites in the last hour
           </p>
         )}
@@ -295,7 +295,7 @@ function CrossSiteCorrelationsPanel({ sites }: { sites: Site[] }) {
                 <div className="flex flex-wrap items-center gap-1.5">
                   {group.sites.map((site, idx) => (
                     <span key={site.id} className="flex items-center gap-1">
-                      <span className="rounded bg-gray-800 border border-gray-700 px-2 py-0.5 text-[10px] font-mono text-gray-300">
+                      <span className="rounded bg-surface-3 border border-border-strong px-2 py-0.5 text-[10px] font-mono text-foreground">
                         {site.name}
                       </span>
                       {idx < group.sites.length - 1 && (
@@ -305,7 +305,7 @@ function CrossSiteCorrelationsPanel({ sites }: { sites: Site[] }) {
                   ))}
                 </div>
 
-                <p className="mt-2 text-[10px] text-gray-600">
+                <p className="mt-2 text-[10px] text-muted-foreground">
                   Earliest:{" "}
                   {new Date(
                     Math.min(...group.sites.map((s) => new Date(s.timestamp).getTime()))
@@ -336,7 +336,7 @@ function siteStatusBadge(status: string) {
     offline: "bg-red-500/10 text-red-400 border-red-500/40",
     maintenance: "bg-yellow-500/10 text-yellow-400 border-yellow-500/40",
   };
-  return map[status] || "bg-gray-500/10 text-gray-400 border-gray-500/40";
+  return map[status] || "bg-gray-500/10 text-muted-foreground border-gray-500/40";
 }
 
 function siteStatusDot(status: string) {
@@ -367,20 +367,20 @@ function SiteCard({
   return (
     <div
       onClick={onClick}
-      className={`rounded-lg border p-4 hover:bg-gray-900/90 transition-colors cursor-pointer ${
+      className={`rounded-lg border p-4 hover:bg-surface-2/90 transition-colors cursor-pointer ${
         isSelected
-          ? "border-cyan-500/60 bg-gray-900/80 ring-1 ring-cyan-500/30"
-          : "border-gray-800 bg-gray-900/60"
+          ? "border-cyan-500/60 bg-surface-2/80 ring-1 ring-cyan-500/30"
+          : "border-border bg-surface-2/60"
       }`}
     >
       {/* Top row: name + status */}
       <div className="flex items-start justify-between gap-2 mb-3">
         <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-semibold text-gray-100 truncate">
+          <h3 className="text-sm font-semibold text-foreground truncate">
             {site.name}
           </h3>
           {site.address && (
-            <p className="text-xs text-gray-500 mt-0.5 truncate">
+            <p className="text-xs text-muted-foreground mt-0.5 truncate">
               {site.address}
             </p>
           )}
@@ -395,7 +395,7 @@ function SiteCard({
 
       {/* Cameras count */}
       <div className="flex items-center gap-2 mb-3">
-        <div className="flex items-center gap-1.5 rounded bg-gray-800/80 px-2 py-1">
+        <div className="flex items-center gap-1.5 rounded bg-surface-3/80 px-2 py-1">
           <svg
             className="h-3.5 w-3.5 text-cyan-400"
             fill="none"
@@ -409,26 +409,26 @@ function SiteCard({
               d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"
             />
           </svg>
-          <span className="text-xs font-mono text-gray-300">
+          <span className="text-xs font-mono text-foreground">
             {site.total_cameras}
           </span>
-          <span className="text-[10px] text-gray-500">cameras</span>
+          <span className="text-[10px] text-muted-foreground">cameras</span>
         </div>
       </div>
 
       {/* Alert summary metrics */}
       {summaryEntries.length > 0 && (
-        <div className="border-t border-gray-800 pt-2 mt-2">
-          <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-1.5">
+        <div className="border-t border-border pt-2 mt-2">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">
             Alert Summary
           </p>
           <div className="grid grid-cols-2 gap-1.5">
             {summaryEntries.map(([key, value]) => (
               <div
                 key={key}
-                className="flex items-center justify-between rounded bg-gray-800/50 px-2 py-1"
+                className="flex items-center justify-between rounded bg-surface-3/50 px-2 py-1"
               >
-                <span className="text-[10px] text-gray-400 capitalize truncate">
+                <span className="text-[10px] text-muted-foreground capitalize truncate">
                   {key.replace(/_/g, " ")}
                 </span>
                 <span className="text-xs font-mono text-cyan-400 ml-1">
@@ -442,7 +442,7 @@ function SiteCard({
 
       {/* Coordinates if available */}
       {site.lat != null && site.lng != null && (
-        <div className="mt-2 text-[10px] text-gray-600 font-mono">
+        <div className="mt-2 text-[10px] text-muted-foreground font-mono">
           {site.lat.toFixed(4)}, {site.lng.toFixed(4)}
         </div>
       )}
@@ -486,16 +486,16 @@ function SiteDetailPanel({
   }, [siteId]);
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-900/80 p-5 space-y-4 animate-in slide-in-from-right-2">
+    <div className="rounded-lg border border-border bg-surface-2/80 p-5 space-y-4 animate-in slide-in-from-right-2">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-bold text-gray-100 flex items-center gap-2">
+        <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
           <Building2 className="h-4 w-4 text-cyan-400" />
           Site Detail
         </h3>
         <button
           onClick={onClose}
-          className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+          className="rounded p-1 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
         >
           <X className="h-4 w-4" />
         </button>
@@ -504,7 +504,7 @@ function SiteDetailPanel({
       {loading && (
         <div className="flex items-center justify-center py-8">
           <RefreshCw className="h-5 w-5 animate-spin text-cyan-400" />
-          <span className="ml-2 text-xs text-gray-500">Loading...</span>
+          <span className="ml-2 text-xs text-muted-foreground">Loading...</span>
         </div>
       )}
 
@@ -519,9 +519,9 @@ function SiteDetailPanel({
         <div className="space-y-3">
           {/* Site name & status */}
           <div>
-            <h4 className="text-base font-semibold text-gray-100">{detail.name}</h4>
+            <h4 className="text-base font-semibold text-foreground">{detail.name}</h4>
             {detail.address && (
-              <p className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+              <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
                 <MapPin className="h-3 w-3" />
                 {detail.address}
               </p>
@@ -536,29 +536,29 @@ function SiteDetailPanel({
 
           {/* Metrics grid */}
           <div className="grid grid-cols-2 gap-2">
-            <div className="rounded bg-gray-800/60 p-2.5">
-              <p className="text-[10px] uppercase tracking-wider text-gray-500">Cameras Online</p>
+            <div className="rounded bg-surface-3/60 p-2.5">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Cameras Online</p>
               <p className="text-lg font-bold font-mono text-cyan-400">
                 {detail.cameras_online}
-                <span className="text-xs text-gray-500 font-normal">
+                <span className="text-xs text-muted-foreground font-normal">
                   /{detail.total_cameras}
                 </span>
               </p>
             </div>
-            <div className="rounded bg-gray-800/60 p-2.5">
-              <p className="text-[10px] uppercase tracking-wider text-gray-500">Cameras Offline</p>
+            <div className="rounded bg-surface-3/60 p-2.5">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Cameras Offline</p>
               <p className="text-lg font-bold font-mono text-red-400">
                 {detail.cameras_offline}
               </p>
             </div>
-            <div className="rounded bg-gray-800/60 p-2.5">
-              <p className="text-[10px] uppercase tracking-wider text-gray-500">Recent Alerts</p>
+            <div className="rounded bg-surface-3/60 p-2.5">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Recent Alerts</p>
               <p className="text-lg font-bold font-mono text-yellow-400">
                 {detail.recent_alerts}
               </p>
             </div>
-            <div className="rounded bg-gray-800/60 p-2.5">
-              <p className="text-[10px] uppercase tracking-wider text-gray-500">Uptime</p>
+            <div className="rounded bg-surface-3/60 p-2.5">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Uptime</p>
               <p className="text-lg font-bold font-mono text-green-400">
                 {detail.uptime_percent != null ? `${detail.uptime_percent}%` : "N/A"}
               </p>
@@ -566,14 +566,14 @@ function SiteDetailPanel({
           </div>
 
           {/* Timezone & last activity */}
-          <div className="border-t border-gray-800 pt-3 space-y-1.5">
-            <div className="flex items-center gap-2 text-xs text-gray-400">
-              <Globe className="h-3.5 w-3.5 text-gray-500" />
+          <div className="border-t border-border pt-3 space-y-1.5">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Globe className="h-3.5 w-3.5 text-muted-foreground" />
               <span>Timezone: {detail.timezone_str}</span>
             </div>
             {detail.last_activity && (
-              <div className="flex items-center gap-2 text-xs text-gray-400">
-                <Clock className="h-3.5 w-3.5 text-gray-500" />
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Clock className="h-3.5 w-3.5 text-muted-foreground" />
                 <span>
                   Last activity:{" "}
                   {new Date(detail.last_activity).toLocaleString("en-US", {
@@ -587,8 +587,8 @@ function SiteDetailPanel({
               </div>
             )}
             {detail.lat != null && detail.lng != null && (
-              <div className="flex items-center gap-2 text-xs text-gray-400">
-                <MapPin className="h-3.5 w-3.5 text-gray-500" />
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
                 <span className="font-mono">
                   {detail.lat.toFixed(4)}, {detail.lng.toFixed(4)}
                 </span>
@@ -598,17 +598,17 @@ function SiteDetailPanel({
 
           {/* Alert summary */}
           {Object.entries(detail.alert_summary || {}).length > 0 && (
-            <div className="border-t border-gray-800 pt-3">
-              <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-2">
+            <div className="border-t border-border pt-3">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2">
                 Alert Breakdown
               </p>
               <div className="grid grid-cols-2 gap-1.5">
                 {Object.entries(detail.alert_summary).map(([key, value]) => (
                   <div
                     key={key}
-                    className="flex items-center justify-between rounded bg-gray-800/50 px-2 py-1"
+                    className="flex items-center justify-between rounded bg-surface-3/50 px-2 py-1"
                   >
-                    <span className="text-[10px] text-gray-400 capitalize truncate">
+                    <span className="text-[10px] text-muted-foreground capitalize truncate">
                       {key.replace(/_/g, " ")}
                     </span>
                     <span className="text-xs font-mono text-cyan-400 ml-1">
@@ -727,9 +727,9 @@ export default function GlobalOverwatchPage() {
   );
 
   return (
-    <div className="flex h-full flex-col bg-gray-950">
+    <div className="flex h-full flex-col bg-surface-0">
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-900/30 border border-cyan-800/50">
             <svg
@@ -747,10 +747,10 @@ export default function GlobalOverwatchPage() {
             </svg>
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Global Overwatch
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Multi-site surveillance command view
             </p>
           </div>
@@ -765,18 +765,18 @@ export default function GlobalOverwatchPage() {
                 e.stopPropagation();
                 setFilterOpen((v) => !v);
               }}
-              className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-800 transition-colors"
+              className="flex items-center gap-2 rounded-lg border border-border-strong bg-surface-2 px-3 py-1.5 text-xs text-foreground hover:bg-surface-3 transition-colors"
             >
-              {statusFilter === "all" && <Activity className="h-3.5 w-3.5 text-gray-400" />}
+              {statusFilter === "all" && <Activity className="h-3.5 w-3.5 text-muted-foreground" />}
               {statusFilter === "active" && <Wifi className="h-3.5 w-3.5 text-green-400" />}
               {statusFilter === "offline" && <WifiOff className="h-3.5 w-3.5 text-red-400" />}
               {statusFilter === "maintenance" && <Wrench className="h-3.5 w-3.5 text-yellow-400" />}
               <span className="capitalize">{statusFilter === "all" ? "All Status" : statusFilter}</span>
-              <ChevronDown className="h-3.5 w-3.5 text-gray-500" />
+              <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
             </button>
 
             {filterOpen && (
-              <div className="absolute right-0 top-full mt-1 z-50 w-44 rounded-lg border border-gray-700 bg-gray-900 py-1 shadow-xl">
+              <div className="absolute right-0 top-full mt-1 z-50 w-44 rounded-lg border border-border-strong bg-surface-2 py-1 shadow-xl">
                 {(["all", "active", "offline", "maintenance"] as StatusFilter[]).map(
                   (value) => {
                     const icons: Record<StatusFilter, typeof Activity> = {
@@ -786,7 +786,7 @@ export default function GlobalOverwatchPage() {
                       maintenance: Wrench,
                     };
                     const colors: Record<StatusFilter, string> = {
-                      all: "text-gray-400",
+                      all: "text-muted-foreground",
                       active: "text-green-400",
                       offline: "text-red-400",
                       maintenance: "text-yellow-400",
@@ -802,8 +802,8 @@ export default function GlobalOverwatchPage() {
                         }}
                         className={`flex w-full items-center gap-2 px-3 py-1.5 text-xs transition-colors ${
                           statusFilter === value
-                            ? "bg-gray-800 text-gray-100"
-                            : "text-gray-400 hover:bg-gray-800/60 hover:text-gray-200"
+                            ? "bg-surface-3 text-foreground"
+                            : "text-muted-foreground hover:bg-surface-3/60 hover:text-foreground"
                         }`}
                       >
                         <Icon className={`h-3.5 w-3.5 ${colors[value]}`} />
@@ -827,7 +827,7 @@ export default function GlobalOverwatchPage() {
             className={`flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs transition-colors ${
               autoRefresh
                 ? "border-cyan-700/60 bg-cyan-900/20 text-cyan-400"
-                : "border-gray-700 bg-gray-900 text-gray-400 hover:bg-gray-800"
+                : "border-border-strong bg-surface-2 text-muted-foreground hover:bg-surface-3"
             }`}
             title={autoRefresh ? "Auto-refresh ON (30s)" : "Auto-refresh OFF"}
           >
@@ -850,7 +850,7 @@ export default function GlobalOverwatchPage() {
                 label: "Total Sites",
                 value: overview.total_sites,
                 icon: Building2,
-                color: "text-gray-100",
+                color: "text-foreground",
                 iconColor: "text-cyan-400",
                 bg: "bg-cyan-900/20 border-cyan-800/40",
               },
@@ -901,7 +901,7 @@ export default function GlobalOverwatchPage() {
               >
                 <div className="flex items-center gap-2 mb-1">
                   <stat.icon className={`h-3.5 w-3.5 ${stat.iconColor}`} />
-                  <span className="text-[10px] uppercase tracking-wider text-gray-500">
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
                     {stat.label}
                   </span>
                 </div>
@@ -940,7 +940,7 @@ export default function GlobalOverwatchPage() {
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
               />
             </svg>
-            <p className="mt-3 text-sm text-gray-500">Loading sites...</p>
+            <p className="mt-3 text-sm text-muted-foreground">Loading sites...</p>
           </div>
         )}
 
@@ -963,7 +963,7 @@ export default function GlobalOverwatchPage() {
             <p className="text-sm text-red-400">{error}</p>
             <button
               onClick={fetchSites}
-              className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+              className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             >
               Retry
             </button>
@@ -973,10 +973,10 @@ export default function GlobalOverwatchPage() {
         {!loading && !error && (
           <>
             {/* Map placeholder */}
-            <div className="rounded-lg border border-gray-800 bg-gray-900/40 flex items-center justify-center h-[200px]">
+            <div className="rounded-lg border border-border bg-surface-2/40 flex items-center justify-center h-[200px]">
               <div className="text-center">
                 <svg
-                  className="mx-auto h-10 w-10 text-gray-700 mb-2"
+                  className="mx-auto h-10 w-10 text-muted-foreground mb-2"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1}
@@ -988,8 +988,8 @@ export default function GlobalOverwatchPage() {
                     d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z"
                   />
                 </svg>
-                <p className="text-sm font-medium text-gray-600">Map View</p>
-                <p className="text-[10px] text-gray-700 mt-0.5">
+                <p className="text-sm font-medium text-muted-foreground">Map View</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">
                   {sites.length} sites across all regions
                 </p>
               </div>
@@ -1002,12 +1002,12 @@ export default function GlobalOverwatchPage() {
                 {/* Filter active indicator */}
                 {statusFilter !== "all" && (
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-muted-foreground">
                       Showing {filteredSites.length} of {sites.length} sites
                     </span>
                     <button
                       onClick={() => setStatusFilter("all")}
-                      className="flex items-center gap-1 rounded bg-gray-800 px-2 py-0.5 text-[10px] text-gray-400 hover:text-gray-200 transition-colors"
+                      className="flex items-center gap-1 rounded bg-surface-3 px-2 py-0.5 text-[10px] text-muted-foreground hover:text-foreground transition-colors"
                     >
                       <X className="h-3 w-3" />
                       Clear filter
@@ -1017,7 +1017,7 @@ export default function GlobalOverwatchPage() {
 
                 {filteredSites.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-12">
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground">
                       {sites.length === 0
                         ? "No sites configured"
                         : "No sites match the current filter"}
@@ -1064,34 +1064,34 @@ export default function GlobalOverwatchPage() {
             <CrossSiteCorrelationsPanel sites={sites} />
 
             {/* Site status summary bar */}
-            <div className="rounded-lg border border-gray-800 bg-gray-900/60 px-6 py-3 flex items-center justify-between">
+            <div className="rounded-lg border border-border bg-surface-2/60 px-6 py-3 flex items-center justify-between">
               <div className="flex items-center gap-6">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500">Total Sites</span>
-                  <span className="text-sm font-bold text-gray-100 font-mono">
+                  <span className="text-xs text-muted-foreground">Total Sites</span>
+                  <span className="text-sm font-bold text-foreground font-mono">
                     {sites.length}
                   </span>
                 </div>
-                <div className="h-4 w-px bg-gray-800" />
+                <div className="h-4 w-px bg-surface-3" />
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-green-400" />
-                  <span className="text-xs text-gray-500">Active</span>
+                  <span className="text-xs text-muted-foreground">Active</span>
                   <span className="text-sm font-bold text-green-400 font-mono">
                     {activeSites}
                   </span>
                 </div>
-                <div className="h-4 w-px bg-gray-800" />
+                <div className="h-4 w-px bg-surface-3" />
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-red-400" />
-                  <span className="text-xs text-gray-500">Offline</span>
+                  <span className="text-xs text-muted-foreground">Offline</span>
                   <span className="text-sm font-bold text-red-400 font-mono">
                     {offlineSites}
                   </span>
                 </div>
-                <div className="h-4 w-px bg-gray-800" />
+                <div className="h-4 w-px bg-surface-3" />
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-yellow-400" />
-                  <span className="text-xs text-gray-500">Maintenance</span>
+                  <span className="text-xs text-muted-foreground">Maintenance</span>
                   <span className="text-sm font-bold text-yellow-400 font-mono">
                     {maintenanceSites}
                   </span>

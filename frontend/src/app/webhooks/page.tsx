@@ -102,8 +102,8 @@ function timeAgo(iso: string): string {
 }
 
 function statusBadge(status: string | null, isActive: boolean): string {
-  if (!isActive) return "bg-gray-800 text-gray-500 border-gray-700";
-  if (!status) return "bg-gray-800 text-gray-400 border-gray-700";
+  if (!isActive) return "bg-surface-3 text-muted-foreground border-border-strong";
+  if (!status) return "bg-surface-3 text-muted-foreground border-border-strong";
   if (status === "success")
     return "bg-green-900/40 text-green-400 border-green-800/60";
   return "bg-red-900/40 text-red-400 border-red-800/60";
@@ -120,7 +120,7 @@ function integrationColor(type: string): string {
     case "splunk":
       return "text-green-400";
     default:
-      return "text-gray-400";
+      return "text-muted-foreground";
   }
 }
 
@@ -319,18 +319,18 @@ export default function WebhooksPage() {
 
   /* --- Render --- */
   return (
-    <div className="flex h-full flex-col overflow-auto bg-gray-950 text-gray-100">
+    <div className="flex h-full flex-col overflow-auto bg-surface-0 text-foreground">
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-900/30 border border-indigo-800/50">
             <Webhook className="h-5 w-5 text-indigo-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Webhooks
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Push events to Slack, Teams, Jira, Splunk, and custom endpoints
             </p>
           </div>
@@ -339,7 +339,7 @@ export default function WebhooksPage() {
         <div className="flex gap-2">
           <button
             onClick={fetchWebhooks}
-            className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
+            className="flex items-center gap-2 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             Refresh
@@ -356,14 +356,14 @@ export default function WebhooksPage() {
 
       {/* ---- Create Form ---- */}
       {showCreate && (
-        <div className="border-b border-gray-800 bg-gray-900/50 px-6 py-4">
-          <h2 className="mb-3 text-sm font-semibold text-gray-300">
+        <div className="border-b border-border bg-surface-2/50 px-6 py-4">
+          <h2 className="mb-3 text-sm font-semibold text-foreground">
             New Webhook
           </h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {/* Name */}
             <div>
-              <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+              <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                 Name
               </label>
               <input
@@ -371,13 +371,13 @@ export default function WebhooksPage() {
                 value={formName}
                 onChange={(e) => setFormName(e.target.value)}
                 placeholder="e.g. Slack Security Channel"
-                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-300 placeholder-gray-600 focus:border-indigo-600 focus:outline-none"
+                className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-indigo-600 focus:outline-none"
               />
             </div>
 
             {/* URL */}
             <div>
-              <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+              <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                 URL
               </label>
               <input
@@ -385,20 +385,20 @@ export default function WebhooksPage() {
                 value={formUrl}
                 onChange={(e) => setFormUrl(e.target.value)}
                 placeholder="https://hooks.slack.com/services/..."
-                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-300 placeholder-gray-600 focus:border-indigo-600 focus:outline-none"
+                className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-indigo-600 focus:outline-none"
               />
             </div>
 
             {/* Integration Type */}
             <div>
-              <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+              <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                 Integration
               </label>
               <div className="relative">
                 <select
                   value={formType}
                   onChange={(e) => setFormType(e.target.value)}
-                  className="w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 pr-8 text-xs text-gray-300 focus:border-indigo-600 focus:outline-none"
+                  className="w-full appearance-none rounded-lg border border-border-strong bg-surface-2 px-3 py-2 pr-8 text-xs text-foreground focus:border-indigo-600 focus:outline-none"
                 >
                   {INTEGRATION_TYPES.map((t) => (
                     <option key={t.value} value={t.value}>
@@ -406,13 +406,13 @@ export default function WebhooksPage() {
                     </option>
                   ))}
                 </select>
-                <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+                <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
               </div>
             </div>
 
             {/* Secret */}
             <div>
-              <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+              <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                 HMAC Secret (optional)
               </label>
               <input
@@ -420,20 +420,20 @@ export default function WebhooksPage() {
                 value={formSecret}
                 onChange={(e) => setFormSecret(e.target.value)}
                 placeholder="Signing key for X-Webhook-Signature"
-                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-xs text-gray-300 placeholder-gray-600 focus:border-indigo-600 focus:outline-none"
+                className="w-full rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-xs text-foreground placeholder-gray-600 focus:border-indigo-600 focus:outline-none"
               />
             </div>
 
             {/* Severity Filter */}
             <div>
-              <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+              <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                 Min Severity
               </label>
               <div className="relative">
                 <select
                   value={formSeverity}
                   onChange={(e) => setFormSeverity(e.target.value)}
-                  className="w-full appearance-none rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 pr-8 text-xs text-gray-300 focus:border-indigo-600 focus:outline-none"
+                  className="w-full appearance-none rounded-lg border border-border-strong bg-surface-2 px-3 py-2 pr-8 text-xs text-foreground focus:border-indigo-600 focus:outline-none"
                 >
                   {SEVERITY_OPTIONS.map((o) => (
                     <option key={o.value} value={o.value}>
@@ -441,13 +441,13 @@ export default function WebhooksPage() {
                     </option>
                   ))}
                 </select>
-                <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-500" />
+                <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
               </div>
             </div>
 
             {/* Event Types */}
             <div>
-              <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+              <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                 Event Types (empty = all)
               </label>
               <div className="flex flex-wrap gap-1.5">
@@ -459,7 +459,7 @@ export default function WebhooksPage() {
                       "rounded px-2 py-1 text-[10px] font-medium border transition-colors",
                       formEventTypes.includes(type)
                         ? "bg-indigo-900/40 text-indigo-400 border-indigo-800/60"
-                        : "bg-gray-800 text-gray-500 border-gray-700 hover:text-gray-300"
+                        : "bg-surface-3 text-muted-foreground border-border-strong hover:text-foreground"
                     )}
                   >
                     {type}
@@ -484,7 +484,7 @@ export default function WebhooksPage() {
             </button>
             <button
               onClick={() => setShowCreate(false)}
-              className="rounded-lg border border-gray-700 px-4 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+              className="rounded-lg border border-border-strong px-4 py-2 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             >
               Cancel
             </button>
@@ -530,13 +530,13 @@ export default function WebhooksPage() {
             </div>
             <button
               onClick={() => setTestResult(null)}
-              className="text-xs text-gray-500 hover:text-gray-300"
+              className="text-xs text-muted-foreground hover:text-foreground"
             >
               Dismiss
             </button>
           </div>
           {testResult.body && (
-            <pre className="rounded bg-gray-950/60 border border-gray-800 px-3 py-2 text-[10px] text-gray-400 font-mono overflow-x-auto max-h-24 overflow-y-auto">
+            <pre className="rounded bg-surface-0/60 border border-border px-3 py-2 text-[10px] text-muted-foreground font-mono overflow-x-auto max-h-24 overflow-y-auto">
               {testResult.body}
             </pre>
           )}
@@ -549,7 +549,7 @@ export default function WebhooksPage() {
         {loading && (
           <div className="flex flex-col items-center justify-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-indigo-400" />
-            <p className="mt-3 text-sm text-gray-500">Loading webhooks...</p>
+            <p className="mt-3 text-sm text-muted-foreground">Loading webhooks...</p>
           </div>
         )}
 
@@ -563,7 +563,7 @@ export default function WebhooksPage() {
                 setError(null);
                 fetchWebhooks();
               }}
-              className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+              className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             >
               Retry
             </button>
@@ -573,11 +573,11 @@ export default function WebhooksPage() {
         {/* Empty */}
         {!loading && !error && webhooks.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20">
-            <Webhook className="mb-2 h-10 w-10 text-gray-700" />
-            <p className="text-sm font-medium text-gray-400">
+            <Webhook className="mb-2 h-10 w-10 text-muted-foreground" />
+            <p className="text-sm font-medium text-muted-foreground">
               No webhooks configured
             </p>
-            <p className="mt-1 text-xs text-gray-600">
+            <p className="mt-1 text-xs text-muted-foreground">
               Click &quot;Add Webhook&quot; to set up your first integration
             </p>
           </div>
@@ -592,8 +592,8 @@ export default function WebhooksPage() {
                   className={cn(
                     "rounded-lg border p-4 transition-shadow hover:shadow-lg hover:shadow-indigo-900/10",
                     wh.is_active
-                      ? "border-gray-800 bg-gray-900/60"
-                      : "border-gray-800/50 bg-gray-900/30 opacity-60"
+                      ? "border-border bg-surface-2/60"
+                      : "border-border/50 bg-surface-2/30 opacity-60"
                   )}
                 >
                   {/* Header row */}
@@ -604,32 +604,32 @@ export default function WebhooksPage() {
                           "flex h-8 w-8 items-center justify-center rounded-lg border",
                           wh.is_active
                             ? "bg-indigo-900/30 border-indigo-800/50"
-                            : "bg-gray-800 border-gray-700"
+                            : "bg-surface-3 border-border-strong"
                         )}
                       >
                         <Send
                           className={cn(
                             "h-4 w-4",
-                            wh.is_active ? "text-indigo-400" : "text-gray-600"
+                            wh.is_active ? "text-indigo-400" : "text-muted-foreground"
                           )}
                         />
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <h3 className="text-sm font-semibold text-gray-200">
+                          <h3 className="text-sm font-semibold text-foreground">
                             {wh.name}
                           </h3>
                           <span
                             className={cn(
                               "rounded px-1.5 py-0.5 text-[10px] font-medium border",
                               integrationColor(wh.integration_type),
-                              "bg-gray-800 border-gray-700"
+                              "bg-surface-3 border-border-strong"
                             )}
                           >
                             {wh.integration_type}
                           </span>
                         </div>
-                        <p className="mt-0.5 text-[11px] text-gray-500 font-mono truncate max-w-md">
+                        <p className="mt-0.5 text-[11px] text-muted-foreground font-mono truncate max-w-md">
                           {wh.url}
                         </p>
                       </div>
@@ -651,7 +651,7 @@ export default function WebhooksPage() {
                       <button
                         onClick={() => handleTest(wh.id)}
                         disabled={actionLoading === `test-${wh.id}`}
-                        className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-900 px-2 py-1.5 text-[11px] text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors disabled:opacity-50"
+                        className="flex items-center gap-1 rounded-lg border border-border-strong bg-surface-2 px-2 py-1.5 text-[11px] text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors disabled:opacity-50"
                       >
                         {actionLoading === `test-${wh.id}` ? (
                           <Loader2 className="h-3 w-3 animate-spin" />
@@ -676,7 +676,7 @@ export default function WebhooksPage() {
 
                       <button
                         onClick={() => handleViewLogs(wh.id)}
-                        className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-900 px-2 py-1.5 text-[11px] text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+                        className="flex items-center gap-1 rounded-lg border border-border-strong bg-surface-2 px-2 py-1.5 text-[11px] text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
                       >
                         <Eye className="h-3 w-3" />
                         Logs
@@ -697,7 +697,7 @@ export default function WebhooksPage() {
                   </div>
 
                   {/* Detail row */}
-                  <div className="mt-2 flex flex-wrap items-center gap-3 text-[11px] text-gray-500">
+                  <div className="mt-2 flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
                     {wh.event_types.length > 0 && (
                       <div className="flex items-center gap-1">
                         <Activity className="h-3 w-3" />
@@ -725,9 +725,9 @@ export default function WebhooksPage() {
 
                 {/* Delivery Logs (expandable) */}
                 {selectedWebhookId === wh.id && (
-                  <div className="ml-4 mt-1 rounded-lg border border-gray-800/50 bg-gray-900/30 p-3">
+                  <div className="ml-4 mt-1 rounded-lg border border-border/50 bg-surface-2/30 p-3">
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                      <h4 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                         Recent Deliveries
                       </h4>
                       {/* Last-5 delivery dots */}
@@ -745,19 +745,19 @@ export default function WebhooksPage() {
                               )}
                             />
                           ))}
-                          <span className="ml-1 text-[9px] text-gray-600">last {Math.min(logs.length, 5)}</span>
+                          <span className="ml-1 text-[9px] text-muted-foreground">last {Math.min(logs.length, 5)}</span>
                         </div>
                       )}
                     </div>
                     {logsLoading ? (
                       <div className="flex items-center gap-2 py-4">
-                        <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
-                        <span className="text-xs text-gray-500">
+                        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                        <span className="text-xs text-muted-foreground">
                           Loading logs...
                         </span>
                       </div>
                     ) : logs.length === 0 ? (
-                      <p className="py-2 text-xs text-gray-600">
+                      <p className="py-2 text-xs text-muted-foreground">
                         No delivery logs yet
                       </p>
                     ) : (
@@ -765,7 +765,7 @@ export default function WebhooksPage() {
                         {logs.map((log) => (
                           <div
                             key={log.id}
-                            className="flex items-center justify-between rounded px-2 py-1.5 text-[11px] hover:bg-gray-800/50"
+                            className="flex items-center justify-between rounded px-2 py-1.5 text-[11px] hover:bg-surface-3/50"
                           >
                             <div className="flex items-center gap-2">
                               {log.success ? (
@@ -773,7 +773,7 @@ export default function WebhooksPage() {
                               ) : (
                                 <XCircle className="h-3 w-3 text-red-500" />
                               )}
-                              <span className="text-gray-400">
+                              <span className="text-muted-foreground">
                                 {log.event_type}
                               </span>
                               {log.status_code && (
@@ -794,7 +794,7 @@ export default function WebhooksPage() {
                                 </span>
                               )}
                             </div>
-                            <div className="flex items-center gap-2 text-gray-600">
+                            <div className="flex items-center gap-2 text-muted-foreground">
                               <span>Attempt {log.attempt_number}</span>
                               {log.delivered_at && (
                                 <span>{timeAgo(log.delivered_at)}</span>

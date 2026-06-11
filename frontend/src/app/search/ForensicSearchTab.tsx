@@ -219,7 +219,7 @@ function stripEmpty(obj: Record<string, unknown>): Record<string, unknown> {
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <label className="block text-xs font-medium text-gray-400 mb-1.5">
+    <label className="block text-xs font-medium text-muted-foreground mb-1.5">
       {children}
     </label>
   );
@@ -243,8 +243,8 @@ function TextInput({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       className={cn(
-        "w-full rounded-lg border border-gray-700 bg-gray-800/60 px-3 py-2 text-sm text-gray-200",
-        "placeholder:text-gray-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/40",
+        "w-full rounded-lg border border-border-strong bg-surface-3/60 px-3 py-2 text-sm text-foreground",
+        "placeholder:text-muted-foreground focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/40",
         "transition-colors",
         className
       )}
@@ -268,7 +268,7 @@ function SelectInput({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       className={cn(
-        "w-full rounded-lg border border-gray-700 bg-gray-800/60 px-3 py-2 text-sm text-gray-200",
+        "w-full rounded-lg border border-border-strong bg-surface-3/60 px-3 py-2 text-sm text-foreground",
         "focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/40",
         "transition-colors appearance-none cursor-pointer"
       )}
@@ -300,7 +300,7 @@ function DateTimeInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={cn(
-          "w-full rounded-lg border border-gray-700 bg-gray-800/60 px-3 py-2 text-sm text-gray-200",
+          "w-full rounded-lg border border-border-strong bg-surface-3/60 px-3 py-2 text-sm text-foreground",
           "focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/40",
           "transition-colors [color-scheme:dark]"
         )}
@@ -335,7 +335,7 @@ function TriStateToggle({
               "flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition-colors",
               value === o.val
                 ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/40"
-                : "bg-gray-800/60 text-gray-400 border border-gray-700 hover:border-gray-600"
+                : "bg-surface-3/60 text-muted-foreground border border-border-strong hover:border-border-strong"
             )}
           >
             {o.label}
@@ -360,9 +360,9 @@ function ResultCard({
   const [creating, setCreating] = useState(false);
 
   return (
-    <div className="group rounded-xl border border-gray-800 bg-zinc-900/70 hover:border-gray-700 transition-all overflow-hidden">
+    <div className="group rounded-xl border border-border bg-zinc-900/70 hover:border-border-strong transition-all overflow-hidden">
       {/* Thumbnail area */}
-      <div className="relative h-40 bg-gray-800/50 flex items-center justify-center overflow-hidden">
+      <div className="relative h-40 bg-surface-3/50 flex items-center justify-center overflow-hidden">
         {result.thumbnail_url ? (
           <img
             src={result.thumbnail_url}
@@ -371,7 +371,7 @@ function ResultCard({
             loading="lazy"
           />
         ) : (
-          <div className="flex flex-col items-center gap-2 text-gray-600">
+          <div className="flex flex-col items-center gap-2 text-muted-foreground">
             <ImageIcon className="h-8 w-8" />
             <span className="text-[10px]">No thumbnail</span>
           </div>
@@ -390,18 +390,18 @@ function ResultCard({
 
       {/* Info section */}
       <div className="p-3 space-y-2">
-        <div className="flex items-center gap-2 text-sm font-medium text-gray-200">
+        <div className="flex items-center gap-2 text-sm font-medium text-foreground">
           <Camera className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
           <span className="truncate">{result.camera_name}</span>
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-gray-400">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <Clock className="h-3 w-3 shrink-0" />
           <span>{fmtTimestamp(result.timestamp)}</span>
         </div>
 
         {result.zone && (
-          <div className="flex items-center gap-2 text-xs text-gray-500">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <Crosshair className="h-3 w-3 shrink-0" />
             <span>{result.zone}</span>
           </div>
@@ -464,20 +464,20 @@ function JourneyTimeline({ journey }: { journey: CameraWaypoint[] }) {
                   ? "bg-cyan-400 border-cyan-400"
                   : idx === journey.length - 1
                   ? "bg-red-400 border-red-400"
-                  : "bg-gray-700 border-gray-500"
+                  : "bg-surface-3 border-gray-500"
               )}
             />
             {idx < journey.length - 1 && (
-              <div className="flex-1 w-px bg-gray-700 min-h-[24px]" />
+              <div className="flex-1 w-px bg-surface-3 min-h-[24px]" />
             )}
           </div>
 
           {/* Waypoint card */}
-          <div className="flex-1 rounded-lg border border-gray-800 bg-zinc-900/70 px-4 py-3 mb-2">
+          <div className="flex-1 rounded-lg border border-border bg-zinc-900/70 px-4 py-3 mb-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Camera className="h-3.5 w-3.5 text-cyan-400" />
-                <span className="text-sm font-medium text-gray-200">
+                <span className="text-sm font-medium text-foreground">
                   {wp.camera_name}
                 </span>
               </div>
@@ -490,7 +490,7 @@ function JourneyTimeline({ journey }: { journey: CameraWaypoint[] }) {
                 {(wp.confidence * 100).toFixed(1)}%
               </span>
             </div>
-            <div className="mt-1.5 flex items-center gap-4 text-xs text-gray-400">
+            <div className="mt-1.5 flex items-center gap-4 text-xs text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
                 {fmtTimestamp(wp.timestamp)}
@@ -976,9 +976,9 @@ export default function ForensicSearchTab() {
   /* ── Render ────────────────────────────────────────────────── */
 
   return (
-    <div className="min-h-full bg-[#030712] text-gray-200">
+    <div className="min-h-full bg-[#030712] text-foreground">
       {/* ── Header ──────────────────────────────────────────── */}
-      <div className="border-b border-gray-800 bg-zinc-900/50 backdrop-blur-sm">
+      <div className="border-b border-border bg-zinc-900/50 backdrop-blur-sm">
         <div className="mx-auto max-w-7xl px-6 py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -989,7 +989,7 @@ export default function ForensicSearchTab() {
                 <h1 className="text-xl font-semibold text-white">
                   Forensic Video Search
                 </h1>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   Search across all cameras using attributes, vehicles, visual
                   similarity, or cross-camera tracking
                 </p>
@@ -998,7 +998,7 @@ export default function ForensicSearchTab() {
             {hasExportable && (
               <button
                 onClick={handleExport}
-                className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-800/60 px-3 py-2 text-xs text-gray-300 hover:border-gray-600 hover:text-white transition-colors"
+                className="flex items-center gap-2 rounded-lg border border-border-strong bg-surface-3/60 px-3 py-2 text-xs text-foreground hover:border-border-strong hover:text-white transition-colors"
               >
                 <Download className="h-3.5 w-3.5" />
                 Export Results
@@ -1010,7 +1010,7 @@ export default function ForensicSearchTab() {
 
       <div className="mx-auto max-w-7xl px-6 py-6 space-y-6">
         {/* ── Tab Navigation ──────────────────────────────────── */}
-        <div className="flex gap-1 rounded-xl border border-gray-800 bg-zinc-900/50 p-1">
+        <div className="flex gap-1 rounded-xl border border-border bg-zinc-900/50 p-1">
           {TABS.map((tab) => (
             <button
               key={tab.key}
@@ -1019,7 +1019,7 @@ export default function ForensicSearchTab() {
                 "flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all flex-1 justify-center",
                 activeTab === tab.key
                   ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 shadow-lg shadow-cyan-500/5"
-                  : "text-gray-400 hover:text-gray-200 hover:bg-gray-800/40 border border-transparent"
+                  : "text-muted-foreground hover:text-foreground hover:bg-surface-3/40 border border-transparent"
               )}
             >
               {tab.icon}
@@ -1029,9 +1029,9 @@ export default function ForensicSearchTab() {
         </div>
 
         {/* ── Saved Search Templates ──────────────────────────── */}
-        <div className="rounded-xl border border-gray-800 bg-zinc-900/50 p-4">
+        <div className="rounded-xl border border-border bg-zinc-900/50 p-4">
           <div className="flex items-center gap-3 flex-wrap">
-            <div className="flex items-center gap-2 text-xs font-medium text-gray-400">
+            <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
               <Save className="h-3.5 w-3.5 text-cyan-400" />
               Saved Searches
             </div>
@@ -1043,14 +1043,14 @@ export default function ForensicSearchTab() {
                   <div key={s.name} className="flex items-center gap-0.5">
                     <button
                       onClick={() => handleLoadSearch(s)}
-                      className="flex items-center gap-1 rounded-l-md border border-gray-700 bg-gray-800/60 px-2 py-1 text-[10px] text-gray-300 hover:text-white hover:border-gray-600 transition-colors"
+                      className="flex items-center gap-1 rounded-l-md border border-border-strong bg-surface-3/60 px-2 py-1 text-[10px] text-foreground hover:text-white hover:border-border-strong transition-colors"
                     >
                       <FolderOpen className="h-2.5 w-2.5" />
                       {s.name}
                     </button>
                     <button
                       onClick={() => handleDeleteSavedSearch(s.name)}
-                      className="flex items-center rounded-r-md border border-l-0 border-gray-700 bg-gray-800/60 px-1.5 py-1 text-[10px] text-gray-500 hover:text-red-400 hover:border-gray-600 transition-colors"
+                      className="flex items-center rounded-r-md border border-l-0 border-border-strong bg-surface-3/60 px-1.5 py-1 text-[10px] text-muted-foreground hover:text-red-400 hover:border-border-strong transition-colors"
                     >
                       <X className="h-2.5 w-2.5" />
                     </button>
@@ -1069,7 +1069,7 @@ export default function ForensicSearchTab() {
                   onKeyDown={(e) => { if (e.key === "Enter") handleSaveSearch(); if (e.key === "Escape") setShowSaveInput(false); }}
                   placeholder="Search name..."
                   autoFocus
-                  className="rounded-md border border-gray-700 bg-gray-800/60 px-2 py-1 text-xs text-gray-200 placeholder:text-gray-600 focus:border-cyan-500 focus:outline-none w-36"
+                  className="rounded-md border border-border-strong bg-surface-3/60 px-2 py-1 text-xs text-foreground placeholder:text-muted-foreground focus:border-cyan-500 focus:outline-none w-36"
                 />
                 <button
                   onClick={handleSaveSearch}
@@ -1080,7 +1080,7 @@ export default function ForensicSearchTab() {
                 </button>
                 <button
                   onClick={() => { setShowSaveInput(false); setSaveSearchName(""); }}
-                  className="rounded-md border border-gray-700 bg-gray-800/60 px-2 py-1 text-[10px] text-gray-500 hover:text-gray-300 transition-colors"
+                  className="rounded-md border border-border-strong bg-surface-3/60 px-2 py-1 text-[10px] text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Cancel
                 </button>
@@ -1088,7 +1088,7 @@ export default function ForensicSearchTab() {
             ) : (
               <button
                 onClick={() => setShowSaveInput(true)}
-                className="flex items-center gap-1 rounded-md border border-gray-700 bg-gray-800/60 px-2.5 py-1 text-[10px] font-medium text-gray-400 hover:text-gray-200 hover:border-gray-600 transition-colors"
+                className="flex items-center gap-1 rounded-md border border-border-strong bg-surface-3/60 px-2.5 py-1 text-[10px] font-medium text-muted-foreground hover:text-foreground hover:border-border-strong transition-colors"
               >
                 <Save className="h-3 w-3" />
                 Save Search
@@ -1098,36 +1098,36 @@ export default function ForensicSearchTab() {
         </div>
 
         {/* ── Temporal Filter ──────────────────────────────────── */}
-        <div className="rounded-xl border border-gray-800 bg-zinc-900/50 px-5 py-4">
+        <div className="rounded-xl border border-border bg-zinc-900/50 px-5 py-4">
           <div className="flex items-center gap-3 flex-wrap">
-            <div className="flex items-center gap-2 text-xs font-medium text-gray-400 shrink-0">
+            <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground shrink-0">
               <CalendarRange className="h-3.5 w-3.5 text-cyan-400" />
               Temporal Filter
-              <span className="text-gray-600 font-normal">(filters displayed results)</span>
+              <span className="text-muted-foreground font-normal">(filters displayed results)</span>
             </div>
             <div className="flex items-center gap-2 flex-wrap flex-1">
               <div className="flex items-center gap-2">
-                <label className="text-[10px] text-gray-500 shrink-0">From</label>
+                <label className="text-[10px] text-muted-foreground shrink-0">From</label>
                 <input
                   type="datetime-local"
                   value={temporalStart}
                   onChange={(e) => setTemporalStart(e.target.value)}
-                  className="rounded-lg border border-gray-700 bg-gray-800/60 px-3 py-1.5 text-xs text-gray-200 focus:border-cyan-500 focus:outline-none [color-scheme:dark]"
+                  className="rounded-lg border border-border-strong bg-surface-3/60 px-3 py-1.5 text-xs text-foreground focus:border-cyan-500 focus:outline-none [color-scheme:dark]"
                 />
               </div>
               <div className="flex items-center gap-2">
-                <label className="text-[10px] text-gray-500 shrink-0">To</label>
+                <label className="text-[10px] text-muted-foreground shrink-0">To</label>
                 <input
                   type="datetime-local"
                   value={temporalEnd}
                   onChange={(e) => setTemporalEnd(e.target.value)}
-                  className="rounded-lg border border-gray-700 bg-gray-800/60 px-3 py-1.5 text-xs text-gray-200 focus:border-cyan-500 focus:outline-none [color-scheme:dark]"
+                  className="rounded-lg border border-border-strong bg-surface-3/60 px-3 py-1.5 text-xs text-foreground focus:border-cyan-500 focus:outline-none [color-scheme:dark]"
                 />
               </div>
               {(temporalStart || temporalEnd) && (
                 <button
                   onClick={() => { setTemporalStart(""); setTemporalEnd(""); }}
-                  className="flex items-center gap-1 text-[10px] text-gray-500 hover:text-gray-300 transition-colors"
+                  className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <X className="h-3 w-3" /> Clear
                 </button>
@@ -1142,13 +1142,13 @@ export default function ForensicSearchTab() {
         </div>
 
         {/* ── Search Form ─────────────────────────────────────── */}
-        <div className="rounded-xl border border-gray-800 bg-zinc-900/50 p-6">
+        <div className="rounded-xl border border-border bg-zinc-900/50 p-6">
           {/* ---- Attribute Search Form ---- */}
           {activeTab === "attributes" && (
             <div className="space-y-5">
               <div className="flex items-center gap-2 mb-1">
                 <Filter className="h-4 w-4 text-cyan-400" />
-                <h2 className="text-sm font-semibold text-gray-200">
+                <h2 className="text-sm font-semibold text-foreground">
                   Person Attribute Search
                 </h2>
               </div>
@@ -1249,7 +1249,7 @@ export default function ForensicSearchTab() {
                 </button>
                 <button
                   onClick={() => setAttrParams({ ...DEFAULT_ATTR })}
-                  className="rounded-lg border border-gray-700 px-4 py-2.5 text-sm text-gray-400 hover:text-gray-200 hover:border-gray-600 transition-colors"
+                  className="rounded-lg border border-border-strong px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:border-border-strong transition-colors"
                 >
                   Clear
                 </button>
@@ -1262,7 +1262,7 @@ export default function ForensicSearchTab() {
             <div className="space-y-5">
               <div className="flex items-center gap-2 mb-1">
                 <Car className="h-4 w-4 text-cyan-400" />
-                <h2 className="text-sm font-semibold text-gray-200">
+                <h2 className="text-sm font-semibold text-foreground">
                   Vehicle Search
                 </h2>
               </div>
@@ -1351,7 +1351,7 @@ export default function ForensicSearchTab() {
                 </button>
                 <button
                   onClick={() => setVehicleParams({ ...DEFAULT_VEHICLE })}
-                  className="rounded-lg border border-gray-700 px-4 py-2.5 text-sm text-gray-400 hover:text-gray-200 hover:border-gray-600 transition-colors"
+                  className="rounded-lg border border-border-strong px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:border-border-strong transition-colors"
                 >
                   Clear
                 </button>
@@ -1364,7 +1364,7 @@ export default function ForensicSearchTab() {
             <div className="space-y-5">
               <div className="flex items-center gap-2 mb-1">
                 <Eye className="h-4 w-4 text-cyan-400" />
-                <h2 className="text-sm font-semibold text-gray-200">
+                <h2 className="text-sm font-semibold text-foreground">
                   Visual Similarity Search (CLIP Embeddings)
                 </h2>
               </div>
@@ -1381,7 +1381,7 @@ export default function ForensicSearchTab() {
                     className="hidden"
                   />
                   {similarityPreview ? (
-                    <div className="relative rounded-xl border border-gray-700 bg-gray-800/40 overflow-hidden">
+                    <div className="relative rounded-xl border border-border-strong bg-surface-3/40 overflow-hidden">
                       <img
                         src={similarityPreview}
                         alt="Reference preview"
@@ -1389,11 +1389,11 @@ export default function ForensicSearchTab() {
                       />
                       <button
                         onClick={clearFile}
-                        className="absolute top-2 right-2 rounded-full bg-gray-900/80 p-1.5 text-gray-400 hover:text-white transition-colors"
+                        className="absolute top-2 right-2 rounded-full bg-surface-2/80 p-1.5 text-muted-foreground hover:text-white transition-colors"
                       >
                         <X className="h-4 w-4" />
                       </button>
-                      <div className="absolute bottom-2 left-2 rounded-md bg-gray-900/80 px-2 py-1 text-[10px] text-gray-400">
+                      <div className="absolute bottom-2 left-2 rounded-md bg-surface-2/80 px-2 py-1 text-[10px] text-muted-foreground">
                         {similarityFile?.name} (
                         {((similarityFile?.size || 0) / 1024).toFixed(0)} KB)
                       </div>
@@ -1402,9 +1402,9 @@ export default function ForensicSearchTab() {
                     <button
                       onClick={() => fileInputRef.current?.click()}
                       className={cn(
-                        "w-full h-48 rounded-xl border-2 border-dashed border-gray-700 bg-gray-800/30",
+                        "w-full h-48 rounded-xl border-2 border-dashed border-border-strong bg-surface-3/30",
                         "flex flex-col items-center justify-center gap-3",
-                        "text-gray-500 hover:text-gray-300 hover:border-gray-500 transition-all cursor-pointer"
+                        "text-muted-foreground hover:text-foreground hover:border-gray-500 transition-all cursor-pointer"
                       )}
                     >
                       <Upload className="h-8 w-8" />
@@ -1434,19 +1434,19 @@ export default function ForensicSearchTab() {
                         onChange={(e) =>
                           setSimilarityThreshold(e.target.value)
                         }
-                        className="flex-1 accent-cyan-500 h-1.5 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                        className="flex-1 accent-cyan-500 h-1.5 bg-surface-3 rounded-lg appearance-none cursor-pointer"
                       />
                       <span className="text-sm font-mono text-cyan-400 w-12 text-right tabular-nums">
                         {Number(similarityThreshold).toFixed(2)}
                       </span>
                     </div>
-                    <p className="text-[10px] text-gray-600 mt-1">
+                    <p className="text-[10px] text-muted-foreground mt-1">
                       Higher threshold = fewer but more accurate matches
                     </p>
                   </div>
 
-                  <div className="rounded-lg border border-gray-800 bg-gray-800/30 p-3">
-                    <p className="text-xs text-gray-400 leading-relaxed">
+                  <div className="rounded-lg border border-border bg-surface-3/30 p-3">
+                    <p className="text-xs text-muted-foreground leading-relaxed">
                       Upload a reference image of a person, vehicle, or
                       object. The system will use CLIP neural embeddings to
                       find visually similar detections across all indexed
@@ -1478,7 +1478,7 @@ export default function ForensicSearchTab() {
                     clearFile();
                     setSimilarityThreshold("0.7");
                   }}
-                  className="rounded-lg border border-gray-700 px-4 py-2.5 text-sm text-gray-400 hover:text-gray-200 hover:border-gray-600 transition-colors"
+                  className="rounded-lg border border-border-strong px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:border-border-strong transition-colors"
                 >
                   Clear
                 </button>
@@ -1491,7 +1491,7 @@ export default function ForensicSearchTab() {
             <div className="space-y-5">
               <div className="flex items-center gap-2 mb-1">
                 <Route className="h-4 w-4 text-cyan-400" />
-                <h2 className="text-sm font-semibold text-gray-200">
+                <h2 className="text-sm font-semibold text-foreground">
                   Cross-Camera Journey Tracking
                 </h2>
               </div>
@@ -1523,7 +1523,7 @@ export default function ForensicSearchTab() {
                           "flex-1 flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                           crossParams.entity_type === type
                             ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/40"
-                            : "bg-gray-800/60 text-gray-400 border border-gray-700 hover:border-gray-600"
+                            : "bg-surface-3/60 text-muted-foreground border border-border-strong hover:border-border-strong"
                         )}
                       >
                         {type === "person" ? (
@@ -1574,7 +1574,7 @@ export default function ForensicSearchTab() {
                 </button>
                 <button
                   onClick={() => setCrossParams({ ...DEFAULT_CROSS })}
-                  className="rounded-lg border border-gray-700 px-4 py-2.5 text-sm text-gray-400 hover:text-gray-200 hover:border-gray-600 transition-colors"
+                  className="rounded-lg border border-border-strong px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:border-border-strong transition-colors"
                 >
                   Clear
                 </button>
@@ -1586,7 +1586,7 @@ export default function ForensicSearchTab() {
             <div className="space-y-5">
               <div className="flex items-center gap-2 mb-1">
                 <Search className="h-4 w-4 text-cyan-400" />
-                <h2 className="text-sm font-semibold text-gray-200">
+                <h2 className="text-sm font-semibold text-foreground">
                   Natural-Language Object Search
                 </h2>
               </div>
@@ -1601,7 +1601,7 @@ export default function ForensicSearchTab() {
                       if (e.key === "Enter") handleSearch();
                     }}
                     placeholder="e.g. person in a red jacket carrying a backpack"
-                    className="flex-1 rounded-lg border border-gray-700 bg-gray-800/60 px-3 py-2.5 text-sm text-gray-200 placeholder:text-gray-500 focus:border-cyan-500 focus:outline-none"
+                    className="flex-1 rounded-lg border border-border-strong bg-surface-3/60 px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-cyan-500 focus:outline-none"
                   />
                   <button
                     onClick={() => handleSearch()}
@@ -1620,7 +1620,7 @@ export default function ForensicSearchTab() {
                     Search
                   </button>
                 </div>
-                <p className="mt-2 text-[11px] text-gray-500">
+                <p className="mt-2 text-[11px] text-muted-foreground">
                   Semantic CLIP search over indexed object crops. Requires
                   re-identification embeddings (REID_USE_CLIP) and the vector
                   store to be enabled.
@@ -1648,7 +1648,7 @@ export default function ForensicSearchTab() {
         {loading && (
           <div className="flex flex-col items-center justify-center py-20">
             <Loader2 className="h-8 w-8 text-cyan-400 animate-spin mb-3" />
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-muted-foreground">
               Searching across indexed video...
             </p>
           </div>
@@ -1659,33 +1659,33 @@ export default function ForensicSearchTab() {
           <div className="space-y-4">
             {/* Journey summary cards */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div className="rounded-xl border border-gray-800 bg-zinc-900/50 px-4 py-3 text-center">
+              <div className="rounded-xl border border-border bg-zinc-900/50 px-4 py-3 text-center">
                 <div className="text-lg font-bold text-cyan-400 tabular-nums">
                   {crossResult.total_cameras}
                 </div>
-                <div className="text-[11px] text-gray-500">
+                <div className="text-[11px] text-muted-foreground">
                   Cameras Visited
                 </div>
               </div>
-              <div className="rounded-xl border border-gray-800 bg-zinc-900/50 px-4 py-3 text-center">
+              <div className="rounded-xl border border-border bg-zinc-900/50 px-4 py-3 text-center">
                 <div className="text-lg font-bold text-cyan-400 tabular-nums">
                   {crossResult.journey.length}
                 </div>
-                <div className="text-[11px] text-gray-500">Waypoints</div>
+                <div className="text-[11px] text-muted-foreground">Waypoints</div>
               </div>
-              <div className="rounded-xl border border-gray-800 bg-zinc-900/50 px-4 py-3 text-center">
+              <div className="rounded-xl border border-border bg-zinc-900/50 px-4 py-3 text-center">
                 <div className="text-lg font-bold text-yellow-400 tabular-nums">
                   {crossResult.elapsed_minutes.toFixed(1)}m
                 </div>
-                <div className="text-[11px] text-gray-500">
+                <div className="text-[11px] text-muted-foreground">
                   Total Duration
                 </div>
               </div>
-              <div className="rounded-xl border border-gray-800 bg-zinc-900/50 px-4 py-3 text-center">
-                <div className="text-sm font-medium text-gray-300 truncate">
+              <div className="rounded-xl border border-border bg-zinc-900/50 px-4 py-3 text-center">
+                <div className="text-sm font-medium text-foreground truncate">
                   {crossResult.entity_id}
                 </div>
-                <div className="text-[11px] text-gray-500 capitalize">
+                <div className="text-[11px] text-muted-foreground capitalize">
                   {crossResult.entity_type}
                 </div>
               </div>
@@ -1693,12 +1693,12 @@ export default function ForensicSearchTab() {
 
             {/* Time range bar */}
             {crossResult.first_seen && crossResult.last_seen && (
-              <div className="flex items-center gap-3 rounded-lg border border-gray-800 bg-zinc-900/30 px-4 py-2.5 text-xs text-gray-400">
+              <div className="flex items-center gap-3 rounded-lg border border-border bg-zinc-900/30 px-4 py-2.5 text-xs text-muted-foreground">
                 <Clock className="h-3.5 w-3.5 text-cyan-400" />
                 <span>
                   First seen: {fmtTimestamp(crossResult.first_seen)}
                 </span>
-                <ArrowRight className="h-3 w-3 text-gray-600" />
+                <ArrowRight className="h-3 w-3 text-muted-foreground" />
                 <span>
                   Last seen: {fmtTimestamp(crossResult.last_seen)}
                 </span>
@@ -1706,8 +1706,8 @@ export default function ForensicSearchTab() {
             )}
 
             {/* Timeline */}
-            <div className="rounded-xl border border-gray-800 bg-zinc-900/50 p-5">
-              <h3 className="text-sm font-semibold text-gray-200 mb-4 flex items-center gap-2">
+            <div className="rounded-xl border border-border bg-zinc-900/50 p-5">
+              <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
                 <Route className="h-4 w-4 text-cyan-400" />
                 Journey Timeline
               </h3>
@@ -1719,17 +1719,17 @@ export default function ForensicSearchTab() {
         {/* ── Object NL Search Results ────────────────────────── */}
         {!loading && activeTab === "objects" && objectResult && (
           <div className="space-y-3">
-            <div className="flex items-center gap-2 text-xs text-gray-500">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Search className="h-3.5 w-3.5" />
               <span>
                 {objectResult.result_count} match
                 {objectResult.result_count === 1 ? "" : "es"} for
-                <span className="text-gray-300"> “{objectResult.query}”</span>
+                <span className="text-foreground"> “{objectResult.query}”</span>
               </span>
             </div>
 
             {objectResult.results.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-gray-500">
+              <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <Search className="h-8 w-8 mb-3 opacity-40" />
                 <p className="text-sm">No matching objects found</p>
                 <p className="text-[11px] mt-1">
@@ -1742,10 +1742,10 @@ export default function ForensicSearchTab() {
                 {objectResult.results.map((hit, i) => (
                   <div
                     key={`${hit.entity_id ?? "obj"}-${i}`}
-                    className="flex items-center justify-between gap-4 rounded-xl border border-gray-800 bg-zinc-900/50 px-4 py-3"
+                    className="flex items-center justify-between gap-4 rounded-xl border border-border bg-zinc-900/50 px-4 py-3"
                   >
                     <div className="min-w-0">
-                      <div className="flex items-center gap-2 text-sm text-gray-200">
+                      <div className="flex items-center gap-2 text-sm text-foreground">
                         <Camera className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
                         <span className="truncate">
                           Camera {String(hit.camera_id ?? "—").slice(0, 12)}
@@ -1756,7 +1756,7 @@ export default function ForensicSearchTab() {
                           </span>
                         )}
                       </div>
-                      <div className="mt-1 flex items-center gap-3 text-[11px] text-gray-500">
+                      <div className="mt-1 flex items-center gap-3 text-[11px] text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
                           {hit.timestamp
@@ -1787,19 +1787,19 @@ export default function ForensicSearchTab() {
             {/* Results header */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <h3 className="text-sm font-semibold text-gray-200">
+                <h3 className="text-sm font-semibold text-foreground">
                   {temporallyFilteredResults.length !== results.length
                     ? `${temporallyFilteredResults.length} of ${totalResults.toLocaleString()} result${totalResults !== 1 ? "s" : ""} (filtered)`
                     : `${totalResults.toLocaleString()} result${totalResults !== 1 ? "s" : ""} found`
                   }
                 </h3>
                 {queryTimeMs !== null && (
-                  <span className="text-[10px] text-gray-600 tabular-nums">
+                  <span className="text-[10px] text-muted-foreground tabular-nums">
                     ({queryTimeMs.toFixed(0)} ms)
                   </span>
                 )}
               </div>
-              <div className="text-xs text-gray-500 tabular-nums">
+              <div className="text-xs text-muted-foreground tabular-nums">
                 Page {currentPage} of {totalPages}
               </div>
             </div>
@@ -1815,7 +1815,7 @@ export default function ForensicSearchTab() {
               ))}
             </div>
             {temporallyFilteredResults.length === 0 && (temporalStart || temporalEnd) && (
-              <div className="flex flex-col items-center justify-center py-10 text-gray-600">
+              <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
                 <CalendarRange className="h-8 w-8 mb-2 opacity-40" />
                 <p className="text-sm">No results match the selected time window</p>
                 <p className="text-xs mt-1">Adjust or clear the temporal filter above</p>
@@ -1829,10 +1829,10 @@ export default function ForensicSearchTab() {
                   onClick={() => goToPage(currentPage - 1)}
                   disabled={currentPage <= 1}
                   className={cn(
-                    "flex items-center gap-1 rounded-lg border border-gray-700 px-3 py-2 text-xs text-gray-400 transition-colors",
+                    "flex items-center gap-1 rounded-lg border border-border-strong px-3 py-2 text-xs text-muted-foreground transition-colors",
                     currentPage <= 1
                       ? "opacity-40 cursor-not-allowed"
-                      : "hover:border-gray-600 hover:text-gray-200"
+                      : "hover:border-border-strong hover:text-foreground"
                   )}
                 >
                   <ChevronLeft className="h-3.5 w-3.5" />
@@ -1862,7 +1862,7 @@ export default function ForensicSearchTab() {
                             "h-8 w-8 rounded-lg text-xs font-medium transition-colors tabular-nums",
                             pageNum === currentPage
                               ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
-                              : "text-gray-500 hover:text-gray-300 border border-transparent hover:border-gray-700"
+                              : "text-muted-foreground hover:text-foreground border border-transparent hover:border-border-strong"
                           )}
                         >
                           {pageNum}
@@ -1876,10 +1876,10 @@ export default function ForensicSearchTab() {
                   onClick={() => goToPage(currentPage + 1)}
                   disabled={currentPage >= totalPages}
                   className={cn(
-                    "flex items-center gap-1 rounded-lg border border-gray-700 px-3 py-2 text-xs text-gray-400 transition-colors",
+                    "flex items-center gap-1 rounded-lg border border-border-strong px-3 py-2 text-xs text-muted-foreground transition-colors",
                     currentPage >= totalPages
                       ? "opacity-40 cursor-not-allowed"
-                      : "hover:border-gray-600 hover:text-gray-200"
+                      : "hover:border-border-strong hover:text-foreground"
                   )}
                 >
                   Next
@@ -1892,12 +1892,12 @@ export default function ForensicSearchTab() {
 
         {/* ── Empty State ─────────────────────────────────────── */}
         {!loading && !error && results.length === 0 && !crossResult && !objectResult && (
-          <div className="flex flex-col items-center justify-center py-20 text-gray-600">
+          <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
             <Search className="h-12 w-12 mb-4 opacity-30" />
             <p className="text-sm">
               Enter search criteria above and run a query
             </p>
-            <p className="text-xs mt-1 text-gray-700">
+            <p className="text-xs mt-1 text-muted-foreground">
               Results will appear here from indexed video across all cameras
             </p>
           </div>

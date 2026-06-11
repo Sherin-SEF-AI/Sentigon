@@ -81,14 +81,14 @@ export default function SLACountdown({
   return (
     <div className={`rounded-lg border ${colors.bg} ${colors.ring} ring-1 px-3 py-2`}>
       <div className="flex items-center justify-between mb-1">
-        <span className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">
+        <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
           SLA {remaining <= 0 ? "Breached" : "Remaining"}
         </span>
         <span className={`text-sm font-bold ${colors.text} tabular-nums`}>
           {label}
         </span>
       </div>
-      <div className="h-1 rounded-full bg-gray-800">
+      <div className="h-1 rounded-full bg-surface-3">
         <div
           className={`h-1 rounded-full transition-all duration-1000 ${
             remaining <= 0

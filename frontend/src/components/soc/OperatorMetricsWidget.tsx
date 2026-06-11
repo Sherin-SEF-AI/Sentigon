@@ -53,7 +53,7 @@ export function OperatorMetricsWidget({ days = 7, userId }: { days?: number; use
     ? [
         { label: "Alerts handled", value: data.alerts_handled, icon: Activity, color: "text-cyan-400" },
         { label: "Resolved", value: data.resolved, icon: CheckCircle2, color: "text-green-400" },
-        { label: "Dismissed", value: data.dismissed, icon: XCircle, color: "text-gray-400" },
+        { label: "Dismissed", value: data.dismissed, icon: XCircle, color: "text-muted-foreground" },
         { label: "False-positive rate", value: `${data.false_positive_rate}%`, icon: ShieldAlert, color: "text-yellow-400" },
         { label: "Avg response", value: fmtSeconds(data.avg_response_seconds), icon: Clock, color: "text-blue-400" },
       ]

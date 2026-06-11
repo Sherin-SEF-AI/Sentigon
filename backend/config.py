@@ -125,6 +125,18 @@ class Settings(BaseSettings):
     # this many objects per frame to bound cost.
     SAM2_MAX_OBJECTS: int = 5
 
+    # ── Real-time BOLO appearance matching ─────────────────
+    BOLO_REALTIME_ENABLED: bool = True
+    BOLO_MATCH_THRESHOLD: float = 0.82
+
+    # ── ALPR (license-plate OCR via EasyOCR) ───────────────
+    ALPR_ENABLED: bool = True
+    ALPR_GPU: bool = False          # CPU by default to avoid GPU contention with Ollama
+    ALPR_MIN_CONFIDENCE: float = 0.4
+
+    # ── Audio event detection (DSP; pluggable deep model) ──
+    AUDIO_DETECTION_ENABLED: bool = True
+
     # ── Qdrant ────────────────────────────────────────────────
     QDRANT_HOST: str = "localhost"
     QDRANT_PORT: int = 6333

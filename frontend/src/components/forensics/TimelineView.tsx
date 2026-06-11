@@ -32,8 +32,8 @@ export default function TimelineView({ events, className }: TimelineViewProps) {
   if (events.length === 0) {
     return (
       <div className={cn("flex flex-col items-center justify-center py-12 text-center", className)}>
-        <Clock className="mb-3 h-10 w-10 text-gray-700" />
-        <p className="text-sm text-gray-500">No events in timeline</p>
+        <Clock className="mb-3 h-10 w-10 text-muted-foreground" />
+        <p className="text-sm text-muted-foreground">No events in timeline</p>
       </div>
     );
   }
@@ -46,7 +46,7 @@ export default function TimelineView({ events, className }: TimelineViewProps) {
   return (
     <div className={cn("relative pl-6", className)}>
       {/* Vertical line */}
-      <div className="absolute left-[11px] top-0 bottom-0 w-0.5 bg-gray-700" />
+      <div className="absolute left-[11px] top-0 bottom-0 w-0.5 bg-surface-3" />
 
       <div className="space-y-4">
         {sorted.map((event) => {
@@ -64,14 +64,14 @@ export default function TimelineView({ events, className }: TimelineViewProps) {
               {/* Card */}
               <button
                 onClick={() => setExpandedId(isExpanded ? null : event.id)}
-                className="w-full rounded-lg border border-gray-800 bg-gray-900/60 p-3 text-left transition-colors hover:bg-gray-900"
+                className="w-full rounded-lg border border-border bg-surface-2/60 p-3 text-left transition-colors hover:bg-surface-2"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
                     {isExpanded ? (
-                      <ChevronDown className="h-3.5 w-3.5 shrink-0 text-gray-500" />
+                      <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                     ) : (
-                      <ChevronRight className="h-3.5 w-3.5 shrink-0 text-gray-500" />
+                      <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                     )}
                     <span
                       className={cn(
@@ -82,7 +82,7 @@ export default function TimelineView({ events, className }: TimelineViewProps) {
                       {event.event_type}
                     </span>
                   </div>
-                  <span className="flex items-center gap-1 text-[10px] text-gray-500 font-mono shrink-0">
+                  <span className="flex items-center gap-1 text-[10px] text-muted-foreground font-mono shrink-0">
                     <Clock className="h-3 w-3" />
                     {formatTimestamp(event.timestamp)}
                   </span>
@@ -91,7 +91,7 @@ export default function TimelineView({ events, className }: TimelineViewProps) {
                 {event.description && (
                   <p
                     className={cn(
-                      "mt-2 text-xs leading-relaxed text-gray-400",
+                      "mt-2 text-xs leading-relaxed text-muted-foreground",
                       !isExpanded && "line-clamp-2"
                     )}
                   >
@@ -99,7 +99,7 @@ export default function TimelineView({ events, className }: TimelineViewProps) {
                   </p>
                 )}
 
-                <div className="mt-2 flex items-center gap-1 text-[10px] text-gray-600">
+                <div className="mt-2 flex items-center gap-1 text-[10px] text-muted-foreground">
                   <Camera className="h-3 w-3" />
                   <span>{event.camera_id.slice(0, 8)}</span>
                 </div>
@@ -107,33 +107,33 @@ export default function TimelineView({ events, className }: TimelineViewProps) {
 
               {/* Expanded details */}
               {isExpanded && (
-                <div className="mt-1 ml-5 rounded-lg border border-gray-800 bg-gray-900/40 p-3 space-y-2">
+                <div className="mt-1 ml-5 rounded-lg border border-border bg-surface-2/40 p-3 space-y-2">
                   <div className="grid grid-cols-2 gap-2 text-[10px]">
                     <div>
-                      <span className="text-gray-600 uppercase">Event ID</span>
-                      <p className="text-gray-400 font-mono">{event.id.slice(0, 12)}</p>
+                      <span className="text-muted-foreground uppercase">Event ID</span>
+                      <p className="text-muted-foreground font-mono">{event.id.slice(0, 12)}</p>
                     </div>
                     <div>
-                      <span className="text-gray-600 uppercase">Camera</span>
-                      <p className="text-gray-400 font-mono">{event.camera_id}</p>
+                      <span className="text-muted-foreground uppercase">Camera</span>
+                      <p className="text-muted-foreground font-mono">{event.camera_id}</p>
                     </div>
                     <div>
-                      <span className="text-gray-600 uppercase">Severity</span>
+                      <span className="text-muted-foreground uppercase">Severity</span>
                       <p className={severityColor(event.severity)}>{event.severity}</p>
                     </div>
                     <div>
-                      <span className="text-gray-600 uppercase">Timestamp</span>
-                      <p className="text-gray-400">
+                      <span className="text-muted-foreground uppercase">Timestamp</span>
+                      <p className="text-muted-foreground">
                         {new Date(event.timestamp).toLocaleString()}
                       </p>
                     </div>
                   </div>
                   {event.description && (
                     <div>
-                      <span className="text-[10px] text-gray-600 uppercase">
+                      <span className="text-[10px] text-muted-foreground uppercase">
                         Full Description
                       </span>
-                      <p className="mt-1 text-xs leading-relaxed text-gray-300">
+                      <p className="mt-1 text-xs leading-relaxed text-foreground">
                         {event.description}
                       </p>
                     </div>

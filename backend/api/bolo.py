@@ -200,6 +200,41 @@ async def deactivate_bolo(
         raise HTTPException(status_code=500, detail="Failed to deactivate BOLO entry")
 
 
+class EnrollAppearanceRequest(BaseModel):
+    image_base64: str = Field(..., description="Reference image (base64 JPEG/PNG)")
+    bbox: Optional[List[float]] = Field(None, description="[x1,y1,x2,y2]; whole image if omitted")
+
+
+@router.post("/{bolo_id}/enroll-appearance")
+async def enroll_appearance(bolo_id: uuid.UUID, body: EnrollAppearanceRequest, _user=Depends(get_current_user)):
+    """Enroll a person BOLO with a CLIP appearance embedding from a reference
+    image so the real-time matcher can flag this person across cameras."""
+    import base64
+    import cv2
+    import numpy as np
+    from backend.services.appearance_embedder import appearance_embedding
+    from backend.services.bolo_service import bolo_service
+
+    try:
+        raw = base64.b64decode(body.image_base64.split(",", 1)[-1])
+        frame = cv2.imdecode(np.frombuffer(raw, np.uint8), cv2.IMREAD_COLOR)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid image_base64")
+    if frame is None:
+        raise HTTPException(status_code=400, detail="Could not decode image")
+
+    h, w = frame.shape[:2]
+    bbox = body.bbox or [0, 0, w, h]
+    emb = appearance_embedding(frame, bbox)
+    if not emb:
+        raise HTTPException(status_code=422, detail="Could not compute appearance embedding")
+
+    ok = await bolo_service.enroll_appearance(bolo_id, emb)
+    if not ok:
+        raise HTTPException(status_code=404, detail="BOLO not found")
+    return {"enrolled": True, "bolo_id": str(bolo_id), "embedding_dim": len(emb)}
+
+
 @router.get("/{bolo_id}/sightings", response_model=List[dict])
 async def get_bolo_sightings(
     bolo_id: uuid.UUID,

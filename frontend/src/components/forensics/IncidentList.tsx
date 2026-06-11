@@ -49,7 +49,7 @@ interface IncidentListProps {
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
 
-const CARD = "rounded-lg border border-gray-800 bg-gray-900/60 backdrop-blur p-4";
+const CARD = "rounded-lg border border-border bg-surface-2/60 backdrop-blur p-4";
 
 const STATUS_STYLES: Record<string, { color: string; label: string; Icon: typeof Circle }> = {
   recording: { color: "bg-green-500", label: "Recording", Icon: Radio },
@@ -71,7 +71,7 @@ function StatusBadge({ status }: { status: string }) {
   const isRecording = status === "recording";
 
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-800/80 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-gray-300">
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-surface-3/80 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground">
       <span
         className={cn(
           "h-2 w-2 rounded-full",
@@ -127,8 +127,8 @@ function StartRecordingForm({ onClose, onCreated }: { onClose: () => void; onCre
   return (
     <div className={cn(CARD, "mb-4")}>
       <div className="mb-3 flex items-center justify-between">
-        <h4 className="text-sm font-semibold text-gray-200">Start Recording</h4>
-        <button onClick={onClose} className="text-gray-500 hover:text-gray-300">
+        <h4 className="text-sm font-semibold text-foreground">Start Recording</h4>
+        <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
           <X className="h-4 w-4" />
         </button>
       </div>
@@ -141,7 +141,7 @@ function StartRecordingForm({ onClose, onCreated }: { onClose: () => void; onCre
 
       <div className="space-y-3">
         <div>
-          <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-gray-500">
+          <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
             Title
           </label>
           <input
@@ -149,12 +149,12 @@ function StartRecordingForm({ onClose, onCreated }: { onClose: () => void; onCre
             placeholder="Incident title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600"
+            className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-500 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600"
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-gray-500">
+          <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
             Camera IDs (comma-separated)
           </label>
           <input
@@ -162,12 +162,12 @@ function StartRecordingForm({ onClose, onCreated }: { onClose: () => void; onCre
             placeholder="cam-01, cam-02, cam-03"
             value={cameraIds}
             onChange={(e) => setCameraIds(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600"
+            className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-500 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600"
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-gray-500">
+          <label className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
             Pre-buffer (seconds)
           </label>
           <input
@@ -176,7 +176,7 @@ function StartRecordingForm({ onClose, onCreated }: { onClose: () => void; onCre
             max={300}
             value={preBuffer}
             onChange={(e) => setPreBuffer(Number(e.target.value))}
-            className="w-32 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600"
+            className="w-32 rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600"
           />
         </div>
 
@@ -262,8 +262,8 @@ export default function IncidentList({ onSelect, className }: IncidentListProps)
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Film className="h-5 w-5 text-cyan-400" />
-            <h2 className="text-sm font-bold text-gray-100">Incident Replays</h2>
-            <span className="rounded-full bg-gray-800 px-2 py-0.5 text-[10px] font-mono text-gray-400">
+            <h2 className="text-sm font-bold text-foreground">Incident Replays</h2>
+            <span className="rounded-full bg-surface-3 px-2 py-0.5 text-[10px] font-mono text-muted-foreground">
               {filtered.length}
             </span>
           </div>
@@ -282,14 +282,14 @@ export default function IncidentList({ onSelect, className }: IncidentListProps)
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="appearance-none rounded-lg border border-gray-700 bg-gray-800 py-1.5 pl-3 pr-7 text-xs text-gray-300 focus:border-cyan-600 focus:outline-none"
+                className="appearance-none rounded-lg border border-border-strong bg-surface-3 py-1.5 pl-3 pr-7 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
               >
                 <option value="all">All Status</option>
                 <option value="recording">Recording</option>
                 <option value="complete">Complete</option>
                 <option value="archived">Archived</option>
               </select>
-              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-gray-500" />
+              <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground" />
             </div>
 
             {/* Start Recording button */}
@@ -333,9 +333,9 @@ export default function IncidentList({ onSelect, className }: IncidentListProps)
       {/* Empty state */}
       {!loading && filtered.length === 0 && (
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <Film className="mb-3 h-10 w-10 text-gray-700" />
-          <p className="text-sm text-gray-500">No incidents found</p>
-          <p className="mt-1 text-xs text-gray-600">
+          <Film className="mb-3 h-10 w-10 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">No incidents found</p>
+          <p className="mt-1 text-xs text-muted-foreground">
             Start a recording to capture an incident replay
           </p>
         </div>
@@ -347,7 +347,7 @@ export default function IncidentList({ onSelect, className }: IncidentListProps)
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-gray-800 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+                <tr className="border-b border-border text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                   <th className="px-4 py-3">Title</th>
                   <th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3">Start</th>
@@ -357,18 +357,18 @@ export default function IncidentList({ onSelect, className }: IncidentListProps)
                   <th className="px-4 py-3">Trigger</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-800/60">
+              <tbody className="divide-y divide-border/60">
                 {filtered.map((incident) => (
                   <tr
                     key={incident.id}
                     onClick={() => onSelect(incident.id)}
-                    className="cursor-pointer transition-colors hover:bg-gray-800/40"
+                    className="cursor-pointer transition-colors hover:bg-surface-3/40"
                   >
                     {/* Title */}
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Play className="h-3.5 w-3.5 shrink-0 text-cyan-400" />
-                        <span className="font-medium text-gray-200 truncate max-w-[200px]">
+                        <span className="font-medium text-foreground truncate max-w-[200px]">
                           {incident.title}
                         </span>
                       </div>
@@ -381,8 +381,8 @@ export default function IncidentList({ onSelect, className }: IncidentListProps)
 
                     {/* Start time */}
                     <td className="px-4 py-3">
-                      <span className="flex items-center gap-1 text-xs text-gray-400 font-mono">
-                        <Clock className="h-3 w-3 text-gray-600" />
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground font-mono">
+                        <Clock className="h-3 w-3 text-muted-foreground" />
                         {formatTimestamp(incident.start_time)}
                       </span>
                     </td>
@@ -390,24 +390,24 @@ export default function IncidentList({ onSelect, className }: IncidentListProps)
                     {/* End time */}
                     <td className="px-4 py-3">
                       {incident.end_time ? (
-                        <span className="text-xs text-gray-400 font-mono">
+                        <span className="text-xs text-muted-foreground font-mono">
                           {formatTimestamp(incident.end_time)}
                         </span>
                       ) : (
-                        <span className="text-xs text-gray-600">--</span>
+                        <span className="text-xs text-muted-foreground">--</span>
                       )}
                     </td>
 
                     {/* Frames */}
                     <td className="px-4 py-3 text-right">
-                      <span className="font-mono text-xs text-gray-300">
+                      <span className="font-mono text-xs text-foreground">
                         {incident.total_frames.toLocaleString()}
                       </span>
                     </td>
 
                     {/* Agent actions */}
                     <td className="px-4 py-3 text-right">
-                      <span className="flex items-center justify-end gap-1 font-mono text-xs text-gray-300">
+                      <span className="flex items-center justify-end gap-1 font-mono text-xs text-foreground">
                         <Zap className="h-3 w-3 text-amber-400" />
                         {incident.total_agent_actions}
                       </span>
@@ -419,7 +419,7 @@ export default function IncidentList({ onSelect, className }: IncidentListProps)
                         className={cn(
                           "inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
                           TRIGGER_STYLES[incident.trigger_type] ||
-                            "bg-gray-800/40 text-gray-400 border-gray-700/40"
+                            "bg-surface-3/40 text-muted-foreground border-border-strong/40"
                         )}
                       >
                         {incident.trigger_type === "alert" && (

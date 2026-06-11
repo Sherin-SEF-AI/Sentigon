@@ -146,7 +146,7 @@ const NEXT_STATUSES: Record<
       status: "available",
       label: "Reassign",
       color:
-        "bg-gray-700/40 border border-gray-600/50 text-gray-300 hover:bg-gray-600/50",
+        "bg-surface-3/40 border border-border-strong/50 text-foreground hover:bg-gray-600/50",
     },
   ],
   en_route: [
@@ -160,7 +160,7 @@ const NEXT_STATUSES: Record<
       status: "available",
       label: "Reassign",
       color:
-        "bg-gray-700/40 border border-gray-600/50 text-gray-300 hover:bg-gray-600/50",
+        "bg-surface-3/40 border border-border-strong/50 text-foreground hover:bg-gray-600/50",
     },
   ],
   on_scene: [
@@ -188,23 +188,23 @@ function DispatchAnalyticsRow({ analytics }: { analytics: DispatchAnalytics }) {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {/* Total Dispatches 24h */}
-      <div className="rounded-xl border border-gray-800 bg-gray-900/50 px-4 py-3">
+      <div className="rounded-xl border border-border bg-surface-2/50 px-4 py-3">
         <div className="flex items-center gap-2 mb-1">
           <Activity className="h-3.5 w-3.5 text-cyan-400" />
-          <span className="text-[10px] uppercase tracking-wider text-gray-500">
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
             Dispatches (24h)
           </span>
         </div>
-        <div className="text-xl font-bold text-gray-100">
+        <div className="text-xl font-bold text-foreground">
           {analytics.totalDispatches24h}
         </div>
       </div>
 
       {/* Avg Response Time */}
-      <div className="rounded-xl border border-gray-800 bg-gray-900/50 px-4 py-3">
+      <div className="rounded-xl border border-border bg-surface-2/50 px-4 py-3">
         <div className="flex items-center gap-2 mb-1">
           <Timer className="h-3.5 w-3.5 text-blue-400" />
-          <span className="text-[10px] uppercase tracking-wider text-gray-500">
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
             Avg Response Time
           </span>
         </div>
@@ -212,7 +212,7 @@ function DispatchAnalyticsRow({ analytics }: { analytics: DispatchAnalytics }) {
           className={cn(
             "text-xl font-bold",
             analytics.avgResponseMinutes == null
-              ? "text-gray-500"
+              ? "text-muted-foreground"
               : analytics.avgResponseMinutes < 5
               ? "text-green-400"
               : analytics.avgResponseMinutes <= 15
@@ -227,10 +227,10 @@ function DispatchAnalyticsRow({ analytics }: { analytics: DispatchAnalytics }) {
       </div>
 
       {/* Resources Available */}
-      <div className="rounded-xl border border-gray-800 bg-gray-900/50 px-4 py-3">
+      <div className="rounded-xl border border-border bg-surface-2/50 px-4 py-3">
         <div className="flex items-center gap-2 mb-1">
           <Users className="h-3.5 w-3.5 text-green-400" />
-          <span className="text-[10px] uppercase tracking-wider text-gray-500">
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
             Available
           </span>
         </div>
@@ -240,10 +240,10 @@ function DispatchAnalyticsRow({ analytics }: { analytics: DispatchAnalytics }) {
       </div>
 
       {/* Active Dispatches */}
-      <div className="rounded-xl border border-gray-800 bg-gray-900/50 px-4 py-3">
+      <div className="rounded-xl border border-border bg-surface-2/50 px-4 py-3">
         <div className="flex items-center gap-2 mb-1">
           <TrendingUp className="h-3.5 w-3.5 text-orange-400" />
-          <span className="text-[10px] uppercase tracking-wider text-gray-500">
+          <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
             Active Dispatches
           </span>
         </div>
@@ -278,8 +278,8 @@ function SuggestedResourcesPanel({
 
   if (suggested.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-gray-700 bg-gray-900/20 px-4 py-5 text-center">
-        <p className="text-xs text-gray-600">No available resources to suggest</p>
+      <div className="rounded-lg border border-dashed border-border-strong bg-surface-2/20 px-4 py-5 text-center">
+        <p className="text-xs text-muted-foreground">No available resources to suggest</p>
       </div>
     );
   }
@@ -291,19 +291,19 @@ function SuggestedResourcesPanel({
         return (
           <div
             key={r.id}
-            className="flex items-center gap-3 rounded-lg border border-gray-800 bg-gray-900/60 px-3 py-2.5"
+            className="flex items-center gap-3 rounded-lg border border-border bg-surface-2/60 px-3 py-2.5"
           >
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gray-800 text-[10px] font-bold text-gray-400">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-surface-3 text-[10px] font-bold text-muted-foreground">
               {idx + 1}
             </span>
             <span className={cn("shrink-0", typeConfig.color)}>
               {typeConfig.icon}
             </span>
             <div className="min-w-0 flex-1">
-              <div className="text-xs font-medium text-gray-200 truncate">
+              <div className="text-xs font-medium text-foreground truncate">
                 {r.name}
               </div>
-              <div className="text-[10px] text-gray-500 capitalize">
+              <div className="text-[10px] text-muted-foreground capitalize">
                 {r.resource_type === "ems" ? "EMS" : r.resource_type}
                 {r.updated_at && (
                   <> · freed {new Date(r.updated_at).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false })}</>
@@ -360,17 +360,17 @@ function ResourceStatusBar({
           <div
             key={type}
             className={cn(
-              "rounded-xl border bg-gray-900/50 p-4 transition-all",
+              "rounded-xl border bg-surface-2/50 p-4 transition-all",
               config.bgColor
             )}
           >
             {/* Header */}
             <div className="flex items-center gap-2 mb-3">
               <span className={config.color}>{config.icon}</span>
-              <h3 className="text-sm font-semibold capitalize text-gray-200">
+              <h3 className="text-sm font-semibold capitalize text-foreground">
                 {type === "ems" ? "EMS" : type}
               </h3>
-              <span className="ml-auto text-lg font-bold text-gray-300">
+              <span className="ml-auto text-lg font-bold text-foreground">
                 {typeResources.length}
               </span>
             </div>
@@ -380,7 +380,7 @@ function ResourceStatusBar({
               <div className="flex items-center justify-between text-[11px]">
                 <span className="flex items-center gap-1.5">
                   <span className="h-2 w-2 rounded-full bg-green-400" />
-                  <span className="text-gray-500">Available</span>
+                  <span className="text-muted-foreground">Available</span>
                 </span>
                 <span className="font-semibold text-green-400">
                   {available}
@@ -389,7 +389,7 @@ function ResourceStatusBar({
               <div className="flex items-center justify-between text-[11px]">
                 <span className="flex items-center gap-1.5">
                   <span className="h-2 w-2 rounded-full bg-yellow-400" />
-                  <span className="text-gray-500">Dispatched</span>
+                  <span className="text-muted-foreground">Dispatched</span>
                 </span>
                 <span className="font-semibold text-yellow-400">
                   {dispatched}
@@ -398,7 +398,7 @@ function ResourceStatusBar({
               <div className="flex items-center justify-between text-[11px]">
                 <span className="flex items-center gap-1.5">
                   <span className="h-2 w-2 rounded-full bg-orange-400" />
-                  <span className="text-gray-500">En Route</span>
+                  <span className="text-muted-foreground">En Route</span>
                 </span>
                 <span className="font-semibold text-orange-400">
                   {enRoute}
@@ -407,7 +407,7 @@ function ResourceStatusBar({
               <div className="flex items-center justify-between text-[11px]">
                 <span className="flex items-center gap-1.5">
                   <span className="h-2 w-2 rounded-full bg-red-400" />
-                  <span className="text-gray-500">On Scene</span>
+                  <span className="text-muted-foreground">On Scene</span>
                 </span>
                 <span className="font-semibold text-red-400">{onScene}</span>
               </div>
@@ -481,14 +481,14 @@ function CreateResourceModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="w-full max-w-lg rounded-xl border border-gray-700 bg-gray-900 p-6 shadow-2xl">
+      <div className="w-full max-w-lg rounded-xl border border-border-strong bg-surface-2 p-6 shadow-2xl">
         <div className="mb-5 flex items-center justify-between">
-          <h3 className="text-base font-semibold text-gray-100">
+          <h3 className="text-base font-semibold text-foreground">
             Add Dispatch Resource
           </h3>
           <button
             onClick={onClose}
-            className="rounded-md p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+            className="rounded-md p-1 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             <X className="h-4 w-4" />
           </button>
@@ -497,7 +497,7 @@ function CreateResourceModal({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name */}
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-400">
+            <label className="mb-1 block text-xs font-medium text-muted-foreground">
               Resource Name *
             </label>
             <input
@@ -505,14 +505,14 @@ function CreateResourceModal({
               value={form.name}
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
               placeholder="e.g. Unit Alpha-7"
-              className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
+              className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
               required
             />
           </div>
 
           {/* Type */}
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-400">
+            <label className="mb-1 block text-xs font-medium text-muted-foreground">
               Resource Type
             </label>
             <select
@@ -523,7 +523,7 @@ function CreateResourceModal({
                   resource_type: e.target.value as CreateResourceFormData["resource_type"],
                 }))
               }
-              className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 focus:border-cyan-600 focus:outline-none"
+              className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground focus:border-cyan-600 focus:outline-none"
             >
               <option value="security">Security</option>
               <option value="police">Police</option>
@@ -534,7 +534,7 @@ function CreateResourceModal({
 
           {/* Status */}
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-400">
+            <label className="mb-1 block text-xs font-medium text-muted-foreground">
               Initial Status
             </label>
             <select
@@ -545,7 +545,7 @@ function CreateResourceModal({
                   status: e.target.value as CreateResourceFormData["status"],
                 }))
               }
-              className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 focus:border-cyan-600 focus:outline-none"
+              className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground focus:border-cyan-600 focus:outline-none"
             >
               <option value="available">Available</option>
               <option value="dispatched">Dispatched</option>
@@ -556,7 +556,7 @@ function CreateResourceModal({
 
           {/* ETA */}
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-400">
+            <label className="mb-1 block text-xs font-medium text-muted-foreground">
               ETA (minutes, optional)
             </label>
             <input
@@ -567,14 +567,14 @@ function CreateResourceModal({
                 setForm((f) => ({ ...f, eta_minutes: e.target.value }))
               }
               placeholder="e.g. 8"
-              className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
+              className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-2 text-sm text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
             />
           </div>
 
           {/* Suggested Resources section */}
           {availableResources.length > 0 && (
             <div>
-              <label className="mb-2 flex items-center gap-1.5 text-xs font-medium text-gray-400">
+              <label className="mb-2 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                 <Sparkles className="h-3.5 w-3.5 text-cyan-500" />
                 Suggested Available Resources
               </label>
@@ -588,7 +588,7 @@ function CreateResourceModal({
               type="button"
               onClick={onClose}
               disabled={submitting}
-              className="flex-1 rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors disabled:opacity-50"
+              className="flex-1 rounded-lg border border-border-strong px-4 py-2 text-sm text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors disabled:opacity-50"
             >
               Cancel
             </button>
@@ -665,12 +665,12 @@ function RecommendPanel({ availableResources }: { availableResources: DispatchRe
   };
 
   return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6">
+    <div className="rounded-xl border border-border bg-surface-2/50 p-6">
       <div className="mb-4">
-        <h3 className="text-sm font-semibold text-gray-200">
+        <h3 className="text-sm font-semibold text-foreground">
           AI Dispatch Recommendation
         </h3>
-        <p className="mt-0.5 text-xs text-gray-500">
+        <p className="mt-0.5 text-xs text-muted-foreground">
           Analyze current incidents and resource availability to suggest
           optimal dispatch assignments
         </p>
@@ -679,7 +679,7 @@ function RecommendPanel({ availableResources }: { availableResources: DispatchRe
       {/* Inputs */}
       <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-500">
+          <label className="mb-1 block text-xs font-medium text-muted-foreground">
             Alert ID *
           </label>
           <input
@@ -687,11 +687,11 @@ function RecommendPanel({ availableResources }: { availableResources: DispatchRe
             value={alertId}
             onChange={(e) => setAlertId(e.target.value)}
             placeholder="UUID of the alert"
-            className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-100 placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-1.5 text-xs text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-500">
+          <label className="mb-1 block text-xs font-medium text-muted-foreground">
             Threat Type
           </label>
           <input
@@ -699,17 +699,17 @@ function RecommendPanel({ availableResources }: { availableResources: DispatchRe
             value={threatType}
             onChange={(e) => setThreatType(e.target.value)}
             placeholder="e.g. intrusion, weapon"
-            className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-100 placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-1.5 text-xs text-foreground placeholder-gray-600 focus:border-cyan-600 focus:outline-none"
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-500">
+          <label className="mb-1 block text-xs font-medium text-muted-foreground">
             Severity
           </label>
           <select
             value={severity}
             onChange={(e) => setSeverity(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-1.5 text-xs text-gray-100 focus:border-cyan-600 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong bg-surface-3 px-3 py-1.5 text-xs text-foreground focus:border-cyan-600 focus:outline-none"
           >
             <option value="critical">Critical</option>
             <option value="high">High</option>
@@ -723,7 +723,7 @@ function RecommendPanel({ availableResources }: { availableResources: DispatchRe
         {/* Suggested Resources toggle */}
         <button
           onClick={() => setShowSuggestions((v) => !v)}
-          className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+          className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
         >
           <Sparkles className="h-3.5 w-3.5 text-cyan-500" />
           {showSuggestions ? "Hide" : "Show"} Suggested Resources
@@ -755,8 +755,8 @@ function RecommendPanel({ availableResources }: { availableResources: DispatchRe
 
       {/* Suggested Resources */}
       {showSuggestions && (
-        <div className="mt-4 rounded-lg border border-gray-800 bg-gray-950/40 p-4">
-          <h4 className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400">
+        <div className="mt-4 rounded-lg border border-border bg-surface-0/40 p-4">
+          <h4 className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             <Sparkles className="h-3.5 w-3.5 text-cyan-500" />
             Suggested Resources (Most Recently Available)
           </h4>
@@ -892,18 +892,18 @@ export default function DispatchPage() {
 
   /* --- Render --- */
   return (
-    <div className="flex h-full flex-col bg-gray-950">
+    <div className="flex h-full flex-col bg-surface-0">
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-900/30 border border-red-800/50">
             <Siren className="h-5 w-5 text-red-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Emergency Dispatch
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Coordinate and deploy emergency response resources in real-time
             </p>
           </div>
@@ -911,21 +911,21 @@ export default function DispatchPage() {
 
         {/* Right side: quick stats + actions */}
         <div className="flex items-center gap-4">
-          <div className="hidden items-center gap-4 text-xs text-gray-500 md:flex">
+          <div className="hidden items-center gap-4 text-xs text-muted-foreground md:flex">
             <span>
-              <span className="font-semibold text-gray-300">
+              <span className="font-semibold text-foreground">
                 {totalResources}
               </span>{" "}
               resources
             </span>
-            <span className="text-gray-700">|</span>
+            <span className="text-muted-foreground">|</span>
             <span>
               <span className="font-semibold text-green-400">
                 {availableCount}
               </span>{" "}
               available
             </span>
-            <span className="text-gray-700">|</span>
+            <span className="text-muted-foreground">|</span>
             <span>
               <span className="font-semibold text-orange-400">
                 {activeCount}
@@ -937,7 +937,7 @@ export default function DispatchPage() {
           <button
             onClick={fetchData}
             disabled={loading}
-            className="flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-lg border border-border-strong px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors disabled:opacity-50"
           >
             <RefreshCw className={cn("h-3.5 w-3.5", loading && "animate-spin")} />
             Refresh
@@ -957,7 +957,7 @@ export default function DispatchPage() {
       {loading && (
         <div className="flex flex-1 items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-          <span className="ml-3 text-sm text-gray-500">
+          <span className="ml-3 text-sm text-muted-foreground">
             Loading dispatch resources...
           </span>
         </div>
@@ -970,7 +970,7 @@ export default function DispatchPage() {
           <p className="text-sm text-red-400">{error}</p>
           <button
             onClick={fetchData}
-            className="mt-4 flex items-center gap-2 rounded-lg border border-gray-700 px-4 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="mt-4 flex items-center gap-2 rounded-lg border border-border-strong px-4 py-2 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             Retry
@@ -989,13 +989,13 @@ export default function DispatchPage() {
           <ResourceStatusBar resources={resources} />
 
           {/* Resource Table */}
-          <div className="rounded-xl border border-gray-800 bg-gray-900/50">
-            <div className="flex items-center justify-between border-b border-gray-800 px-5 py-3">
+          <div className="rounded-xl border border-border bg-surface-2/50">
+            <div className="flex items-center justify-between border-b border-border px-5 py-3">
               <h2 className="flex items-center gap-2 text-sm font-semibold text-cyan-400">
                 <Radio className="h-4 w-4" />
                 All Resources
               </h2>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-muted-foreground">
                 {resources.length} total
               </span>
             </div>
@@ -1003,7 +1003,7 @@ export default function DispatchPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-800 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <tr className="border-b border-border text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                     <th className="px-5 py-3">Name</th>
                     <th className="px-5 py-3">Type</th>
                     <th className="px-5 py-3">Status</th>
@@ -1018,7 +1018,7 @@ export default function DispatchPage() {
                     <tr>
                       <td
                         colSpan={7}
-                        className="px-5 py-10 text-center text-gray-600"
+                        className="px-5 py-10 text-center text-muted-foreground"
                       >
                         No dispatch resources available
                       </td>
@@ -1038,13 +1038,13 @@ export default function DispatchPage() {
                     return (
                       <tr
                         key={resource.id}
-                        className="border-b border-gray-800/50 transition-colors hover:bg-gray-900/80"
+                        className="border-b border-border/50 transition-colors hover:bg-surface-2/80"
                       >
                         {/* Name */}
                         <td className="px-5 py-3">
                           <div className="flex items-center gap-2">
-                            <Truck className="h-3.5 w-3.5 text-gray-600" />
-                            <span className="text-sm font-medium text-gray-200">
+                            <Truck className="h-3.5 w-3.5 text-muted-foreground" />
+                            <span className="text-sm font-medium text-foreground">
                               {resource.name}
                             </span>
                           </div>
@@ -1091,8 +1091,8 @@ export default function DispatchPage() {
 
                         {/* Location */}
                         <td className="px-5 py-3">
-                          <span className="flex items-center gap-1 text-xs text-gray-400">
-                            <MapPin className="h-3 w-3 text-gray-600" />
+                          <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                            <MapPin className="h-3 w-3 text-muted-foreground" />
                             {formatLocation(resource.current_location)}
                           </span>
                         </td>
@@ -1101,7 +1101,7 @@ export default function DispatchPage() {
                         <td className="px-5 py-3">
                           {resource.eta_minutes != null ? (
                             <span className="flex items-center gap-1 text-xs">
-                              <Clock className="h-3 w-3 text-gray-600" />
+                              <Clock className="h-3 w-3 text-muted-foreground" />
                               <span
                                 className={cn(
                                   "font-mono font-semibold",
@@ -1114,10 +1114,10 @@ export default function DispatchPage() {
                               >
                                 {resource.eta_minutes}
                               </span>
-                              <span className="text-gray-600">min</span>
+                              <span className="text-muted-foreground">min</span>
                             </span>
                           ) : (
-                            <span className="text-xs text-gray-600">---</span>
+                            <span className="text-xs text-muted-foreground">---</span>
                           )}
                         </td>
 
@@ -1139,7 +1139,7 @@ export default function DispatchPage() {
                               );
                             })()
                           ) : (
-                            <span className="text-xs text-gray-600">---</span>
+                            <span className="text-xs text-muted-foreground">---</span>
                           )}
                         </td>
 
@@ -1180,7 +1180,7 @@ export default function DispatchPage() {
                               );
                             })}
                             {nextActions.length === 0 && (
-                              <span className="text-[10px] text-gray-700 italic">
+                              <span className="text-[10px] text-muted-foreground italic">
                                 —
                               </span>
                             )}

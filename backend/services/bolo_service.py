@@ -192,6 +192,31 @@ class BOLOService:
             logger.error("Failed to deactivate BOLO %s: %s", bolo_id, exc, exc_info=True)
             return False
 
+    async def enroll_appearance(self, bolo_id: uuid.UUID, embedding: List[float]) -> bool:
+        """Store a CLIP appearance embedding on a person BOLO (in description JSONB)
+        so the real-time matcher can match detected people against it."""
+        try:
+            from backend.database import async_session
+            from backend.models.phase2_models import BOLOEntry
+
+            async with async_session() as session:
+                entry = await session.get(BOLOEntry, bolo_id)
+                if entry is None:
+                    return False
+                desc = dict(entry.description or {})
+                desc["appearance_embedding"] = list(embedding)
+                entry.description = desc
+                # JSONB needs an explicit reassignment to be flagged dirty
+                from sqlalchemy.orm.attributes import flag_modified
+                flag_modified(entry, "description")
+                entry.updated_at = datetime.now(timezone.utc)
+                await session.commit()
+                logger.info("BOLO %s enrolled with %d-d appearance embedding", bolo_id, len(embedding))
+                return True
+        except Exception as exc:
+            logger.error("Failed to enroll BOLO appearance %s: %s", bolo_id, exc, exc_info=True)
+            return False
+
     # ── Fuzzy plate matching ─────────────────────────────────────
 
     async def check_plate_match(self, plate_text: str) -> List[Dict[str, Any]]:

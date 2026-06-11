@@ -41,8 +41,8 @@ const STATUS_STYLES: Record<string, { dot: string; text: string; bg: string }> =
   },
   stopped: {
     dot: "bg-gray-500",
-    text: "text-gray-400",
-    bg: "bg-gray-800 border-gray-700",
+    text: "text-muted-foreground",
+    bg: "bg-surface-3 border-border-strong",
   },
   error: {
     dot: "bg-red-500",
@@ -109,20 +109,20 @@ export default function AgentControlPanel({
   );
 
   const st = STATUS_STYLES[currentStatus] || STATUS_STYLES.stopped;
-  const tierColor = TIER_COLORS[status.tier || ""] || "text-gray-400";
+  const tierColor = TIER_COLORS[status.tier || ""] || "text-muted-foreground";
 
   return (
     <div
       className={cn(
-        "rounded-lg border border-gray-800 bg-gray-900/60",
+        "rounded-lg border border-border bg-surface-2/60",
         className
       )}
     >
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-gray-800 px-4 py-3">
+      <div className="flex items-center gap-3 border-b border-border px-4 py-3">
         <Cpu className="h-4 w-4 text-cyan-400" />
         <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-semibold text-gray-200">
+          <h3 className="text-sm font-semibold text-foreground">
             {status.display_name || agentName}
           </h3>
           {status.tier && (
@@ -159,7 +159,7 @@ export default function AgentControlPanel({
       <div className="px-4 py-3 space-y-3">
         {/* Description */}
         {status.description && (
-          <p className="text-xs text-gray-400 leading-relaxed">
+          <p className="text-xs text-muted-foreground leading-relaxed">
             {status.description}
           </p>
         )}
@@ -168,24 +168,24 @@ export default function AgentControlPanel({
         <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
           {status.model && (
             <>
-              <span className="text-gray-500">Model</span>
-              <span className="truncate font-mono text-gray-300">
+              <span className="text-muted-foreground">Model</span>
+              <span className="truncate font-mono text-foreground">
                 {status.model}
               </span>
             </>
           )}
           {status.cycle_count != null && (
             <>
-              <span className="text-gray-500">Cycles</span>
-              <span className="font-mono text-gray-300">
+              <span className="text-muted-foreground">Cycles</span>
+              <span className="font-mono text-foreground">
                 {status.cycle_count.toLocaleString()}
               </span>
             </>
           )}
           {status.uptime_seconds != null && (
             <>
-              <span className="text-gray-500">Uptime</span>
-              <span className="font-mono text-gray-300">
+              <span className="text-muted-foreground">Uptime</span>
+              <span className="font-mono text-foreground">
                 {Math.floor(status.uptime_seconds / 3600)}h{" "}
                 {Math.floor((status.uptime_seconds % 3600) / 60)}m
               </span>
@@ -193,7 +193,7 @@ export default function AgentControlPanel({
           )}
           {status.error_count != null && status.error_count > 0 && (
             <>
-              <span className="text-gray-500">Errors</span>
+              <span className="text-muted-foreground">Errors</span>
               <span className="font-semibold text-red-400">
                 {status.error_count}
               </span>
@@ -266,8 +266,8 @@ export default function AgentControlPanel({
             disabled={loadingAction !== null}
             className={cn(
               "flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold transition-colors",
-              "bg-gray-800 text-gray-400 border border-gray-700",
-              "hover:bg-gray-700 hover:text-gray-300",
+              "bg-surface-3 text-muted-foreground border border-border-strong",
+              "hover:bg-surface-3 hover:text-foreground",
               "disabled:opacity-40 disabled:cursor-not-allowed"
             )}
           >

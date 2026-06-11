@@ -66,8 +66,8 @@ function MessageBubble({ message }: { message: ChatMessage }) {
         className={cn(
           "max-w-[80%] rounded-lg px-3.5 py-2.5 text-sm leading-relaxed",
           isOperator
-            ? "bg-gray-800 text-gray-200 rounded-br-sm"
-            : "bg-cyan-900/30 border border-cyan-800/30 text-gray-200 rounded-bl-sm"
+            ? "bg-surface-3 text-foreground rounded-br-sm"
+            : "bg-cyan-900/30 border border-cyan-800/30 text-foreground rounded-bl-sm"
         )}
       >
         {/* Message content */}
@@ -75,7 +75,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 
         {/* Tool calls */}
         {message.tool_calls && message.tool_calls.length > 0 && (
-          <div className="mt-2 border-t border-gray-700/50 pt-2">
+          <div className="mt-2 border-t border-border-strong/50 pt-2">
             <button
               onClick={() => setToolsExpanded(!toolsExpanded)}
               className="flex items-center gap-1.5 text-[11px] font-semibold text-blue-400 hover:text-blue-300 transition-colors"
@@ -95,13 +95,13 @@ function MessageBubble({ message }: { message: ChatMessage }) {
                 {message.tool_calls.map((tc, i) => (
                   <div
                     key={i}
-                    className="rounded border border-gray-800 bg-gray-950/60 px-2.5 py-1.5"
+                    className="rounded border border-border bg-surface-0/60 px-2.5 py-1.5"
                   >
                     <p className="font-mono text-[11px] text-blue-300">
                       {tc.name}
                     </p>
                     {tc.result && (
-                      <p className="mt-0.5 text-[11px] text-gray-500 line-clamp-3">
+                      <p className="mt-0.5 text-[11px] text-muted-foreground line-clamp-3">
                         {tc.result}
                       </p>
                     )}
@@ -116,7 +116,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
         <p
           className={cn(
             "mt-1 text-[10px]",
-            isOperator ? "text-gray-500 text-right" : "text-cyan-700"
+            isOperator ? "text-muted-foreground text-right" : "text-cyan-700"
           )}
         >
           {new Date(message.timestamp).toLocaleTimeString("en-US", {
@@ -129,8 +129,8 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 
       {/* Avatar for operator */}
       {isOperator && (
-        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-800 border border-gray-700">
-          <User className="h-3.5 w-3.5 text-gray-400" />
+        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-surface-3 border border-border-strong">
+          <User className="h-3.5 w-3.5 text-muted-foreground" />
         </div>
       )}
     </div>
@@ -221,14 +221,14 @@ export default function AgentChatInterface({
   return (
     <div
       className={cn(
-        "flex flex-col rounded-lg border border-gray-800 bg-gray-950",
+        "flex flex-col rounded-lg border border-border bg-surface-0",
         className
       )}
     >
       {/* Header */}
-      <div className="flex items-center gap-2 border-b border-gray-800 px-4 py-3">
+      <div className="flex items-center gap-2 border-b border-border px-4 py-3">
         <MessageSquare className="h-4 w-4 text-cyan-400" />
-        <h3 className="text-sm font-semibold text-gray-200">
+        <h3 className="text-sm font-semibold text-foreground">
           Operator Chat
         </h3>
         <span className="rounded-full bg-cyan-900/30 border border-cyan-800/40 px-2 py-0.5 text-[10px] font-semibold text-cyan-400">
@@ -247,10 +247,10 @@ export default function AgentChatInterface({
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-cyan-900/20 border border-cyan-800/30 mb-3">
               <Sparkles className="h-7 w-7 text-cyan-400" />
             </div>
-            <p className="text-sm font-medium text-gray-400 mb-1">
+            <p className="text-sm font-medium text-muted-foreground mb-1">
               Sentinel Cortex
             </p>
-            <p className="text-xs text-gray-600 text-center max-w-[260px]">
+            <p className="text-xs text-muted-foreground text-center max-w-[260px]">
               Ask about security status, active threats, or issue commands to
               the agent fleet
             </p>
@@ -263,7 +263,7 @@ export default function AgentChatInterface({
                   onClick={() => handleSend(q)}
                   disabled={sending}
                   className={cn(
-                    "rounded-full border border-gray-700 bg-gray-900 px-3 py-1.5 text-xs text-gray-400 transition-colors",
+                    "rounded-full border border-border-strong bg-surface-2 px-3 py-1.5 text-xs text-muted-foreground transition-colors",
                     "hover:border-cyan-700 hover:bg-cyan-900/20 hover:text-cyan-300",
                     "disabled:opacity-50 disabled:cursor-not-allowed"
                   )}
@@ -296,12 +296,12 @@ export default function AgentChatInterface({
 
       {/* Suggested queries (when there are messages) */}
       {messages.length > 0 && !sending && (
-        <div className="flex items-center gap-1.5 border-t border-gray-800/50 px-4 py-2 overflow-x-auto">
+        <div className="flex items-center gap-1.5 border-t border-border/50 px-4 py-2 overflow-x-auto">
           {SUGGESTED_QUERIES.map((q) => (
             <button
               key={q}
               onClick={() => handleSend(q)}
-              className="shrink-0 rounded-full border border-gray-800 bg-gray-900/60 px-2.5 py-1 text-[11px] text-gray-500 hover:border-cyan-700 hover:text-cyan-400 transition-colors"
+              className="shrink-0 rounded-full border border-border bg-surface-2/60 px-2.5 py-1 text-[11px] text-muted-foreground hover:border-cyan-700 hover:text-cyan-400 transition-colors"
             >
               {q}
             </button>
@@ -312,7 +312,7 @@ export default function AgentChatInterface({
       {/* Input bar */}
       <form
         onSubmit={handleSubmit}
-        className="flex items-center gap-2 border-t border-gray-800 px-4 py-3"
+        className="flex items-center gap-2 border-t border-border px-4 py-3"
       >
         <input
           ref={inputRef}
@@ -322,7 +322,7 @@ export default function AgentChatInterface({
           placeholder="Ask Sentinel Cortex..."
           disabled={sending}
           className={cn(
-            "flex-1 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200",
+            "flex-1 rounded-lg border border-border-strong bg-surface-2 px-3 py-2 text-sm text-foreground",
             "placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700",
             "disabled:opacity-60"
           )}

@@ -70,13 +70,13 @@ export default function SemanticSearchBar({
   return (
     <div ref={containerRef} className={cn("relative", className)}>
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search security events..."
-          className="w-full rounded-lg border border-gray-700 bg-gray-900 pl-10 pr-10 py-2.5 text-sm text-gray-100 placeholder-gray-500 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600"
+          className="w-full rounded-lg border border-border-strong bg-surface-2 pl-10 pr-10 py-2.5 text-sm text-foreground placeholder-gray-500 focus:border-cyan-600 focus:outline-none focus:ring-1 focus:ring-cyan-600"
           onFocus={() => results.length > 0 && setShowDropdown(true)}
         />
         {loading && (
@@ -86,9 +86,9 @@ export default function SemanticSearchBar({
 
       {/* Dropdown results */}
       {showDropdown && (
-        <div className="absolute z-50 mt-1 w-full rounded-lg border border-gray-700 bg-gray-900 shadow-xl max-h-80 overflow-y-auto">
+        <div className="absolute z-50 mt-1 w-full rounded-lg border border-border-strong bg-surface-2 shadow-xl max-h-80 overflow-y-auto">
           {results.length === 0 ? (
-            <div className="p-4 text-center text-xs text-gray-500">
+            <div className="p-4 text-center text-xs text-muted-foreground">
               No results found
             </div>
           ) : (
@@ -96,7 +96,7 @@ export default function SemanticSearchBar({
               <button
                 key={r.event_id}
                 onClick={() => handleSelect(r)}
-                className="flex w-full items-start gap-3 border-b border-gray-800 p-3 text-left transition-colors hover:bg-gray-800/60 last:border-b-0"
+                className="flex w-full items-start gap-3 border-b border-border p-3 text-left transition-colors hover:bg-surface-3/60 last:border-b-0"
               >
                 {/* Event type badge */}
                 <span className="mt-0.5 shrink-0 rounded bg-cyan-900/30 px-1.5 py-0.5 text-[10px] font-bold uppercase text-cyan-400">
@@ -104,10 +104,10 @@ export default function SemanticSearchBar({
                 </span>
 
                 <div className="flex-1 min-w-0">
-                  <p className="truncate text-sm text-gray-200">
+                  <p className="truncate text-sm text-foreground">
                     {r.description || "No description"}
                   </p>
-                  <div className="mt-1 flex items-center gap-3 text-[10px] text-gray-500">
+                  <div className="mt-1 flex items-center gap-3 text-[10px] text-muted-foreground">
                     {r.timestamp && (
                       <span className="flex items-center gap-1">
                         <Clock className="h-3 w-3" />

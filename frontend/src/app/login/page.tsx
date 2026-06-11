@@ -38,10 +38,10 @@ export default function LoginPage() {
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-cyan-900/30 border border-cyan-800/50">
             <Shield className="h-8 w-8 text-cyan-400" />
           </div>
-          <h1 className="text-xl font-bold tracking-widest text-gray-100 uppercase">
+          <h1 className="text-xl font-bold tracking-widest text-foreground uppercase">
             Sentinel AI
           </h1>
-          <p className="text-xs text-gray-500 tracking-wider uppercase">
+          <p className="text-xs text-muted-foreground tracking-wider uppercase">
             Security Operations Center
           </p>
         </div>
@@ -55,21 +55,21 @@ export default function LoginPage() {
           )}
 
           <div>
-            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-gray-400">
+            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Email
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 px-4 py-2.5 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
               placeholder="admin@sentinel.local"
               required
             />
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-gray-400">
+            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Password
             </label>
             <div className="relative">
@@ -77,14 +77,14 @@ export default function LoginPage() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 pr-10 text-sm text-gray-100 placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
+                className="w-full rounded-lg border border-border-strong bg-surface-2 px-4 py-2.5 pr-10 text-sm text-foreground placeholder-gray-600 focus:border-cyan-700 focus:outline-none focus:ring-1 focus:ring-cyan-700"
                 placeholder="Enter password"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -101,7 +101,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="text-center text-[10px] text-gray-600">
+        <p className="text-center text-[10px] text-muted-foreground">
           SENTINEL AI — Autonomous Security Intelligence
         </p>
       </div>

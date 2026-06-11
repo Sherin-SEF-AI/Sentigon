@@ -142,7 +142,7 @@ function Skeleton({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "animate-pulse rounded bg-gray-800/60",
+        "animate-pulse rounded bg-surface-3/60",
         className
       )}
     />
@@ -151,7 +151,7 @@ function Skeleton({ className }: { className?: string }) {
 
 function CardSkeleton() {
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-5 space-y-3">
+    <div className="rounded-lg border border-border bg-surface-2/50 p-5 space-y-3">
       <Skeleton className="h-4 w-2/3" />
       <Skeleton className="h-3 w-full" />
       <Skeleton className="h-3 w-4/5" />
@@ -179,13 +179,13 @@ function ClothingBadge({
   const hex = getColorHex(detail.color);
 
   return (
-    <div className="flex items-center gap-2 rounded-full border border-gray-700 bg-gray-800/60 px-3 py-1">
+    <div className="flex items-center gap-2 rounded-full border border-border-strong bg-surface-3/60 px-3 py-1">
       <span
-        className="h-3 w-3 shrink-0 rounded-full border border-gray-600"
+        className="h-3 w-3 shrink-0 rounded-full border border-border-strong"
         style={{ backgroundColor: hex }}
       />
-      <span className="text-[11px] text-gray-400">
-        <span className="font-medium text-gray-300">{label}:</span>{" "}
+      <span className="text-[11px] text-muted-foreground">
+        <span className="font-medium text-foreground">{label}:</span>{" "}
         {detail.description || `${detail.color} ${detail.type}`}
       </span>
     </div>
@@ -218,7 +218,7 @@ function ProfileCard({
         "rounded-lg border transition-all duration-200",
         profile.is_flagged
           ? "border-red-700/70 bg-red-950/20"
-          : "border-gray-800 bg-gray-900/50 hover:bg-gray-900/80",
+          : "border-border bg-surface-2/50 hover:bg-surface-2/80",
         onSelect && "cursor-pointer"
       )}
       onClick={() => onSelect?.(profile.id)}
@@ -257,7 +257,7 @@ function ProfileCard({
                 </span>
               )}
             </div>
-            <p className="mt-1.5 text-sm leading-relaxed text-gray-200">
+            <p className="mt-1.5 text-sm leading-relaxed text-foreground">
               {profile.descriptor}
             </p>
           </div>
@@ -270,7 +270,7 @@ function ProfileCard({
               "flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors",
               profile.is_flagged
                 ? "bg-red-900/40 text-red-400 border border-red-800/60 hover:bg-red-800/50"
-                : "bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700 hover:text-gray-200",
+                : "bg-surface-3 text-muted-foreground border border-border-strong hover:bg-surface-3 hover:text-foreground",
               "disabled:opacity-50 disabled:cursor-not-allowed"
             )}
           >
@@ -299,22 +299,22 @@ function ProfileCard({
         )}
 
         {/* Build, hair, accessories */}
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
           {profile.build && (
             <span className="flex items-center gap-1">
               <Users className="h-3 w-3 text-teal-500" />
-              Build: <span className="text-gray-300">{profile.build}</span>
+              Build: <span className="text-foreground">{profile.build}</span>
             </span>
           )}
           {profile.hair && (
             <span className="flex items-center gap-1">
-              Hair: <span className="text-gray-300">{profile.hair}</span>
+              Hair: <span className="text-foreground">{profile.hair}</span>
             </span>
           )}
           {profile.accessories && profile.accessories.length > 0 && (
             <span className="flex items-center gap-1">
               Accessories:{" "}
-              <span className="text-gray-300">
+              <span className="text-foreground">
                 {profile.accessories.join(", ")}
               </span>
             </span>
@@ -322,17 +322,17 @@ function ProfileCard({
         </div>
 
         {/* Stats row */}
-        <div className="flex items-center gap-4 text-xs text-gray-500">
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
             <Eye className="h-3 w-3 text-teal-500" />
-            <span className="font-semibold text-gray-300">
+            <span className="font-semibold text-foreground">
               {profile.sightings_count}
             </span>{" "}
             sightings
           </span>
           <span className="flex items-center gap-1">
             <Camera className="h-3 w-3 text-teal-500" />
-            <span className="font-semibold text-gray-300">
+            <span className="font-semibold text-foreground">
               {profile.camera_sightings?.length || 0}
             </span>{" "}
             cameras
@@ -371,8 +371,8 @@ function ProfileCard({
 
       {/* Camera timeline (expanded) */}
       {expanded && profile.camera_sightings && profile.camera_sightings.length > 0 && (
-        <div className="border-t border-gray-800 px-4 py-3 space-y-1.5">
-          <div className="flex items-center gap-2 mb-2 text-xs font-medium text-gray-400">
+        <div className="border-t border-border px-4 py-3 space-y-1.5">
+          <div className="flex items-center gap-2 mb-2 text-xs font-medium text-muted-foreground">
             <Footprints className="h-3.5 w-3.5 text-teal-500" />
             Camera Timeline
           </div>
@@ -380,27 +380,27 @@ function ProfileCard({
             {profile.camera_sightings.map((sighting, idx) => (
               <div
                 key={`${sighting.camera_id}-${idx}`}
-                className="flex items-center gap-3 rounded border border-gray-800 bg-gray-950/50 px-3 py-2"
+                className="flex items-center gap-3 rounded border border-border bg-surface-0/50 px-3 py-2"
               >
                 {/* Timeline connector */}
                 <div className="flex flex-col items-center">
                   <span className="h-2 w-2 rounded-full bg-teal-500" />
                   {idx < profile.camera_sightings.length - 1 && (
-                    <span className="mt-0.5 h-4 w-px bg-gray-700" />
+                    <span className="mt-0.5 h-4 w-px bg-surface-3" />
                   )}
                 </div>
 
-                <span className="flex items-center gap-1 text-xs font-medium text-gray-300">
-                  <Camera className="h-3 w-3 text-gray-500" />
+                <span className="flex items-center gap-1 text-xs font-medium text-foreground">
+                  <Camera className="h-3 w-3 text-muted-foreground" />
                   {sighting.camera_name}
                 </span>
 
-                <span className="font-mono text-[10px] text-gray-500">
+                <span className="font-mono text-[10px] text-muted-foreground">
                   {formatTimestamp(sighting.timestamp)}
                 </span>
 
                 {sighting.direction && (
-                  <span className="rounded bg-gray-800 px-2 py-0.5 text-[10px] text-gray-400">
+                  <span className="rounded bg-surface-3 px-2 py-0.5 text-[10px] text-muted-foreground">
                     {sighting.direction}
                   </span>
                 )}
@@ -461,18 +461,18 @@ function ProfileDetailPanel({
       />
 
       {/* Sidebar */}
-      <div className="fixed inset-y-0 right-0 z-50 flex w-full max-w-lg flex-col border-l border-gray-800 bg-gray-950 shadow-2xl">
+      <div className="fixed inset-y-0 right-0 z-50 flex w-full max-w-lg flex-col border-l border-border bg-surface-0 shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <div className="flex items-center gap-2">
             <ScanSearch className="h-5 w-5 text-emerald-400" />
-            <h2 className="text-base font-bold text-gray-100">
+            <h2 className="text-base font-bold text-foreground">
               Profile Detail
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+            className="rounded-lg p-1.5 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
@@ -483,7 +483,7 @@ function ProfileDetailPanel({
           {loading && (
             <div className="flex flex-col items-center justify-center py-20">
               <Loader2 className="h-8 w-8 animate-spin text-emerald-400" />
-              <p className="mt-3 text-sm text-gray-500">Loading profile...</p>
+              <p className="mt-3 text-sm text-muted-foreground">Loading profile...</p>
             </div>
           )}
 
@@ -506,7 +506,7 @@ function ProfileDetailPanel({
                         Flagged
                       </span>
                     )}
-                    <span className="font-mono text-xs text-gray-600">
+                    <span className="font-mono text-xs text-muted-foreground">
                       ID: {detail.id}
                     </span>
                   </div>
@@ -517,7 +517,7 @@ function ProfileDetailPanel({
                       "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors",
                       detail.is_flagged
                         ? "bg-red-900/40 text-red-400 border border-red-800/60 hover:bg-red-800/50"
-                        : "bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700 hover:text-gray-200",
+                        : "bg-surface-3 text-muted-foreground border border-border-strong hover:bg-surface-3 hover:text-foreground",
                       "disabled:opacity-50 disabled:cursor-not-allowed"
                     )}
                   >
@@ -531,7 +531,7 @@ function ProfileDetailPanel({
                 </div>
 
                 {/* Descriptor */}
-                <p className="text-sm leading-relaxed text-gray-200">
+                <p className="text-sm leading-relaxed text-foreground">
                   {detail.descriptor}
                 </p>
               </div>
@@ -539,7 +539,7 @@ function ProfileDetailPanel({
               {/* Clothing */}
               {detail.clothing && (
                 <div className="space-y-2">
-                  <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     <Shirt className="h-3.5 w-3.5 text-teal-500" />
                     Clothing
                   </h3>
@@ -559,28 +559,28 @@ function ProfileDetailPanel({
 
               {/* Physical attributes */}
               <div className="space-y-2">
-                <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   <Users className="h-3.5 w-3.5 text-teal-500" />
                   Physical Attributes
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
                   {detail.build && (
-                    <div className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2">
-                      <span className="text-[10px] uppercase tracking-wide text-gray-600">Build</span>
-                      <p className="text-sm text-gray-300">{detail.build}</p>
+                    <div className="rounded-lg border border-border bg-surface-2/50 px-3 py-2">
+                      <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Build</span>
+                      <p className="text-sm text-foreground">{detail.build}</p>
                     </div>
                   )}
                   {detail.hair && (
-                    <div className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2">
-                      <span className="text-[10px] uppercase tracking-wide text-gray-600">Hair</span>
-                      <p className="text-sm text-gray-300">{detail.hair}</p>
+                    <div className="rounded-lg border border-border bg-surface-2/50 px-3 py-2">
+                      <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Hair</span>
+                      <p className="text-sm text-foreground">{detail.hair}</p>
                     </div>
                   )}
                 </div>
                 {detail.accessories && detail.accessories.length > 0 && (
-                  <div className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2">
-                    <span className="text-[10px] uppercase tracking-wide text-gray-600">Accessories</span>
-                    <p className="text-sm text-gray-300">
+                  <div className="rounded-lg border border-border bg-surface-2/50 px-3 py-2">
+                    <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Accessories</span>
+                    <p className="text-sm text-foreground">
                       {detail.accessories.join(", ")}
                     </p>
                   </div>
@@ -589,21 +589,21 @@ function ProfileDetailPanel({
 
               {/* Stats */}
               <div className="space-y-2">
-                <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   <Activity className="h-3.5 w-3.5 text-teal-500" />
                   Statistics
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2">
-                    <span className="text-[10px] uppercase tracking-wide text-gray-600">Sightings</span>
-                    <p className="text-lg font-bold text-gray-200">{detail.sightings_count}</p>
+                  <div className="rounded-lg border border-border bg-surface-2/50 px-3 py-2">
+                    <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Sightings</span>
+                    <p className="text-lg font-bold text-foreground">{detail.sightings_count}</p>
                   </div>
-                  <div className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2">
-                    <span className="text-[10px] uppercase tracking-wide text-gray-600">Cameras</span>
-                    <p className="text-lg font-bold text-gray-200">{detail.camera_sightings?.length || 0}</p>
+                  <div className="rounded-lg border border-border bg-surface-2/50 px-3 py-2">
+                    <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Cameras</span>
+                    <p className="text-lg font-bold text-foreground">{detail.camera_sightings?.length || 0}</p>
                   </div>
-                  <div className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2">
-                    <span className="text-[10px] uppercase tracking-wide text-gray-600">Confidence</span>
+                  <div className="rounded-lg border border-border bg-surface-2/50 px-3 py-2">
+                    <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Confidence</span>
                     <p className={cn(
                       "text-lg font-bold font-mono",
                       detail.confidence >= 0.8
@@ -615,17 +615,17 @@ function ProfileDetailPanel({
                       {(detail.confidence * 100).toFixed(1)}%
                     </p>
                   </div>
-                  <div className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2">
-                    <span className="text-[10px] uppercase tracking-wide text-gray-600">First Seen</span>
-                    <p className="text-xs font-mono text-gray-300">
+                  <div className="rounded-lg border border-border bg-surface-2/50 px-3 py-2">
+                    <span className="text-[10px] uppercase tracking-wide text-muted-foreground">First Seen</span>
+                    <p className="text-xs font-mono text-foreground">
                       {detail.first_seen ? formatTimestamp(detail.first_seen) : "N/A"}
                     </p>
                   </div>
                 </div>
                 {detail.last_seen && (
-                  <div className="rounded-lg border border-gray-800 bg-gray-900/50 px-3 py-2">
-                    <span className="text-[10px] uppercase tracking-wide text-gray-600">Last Seen</span>
-                    <p className="text-xs font-mono text-gray-300">
+                  <div className="rounded-lg border border-border bg-surface-2/50 px-3 py-2">
+                    <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Last Seen</span>
+                    <p className="text-xs font-mono text-foreground">
                       {formatTimestamp(detail.last_seen)}
                     </p>
                   </div>
@@ -635,7 +635,7 @@ function ProfileDetailPanel({
               {/* Camera timeline */}
               {detail.camera_sightings && detail.camera_sightings.length > 0 && (
                 <div className="space-y-2">
-                  <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     <Footprints className="h-3.5 w-3.5 text-teal-500" />
                     Camera Timeline
                   </h3>
@@ -643,23 +643,23 @@ function ProfileDetailPanel({
                     {detail.camera_sightings.map((sighting, idx) => (
                       <div
                         key={`${sighting.camera_id}-${idx}`}
-                        className="flex items-center gap-3 rounded border border-gray-800 bg-gray-900/40 px-3 py-2"
+                        className="flex items-center gap-3 rounded border border-border bg-surface-2/40 px-3 py-2"
                       >
                         <div className="flex flex-col items-center">
                           <span className="h-2 w-2 rounded-full bg-teal-500" />
                           {idx < detail.camera_sightings.length - 1 && (
-                            <span className="mt-0.5 h-4 w-px bg-gray-700" />
+                            <span className="mt-0.5 h-4 w-px bg-surface-3" />
                           )}
                         </div>
-                        <span className="flex items-center gap-1 text-xs font-medium text-gray-300">
-                          <Camera className="h-3 w-3 text-gray-500" />
+                        <span className="flex items-center gap-1 text-xs font-medium text-foreground">
+                          <Camera className="h-3 w-3 text-muted-foreground" />
                           {sighting.camera_name}
                         </span>
-                        <span className="font-mono text-[10px] text-gray-500">
+                        <span className="font-mono text-[10px] text-muted-foreground">
                           {formatTimestamp(sighting.timestamp)}
                         </span>
                         {sighting.direction && (
-                          <span className="rounded bg-gray-800 px-2 py-0.5 text-[10px] text-gray-400">
+                          <span className="rounded bg-surface-3 px-2 py-0.5 text-[10px] text-muted-foreground">
                             {sighting.direction}
                           </span>
                         )}
@@ -685,22 +685,22 @@ function ProfileDetailPanel({
 
 function TrackingCard({ entry }: { entry: TrackingEntry }) {
   return (
-    <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-5 space-y-4">
+    <div className="rounded-lg border border-border bg-surface-2/50 p-5 space-y-4">
       {/* Profile descriptor */}
-      <p className="text-sm leading-relaxed text-gray-200">
+      <p className="text-sm leading-relaxed text-foreground">
         {entry.profile.descriptor}
       </p>
 
       {/* Stats */}
-      <div className="flex items-center gap-4 text-xs text-gray-500">
+      <div className="flex items-center gap-4 text-xs text-muted-foreground">
         <span className="flex items-center gap-1">
           <Camera className="h-3 w-3 text-teal-500" />
-          <span className="font-semibold text-gray-300">{entry.total_cameras}</span>{" "}
+          <span className="font-semibold text-foreground">{entry.total_cameras}</span>{" "}
           cameras
         </span>
         <span className="flex items-center gap-1">
           <Clock className="h-3 w-3 text-teal-500" />
-          <span className="font-semibold text-gray-300">{entry.duration_minutes}</span>{" "}
+          <span className="font-semibold text-foreground">{entry.duration_minutes}</span>{" "}
           min tracked
         </span>
         <span className="flex items-center gap-1">
@@ -723,7 +723,7 @@ function TrackingCard({ entry }: { entry: TrackingEntry }) {
       {/* Visual camera trail */}
       {entry.camera_trail && entry.camera_trail.length > 0 && (
         <div className="space-y-2">
-          <div className="flex items-center gap-2 text-xs font-medium text-gray-400">
+          <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
             <Crosshair className="h-3.5 w-3.5 text-teal-500" />
             Cross-Camera Trail
           </div>
@@ -737,11 +737,11 @@ function TrackingCard({ entry }: { entry: TrackingEntry }) {
                     <Camera className="h-3 w-3" />
                     {hop.camera_name}
                   </span>
-                  <span className="mt-0.5 font-mono text-[10px] text-gray-500">
+                  <span className="mt-0.5 font-mono text-[10px] text-muted-foreground">
                     {formatTimestamp(hop.timestamp)}
                   </span>
                   {hop.direction && (
-                    <span className="mt-0.5 text-[10px] text-gray-600">
+                    <span className="mt-0.5 text-[10px] text-muted-foreground">
                       {hop.direction}
                     </span>
                   )}
@@ -971,18 +971,18 @@ export default function ReIdPage() {
 
   /* --- Render --- */
   return (
-    <div className="flex h-full flex-col bg-gray-950">
+    <div className="flex h-full flex-col bg-surface-0">
       {/* ---- Header ---- */}
-      <header className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <header className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-900/30 border border-emerald-800/50">
             <ScanSearch className="h-5 w-5 text-emerald-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Person Re-Identification
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Privacy-Preserving &mdash; No Facial Recognition
             </p>
           </div>
@@ -998,7 +998,7 @@ export default function ReIdPage() {
       </header>
 
       {/* ---- Stats bar ---- */}
-      <div className="border-b border-gray-800 px-6 py-3">
+      <div className="border-b border-border px-6 py-3">
         {statsLoading ? (
           <div className="flex items-center gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -1013,10 +1013,10 @@ export default function ReIdPage() {
                 <div key={item.label} className="flex items-center gap-2">
                   <Icon className={cn("h-4 w-4", item.color)} />
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-sm font-bold text-gray-100">
+                    <span className="text-sm font-bold text-foreground">
                       {item.value}
                     </span>
-                    <span className="text-[11px] text-gray-500">
+                    <span className="text-[11px] text-muted-foreground">
                       {item.label}
                     </span>
                   </div>
@@ -1025,17 +1025,17 @@ export default function ReIdPage() {
             })}
           </div>
         ) : (
-          <p className="text-xs text-gray-600">
+          <p className="text-xs text-muted-foreground">
             Stats unavailable
           </p>
         )}
       </div>
 
       {/* ---- Search bar ---- */}
-      <div className="border-b border-gray-800 px-6 py-3">
+      <div className="border-b border-border px-6 py-3">
         <div className="flex items-center gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
               type="text"
               value={searchQuery}
@@ -1044,7 +1044,7 @@ export default function ReIdPage() {
                 if (e.key === "Enter") handleSearch();
               }}
               placeholder="Search by appearance description... e.g. 'person in black hoodie with red backpack'"
-              className="w-full rounded-lg border border-gray-700 bg-gray-900 pl-10 pr-4 py-2.5 text-sm text-gray-100 placeholder-gray-600 focus:border-emerald-700 focus:outline-none focus:ring-1 focus:ring-emerald-700"
+              className="w-full rounded-lg border border-border-strong bg-surface-2 pl-10 pr-4 py-2.5 text-sm text-foreground placeholder-gray-600 focus:border-emerald-700 focus:outline-none focus:ring-1 focus:ring-emerald-700"
             />
           </div>
           <button
@@ -1062,7 +1062,7 @@ export default function ReIdPage() {
           {searchResults !== null && (
             <button
               onClick={clearSearch}
-              className="flex items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+              className="flex items-center gap-1.5 rounded-lg border border-border-strong bg-surface-2 px-3 py-2.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
             >
               <XCircle className="h-3.5 w-3.5" />
               Clear
@@ -1087,12 +1087,12 @@ export default function ReIdPage() {
       )}
 
       {searchResults !== null && !searchLoading && (
-        <div className="border-b border-gray-800 px-6 py-4 space-y-3 max-h-[50vh] overflow-y-auto">
+        <div className="border-b border-border px-6 py-4 space-y-3 max-h-[50vh] overflow-y-auto">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
+            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
               <ScanSearch className="h-4 w-4 text-emerald-400" />
               Search Results
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-muted-foreground">
                 ({searchResults.length} matches)
               </span>
             </div>
@@ -1100,11 +1100,11 @@ export default function ReIdPage() {
 
           {searchResults.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10">
-              <Shirt className="mb-2 h-8 w-8 text-gray-700" />
-              <p className="text-sm text-gray-500">
+              <Shirt className="mb-2 h-8 w-8 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">
                 No matching profiles found
               </p>
-              <p className="mt-1 text-xs text-gray-600">
+              <p className="mt-1 text-xs text-muted-foreground">
                 Try adjusting your description
               </p>
             </div>
@@ -1126,14 +1126,14 @@ export default function ReIdPage() {
       )}
 
       {/* ---- Tab bar ---- */}
-      <div className="flex items-center gap-1 border-b border-gray-800 px-6">
+      <div className="flex items-center gap-1 border-b border-border px-6">
         <button
           onClick={() => setActiveTab("profiles")}
           className={cn(
             "relative px-4 py-3 text-sm font-medium transition-colors",
             activeTab === "profiles"
               ? "text-emerald-400"
-              : "text-gray-500 hover:text-gray-300"
+              : "text-muted-foreground hover:text-foreground"
           )}
         >
           <span className="flex items-center gap-2">
@@ -1151,7 +1151,7 @@ export default function ReIdPage() {
             "relative px-4 py-3 text-sm font-medium transition-colors",
             activeTab === "tracking"
               ? "text-emerald-400"
-              : "text-gray-500 hover:text-gray-300"
+              : "text-muted-foreground hover:text-foreground"
           )}
         >
           <span className="flex items-center gap-2">
@@ -1169,7 +1169,7 @@ export default function ReIdPage() {
             "relative px-4 py-3 text-sm font-medium transition-colors",
             activeTab === "gait"
               ? "text-emerald-400"
-              : "text-gray-500 hover:text-gray-300"
+              : "text-muted-foreground hover:text-foreground"
           )}
         >
           <span className="flex items-center gap-2">
@@ -1183,12 +1183,12 @@ export default function ReIdPage() {
 
         {/* Flagged only toggle (for profiles tab) */}
         {activeTab === "profiles" && (
-          <label className="ml-auto flex items-center gap-2 text-xs text-gray-500 cursor-pointer select-none">
+          <label className="ml-auto flex items-center gap-2 text-xs text-muted-foreground cursor-pointer select-none">
             <input
               type="checkbox"
               checked={flaggedOnly}
               onChange={(e) => setFlaggedOnly(e.target.checked)}
-              className="h-3.5 w-3.5 rounded border-gray-600 bg-gray-800 text-emerald-500 focus:ring-emerald-700 focus:ring-offset-0"
+              className="h-3.5 w-3.5 rounded border-border-strong bg-surface-3 text-emerald-500 focus:ring-emerald-700 focus:ring-offset-0"
             />
             <Flag className="h-3 w-3 text-red-500" />
             Flagged only
@@ -1217,7 +1217,7 @@ export default function ReIdPage() {
                 <p className="text-sm text-red-400">{profilesError}</p>
                 <button
                   onClick={fetchProfiles}
-                  className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+                  className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
                 >
                   Retry
                 </button>
@@ -1227,11 +1227,11 @@ export default function ReIdPage() {
             {/* Empty */}
             {!profilesLoading && !profilesError && profiles.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20">
-                <Users className="mb-2 h-10 w-10 text-gray-700" />
-                <p className="text-sm font-medium text-gray-400">
+                <Users className="mb-2 h-10 w-10 text-muted-foreground" />
+                <p className="text-sm font-medium text-muted-foreground">
                   No active profiles
                 </p>
-                <p className="mt-1 text-xs text-gray-600">
+                <p className="mt-1 text-xs text-muted-foreground">
                   {flaggedOnly
                     ? "No flagged profiles found. Try disabling the filter."
                     : "Re-identification profiles will appear here as persons are detected."}
@@ -1286,7 +1286,7 @@ export default function ReIdPage() {
                       )
                       .finally(() => setTrackingLoading(false));
                   }}
-                  className="mt-3 rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+                  className="mt-3 rounded-lg border border-border-strong px-4 py-1.5 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
                 >
                   Retry
                 </button>
@@ -1296,11 +1296,11 @@ export default function ReIdPage() {
             {/* Empty */}
             {!trackingLoading && !trackingError && trackingMap.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20">
-                <Crosshair className="mb-2 h-10 w-10 text-gray-700" />
-                <p className="text-sm font-medium text-gray-400">
+                <Crosshair className="mb-2 h-10 w-10 text-muted-foreground" />
+                <p className="text-sm font-medium text-muted-foreground">
                   No cross-camera tracking data
                 </p>
-                <p className="mt-1 text-xs text-gray-600">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Cross-camera matches will appear here when a person is detected
                   across multiple cameras.
                 </p>
@@ -1321,18 +1321,18 @@ export default function ReIdPage() {
           <>
             {/* Buffer stats bar */}
             {gaitBufferStats && (
-              <div className="flex items-center gap-6 rounded-lg border border-gray-800 bg-gray-900/50 px-5 py-3 mb-3">
-                <div className="flex items-center gap-2 text-xs text-gray-500">
+              <div className="flex items-center gap-6 rounded-lg border border-border bg-surface-2/50 px-5 py-3 mb-3">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Camera className="h-3.5 w-3.5 text-teal-500" />
-                  <span className="font-semibold text-gray-300">{gaitBufferStats.cameras}</span> cameras tracked
+                  <span className="font-semibold text-foreground">{gaitBufferStats.cameras}</span> cameras tracked
                 </div>
-                <div className="flex items-center gap-2 text-xs text-gray-500">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Users className="h-3.5 w-3.5 text-teal-500" />
-                  <span className="font-semibold text-gray-300">{gaitBufferStats.tracked_persons}</span> persons buffered
+                  <span className="font-semibold text-foreground">{gaitBufferStats.tracked_persons}</span> persons buffered
                 </div>
-                <div className="flex items-center gap-2 text-xs text-gray-500">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Activity className="h-3.5 w-3.5 text-teal-500" />
-                  <span className="font-semibold text-gray-300">{gaitBufferStats.buffered_frames}</span> keypoint frames
+                  <span className="font-semibold text-foreground">{gaitBufferStats.buffered_frames}</span> keypoint frames
                 </div>
               </div>
             )}
@@ -1357,11 +1357,11 @@ export default function ReIdPage() {
             {/* Empty */}
             {!gaitLoading && !gaitError && gaitMatches.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20">
-                <Footprints className="mb-2 h-10 w-10 text-gray-700" />
-                <p className="text-sm font-medium text-gray-400">
+                <Footprints className="mb-2 h-10 w-10 text-muted-foreground" />
+                <p className="text-sm font-medium text-muted-foreground">
                   No gait matches yet
                 </p>
-                <p className="mt-1 text-xs text-gray-600">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Cross-camera gait re-identification matches will appear here
                   when persons are tracked across multiple cameras.
                 </p>
@@ -1387,13 +1387,13 @@ export default function ReIdPage() {
                         {(match.match_score * 100).toFixed(1)}% similarity
                       </span>
                     </div>
-                    <span className="font-mono text-[10px] text-gray-500">
+                    <span className="font-mono text-[10px] text-muted-foreground">
                       {formatTimestamp(match.timestamp)}
                     </span>
                   </div>
 
                   {/* Gait description */}
-                  <p className="text-xs leading-relaxed text-gray-300">
+                  <p className="text-xs leading-relaxed text-foreground">
                     {match.gait_description}
                   </p>
 
@@ -1404,7 +1404,7 @@ export default function ReIdPage() {
                         <Camera className="h-3 w-3" />
                         {match.source_camera}
                       </span>
-                      <span className="mt-0.5 text-[10px] text-gray-500">
+                      <span className="mt-0.5 text-[10px] text-muted-foreground">
                         Track #{match.source_track_id}
                       </span>
                     </div>
@@ -1414,7 +1414,7 @@ export default function ReIdPage() {
                         <Camera className="h-3 w-3" />
                         {match.matched_camera}
                       </span>
-                      <span className="mt-0.5 text-[10px] text-gray-500">
+                      <span className="mt-0.5 text-[10px] text-muted-foreground">
                         Track #{match.matched_track_id}
                       </span>
                     </div>

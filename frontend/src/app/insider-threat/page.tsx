@@ -144,14 +144,14 @@ function AccessPatternGrid({ profileId }: { profileId?: string }) {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="h-4 w-4 animate-spin text-cyan-400" />
-        <span className="ml-2 text-xs text-gray-500">Loading access patterns...</span>
+        <span className="ml-2 text-xs text-muted-foreground">Loading access patterns...</span>
       </div>
     );
   }
 
   if (unavailable || !grid) {
     return (
-      <p className="py-4 text-center text-xs text-gray-600">
+      <p className="py-4 text-center text-xs text-muted-foreground">
         Access pattern data unavailable
       </p>
     );
@@ -169,7 +169,7 @@ function AccessPatternGrid({ profileId }: { profileId?: string }) {
       <div className="grid" style={{ gridTemplateColumns: `40px repeat(7, 1fr)` }}>
         <div />
         {DAYS.map((d) => (
-          <div key={d} className="text-center text-[9px] font-semibold uppercase tracking-wider text-gray-500 pb-1">
+          <div key={d} className="text-center text-[9px] font-semibold uppercase tracking-wider text-muted-foreground pb-1">
             {d}
           </div>
         ))}
@@ -184,7 +184,7 @@ function AccessPatternGrid({ profileId }: { profileId?: string }) {
             style={{ gridTemplateColumns: `40px repeat(7, 1fr)` }}
           >
             {/* Hour label */}
-            <div className="text-right pr-2 text-[9px] font-mono text-gray-600">
+            <div className="text-right pr-2 text-[9px] font-mono text-muted-foreground">
               {String(hour).padStart(2, "0")}h
             </div>
 
@@ -220,8 +220,8 @@ function AccessPatternGrid({ profileId }: { profileId?: string }) {
       {/* Legend */}
       <div className="mt-3 flex items-center justify-between px-10">
         <div className="flex items-center gap-1.5">
-          <div className="h-2.5 w-5 rounded-sm bg-gray-800/60" />
-          <span className="text-[9px] text-gray-600">None</span>
+          <div className="h-2.5 w-5 rounded-sm bg-surface-3/60" />
+          <span className="text-[9px] text-muted-foreground">None</span>
         </div>
         <div className="flex items-center gap-1">
           {[0.1, 0.3, 0.6, 1.0].map((v) => (
@@ -231,7 +231,7 @@ function AccessPatternGrid({ profileId }: { profileId?: string }) {
               style={{ backgroundColor: `rgba(6,182,212,${0.08 + v * 0.82})` }}
             />
           ))}
-          <span className="ml-1 text-[9px] text-gray-600">High</span>
+          <span className="ml-1 text-[9px] text-muted-foreground">High</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="h-2.5 w-5 rounded-sm ring-1 ring-red-500" style={{ backgroundColor: "rgba(6,182,212,0.5)" }} />
@@ -256,7 +256,7 @@ function RiskMatrix({ profiles }: { profiles: InsiderThreatProfile[] }) {
   ];
 
   return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-5">
+    <div className="rounded-xl border border-border bg-surface-2/50 p-5">
       <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-cyan-400">
         <Activity className="h-4 w-4" />
         Risk Distribution Matrix
@@ -271,15 +271,15 @@ function RiskMatrix({ profiles }: { profiles: InsiderThreatProfile[] }) {
             <div
               key={range.label}
               className={cn(
-                "rounded-lg border bg-gray-900/60 p-4 transition-all",
+                "rounded-lg border bg-surface-2/60 p-4 transition-all",
                 range.border
               )}
             >
               <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   {range.label}
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-muted-foreground">
                   {range.min}-{range.max}
                 </span>
               </div>
@@ -287,7 +287,7 @@ function RiskMatrix({ profiles }: { profiles: InsiderThreatProfile[] }) {
               {/* Dot scatter */}
               <div className="flex flex-wrap gap-1.5 min-h-[48px]">
                 {bucket.length === 0 && (
-                  <span className="text-[10px] text-gray-600">
+                  <span className="text-[10px] text-muted-foreground">
                     No profiles
                   </span>
                 )}
@@ -306,9 +306,9 @@ function RiskMatrix({ profiles }: { profiles: InsiderThreatProfile[] }) {
               </div>
 
               {/* Count */}
-              <div className="mt-3 flex items-center justify-between border-t border-gray-800 pt-2">
-                <span className="text-[10px] text-gray-500">Profiles</span>
-                <span className="text-sm font-bold text-gray-300">
+              <div className="mt-3 flex items-center justify-between border-t border-border pt-2">
+                <span className="text-[10px] text-muted-foreground">Profiles</span>
+                <span className="text-sm font-bold text-foreground">
                   {bucket.length}
                 </span>
               </div>
@@ -508,37 +508,37 @@ export default function InsiderThreatPage() {
 
   /* --- Render --- */
   return (
-    <div className="flex h-full flex-col bg-gray-950">
+    <div className="flex h-full flex-col bg-surface-0">
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
+      <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-900/30 border border-red-800/50">
             <UserX className="h-5 w-5 text-red-400" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-wide text-gray-100">
+            <h1 className="text-lg font-bold tracking-wide text-foreground">
               Insider Threat Detection
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Behavioral analytics and risk profiling for internal personnel
             </p>
           </div>
         </div>
 
         {/* Quick stats */}
-        <div className="hidden items-center gap-4 text-xs text-gray-500 md:flex">
+        <div className="hidden items-center gap-4 text-xs text-muted-foreground md:flex">
           <span>
             <span className="font-semibold text-red-400">{flaggedCount}</span>{" "}
             flagged
           </span>
-          <span className="text-gray-700">|</span>
+          <span className="text-muted-foreground">|</span>
           <span>
             <span className="font-semibold text-blue-400">
               {monitoringCount}
             </span>{" "}
             monitoring
           </span>
-          <span className="text-gray-700">|</span>
+          <span className="text-muted-foreground">|</span>
           <span>
             Avg risk:{" "}
             <span className={cn("font-semibold", riskScoreColor(avgRisk))}>
@@ -552,7 +552,7 @@ export default function InsiderThreatPage() {
       {loading && (
         <div className="flex flex-1 items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
-          <span className="ml-3 text-sm text-gray-500">
+          <span className="ml-3 text-sm text-muted-foreground">
             Loading threat profiles...
           </span>
         </div>
@@ -565,7 +565,7 @@ export default function InsiderThreatPage() {
           <p className="text-sm text-red-400">{error}</p>
           <button
             onClick={fetchData}
-            className="mt-4 flex items-center gap-2 rounded-lg border border-gray-700 px-4 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+            className="mt-4 flex items-center gap-2 rounded-lg border border-border-strong px-4 py-2 text-xs text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             Retry
@@ -580,8 +580,8 @@ export default function InsiderThreatPage() {
           <RiskMatrix profiles={profiles} />
 
           {/* Profiles Table */}
-          <div className="rounded-xl border border-gray-800 bg-gray-900/50">
-            <div className="flex items-center justify-between border-b border-gray-800 px-5 py-3">
+          <div className="rounded-xl border border-border bg-surface-2/50">
+            <div className="flex items-center justify-between border-b border-border px-5 py-3">
               <h2 className="flex items-center gap-2 text-sm font-semibold text-cyan-400">
                 <ShieldAlert className="h-4 w-4" />
                 Threat Profiles
@@ -597,7 +597,7 @@ export default function InsiderThreatPage() {
                       "rounded-lg px-3 py-1 text-[11px] font-medium transition-colors border",
                       filterStatus === s
                         ? "bg-cyan-900/40 text-cyan-400 border-cyan-700/50"
-                        : "bg-gray-800 text-gray-500 border-gray-700/50 hover:text-gray-300"
+                        : "bg-surface-3 text-muted-foreground border-border-strong/50 hover:text-foreground"
                     )}
                   >
                     {s.charAt(0).toUpperCase() + s.slice(1)}
@@ -609,7 +609,7 @@ export default function InsiderThreatPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-800 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <tr className="border-b border-border text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                     <th className="px-5 py-3">User ID</th>
                     <th className="px-5 py-3">Risk Score</th>
                     <th className="px-5 py-3">Computed Score</th>
@@ -623,7 +623,7 @@ export default function InsiderThreatPage() {
                     <tr>
                       <td
                         colSpan={6}
-                        className="px-5 py-10 text-center text-gray-600"
+                        className="px-5 py-10 text-center text-muted-foreground"
                       >
                         No profiles match current filter
                       </td>
@@ -638,15 +638,15 @@ export default function InsiderThreatPage() {
                         key={profile.id}
                         onClick={() => openProfileDetail(profile.id)}
                         className={cn(
-                          "border-b border-gray-800/50 transition-colors cursor-pointer",
+                          "border-b border-border/50 transition-colors cursor-pointer",
                           isSelected
                             ? "bg-cyan-950/30 hover:bg-cyan-950/40"
-                            : "hover:bg-gray-900/80"
+                            : "hover:bg-surface-2/80"
                         )}
                       >
                         {/* User ID */}
                         <td className="px-5 py-3">
-                          <span className="font-mono text-xs text-gray-300">
+                          <span className="font-mono text-xs text-foreground">
                             {profile.user_id || profile.id.slice(0, 12)}
                           </span>
                         </td>
@@ -655,7 +655,7 @@ export default function InsiderThreatPage() {
                         <td className="px-5 py-3">
                           <div className="flex items-center gap-3">
                             <div className="flex-1 max-w-[120px]">
-                              <div className="h-2.5 rounded-full bg-gray-800">
+                              <div className="h-2.5 rounded-full bg-surface-3">
                                 <div
                                   className={cn(
                                     "h-2.5 rounded-full transition-all",
@@ -692,12 +692,12 @@ export default function InsiderThreatPage() {
                                 ? riskScoreBgColor(80)
                                 : profile.anomaly_count > 5
                                 ? riskScoreBgColor(50)
-                                : "bg-gray-800 border-gray-700",
+                                : "bg-surface-3 border-border-strong",
                               profile.anomaly_count > 10
                                 ? "text-red-400"
                                 : profile.anomaly_count > 5
                                 ? "text-yellow-400"
-                                : "text-gray-400"
+                                : "text-muted-foreground"
                             )}
                           >
                             <AlertTriangle className="h-3 w-3" />
@@ -722,14 +722,14 @@ export default function InsiderThreatPage() {
                         <td className="px-5 py-3">
                           <div className="flex flex-wrap gap-1">
                             {profile.behavioral_flags.length === 0 && (
-                              <span className="text-xs text-gray-600">
+                              <span className="text-xs text-muted-foreground">
                                 None
                               </span>
                             )}
                             {profile.behavioral_flags.map((flag, i) => (
                               <span
                                 key={i}
-                                className="rounded-full bg-gray-800 px-2.5 py-0.5 text-[10px] font-medium text-gray-400 border border-gray-700/60"
+                                className="rounded-full bg-surface-3 px-2.5 py-0.5 text-[10px] font-medium text-muted-foreground border border-border-strong/60"
                               >
                                 {flag}
                               </span>
@@ -746,15 +746,15 @@ export default function InsiderThreatPage() {
 
           {/* ---- Profile Detail Panel ---- */}
           {(selectedProfile || detailLoading || detailError) && (
-            <div className="rounded-xl border border-gray-800 bg-gray-900/50">
-              <div className="flex items-center justify-between border-b border-gray-800 px-5 py-3">
+            <div className="rounded-xl border border-border bg-surface-2/50">
+              <div className="flex items-center justify-between border-b border-border px-5 py-3">
                 <h2 className="flex items-center gap-2 text-sm font-semibold text-cyan-400">
                   <Eye className="h-4 w-4" />
                   Profile Detail
                 </h2>
                 <button
                   onClick={closeDetail}
-                  className="rounded-lg p-1 text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+                  className="rounded-lg p-1 text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -764,7 +764,7 @@ export default function InsiderThreatPage() {
                 {detailLoading && (
                   <div className="flex items-center justify-center py-8">
                     <Loader2 className="h-5 w-5 animate-spin text-cyan-400" />
-                    <span className="ml-2 text-xs text-gray-500">
+                    <span className="ml-2 text-xs text-muted-foreground">
                       Loading profile detail...
                     </span>
                   </div>
@@ -783,25 +783,25 @@ export default function InsiderThreatPage() {
                     <div className="flex items-start justify-between gap-4">
                       <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-xs md:grid-cols-4">
                         <div>
-                          <span className="text-gray-500">User ID</span>
-                          <p className="mt-0.5 font-mono font-semibold text-gray-200">
+                          <span className="text-muted-foreground">User ID</span>
+                          <p className="mt-0.5 font-mono font-semibold text-foreground">
                             {selectedProfile.user_id || "N/A"}
                           </p>
                         </div>
                         <div>
-                          <span className="text-gray-500">Risk Score</span>
+                          <span className="text-muted-foreground">Risk Score</span>
                           <p className={cn("mt-0.5 font-mono font-bold", riskScoreColor(selectedProfile.risk_score))}>
                             {selectedProfile.risk_score}
                           </p>
                         </div>
                         <div>
-                          <span className="text-gray-500">Anomalies</span>
-                          <p className="mt-0.5 font-mono font-semibold text-gray-200">
+                          <span className="text-muted-foreground">Anomalies</span>
+                          <p className="mt-0.5 font-mono font-semibold text-foreground">
                             {selectedProfile.anomaly_count}
                           </p>
                         </div>
                         <div>
-                          <span className="text-gray-500">Status</span>
+                          <span className="text-muted-foreground">Status</span>
                           <p className="mt-0.5">
                             <span
                               className={cn(
@@ -827,7 +827,7 @@ export default function InsiderThreatPage() {
                           className={cn(
                             "flex shrink-0 items-center gap-2 rounded-lg border px-4 py-2 text-xs font-medium transition-colors",
                             baselineLoading
-                              ? "border-gray-700 bg-gray-800 text-gray-500 cursor-not-allowed"
+                              ? "border-border-strong bg-surface-3 text-muted-foreground cursor-not-allowed"
                               : "border-cyan-700/50 bg-cyan-900/30 text-cyan-400 hover:bg-cyan-900/50"
                           )}
                         >
@@ -858,14 +858,14 @@ export default function InsiderThreatPage() {
                     {/* Behavioral flags */}
                     {selectedProfile.behavioral_flags.length > 0 && (
                       <div>
-                        <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+                        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                           Behavioral Flags
                         </span>
                         <div className="mt-1.5 flex flex-wrap gap-1.5">
                           {selectedProfile.behavioral_flags.map((flag, i) => (
                             <span
                               key={i}
-                              className="rounded-full bg-gray-800 px-2.5 py-0.5 text-[10px] font-medium text-gray-400 border border-gray-700/60"
+                              className="rounded-full bg-surface-3 px-2.5 py-0.5 text-[10px] font-medium text-muted-foreground border border-border-strong/60"
                             >
                               {flag}
                             </span>
@@ -878,7 +878,7 @@ export default function InsiderThreatPage() {
                     {selectedProfile.baseline_access_pattern &&
                       Object.keys(selectedProfile.baseline_access_pattern).length > 0 && (
                       <div>
-                        <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+                        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                           Baseline Pattern
                         </span>
                         <div className="mt-1.5 grid grid-cols-2 gap-2 md:grid-cols-4">
@@ -888,12 +888,12 @@ export default function InsiderThreatPage() {
                             .map(([key, val]) => (
                               <div
                                 key={key}
-                                className="rounded-lg border border-gray-800 bg-gray-900/60 px-3 py-2"
+                                className="rounded-lg border border-border bg-surface-2/60 px-3 py-2"
                               >
-                                <span className="text-[10px] text-gray-500">
+                                <span className="text-[10px] text-muted-foreground">
                                   {key.replace(/_/g, " ")}
                                 </span>
-                                <p className="mt-0.5 font-mono text-xs font-semibold text-gray-300">
+                                <p className="mt-0.5 font-mono text-xs font-semibold text-foreground">
                                   {String(val)}
                                 </p>
                               </div>
@@ -904,18 +904,18 @@ export default function InsiderThreatPage() {
 
                     {/* Recent access events */}
                     <div>
-                      <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                         Recent Access Events (48h)
                       </span>
                       {selectedProfile.recent_access_events.length === 0 ? (
-                        <p className="mt-2 text-xs text-gray-600">
+                        <p className="mt-2 text-xs text-muted-foreground">
                           No recent access events found
                         </p>
                       ) : (
-                        <div className="mt-2 max-h-52 overflow-y-auto rounded-lg border border-gray-800 scrollbar-thin scrollbar-track-gray-950 scrollbar-thumb-gray-800">
+                        <div className="mt-2 max-h-52 overflow-y-auto rounded-lg border border-border scrollbar-thin scrollbar-track-gray-950 scrollbar-thumb-gray-800">
                           <table className="w-full text-xs">
                             <thead>
-                              <tr className="border-b border-gray-800 text-left text-[10px] font-medium uppercase tracking-wider text-gray-500">
+                              <tr className="border-b border-border text-left text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                                 <th className="px-3 py-2">Time</th>
                                 <th className="px-3 py-2">Door</th>
                                 <th className="px-3 py-2">Type</th>
@@ -925,11 +925,11 @@ export default function InsiderThreatPage() {
                               {selectedProfile.recent_access_events.map((evt) => (
                                 <tr
                                   key={evt.id}
-                                  className="border-b border-gray-800/40 hover:bg-gray-900/40"
+                                  className="border-b border-border/40 hover:bg-surface-2/40"
                                 >
                                   <td className="px-3 py-1.5">
-                                    <span className="inline-flex items-center gap-1 text-gray-400">
-                                      <Clock className="h-3 w-3 text-gray-600" />
+                                    <span className="inline-flex items-center gap-1 text-muted-foreground">
+                                      <Clock className="h-3 w-3 text-muted-foreground" />
                                       {evt.timestamp
                                         ? new Date(evt.timestamp).toLocaleString("en-US", {
                                             month: "short",
@@ -942,8 +942,8 @@ export default function InsiderThreatPage() {
                                     </span>
                                   </td>
                                   <td className="px-3 py-1.5">
-                                    <span className="inline-flex items-center gap-1 font-mono text-gray-300">
-                                      <DoorOpen className="h-3 w-3 text-gray-600" />
+                                    <span className="inline-flex items-center gap-1 font-mono text-foreground">
+                                      <DoorOpen className="h-3 w-3 text-muted-foreground" />
                                       {evt.door_id || "unknown"}
                                     </span>
                                   </td>
@@ -975,18 +975,18 @@ export default function InsiderThreatPage() {
           )}
 
           {/* ---- Access Patterns Section ---- */}
-          <div className="rounded-xl border border-gray-800 bg-gray-900/50">
-            <div className="flex items-center justify-between border-b border-gray-800 px-5 py-3">
+          <div className="rounded-xl border border-border bg-surface-2/50">
+            <div className="flex items-center justify-between border-b border-border px-5 py-3">
               <h2 className="flex items-center gap-2 text-sm font-semibold text-cyan-400">
                 <LayoutGrid className="h-4 w-4" />
                 Access Patterns
-                <span className="text-[10px] text-gray-500 font-normal">
+                <span className="text-[10px] text-muted-foreground font-normal">
                   Hour × Day heatmap
                 </span>
               </h2>
               <button
                 onClick={() => setShowAccessPatterns((v) => !v)}
-                className="flex items-center gap-1.5 rounded-lg border border-gray-700/50 px-3 py-1 text-[11px] text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+                className="flex items-center gap-1.5 rounded-lg border border-border-strong/50 px-3 py-1 text-[11px] text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
               >
                 {showAccessPatterns ? "Hide" : "Show"}
               </button>
@@ -994,7 +994,7 @@ export default function InsiderThreatPage() {
 
             {showAccessPatterns && (
               <div className="p-5">
-                <p className="mb-3 text-[10px] text-gray-600">
+                <p className="mb-3 text-[10px] text-muted-foreground">
                   Aggregated access frequency by hour (0–23) and day. Red-bordered cells deviate &gt;2× from average.
                   {selectedProfile?.user_id && (
                     <span className="ml-1 text-cyan-600">
@@ -1008,17 +1008,17 @@ export default function InsiderThreatPage() {
           </div>
 
           {/* ---- Recent Anomalies Panel ---- */}
-          <div className="rounded-xl border border-gray-800 bg-gray-900/50">
-            <div className="flex items-center justify-between border-b border-gray-800 px-5 py-3">
+          <div className="rounded-xl border border-border bg-surface-2/50">
+            <div className="flex items-center justify-between border-b border-border px-5 py-3">
               <h2 className="flex items-center gap-2 text-sm font-semibold text-cyan-400">
                 <Zap className="h-4 w-4" />
                 Recent Anomalies
-                <span className="text-[10px] text-gray-500 font-normal">(24h)</span>
+                <span className="text-[10px] text-muted-foreground font-normal">(24h)</span>
               </h2>
               <button
                 onClick={fetchAnomalies}
                 disabled={anomaliesLoading}
-                className="flex items-center gap-1.5 rounded-lg border border-gray-700/50 px-3 py-1 text-[11px] text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors"
+                className="flex items-center gap-1.5 rounded-lg border border-border-strong/50 px-3 py-1 text-[11px] text-muted-foreground hover:bg-surface-3 hover:text-foreground transition-colors"
               >
                 <RefreshCw className={cn("h-3 w-3", anomaliesLoading && "animate-spin")} />
                 Refresh
@@ -1029,14 +1029,14 @@ export default function InsiderThreatPage() {
               {anomaliesLoading && anomalies.length === 0 && (
                 <div className="flex items-center justify-center py-6">
                   <Loader2 className="h-5 w-5 animate-spin text-cyan-400" />
-                  <span className="ml-2 text-xs text-gray-500">
+                  <span className="ml-2 text-xs text-muted-foreground">
                     Loading anomalies...
                   </span>
                 </div>
               )}
 
               {!anomaliesLoading && anomalies.length === 0 && (
-                <p className="py-6 text-center text-xs text-gray-600">
+                <p className="py-6 text-center text-xs text-muted-foreground">
                   No anomalies detected in the last 24 hours
                 </p>
               )}
@@ -1053,7 +1053,7 @@ export default function InsiderThreatPage() {
                           ? "border-red-800/50 bg-red-950/20 hover:bg-red-950/30"
                           : anomaly.risk_score >= 60
                           ? "border-orange-800/50 bg-orange-950/20 hover:bg-orange-950/30"
-                          : "border-gray-800 bg-gray-900/40 hover:bg-gray-900/60"
+                          : "border-border bg-surface-2/40 hover:bg-surface-2/60"
                       )}
                     >
                       <div
@@ -1066,20 +1066,20 @@ export default function InsiderThreatPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="rounded bg-gray-800 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-gray-400 border border-gray-700/60">
+                          <span className="rounded bg-surface-3 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-muted-foreground border border-border-strong/60">
                             {anomaly.anomaly_type}
                           </span>
                           {anomaly.user_id && (
-                            <span className="font-mono text-[10px] text-gray-500">
+                            <span className="font-mono text-[10px] text-muted-foreground">
                               {anomaly.user_id.slice(0, 12)}
                             </span>
                           )}
                         </div>
-                        <p className="mt-1 text-xs text-gray-400 truncate">
+                        <p className="mt-1 text-xs text-muted-foreground truncate">
                           {anomaly.description}
                         </p>
                       </div>
-                      <span className="shrink-0 text-[10px] text-gray-600">
+                      <span className="shrink-0 text-[10px] text-muted-foreground">
                         {anomaly.timestamp
                           ? new Date(anomaly.timestamp).toLocaleString("en-US", {
                               month: "short",
